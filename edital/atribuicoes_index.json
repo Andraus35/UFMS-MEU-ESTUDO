@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "classification": "derived_non_normative",
+  "annex": "IV",
+  "source": "EDITAL_UFMS_152_2026.md",
+  "source_git_blob_sha": "a4129cceabd20fc119625d71b1c1599b3ce644e1",
+  "source_pdf_sha256": "c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675",
+  "description": "Recortes literais das atribuições dos cargos 523 (p. 23) e 324 (p. 28). Metadados e hash de cada recorte derivados, sem alterar texto normativo.",
+  "entries": [
+    {
+      "cargo": "523",
+      "page": 23,
+      "chunk_id": "p23-c01",
+      "heading": "Analista em Educação/Administração e Informação / Gestão Pública",
+      "first_text": "Planejar, desenvolver, executar, acompanhar e avaliar atividades, programas, projetos e processos relacionados à gestão pública e à administração universitária.",
+      "last_text": "ambiente organizacional.",
+      "neighbor_exclusion": [
+        "Produção Cultural",
+        "(Campus)",
+        "Endodontia"
+      ],
+      "path": "edital/chunks/p23-c01.md",
+      "chunk_char_start": 3719,
+      "chunk_char_end": 6068,
+      "page_char_start": 3719,
+      "page_char_end": 6068,
+      "characters": 2349,
+      "literal_sha256": "965513446559f2f54bdc23b971b3057303af4d6506b7c9b6419c79aeb31ca933"
+    },
+    {
+      "cargo": "324",
+      "page": 28,
+      "chunk_id": "p28-c02",
+      "heading": "Técnico em Educação / Processos Educacionais / Assuntos Estudantis**",
+      "first_text": "Executar atividades administrativas de apoio às secretarias acadêmicas,",
+      "last_text": "natureza e nível de complexidade associadas ao ambiente organizacional.",
+      "neighbor_exclusion": [
+        "Veterinária e Zootecnia",
+        "hospital veterinário",
+        "Técnico em Tecnologia da Informação"
+      ],
+      "path": "edital/chunks/p28-c02.md",
+      "chunk_char_start": 2810,
+      "chunk_char_end": 5180,
+      "page_char_start": 8008,
+      "page_char_end": 10378,
+      "characters": 2370,
+      "literal_sha256": "52b8ef5302b52bc247037591623eafbabc66b0c29caa2df660f560bef36c4cbe"
+    }
+  ]
+}
