@@ -13,9 +13,16 @@ except ModuleNotFoundError:
     from scripts.core import ROOT, load_json
 
 BOOTSTRAP_FILES = (
-    "AGENTS.md", "settings.json", "rules/CORE.md",
+    "AGENTS.md", "ROADMAP.md", "settings.json", "rules/CORE.md",
     "guardrails/CORE.md", "memory/INDEX.md", "memory/HANDOFF.md",
     "state/CURRENT.json", "EDITAL_UFMS_152_2026.md", "edital/INDEX.md",
+)
+ROADMAP_SECTIONS = (
+    "# ROADMAP — UFMS MEU ESTUDO",
+    "## Governança e leitura obrigatória",
+    "## Estado observado",
+    "## Fila de execução",
+    "## Critérios de promoção",
 )
 HOOK_FILES = {
     "before_write": "hooks/before_write.py",
@@ -53,6 +60,10 @@ def check_bootstrap(root=ROOT):
             raw.decode("utf-8")
         except UnicodeDecodeError as exc:
             raise ValueError("Bootstrap não UTF-8: " + name) from exc
+        if name == "ROADMAP.md":
+            for heading in ROADMAP_SECTIONS:
+                if raw.decode("utf-8").count(heading) != 1:
+                    raise ValueError("Seção obrigatória do roadmap ausente/duplicada: " + heading)
         hashes[name] = hashlib.sha256(raw).hexdigest()
     return hashes
 

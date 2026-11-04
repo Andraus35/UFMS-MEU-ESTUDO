@@ -8,6 +8,7 @@
   "bootstrap": {
     "mandatory": [
       "AGENTS.md",
+      "ROADMAP.md",
       "settings.json",
       "rules/CORE.md",
       "guardrails/CORE.md",

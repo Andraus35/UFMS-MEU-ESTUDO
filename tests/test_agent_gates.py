@@ -12,8 +12,10 @@ from hooks import before_write, after_write, checkpoint
 
 
 class AgentGateTests(unittest.TestCase):
-    def test_bootstrap_do_repositorio_tem_nove_identidades(self):
+    def test_bootstrap_do_repositorio_tem_dez_identidades(self):
         hashes = check_bootstrap(ROOT)
+        self.assertEqual(len(hashes), 10)
+        self.assertEqual(BOOTSTRAP_FILES[1], 'ROADMAP.md')
         self.assertEqual(list(hashes), list(BOOTSTRAP_FILES))
         self.assertTrue(all(len(x) == 64 for x in hashes.values()))
 
@@ -47,6 +49,34 @@ class AgentGateTests(unittest.TestCase):
             (root / "AGENTS.md").write_text("", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "vazio"):
                 check_bootstrap(root)
+
+    def test_roadmap_ausente_vazio_placeholder_falham(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in BOOTSTRAP_FILES:
+                target = root / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("fixture", encoding="utf-8")
+            (root / "settings.json").write_text(json.dumps({"bootstrap": {"mandatory": list(BOOTSTRAP_FILES)}}), encoding="utf-8")
+            (root / "ROADMAP.md").unlink()
+            with self.assertRaisesRegex(ValueError, "ausente"):
+                check_bootstrap(root)
+            (root / "ROADMAP.md").write_text("", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "vazio"):
+                check_bootstrap(root)
+            (root / "ROADMAP.md").write_text("placeholder", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Seção obrigatória"):
+                check_bootstrap(root)
+
+    def test_roadmap_omitido_ou_fora_de_ordem_falha(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ordered = list(BOOTSTRAP_FILES)
+            for variant in ([x for x in ordered if x != "ROADMAP.md"],
+                            [ordered[0], ordered[2], ordered[1], *ordered[3:]]):
+                (root / "settings.json").write_text(json.dumps({"bootstrap": {"mandatory": variant}}), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "ordem"):
+                    check_bootstrap(root)
 
     def test_hook_sem_interface_run_falha(self):
         with tempfile.TemporaryDirectory() as tmp:

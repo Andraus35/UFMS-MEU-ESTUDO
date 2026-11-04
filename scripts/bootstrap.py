@@ -22,12 +22,14 @@ def run(root=ROOT):
         "bootstrap": "verificado_localmente",
         "obrigatorios": cfg["bootstrap"]["mandatory"],
         "sha256_dos_arquivos": digests,
+        "roadmap_sha256": digests["ROADMAP.md"],
+        "roadmap_bytes": "lidos localmente; compreensão semântica não comprovada",
         "hooks_com_interface": ["before_write", "after_write", "checkpoint"],
         "cargos": [c["codigo"] for c in concursos["cargos"]],
         "prova": concursos["prova_data"],
         "event_count": state["event_count"],
         "last_event": state["event_cursor"],
-        "next": "Consultar regras de estudo, tópicos e eventos relevantes sob demanda",
+        "next": "Interpretar ROADMAP.md do HEAD e escolher item RM, depois consultar contexto relevante",
         "warning": "Leitura local não comprova commit remoto nem execução automática de hooks",
     }
 
