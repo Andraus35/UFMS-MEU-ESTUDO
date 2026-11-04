@@ -1,0 +1,59 @@
+{
+  "id": "POC-UFMS-005",
+  "dados_ficticios": true,
+  "fonte_registro": {
+    "repositorio": "Andraus35/UFMS-MEU-ESTUDO",
+    "branch": "poc-ufms-003-zapia",
+    "caminho": "poc/POC-UFMS-003.json",
+    "commit": "747f239c823e1bfc5eea87130406ff85b9bc6707",
+    "questoes_respondidas": 10,
+    "acertos": 6
+  },
+  "disciplina": "Direito Administrativo",
+  "assunto": "Atos administrativos",
+  "objetivo": "Recuperar conceitos já estudados, identificar lacunas e praticar questões, sem incluir conteúdo jurídico não verificado.",
+  "metodo_fundamentado": {
+    "tecnica": "Recuperação ativa seguida de conferência das lacunas e repetição do autoteste",
+    "passos": [
+      "Sem consultar notas, tentar lembrar e registrar os pontos do assunto já estudado.",
+      "Comparar a recordação com suas notas e identificar omissões.",
+      "Isolar os itens esquecidos e repetir o teste depois."
+    ],
+    "notebook": "Como estudar",
+    "notebook_url": "https://notebook.google.com/notebook/90f0bb1a-6f69-4a13-b581-5fe8ae88a475",
+    "fonte_verificada": {
+      "titulo": "Ace Your Exam",
+      "autor": "Andrew Northedge",
+      "secao": "Load up your memory by testing yourself, capítulo 7",
+      "marcador": "1",
+      "verificacao": "Trecho aberto no notebook: virar cartões, lembrar sem consultar, conferir acertos e lacunas e repetir depois.",
+      "limite": "A fonte fundamenta o método geral, não conteúdo jurídico."
+    },
+    "outros_titulos_nomeados_na_resposta_nao_verificados": [
+      "14 Days to Exam Success — Lucinda Becker",
+      "Be Well, Learn Well — Gareth Hughes"
+    ]
+  },
+  "proposta_tutor": {
+    "duracao_minutos": 25,
+    "duracao_justificativa": "Sugestão do Tutor para este teste, não medida atribuída à fonte.",
+    "prioridade": "alta",
+    "prioridade_justificativa": "Sugestão do Tutor para o teste, motivada por 6 acertos em 10 e revisão pendente; sem regra validada de priorização.",
+    "roteiro": [
+      "10 minutos de recuperação sem consulta.",
+      "5 minutos para conferir lacunas nas próprias notas.",
+      "10 minutos para resolver questões do assunto no TEC Concursos ou Qconcursos."
+    ],
+    "observacoes": "Não há consulta comprovada a um notebook jurídico, nem acesso testado às plataformas de questões."
+  },
+  "coach": {
+    "status": "processado",
+    "mensagem_proposta": "Você estudou Direito Administrativo, com foco em atos administrativos. Acesse o Gemini Notebook “Como estudar” para orientar a revisão pelo método de recuperação ativa: tente lembrar sem consultar e confira as lacunas nas suas próprias notas. Depois, pratique questões do assunto no TEC Concursos ou no Qconcursos.",
+    "mensagem_enviada": false
+  },
+  "teste": {
+    "automacao_recorrente": false,
+    "dados_reais": false,
+    "eventos_criados": false
+  }
+}
