@@ -1,6 +1,6 @@
 # Especificação pedagógica — UFMS MEU ESTUDO
 
-**Versão de referência:** v1.7 — 04/11/2026  
+**Versão de referência:** v1.8 — 04/11/2026  
 **Estado:** PROPOSTA DOCUMENTAL; não equivale a implementação, aprovação do método ou operação autônoma do tutor.  
 **Escopo:** preparação adaptativa por questões para os cargos UFMS 523 e 324.
 
@@ -16,9 +16,12 @@
 8. [Cadernos e resultados v1.6](CADERNOS_RESULTADOS_v1.6.md): prescrições, filtros escalonados, devolução mínima, validação e feedback.
 9. [Contrato integrado de prontidão v1.7](CONTRATO_PRONTIDAO_v1.7.md): arquitetura única de decisão, evidência, persistência e gates.
 10. [Matriz de reconciliação v1.7](MATRIZ_RECONCILIACAO_v1.7.md): diferenças entre especificações e harness, bloqueadores e encaminhamentos.
-11. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
-12. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
-13. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
+11. [Plano técnico por gates v1.8](PLANO_IMPLEMENTACAO_GATES_v1.8.md): pacotes ENG-00–ENG-08, dependências, entregas e critérios de pronto.
+12. [Rastreabilidade de testes v1.8](RASTREABILIDADE_GATES_v1.8.md): 102 cenários vinculados a GP-0..GP-5.
+13. [Prompt de transferência técnica v1.8](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md): retomada READ ONLY e primeira tarefa da outra sessão.
+14. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
+15. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
+16. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
 
 ## Hierarquia e limites
 
