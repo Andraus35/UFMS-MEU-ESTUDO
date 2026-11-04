@@ -96,6 +96,7 @@ def installation_token(jwt, app_id):
         {"repositories": [REPOSITORY.split("/")[1]],
          "permissions": {
              "checks": "write", "pull_requests": "read", "issues": "read",
+             "contents": "read",
          }},
     )
     if not isinstance(answer, dict) or not isinstance(answer.get("token"), str):
