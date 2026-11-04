@@ -161,6 +161,78 @@
       "topic_id": null,
       "page": null,
       "type": "negative"
+    },
+    {
+      "query": "3.6 candidato recolher taxa de inscrição",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 2,
+      "type": "rule"
+    },
+    {
+      "query": "3.8 inscrição efetivada confirmação pagamento rede bancária",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 3,
+      "type": "rule"
+    },
+    {
+      "query": "9.2 Prova Objetiva duração 4 quatro horas",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 8,
+      "type": "rule"
+    },
+    {
+      "query": "9.5 fechamento dos portões pontualmente às 8h 14h",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 9,
+      "type": "rule"
+    },
+    {
+      "query": "10.2 eliminado candidato obtiver nota zero cinco áreas",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 10,
+      "type": "rule"
+    },
+    {
+      "query": "13.10 anulação de questões recursos administrativos",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 11,
+      "type": "rule"
+    },
+    {
+      "query": "ANEXO I QUADRO DE REMUNERAÇÃO vencimento básico inicial",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 12,
+      "type": "rule"
+    },
+    {
+      "query": "523 29 Campo Grande Gestão Pública",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 15,
+      "type": "rule"
+    },
+    {
+      "query": "324 18 Campo Grande Ensino Médio completo",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 18,
+      "type": "rule"
     }
   ]
 }
