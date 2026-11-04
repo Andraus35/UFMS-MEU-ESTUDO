@@ -131,6 +131,10 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
     if area=='especificos' and cargo is None:
         raise ValueError('Informe --cargo para conhecimentos específicos')
     if not 1<=limit<=20: raise ValueError('Limite inválido')
+    # Não transformar perguntas de comparação em resposta parcial sobre um cargo.
+    mentioned=re.findall(r'\b(?:cargo|c[oó]digo)\s*(?:n[º°.]?\s*)?(523|324)\b',query,re.I)
+    if len(set(mentioned))>1:
+        raise ValueError('Consulta menciona múltiplos cargos; consulte cada cargo separadamente')
     # Consultas que nomeiam outro cargo contradizem o filtro explícito: falha segura.
     declared=re.search(r'\b(?:cargo|c[oó]digo)\s*(?:n[º°.]?\s*)?(523|324)\b',query,re.I)
     if cargo and declared and declared.group(1)!=cargo:
