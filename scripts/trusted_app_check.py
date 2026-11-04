@@ -101,6 +101,38 @@ def installation_token(jwt, app_id):
     return answer["token"]
 
 
+def merge_target(pr_number, metadata, installation):
+    """Identify the PR-specific GitHub test merge, never a shared HEAD check."""
+    head = _check_sha(metadata.get("head", {}).get("sha"), "PR HEAD")
+    base = _check_sha(metadata.get("base", {}).get("sha"), "PR BASE")
+    merge_sha = _check_sha(metadata.get("merge_commit_sha"), "PR test merge SHA")
+    ref = api_json("GET", f"repos/{REPOSITORY}/git/ref/pull/{pr_number}/merge",
+                   installation)
+    if (not isinstance(ref, dict)
+            or ref.get("ref") != f"refs/pull/{pr_number}/merge"
+            or ref.get("object", {}).get("sha") != merge_sha):
+        raise ValueError("PR test merge ref does not match metadata")
+    commit = api_json("GET", f"repos/{REPOSITORY}/commits/{merge_sha}",
+                      installation)
+    if (not isinstance(commit, dict) or commit.get("sha") != merge_sha
+            or [p.get("sha") for p in commit.get("parents", [])]
+            != [base, head]):
+        raise ValueError("Test merge parents differ from the exact base/HEAD")
+    return merge_sha
+
+
+def refuse_shared_head(pr_number, head, installation):
+    """Fail closed if two open PRs share a HEAD: checks on commits are global."""
+    for other in list_open_pr_numbers(installation):
+        if other == pr_number:
+            continue
+        meta = api_json("GET", f"repos/{REPOSITORY}/pulls/{other}", installation)
+        if not isinstance(meta, dict) or meta.get("number") != other:
+            raise ValueError("Cannot attest the other open PRs")
+        if meta.get("head", {}).get("sha") == head:
+            raise ValueError("Two open PRs share one HEAD; no authorization allowed")
+
+
 def verify_one(pr_number, installation, app_id, public_key):
     if type(pr_number) is not int or pr_number <= 0:
         raise ValueError("Invalid PR")
@@ -112,6 +144,8 @@ def verify_one(pr_number, installation, app_id, public_key):
         raise ValueError("PR missing, closed or wrong base branch")
     head = _check_sha(metadata.get("head", {}).get("sha"), "PR HEAD")
     base = _check_sha(metadata.get("base", {}).get("sha"), "PR BASE")
+    merge_sha = merge_target(pr_number, metadata, installation)
+    refuse_shared_head(pr_number, head, installation)
 
     # Use the same fail-closed policy, but the App, rather than Actions, is the
     # attested check run SOURCE. A failing evaluation still publishes failure.
@@ -132,21 +166,24 @@ def verify_one(pr_number, installation, app_id, public_key):
         # Fail closed even for unforeseen policy exceptions; never label success.
         pass
 
-    # Prevent reporting a success when HEAD/base move after evaluation.
+    # A PR can advance between API calls. Re-read the candidate's test merge
+    # and the list of open PR heads; never silently transfer a green result.
     try:
         after = api_json("GET", endpoint, installation)
-        if (after.get("head", {}).get("sha") != head
+        if (not isinstance(after, dict) or after.get("head", {}).get("sha") != head
                 or after.get("base", {}).get("sha") != base
-                or after.get("state") != "open"):
-            verdict, explanation = "failure", "PR changed after evaluation"
-    except (ValueError, AttributeError):
-        verdict, explanation = "failure", "PR identity readback failed"
+                or after.get("state") != "open"
+                or merge_target(pr_number, after, installation) != merge_sha):
+            verdict, explanation = "failure", "PR or test merge changed"
+        refuse_shared_head(pr_number, head, installation)
+    except (ValueError, KeyError, TypeError, AttributeError):
+        verdict, explanation = "failure", "PR identity or uniqueness readback failed"
 
-    external_id = f"pr{pr_number}:{head}:{base}"
+    external_id = f"pr{pr_number}:{head}:{base}:{merge_sha}"
     # Do not flood GitHub with duplicate checks on every periodic poll.
     # Importantly, only a check from OUR dedicated GitHub App can be reused.
     history = api_json(
-        "GET", f"repos/{REPOSITORY}/commits/{head}/check-runs?per_page=100",
+        "GET", f"repos/{REPOSITORY}/commits/{merge_sha}/check-runs?per_page=100",
         installation)
     if not isinstance(history, dict) or not isinstance(history.get("check_runs"), list):
         raise ValueError("Cannot verify previous check source")
@@ -158,13 +195,13 @@ def verify_one(pr_number, installation, app_id, public_key):
     if own and (own[0].get("status") == "completed"
                 and own[0].get("conclusion") == verdict
                 and own[0].get("external_id") == external_id):
-        return {"pr": pr_number, "head": head, "conclusion": verdict,
-                "check_name": CHECK_NAME, "app_id": int(app_id),
-                "reused_verified_check": True}
+        return {"pr": pr_number, "head": head, "merge_sha": merge_sha,
+                "conclusion": verdict, "check_name": CHECK_NAME,
+                "app_id": int(app_id), "reused_verified_check": True}
 
     body = {
         "name": CHECK_NAME,
-        "head_sha": head,
+        "head_sha": merge_sha,
         "status": "completed",
         "conclusion": verdict,
         "external_id": external_id,
@@ -172,13 +209,13 @@ def verify_one(pr_number, installation, app_id, public_key):
                    "summary": explanation},
     }
     checked = api_json("POST", f"repos/{REPOSITORY}/check-runs", installation, body)
-    if (not isinstance(checked, dict) or checked.get("head_sha") != head
+    if (not isinstance(checked, dict) or checked.get("head_sha") != merge_sha
             or checked.get("name") != CHECK_NAME
             or checked.get("app", {}).get("id") != int(app_id)
             or checked.get("conclusion") != verdict):
         raise ValueError("GitHub check readback identity mismatch")
-    return {"pr": pr_number, "head": head, "conclusion": verdict,
-            "check_name": CHECK_NAME, "app_id": int(app_id)}
+    return {"pr": pr_number, "head": head, "merge_sha": merge_sha,
+            "conclusion": verdict, "check_name": CHECK_NAME, "app_id": int(app_id)}
 
 
 def list_open_pr_numbers(installation, max_pages=10):
