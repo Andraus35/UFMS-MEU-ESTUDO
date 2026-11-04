@@ -32,6 +32,8 @@ python scripts/rebuild.py --check
 
 A CI inclui `scripts/write_policy.py --check` e os contratos verificáveis de bootstrap/hooks. Ver `docs/OPERACAO.md` para START/DELIVERY e para as limitações de execução automática.
 
+Para escritas pela API, a política de pré-validação, a auditoria da CI e os limites de proteção administrativa estão documentados em [`docs/API_WRITE_GOVERNANCE.md`](docs/API_WRITE_GOVERNANCE.md). O adaptador é voluntário: não intercepta chamadas externas, não substitui autenticação/verificação independente e não libera dados pessoais.
+
 ## Fonte e limites
 
 O documento primário de escopo é o edital UFMS nº 152 de 29/10/2026. Fonte integral em `EDITAL_UFMS_152_2026.md`; índice e chunks em `edital/`. Veja também `docs/EDITAL.md` e `docs/FONTES.md`. Em caso de retificação, interrompa a propagação de dados antigos até conferir a versão oficial.
