@@ -92,18 +92,15 @@ def _git_clean(root):
         raise GateClosed("Dirty or unverifiable checkout")
 
 
-def verify_start(root, trusted_head, observed_head=None, clean_check=None):
-    """Verify a trusted revision and all mandated bytes. Overrides are for tests."""
+def verify_start(root, trusted_head):
+    """Verify a trusted revision and mandated bytes; no caller-controlled bypass."""
     if not isinstance(trusted_head, str) or not SHA40.fullmatch(trusted_head):
         raise GateClosed("Trusted SHA not provided or malformed")
     root = Path(root).resolve()
-    observed = observed_head if observed_head is not None else _git_head(root)
+    observed = _git_head(root)
     if observed != trusted_head:
         raise GateClosed("HEAD changed or was not the trusted SHA")
-    if clean_check is None:
-        _git_clean(root)
-    elif clean_check is not True:
-        raise GateClosed("Dirty checkout")
+    _git_clean(root)
     texts, hashes = {}, {}
     for relative in MANDATORY:
         texts[relative], hashes[relative] = _file(root, relative)
@@ -126,14 +123,21 @@ def verify_start(root, trusted_head, observed_head=None, clean_check=None):
 
 class AgentBroker:
     """No provider credentials, no tool execution, no outward write routes."""
-    def __init__(self, root, trusted_head, observed_head=None, clean_check=None):
-        self._snapshot = verify_start(root, trusted_head, observed_head, clean_check)
+    def __init__(self, root, trusted_head):
+        self._root = Path(root).resolve()
+        self._trusted_head = trusted_head
+        self._snapshot = verify_start(self._root, trusted_head)
+
+    def _refresh(self):
+        # START receipt cannot be replayed after local code/files change.
+        self._snapshot = verify_start(self._root, self._trusted_head)
 
     def request(self, role, action):
         if role not in ROLES:
             raise GateClosed("Unknown agent role")
         if action not in READ_ACTIONS:
             raise GateClosed("No protected writes enabled in this broker")
+        self._refresh()
         return {
             "status": "bootstrap_verified",
             "scope": "local_read_only",
@@ -146,7 +150,8 @@ class AgentBroker:
         }
 
     def prompt_context(self):
-        """The caller MUST include these texts in the actual model invocation."""
+        """Return trusted texts after fresh validation for the actual model call."""
+        self._refresh()
         return self._snapshot["agents"], self._snapshot["roadmap"]
 
 
