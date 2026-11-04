@@ -29,6 +29,12 @@ def validate(root=ROOT):
     for t in topics:
         if t["cargo_ids"] not in ("523|324", "523", "324"):
             raise ValueError(f"Cargo inválido no tópico {t['topic_id']}")
+    # Garante que uma troca isolada de flag nao habilite dados pessoais.
+    try:
+        from write_policy import verify_write_policy
+    except ModuleNotFoundError:
+        from scripts.write_policy import verify_write_policy
+    verify_write_policy(root)
     events = event_rows(root)
     validate_events(events, topics, allow_private=settings["storage"].get("personal_results_writes_enabled", False))
     current, rows = rebuild(events, topics, settings["schema_version"])
