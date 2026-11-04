@@ -21,6 +21,11 @@ def render_progress(rows):
 
 def projected_files(root=ROOT):
     settings = load_json(root / "settings.json")
+    try:
+        from write_policy import verify_write_policy
+    except ModuleNotFoundError:
+        from scripts.write_policy import verify_write_policy
+    verify_write_policy(root)
     topics = topic_rows(root)
     events = event_rows(root)
     validate_events(events, topics, allow_private=settings["storage"].get("personal_results_writes_enabled", False))
