@@ -1,40 +1,44 @@
-name: Spec Lean - verificacao documental UFMS (nao homologacao)
+name: Spec Lean UFMS - PLAN r2 aprovado (somente validacao documental)
 
 on:
   pull_request:
     paths:
       - '.specs/features/ufms-cognitive-gates/revisions/v0.3/**'
+      - '.specs/features/ufms-cognitive-gates/CURRENT.md'
       - '.github/workflows/spec-lean-snapshot.yml'
   push:
     branches:
       - 'spec/ufms-cognitive-gates-gqd-correction-v0-3'
     paths:
       - '.specs/features/ufms-cognitive-gates/revisions/v0.3/**'
+      - '.specs/features/ufms-cognitive-gates/CURRENT.md'
       - '.github/workflows/spec-lean-snapshot.yml'
 
 permissions:
   contents: read
 
 jobs:
-  spec-lean-structural:
+  spec-lean-formal-r2:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - name: Checkout candidato sem credenciais persistidas
+      - name: Checkout HEAD real, sem credenciais persistidas
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
           persist-credentials: false
       - name: Preparar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Obter scripts oficiais TLC de commit fixo
+      - name: Obter e conferir scripts oficiais da Spec Lean por SHA Git
         shell: bash
         run: |
           set -euo pipefail
           TLC_SHA=1da2195067c14ae5d44dc615b31cb26f50ebeb91
           ROOT="https://raw.githubusercontent.com/tech-leads-club/agent-skills/${TLC_SHA}/packages/skills-catalog/skills/%28development%29/tlc-spec-lean/scripts"
-          mkdir -p "$RUNNER_TEMP/tlc-official"
+          mkdir -p "$RUNNER_TEMP/tlc-official" "$RUNNER_TEMP/tlc-r2-reports"
           for f in lean_config.py validate_plan.py validate_checks.py validate_verification.py; do
             curl --fail --location --retry 3 --silent --show-error "$ROOT/$f" --output "$RUNNER_TEMP/tlc-official/$f"
           done
@@ -43,104 +47,35 @@ jobs:
           test "$(git hash-object validate_plan.py)" = '82f7c754fb9542e659e13a9732cf89d9a25def1f'
           test "$(git hash-object validate_checks.py)" = 'be14d1956cc5afaba6009608c71d7ec1a216c29f'
           test "$(git hash-object validate_verification.py)" = 'b2035193543df146dc5c714979b27a94972d8da4'
-      - name: Verificar identidade dos artefatos aprovados e gerar view efemera
+          echo "TLC_OFFICIAL_SCRIPTS_GIT_HASHES_MATCH"
+      - name: Verificar aprovação humana, snapshot e 27 critérios por SHA
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import hashlib, json, pathlib, os, shutil
-          root = pathlib.Path('.specs/features/ufms-cognitive-gates/revisions/v0.3')
-          plan = root / 'plan.md'
-          checks = root / 'checks.md'
-          receipt = json.loads((root / 'approval-receipt.json').read_text(encoding='utf-8'))
-          def sha256(p): return hashlib.sha256(p.read_bytes()).hexdigest()
-          approved_sha = 'fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c'
-          checks_sha = '50dff7d0f8ff6f9d6ce7a66ea624cd06d6a6f90bb8055be18dd74461b5481bc0'
-          assert sha256(plan) == approved_sha == receipt['approved_object']['sha256']
-          assert sha256(checks) == checks_sha == receipt['new_checks_sha256']
-          assert receipt['approval_text'] == 'APROVO'
-          temp = pathlib.Path(os.environ['RUNNER_TEMP']) / 'tlc-approved-view'
-          temp.mkdir(parents=True, exist_ok=True)
-          shutil.copyfile(checks, temp / 'checks.md')
-          original = plan.read_bytes()
-          # Cópia efêmera: acrescenta apenas metadado administrativo exigido pelo TLC.
-          marker = b'\n**Approved**: 2026-11-04 - user: "APROVO"\n'
-          assert b'**Approved**:' not in original
-          (temp / 'plan.md').write_bytes(original + marker)
-          assert (temp / 'plan.md').read_bytes()[:-len(marker)] == original
-          assert sha256(plan) == approved_sha  # nunca alterar a fonte aprovada
-          print('ORIGINAL_PLAN_SHA256=' + approved_sha)
-          print('ORIGINAL_CHECKS_SHA256=' + checks_sha)
-          print('TLC_VIEW_PLAN_SHA256=' + sha256(temp / 'plan.md'))
-          print('VIEW_DIFF_ONLY=APPROVAL_METADATA')
-          PY
-      - name: Validar somente o PLAN r2 proposto (SEM aprovação humana)
+          ROOT='.specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2'
+          SOURCE='.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/plan.md'
+          echo "AUDITED_HEAD=$(git rev-parse HEAD)" | tee "$RUNNER_TEMP/tlc-r2-reports/provenance.txt"
+          test "$(git hash-object "$SOURCE")" = 'a1482c25e064a1ccc06c4a649a704fbd5bf97cf5'
+          test "$(git hash-object "$ROOT/plan.md")" = '7b2d3a655e015684088f3ac56fdf90e81349cac1' || { echo 'APPROVED_PLAN_GIT_BLOB_MISMATCH'; exit 1; }
+          python "$ROOT/verify_approval_snapshot.py" --root "$ROOT" | tee "$RUNNER_TEMP/tlc-r2-reports/approval-provenance.json"
+          python -m unittest discover -s "$ROOT/tests" -v 2>&1 | tee "$RUNNER_TEMP/tlc-r2-reports/approval-tests.log"
+          echo 'PLAN_APPROVAL_BOUND_TO_SOURCE_SHA_NO_FUNCTIONAL_PROOF'
+      - name: Validar PLAN e CHECKS com scripts oficiais da Tech Leads Club
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/tlc-reports"
-          PROPOSAL='.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/plan.md'
-          python "$RUNNER_TEMP/tlc-official/validate_plan.py" "$PROPOSAL" --root . > "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log" 2>&1 || {
-            cat "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log"
-            echo 'PLAN_R2_PROPOSAL_OFFICIAL_VALIDATION_FAILED'
-            exit 1
-          }
-          tail -n 20 "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log"
-          echo 'PLAN_R2_PROPOSAL_FORMAL_PASS_NOT_APPROVAL'
-      - name: Conferir CHECKS r2 preview sem falsificar aprovacao
-        shell: bash
-        run: |
-          set -uo pipefail
-          FILE='.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/checks-preview.md'
-          LOG="$RUNNER_TEMP/tlc-reports/checks-r2-preview.log"
-          set +e
-          python "$RUNNER_TEMP/tlc-official/validate_checks.py" "$FILE" --root . > "$LOG" 2>&1
-          CODE=$?
-          set -e
-          tail -n 45 "$LOG"
-          if [ "$CODE" -ne 1 ]; then
-            echo "CHECKS_R2_UNEXPECTED_EXIT=$CODE"
-            exit 1
-          fi
-          if ! grep -Fq 'plan.md has no' "$LOG" || ! grep -Fq 'validate_checks: 1 error(s)' "$LOG"; then
-            echo 'CHECKS_R2_HAS_ERRORS_BEYOND_EXPECTED_MISSING_APPROVAL'
-            exit 1
-          fi
-          echo 'CHECKS_R2_PREVIEW_ONLY_MISSING_HUMAN_APPROVAL_NOT_OFFICIALLY_APPROVED'
-      - name: Executar validadores oficiais em ambos os objetos
-        shell: bash
-        run: |
-          set -uo pipefail
+          ROOT='.specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2'
           VALID="$RUNNER_TEMP/tlc-official"
-          CANON='.specs/features/ufms-cognitive-gates/revisions/v0.3'
-          VIEW="$RUNNER_TEMP/tlc-approved-view"
-          mkdir -p "$RUNNER_TEMP/tlc-reports"
-          set +e
-          python "$VALID/validate_plan.py" "$CANON/plan.md" --root . > "$RUNNER_TEMP/tlc-reports/plan-original.log" 2>&1
-          A=$?
-          python "$VALID/validate_checks.py" "$CANON/checks.md" --root . > "$RUNNER_TEMP/tlc-reports/checks-original.log" 2>&1
-          B=$?
-          python "$VALID/validate_plan.py" "$VIEW/plan.md" --root . > "$RUNNER_TEMP/tlc-reports/plan-view.log" 2>&1
-          C=$?
-          python "$VALID/validate_checks.py" "$VIEW/checks.md" --root . > "$RUNNER_TEMP/tlc-reports/checks-view.log" 2>&1
-          D=$?
-          set -e
-          printf 'canonical_plan=%s\ncanonical_checks=%s\napproval_view_plan=%s\napproval_view_checks=%s\n' "$A" "$B" "$C" "$D" | tee "$RUNNER_TEMP/tlc-reports/summary.txt"
-          for f in "$RUNNER_TEMP"/tlc-reports/*.log; do
-            echo "--- $(basename "$f") ---"
-            tail -n 60 "$f"
-          done
-          # O erro formal do objeto canônico é reportado, jamais escondido.
-          # O objeto de compatibilidade só PASS se os dois scripts oficiais passarem.
-          if [ "$C" -ne 0 ] || [ "$D" -ne 0 ]; then
-            echo 'OFFICIAL_TLC_COMPATIBILITY_VIEW_FAILED'
-            exit 1
-          fi
-          echo 'OFFICIAL_TLC_COMPATIBILITY_VIEW_PASS_NOT_OPERATIONAL_APPROVAL'
-      - name: Guardar logs mesmo em falha
+          python "$VALID/validate_plan.py" "$ROOT/plan.md" --root . > "$RUNNER_TEMP/tlc-r2-reports/validate-plan.log" 2>&1 || { cat "$RUNNER_TEMP/tlc-r2-reports/validate-plan.log"; exit 1; }
+          python "$VALID/validate_checks.py" "$ROOT/checks.md" --root . > "$RUNNER_TEMP/tlc-r2-reports/validate-checks.log" 2>&1 || { cat "$RUNNER_TEMP/tlc-r2-reports/validate-checks.log"; exit 1; }
+          tail -n 4 "$RUNNER_TEMP/tlc-r2-reports/validate-plan.log"
+          tail -n 4 "$RUNNER_TEMP/tlc-r2-reports/validate-checks.log"
+          echo 'TLC_R2_OFFICIAL_PLAN_CHECKS_FORMAL_PASS_NOT_GQD'
+          echo 'FUNCTIONAL_TESTS_C1_C27=NOT_RUN; VERIFY_C=NOT_RUN; VERIFY_O=BLOCKED; INDEPENDENT_GQD=REPROVADA_PENDING_REAUDIT'
+      - name: Preservar evidências de validação inclusive em falha
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: spec-lean-tlc-logs
-          path: ${{ runner.temp }}/tlc-reports/
-          retention-days: 7
+          name: tlc-r2-approved-formal-logs
+          path: ${{ runner.temp }}/tlc-r2-reports/
+          retention-days: 14
