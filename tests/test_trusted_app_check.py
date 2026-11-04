@@ -80,7 +80,8 @@ class ExternalAppTests(unittest.TestCase):
         self.assertEqual(seen[-1][0], "POST")
         self.assertEqual(seen[-1][2]["repositories"], ["UFMS-MEU-ESTUDO"])
         self.assertEqual(seen[-1][2]["permissions"], {
-            "checks": "write", "pull_requests": "read", "issues": "read"})
+            "checks": "write", "pull_requests": "read",
+            "issues": "read", "contents": "read"})
 
     def test_wrong_app_identity_rejected(self):
         with mock.patch("trusted_app_check.api_json", return_value={"id": 999}):
@@ -152,6 +153,23 @@ class ExternalAppTests(unittest.TestCase):
                                                                      {"number": 9}]):
             with self.assertRaisesRegex(ValueError, "Duplicate"):
                 list_open_pr_numbers("token")
+
+    def test_both_prs_with_shared_head_are_rejected(self):
+        from trusted_app_check import refuse_shared_head
+        from trusted_governance import REPOSITORY
+        def fetch(method, path, token, payload=None):
+            self.assertEqual(method, "GET")
+            if path.endswith("/pulls/9"):
+                return {"number": 9, "head": {"sha": HEAD}, "state": "open"}
+            if path.endswith("/pulls/10"):
+                return {"number": 10, "head": {"sha": HEAD}, "state": "open"}
+            raise AssertionError(path)
+        with mock.patch("trusted_app_check.list_open_pr_numbers", return_value=[9, 10]):
+            with mock.patch("trusted_app_check.api_json", side_effect=fetch):
+                with self.assertRaisesRegex(ValueError, "share one HEAD"):
+                    refuse_shared_head(9, HEAD, "installation")
+                with self.assertRaisesRegex(ValueError, "share one HEAD"):
+                    refuse_shared_head(10, HEAD, "installation")
 
     def test_shared_head_between_prs_forces_failure(self):
         result, posts = self._simulate(shared_head=True)
