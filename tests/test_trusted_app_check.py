@@ -1,6 +1,7 @@
 """Adversarial offline tests for a distinct, externally hosted GitHub App check."""
 import base64
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -29,6 +30,7 @@ class ExternalAppTests(unittest.TestCase):
                            capture_output=True, check=True)
             subprocess.run(["openssl", "pkey", "-in", str(sk), "-pubout", "-out",
                             str(pk)], capture_output=True, check=True)
+            os.chmod(sk, 0o600)
             token = app_jwt(APP_ID, sk, now=1760000000)
             header, payload, signature = token.split(".")
             self.assertEqual(json.loads(base64.urlsafe_b64decode(
@@ -46,6 +48,14 @@ class ExternalAppTests(unittest.TestCase):
                                    "-signature", str(sig), str(msg)],
                                   capture_output=True)
             self.assertEqual(proc.returncode, 0)
+
+    def test_app_key_world_readable_is_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            key = Path(tmp) / "app.pem"
+            key.write_text("fake private key")
+            os.chmod(key, 0o644)
+            with self.assertRaisesRegex(ValueError, "mode 0600"):
+                app_jwt(APP_ID, key, now=1760000000)
 
     def test_missing_key_or_wrong_app_id_fails(self):
         with self.assertRaises(ValueError):
