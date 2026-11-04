@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Rastreamento não normativo da fonte original e de publicações oficiais da prova UFMS 523/324. Não importa retificações automaticamente.",
+  "contest": "Concurso público técnico-administrativo em educação UFMS 2026; cargos 523 e 324",
+  "canonical": {
+    "document": "EDITAL_UFMS_152_2026.md",
+    "source_git_blob_sha": "a4129cceabd20fc119625d71b1c1599b3ce644e1",
+    "original_pdf_sha256": "c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675",
+    "pdf_pages": 47,
+    "identifier": "Edital PROGEP/UFMS nº 152/2026",
+    "date": "2026-10-29",
+    "status": "original_user_provided_hash_verified",
+    "scope": "não incorpora retificações"
+  },
+  "publication_observations": [
+    {
+      "observed_date": "2026-11-04",
+      "source": "FAPEC – página do concurso técnico-administrativo UFMS 2026",
+      "page_url": "https://portal.concurso.fundacaofapec.org.br/edital/ver/22",
+      "listing_date": "2026-10-30",
+      "listing_label": "EDITAL PROGEP/UFMS N. º 001/2026 - Edital de Abertura",
+      "listing_count_observed": 1,
+      "download_filename_observed": "e5f1c2b364f19beadf2685d8fb836065.pdf",
+      "download_bytes_sha256": null,
+      "remote_pdf_equivalence": "unverified",
+      "verified_amendment_found": false,
+      "coverage": "somente esta página naquele momento; não prova ausência de outros atos",
+      "status": "observed_listing_not_remote_pdf_hash_verified"
+    }
+  ],
+  "open_alerts": [
+    {
+      "id": "ALERTA-DOC-01",
+      "page": 13,
+      "annex": "II",
+      "subject": "cronograma preliminar e recurso de heteroidentificação e PcD",
+      "result_date_text": "10/02/2027",
+      "appeal_date_text": "11 e 12/01/2027",
+      "result_label_anchor": "Divulgação do resultado preliminar do procedimento de Heteroidentificação",
+      "appeal_label_anchor": "Período de recurso do resultado preliminar do procedimento de heteroidentificação",
+      "status": "unresolved_source_inconsistency",
+      "interpretation": "A data impressa para recurso antecede o resultado; não corrigir sem publicação oficial identificada.",
+      "resolution_document_id": null
+    }
+  ],
+  "verified_amendments": [],
+  "amendment_policy": {
+    "auto_apply": false,
+    "source_preservation": "immutable_original",
+    "required_evidence": [
+      "official_issuer",
+      "official_publication_url",
+      "published_on",
+      "title",
+      "sha256_verified_bytes",
+      "target_original_or_previous_version",
+      "affected_items",
+      "human_review_before_normative_adoption"
+    ],
+    "default_status": "not_verified",
+    "on_new_publication": "registrar candidato e auditar antes de alterar qualquer fonte canônica"
+  },
+  "last_check": {
+    "date": "2026-11-04",
+    "status": "partial_website_check",
+    "exhaustive": false,
+    "results": "Portal FAPEC ver/22 consultado; download remoto não obtido para hash; demais publicações não exaustivamente verificadas."
+  }
+}
