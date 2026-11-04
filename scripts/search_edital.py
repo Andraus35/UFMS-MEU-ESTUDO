@@ -57,7 +57,9 @@ def _views(chunks, index, cargo, area):
     views=[]
     for c in chunks:
         relevant=ranges.get(c['id'])
-        if area is not None and not relevant:
+        # Com cargo informado, descartar programas de OUTROS cargos, inclusive
+        # quando --area não foi informado. Regras comuns fora do Anexo V ficam acessíveis.
+        if (area is not None or (cargo is not None and 29 <= c['page'] <= 45)) and not relevant:
             continue
         if relevant:
             # Os tópicos oficiais formam intervalos adjacentes por programa.
