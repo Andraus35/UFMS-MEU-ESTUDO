@@ -13,6 +13,8 @@
 5. [Protocolo de simulados v1.4](PROTOCOLO_SIMULADOS_v1.4.md): composição, dois turnos, pontuação válida e comparabilidade.
 6. [Avaliação da eficácia v1.4](AVALIACAO_EFICACIA_v1.4.md): sinais de aprendizagem, acompanhamento das recomendações e adaptação verificável.
 7. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): testes de cenário para implementação posterior.
+8. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
+9. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
 
 ## Hierarquia e limites
 
