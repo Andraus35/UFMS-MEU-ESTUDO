@@ -62,7 +62,7 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 
 - A busca admite `--anexo III|IV|V --cargo 523|324`, com `--area` apenas para o Anexo V; `--anexo` não deve ser combinado com consulta textual, `--topic` ou seletores concorrentes.
 - A rota `search_programa` lista **todos os tópicos aplicáveis**: 523 — 14 (4 gerais + 10 específicos), 324 — 13 (4 gerais + 9 específicos). Ela retorna página, ID, chunk, offsets e pequeno excerto; `--full` recupera os trechos literais. Esse inventário **não** cria conteúdo curricular nem plano de estudos.
-- Perguntas que misturam duas ou três naturezas documentais são rejeitadas, não respondidas parcialmente. A `tests/fixtures/annex_cases.json` contém **21 contraprovas**: 15 rotas positivas e 6 conflitos.
+- Perguntas que misturam duas ou três naturezas documentais são rejeitadas, não respondidas parcialmente. A `tests/fixtures/annex_cases.json` contém agora **23 contraprovas**: 15 rotas positivas e 8 conflitos, incluindo pedidos com dois ou três numerais romanos de anexos.
 - `tests/test_anexos.py` acrescenta **7 testes** de rotas explícitas, recuperação integral, offsets, isolamento e falha segura; a CI executa `scripts/benchmark_anexos.py`.
 - **Defeito encontrado na primeira execução de CI:** a consulta `responsabilidades e procedimentos Resolução 497-Coun` estava explicitamente sob `--area especificos`, mas foi inicialmente confundida com Anexo IV. A CI [41793492274](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41793492274) **falhou**, motivando a correção para respeitar o escopo programático. A falha histórica permanece documentada.
 - **Evidência confirmada após correção:** GitHub Actions [41793859691](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41793859691), SHA `3db50c23b058b0219f27362e7a0b65dd974b3837`: **56/56 testes**, benchmark cruzado **21/21** (15/15 positivos, 6/6 conflitos), benchmark inicial Hit@1 27/27 e adversarial 9/9. Auditoria e testes foram preparados pela mesma frente; não equivalem a avaliação externa cega.
@@ -70,6 +70,12 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 ### Verificação pontual de publicação oficial — 04/11/2026
 
 O portal de editais da [FAPEC](https://portal.concurso.fundacaofapec.org.br/edital/ver/22) mostra a publicação de abertura sob etiqueta **001/2026**, datada de 30/10/2026; o PDF do estudante traz Edital PROGEP/UFMS **152/2026**, de 29/10/2026. Não se deve presumir correspondência de numeração nem equivalência de bytes sem baixar e conferir o arquivo remoto. **Na página oficial consultada, não foi identificada retificação que esclareça o ALERTA-DOC-01** sobre o recurso de heteroidentificação do Anexo II, p. 13. Essa inspeção pontual não comprova inexistência de ato em outros locais ou após a consulta. A anomalia permanece pendente, sem modificação normativa.
+
+### Revalidação ampliada (23/23)
+
+- Detectada a ambiguidade de perguntas como `"Anexos III e IV do cargo 523"`, anteriormente roteáveis só pelo primeiro numeral romano. A extração de numerais foi modificada para verificar **todos** os anexos citados quando houver referência a anexos. O conjunto ganhou dois conflitos adicionais.
+- **Execução comprovada:** [run 41794387965](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41794387965), SHA `a595cfa4b41aad0c6b949870439e270e6c0f9855`, `success`: **62 testes**, diagnóstico dos Anexos III/IV/V **23/23** (15 roteamentos, 8 ambiguidades rejeitadas), benchmark original 27/27 Hit@1, adversarial 9/9 Hit@1, 81 chunks íntegros e índices de 23 tópicos, 2 linhas de vagas e 2 descrições de atribuições.
+- Na consulta ao portal da FAPEC, o botão de download redirecionou para armazenamento externo com endereço temporário, mas não foi possível obter e comparar os bytes oficiais. **O hash da cópia hospedada pela FAPEC não foi verificado**, embora o hash do PDF originalmente fornecido pelo estudante esteja comprovado. Manter o documento primário e suas futuras retificações versionados separadamente.
 
 ## 8. Próxima retomada técnica
 
