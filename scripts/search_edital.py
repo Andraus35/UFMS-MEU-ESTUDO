@@ -101,6 +101,30 @@ def section_results(number,chunks,source_sha,limit=4,full=False,neighbors=False)
             if len(results)>=limit:return results
     return results
 
+def search_vaga(code,root=ROOT,full=False):
+    """Recupera SOMENTE a linha do quadro de vagas auditada no PDF original."""
+    from index_vagas import build, locate_row
+    index=build(root)
+    matches=[entry for entry in index["entries"] if entry["cargo"]==str(code)]
+    if len(matches)!=1: raise ValueError("Cargo não indexado no quadro de vagas")
+    entry=matches[0]
+    located=locate_row(entry,root)
+    result={"cargo":entry["cargo"],"page":entry["page"],"chunk_id":entry["chunk_id"],
+        "path":entry["path"],"source":index["source"],
+        "source_sha":index["source_git_blob_sha"],
+        "source_pdf_sha256":index["source_pdf_sha256"],
+        "route":"quadro_vagas_derived_verified_anchors",
+        "classification":"derived_metadata_with_literal_evidence",
+        "normalized_name":entry["normalized_name"],
+        "vacancies":entry["vacancies"],"location":entry["location"],
+        "page_char_start":located["page_char_start"],
+        "page_char_end":located["page_char_end"],
+        "pdf_row_rect":entry["pdf_row_rect"],
+        "field_evidence":located["fields"],
+        "excerpt":" ".join(located["text"].split())[:240]}
+    if full:result["text"]=located["text"]
+    return result
+
 def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False,neighbors=False):
     if cargo not in (None,'523','324'): raise ValueError('Cargo inválido')
     if area not in (None,'gerais','especificos'): raise ValueError('Área inválida')
@@ -128,6 +152,12 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
             located=section_results(item_match.group(1),chunks,source_sha,
                                     limit,full,neighbors)
             if located:return located
+    # Consulta do quadro de vagas exige cargo inequívoco e intenção de vaga/requisito.
+    target=(declared.group(1) if declared else cargo)
+    if target and area is None and re.search(
+            r'\b(vagas?|requisitos?|escolaridade|lotacao|formacao|localidade)\b',
+            normalized(query)):
+        return [search_vaga(target,root,full)]
     normalized_query=normalized(query)
     if not normalized_query:return []
     # Roteamento direto exige título completo, ID exato ou alias com limites de palavra.
@@ -210,10 +240,12 @@ def main():
     p.add_argument('--area',choices=['gerais','especificos'])
     p.add_argument('--topic',help='ID de config/topics.csv, por exemplo 523-06')
     p.add_argument('--page',type=int,choices=range(1,48))
+    p.add_argument('--vagas-cargo',choices=['523','324'],help='Linha exata do Anexo III')
     p.add_argument('--full',action='store_true',help='Incluir texto literal do trecho selecionado')
     p.add_argument('--neighbors',action='store_true',help='Indicar chunks adjacentes para expansão')
     a=p.parse_args()
-    if a.page:print(page_text(a.page))
+    if a.vagas_cargo:print(json.dumps(search_vaga(a.vagas_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
+    elif a.page:print(page_text(a.page))
     elif a.query or a.topic:print(json.dumps(search(a.query,a.limit,a.cargo,ROOT,a.topic,a.area,a.full,a.neighbors),ensure_ascii=False,indent=2))
     else:p.error('Informe uma consulta, --topic ou --page')
 
