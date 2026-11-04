@@ -170,12 +170,78 @@ def search_atribuicao(cargo, root=ROOT, full=False):
         result["text"] = span["text"]
     return result
 
-def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False,neighbors=False):
+def search_programa(cargo, root=ROOT, full=False, area=None):
+    """Inventário integral do Anexo V para um cargo, sem inferência de conteúdo."""
+    if str(cargo) not in ("523", "324"):
+        raise ValueError("Cargo não indexado no Anexo V")
+    if area not in (None, "gerais", "especificos"):
+        raise ValueError("Área inválida no Anexo V")
+    from index_edital import validate as validate_topics
+    validate_topics(root)
+    index=topic_index(root)
+    by_id={c["id"]:c for c in load(root)}
+    selected=[t for t in index["topics"]
+              if str(cargo) in t["cargo_ids"]
+              and (area is None or t["area"]==area)]
+    expected=14 if str(cargo)=="523" else 13
+    if area is None and len(selected)!=expected:
+        raise ValueError("Anexo V não contém o conjunto completo esperado")
+    if area=="gerais" and len(selected)!=4:
+        raise ValueError("Conhecimentos gerais incompletos")
+    if area=="especificos" and len(selected)!=expected-4:
+        raise ValueError("Conhecimentos específicos incompletos")
+    topics=[]
+    for t in selected:
+        locations=[]
+        for loc in t["locations"]:
+            c=by_id[loc["chunk_id"]]
+            a,b=loc["chunk_char_start"],loc["chunk_char_end"]
+            if c["page"]!=loc["page"] or not (0<=a<b<=len(c["body"])):
+                raise ValueError("Offsets de tópico incompatíveis")
+            literal=c["body"][a:b]
+            record={**loc,"excerpt":" ".join(literal.split())[:180]}
+            if full:record["text"]=literal
+            locations.append(record)
+        topics.append({"topic_id":t["topic_id"],"title":t["title"],
+                       "area":t["area"],"locations":locations})
+    return {"cargo":str(cargo),"annex":"V",
+            "route":"anexo_v_programa_literal",
+            "classification":"literal_source_with_derived_topic_index",
+            "source":index["source"],"source_sha":index["source_git_blob_sha"],
+            "source_pdf_sha256":index["source_pdf_sha256"],
+            "num_topics":len(topics),"area":area or "todos",
+            "topics":topics}
+
+
+def search_anexo(cargo, anexo, root=ROOT, full=False, area=None):
+    """Roteamento explícito: III=requisitos, IV=atribuições, V=programa."""
+    if str(cargo) not in ("523","324"):
+        raise ValueError("Cargo não indexado")
+    if anexo not in ("III","IV","V"):
+        raise ValueError("Anexo inválido (III, IV ou V)")
+    if anexo in ("III","IV") and area is not None:
+        raise ValueError("Filtro --area somente é válido para Anexo V")
+    if anexo=="III":
+        return search_vaga(cargo,root,full)
+    if anexo=="IV":
+        return search_atribuicao(cargo,root,full)
+    return search_programa(cargo,root,full,area)
+
+
+def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False,neighbors=False,anexo=None):
     if cargo not in (None,'523','324'): raise ValueError('Cargo inválido')
     if area not in (None,'gerais','especificos'): raise ValueError('Área inválida')
     if area=='especificos' and cargo is None:
         raise ValueError('Informe --cargo para conhecimentos específicos')
     if not 1<=limit<=20: raise ValueError('Limite inválido')
+    if anexo is not None and anexo not in ('III','IV','V'):
+        raise ValueError('Anexo inválido')
+    if anexo is not None and cargo is None:
+        raise ValueError('Informe --cargo para selecionar o anexo')
+    if anexo in ('III','IV') and topic is not None:
+        raise ValueError('Tópico do Anexo V incompatível com outro anexo')
+    if anexo in ('III','IV') and area is not None:
+        raise ValueError('Filtro de área somente para Anexo V')
     # Não transformar perguntas de comparação em resposta parcial sobre um cargo.
     mentioned=re.findall(r'\b(?:cargo|c[oó]digo)\s*(?:n[º°.]?\s*)?(523|324)\b',query,re.I)
     if len(set(mentioned))>1:
@@ -184,6 +250,10 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
     declared=re.search(r'\b(?:cargo|c[oó]digo)\s*(?:n[º°.]?\s*)?(523|324)\b',query,re.I)
     if cargo and declared and declared.group(1)!=cargo:
         raise ValueError('Cargo da consulta contradiz --cargo')
+    if anexo is not None:
+        if topic is not None and anexo=='V':
+            raise ValueError('Use --topic separadamente de --anexo V')
+        return [search_anexo(cargo,anexo,root,full,area)]
     index=topic_index(root)
     chunks=load(root)
     selected=[t for t in index['topics']
@@ -201,9 +271,41 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
             located=section_results(item_match.group(1),chunks,source_sha,
                                     limit,full,neighbors)
             if located:return located
-    # Atribuições do Anexo IV não são os requisitos do Anexo III.
+    # Os anexos têm objetos jurídicos distintos; consultas misturadas falham sem
+    # usar similaridade lexical como substituto da evidência normativa.
     target=(declared.group(1) if declared else cargo)
     query_clean=normalized(query)
+    ann_mentions=re.findall(r'\banexos?\s+(iii|iv|v)\b',query_clean)
+    annex_name={"iii":"III","iv":"IV","v":"V"}
+    explicit_annexes={annex_name[x] for x in ann_mentions}
+    role_intents=set(explicit_annexes)
+    if re.search(r'\b(atribuicoes?|funcoes?|responsabilidades?|o que faz|descricao do cargo|tarefas do cargo)\b',
+                 query_clean):
+        role_intents.add("IV")
+    if re.search(r'\b(vagas?|requisitos?|escolaridade|lotacao|formacao|localidade|habilitacao para o cargo)\b',
+                 query_clean):
+        role_intents.add("III")
+    if re.search(r'\b(conteudo programatico|ementa|o que cai|conhecimentos especificos|conhecimentos gerais|disciplinas|materias da prova|assuntos (?:da prova|cobrados)|topicos (?:da prova|cobrados))\b',
+                 query_clean):
+        role_intents.add("V")
+    if target and len(role_intents)>1:
+        if role_intents=={"III","IV"}:
+            raise ValueError("Consulta mistura atribuições e requisitos; consulte separadamente")
+        raise ValueError("Consulta mistura anexos distintos; consulte cada anexo separadamente")
+    if target and role_intents and area is None or target and role_intents=={"V"} and area is not None:
+        chosen=next(iter(role_intents))
+        if chosen in ("III","IV") and area is not None:
+            raise ValueError("Filtro de área não é válido para este anexo")
+        if chosen=="V":
+            inferred_area=area
+            if inferred_area is None:
+                if "conhecimentos especificos" in query_clean or "conteudo especifico" in query_clean:
+                    inferred_area="especificos"
+                elif "conhecimentos gerais" in query_clean:
+                    inferred_area="gerais"
+            return [search_anexo(target,"V",root,full,inferred_area)]
+        return [search_anexo(target,chosen,root,full)]
+
     attr_intent=bool(re.search(
         r'\b(atribuicoes?|funcoes?|responsabilidades?|o que faz|descricao do cargo)\b',
         query_clean))
@@ -302,11 +404,15 @@ def main():
     p.add_argument('--topic',help='ID de config/topics.csv, por exemplo 523-06')
     p.add_argument('--page',type=int,choices=range(1,48))
     p.add_argument('--vagas-cargo',choices=['523','324'],help='Linha exata do Anexo III')
+    p.add_argument('--conteudo-cargo',choices=['523','324'],help='Programa completo do Anexo V')
+    p.add_argument('--anexo',choices=['III','IV','V'],help='Selecionar fonte de forma explícita (requer --cargo)')
     p.add_argument('--atribuicoes-cargo',choices=['523','324'],help='Descrição literal do Anexo IV')
     p.add_argument('--full',action='store_true',help='Incluir texto literal do trecho selecionado')
     p.add_argument('--neighbors',action='store_true',help='Indicar chunks adjacentes para expansão')
     a=p.parse_args()
-    if a.atribuicoes_cargo:print(json.dumps(search_atribuicao(a.atribuicoes_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
+    if a.anexo:print(json.dumps(search_anexo(a.cargo,a.anexo,ROOT,a.full,a.area),ensure_ascii=False,indent=2))
+    elif a.conteudo_cargo:print(json.dumps(search_programa(a.conteudo_cargo,ROOT,a.full,a.area),ensure_ascii=False,indent=2))
+    elif a.atribuicoes_cargo:print(json.dumps(search_atribuicao(a.atribuicoes_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
     elif a.vagas_cargo:print(json.dumps(search_vaga(a.vagas_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
     elif a.page:print(page_text(a.page))
     elif a.query or a.topic:print(json.dumps(search(a.query,a.limit,a.cargo,ROOT,a.topic,a.area,a.full,a.neighbors),ensure_ascii=False,indent=2))
