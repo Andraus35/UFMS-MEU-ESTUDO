@@ -9,6 +9,7 @@ import argparse
 import base64
 import fcntl
 import json
+from datetime import datetime, timezone
 import os
 import re
 import stat
@@ -22,6 +23,7 @@ from pathlib import Path
 from trusted_governance import REPOSITORY, _check_sha, enforce
 
 CHECK_NAME = "ufms-governance/app-verified"
+MAX_CHECK_REUSE_SECONDS = 600  # 10-minute refresh; NOT a GitHub-enforced lease
 APP_ID = re.compile(r"^[1-9][0-9]{0,18}$")
 
 
@@ -99,6 +101,21 @@ def installation_token(jwt, app_id):
     if not isinstance(answer, dict) or not isinstance(answer.get("token"), str):
         raise ValueError("No valid short-lived installation token")
     return answer["token"]
+
+
+def recently_completed(check, now=None):
+    """Local polling freshness only; GitHub does NOT enforce this TTL at merge."""
+    if not isinstance(check, dict) or not isinstance(check.get("completed_at"), str):
+        return False
+    try:
+        ts = datetime.fromisoformat(check["completed_at"].replace("Z", "+00:00"))
+        if ts.tzinfo is None:
+            return False
+        reference = time.time() if now is None else now
+        age = reference - ts.timestamp()
+        return 0 <= age <= MAX_CHECK_REUSE_SECONDS
+    except (ValueError, OverflowError):
+        return False
 
 
 def merge_target(pr_number, metadata, installation):
@@ -203,7 +220,9 @@ def verify_one(pr_number, installation, app_id, public_key):
     own.sort(key=lambda x: x.get("id", 0), reverse=True)
     if own and (own[0].get("status") == "completed"
                 and own[0].get("conclusion") == verdict
-                and own[0].get("external_id") == external_id):
+                and own[0].get("external_id") == external_id
+                and own[0].get("head_sha") == merge_sha
+                and recently_completed(own[0])):
         return {"pr": pr_number, "head": head, "merge_sha": merge_sha,
                 "conclusion": verdict, "check_name": CHECK_NAME,
                 "app_id": int(app_id), "reused_verified_check": True}
