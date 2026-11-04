@@ -32,4 +32,8 @@ python scripts/rebuild.py --check
 
 ## Fonte e limites
 
-O documento primário de escopo é o edital UFMS nº 152 de 29/10/2026. Veja `docs/EDITAL.md` e `docs/FONTES.md`. Em caso de retificação, interrompa a propagação de dados antigos até conferir a versão oficial.
+O documento primário de escopo é o edital UFMS nº 152 de 29/10/2026. Fonte integral em `EDITAL_UFMS_152_2026.md`; índice e chunks em `edital/`. Veja também `docs/EDITAL.md` e `docs/FONTES.md`. Em caso de retificação, interrompa a propagação de dados antigos até conferir a versão oficial.
+
+## Busca de baixo custo
+
+Exemplos: `python scripts/search_edital.py 'conduta estudantil' --cargo 324 --limit 4` e `python scripts/search_edital.py --page 29`. Conferir integridade: `python scripts/chunk_edital.py --check`.

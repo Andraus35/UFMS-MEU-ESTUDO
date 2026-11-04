@@ -13,6 +13,8 @@ Leia nesta ordem, usando a versão do branch/commit atual:
 5. `memory/INDEX.md`
 6. `memory/HANDOFF.md`
 7. `state/CURRENT.json`
+8. `EDITAL_UFMS_152_2026.md` — conferir a fonte integral, recuperando apenas trechos pertinentes
+9. `edital/INDEX.md` — leitura obrigatória para localizar páginas e chunks
 
 Se os arquivos já estiverem carregados no mesmo contexto, confirme seu SHA ou versionamento antes de reutilizá-los. **Não afirme ter lido/validado arquivos sem acesso real.** O script `scripts/bootstrap.py` facilita o carregamento, mas não substitui a observação dessas instruções por um agente.
 
@@ -20,7 +22,7 @@ Se os arquivos já estiverem carregados no mesmo contexto, confirme seu SHA ou v
 
 1. Identificar se a solicitação é planejamento, recomendação, resultado, correção ou manutenção.
 2. Se houver dados novos, conferi-los e registrar apenas mediante capacidade de escrita e autorização.
-3. Consultar `config/concursos.json`, `config/topics.csv`, `rules/STUDY.md` e os eventos **sob demanda**, não carregar o histórico inteiro.
+3. Para decisões sobre o edital, consultar índice e 3–5 chunks relevantes, expandindo contexto quando necessário. Citar a página e o trecho. Consultar `config/concursos.json`, `config/topics.csv`, `rules/STUDY.md` e os eventos **sob demanda**, não carregar o histórico inteiro.
 4. Aplicar guardrails, distinguir fato de inferência e escolher livremente uma intervenção pedagógica permitida.
 5. Descrever caderno com ID, plataforma, filtros, assunto, nível, quantidade sugerida e justificativa; não inventar disponibilidade de questões.
 6. Persistir com validação, commit confirmado e handoff resumido quando a interação produzir mudanças autorizadas.

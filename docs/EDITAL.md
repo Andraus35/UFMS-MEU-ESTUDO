@@ -15,3 +15,7 @@ Edital PROGEP/UFMS nº 152 de 29/10/2026. Banca FAPEC. Prova objetiva 17/01/2027
 **Escopo:** `config/topics.csv` usa os blocos de assuntos do Anexo V. O cadastro de subtópicos poderá ser detalhado depois, sem suprimir os blocos originais. A estrutura de um assunto no TEC/Qconcursos pode diferir da classificação do edital.
 
 **Pendente:** verificar retificações em fonte oficial antes da operacionalização dos cadernos.
+
+## Busca do edital
+
+Fonte integral na raiz: `EDITAL_UFMS_152_2026.md`. Índice de recuperação: `edital/INDEX.md`. Chunks: `edital/chunks/`. Manifest com página/offsets: `edital/manifest.json`. Consultar fragmentos relevantes e ampliar o contexto antes de concluir. Retificações exigem verificação própria.

@@ -10,3 +10,5 @@
 8. **Fontes e escopo:** edital e retificações prevalecem sobre classificações dos sites; distinguir versão original de versão atualizada.
 9. **Falha segura:** se arquivos estiverem ausentes, origem for duvidosa, escrita falhar ou dados contradisserem o histórico, registrar a pendência sem inventar conclusão.
 10. **Compactação:** checkpoints contêm fatos e referências, não transcrições completas; contexto pode ser recuperado por assunto e janela temporal.
+
+11. **Edital obrigatório:** conferir a fonte integral da raiz, ler `edital/INDEX.md` e os trechos aplicáveis. Não afirmar leitura integral quando apenas trechos foram recuperados.

@@ -39,7 +39,12 @@ def validate(root=ROOT):
     expected_rows = [{k: str(v) for k, v in row.items()} for row in rows]
     if actual_rows != expected_rows:
         raise ValueError("PROGRESS.csv divergente do histórico; usar rebuild.py --write")
-    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos"
+    try:
+        from chunk_edital import validate as check_edital
+    except ModuleNotFoundError:
+        from scripts.chunk_edital import validate as check_edital
+    chunks = check_edital(root)
+    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados"
 
 
 if __name__ == "__main__":

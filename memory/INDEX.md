@@ -11,3 +11,5 @@
 - `docs/`: explicação metodológica e referências; leitura sob demanda.
 
 Não carregar todo o histórico em cada chamada. **Não condensar/reescrever eventos originais em resumos de memória.**
+
+- `edital/INDEX.md`: leitura obrigatória; o edital integral e os chunks são consultados seletivamente.
