@@ -62,3 +62,15 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - Limites permanecem: não há deploy Oracle, OAuth Google Oracle nem motor IA.
 - Próximo ciclo: verificar CI, auditoria de integridade de dados e fronteira
   entre agenda, Telegram e memória pedagógica.
+
+## Ciclo 3 desta retomada — validação Google Calendar
+
+- START esperado: \`fb957fd9e167dea06296fab1decd116cf6c4f265\`.
+- Bug identificado em auditoria: ID hexadecimal de SHA contém letras w-z,
+  incompatíveis com a regra de IDs \`base32hex\` do Calendar API.
+- Correção: base32hex determinístico; HTTP 409 agora exige \`events.get\` e
+  comprovação de equivalência do evento, com erro em divergência.
+- Contraprovas: 128 IDs válidos, duplicidade verdadeira versus falsa,
+  datas sem UTC offset, intervalo invertido.
+- Fonte: https://developers.google.com/workspace/calendar/api/v3/reference/events
+- Nenhum evento real criado; validar CI/readback no novo SHA.

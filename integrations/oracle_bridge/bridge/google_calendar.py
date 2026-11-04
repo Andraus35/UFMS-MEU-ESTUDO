@@ -5,6 +5,7 @@ O usuário deve conceder OAuth separadamente para esta aplicação Oracle.
 """
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import os
@@ -63,13 +64,48 @@ class GoogleCalendar:
         })
         return result["id"]
 
+    def _get_event(self, event_id: str) -> dict:
+        path = ("/calendars/" + parse.quote(self.calendar_id, safe="") +
+                "/events/" + parse.quote(event_id, safe=""))
+        req = request.Request(self.API + path, headers={
+            "Authorization": "Bearer " + self._token()
+        }, method="GET")
+        with request.urlopen(req, timeout=20) as reply:
+            return json.load(reply)
+
+    @staticmethod
+    def _matching_event(existing: dict, expected: dict) -> bool:
+        """Trata equivalência de instantes, mesmo com offsets diferentes."""
+        def utc_time(value: str):
+            return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
+        try:
+            return (
+                existing.get("id") == expected["id"] and
+                existing.get("status", "confirmed") != "cancelled" and
+                existing.get("summary") == expected["summary"] and
+                utc_time(existing["start"]["dateTime"]) == utc_time(expected["start"]["dateTime"]) and
+                utc_time(existing["end"]["dateTime"]) == utc_time(expected["end"]["dateTime"])
+            )
+        except (KeyError, TypeError, ValueError, AttributeError):
+            return False
+
     def create_event(self, start: datetime, end: datetime, title: str, key: str) -> str:
         if not self.calendar_id or self.calendar_id == "primary":
             raise ValueError("ID explícito do calendário UFMS obrigatório")
-        event_id = hashlib.sha256(("ufms:" + key).encode()).hexdigest()[:32]
+        if any(x.tzinfo is None or x.utcoffset() is None for x in (start, end)):
+            raise ValueError("Datas de eventos exigem fuso")
+        if not start < end or end - start > timedelta(hours=12):
+            raise ValueError("Intervalo de evento inválido")
+        if not isinstance(title, str) or not 1 <= len(title.strip()) <= 160:
+            raise ValueError("Título de evento inválido")
+        if not isinstance(key, str) or not 1 <= len(key) <= 160:
+            raise ValueError("Chave do evento inválida")
+        # Google exige base32hex: 0-9 e a-v. Hex SHA256 puro contém w-z.
+        digest = hashlib.sha256(("ufms:" + key).encode()).digest()
+        event_id = base64.b32hexencode(digest).decode("ascii").lower().rstrip("=")[:32]
         payload = {
             "id": event_id,
-            "summary": title,
+            "summary": title.strip(),
             "start": {"dateTime": start.isoformat()},
             "end": {"dateTime": end.isoformat()},
             "reminders": {"useDefault": False, "overrides": [
@@ -82,8 +118,11 @@ class GoogleCalendar:
             return result["id"]
         except error.HTTPError as exc:
             if exc.code == 409:
-                # O ID foi criado a partir do update Telegram: retry idempotente.
-                return event_id
+                # 409 sozinho não prova identidade: conferir evento efetivamente existente.
+                existing = self._get_event(event_id)
+                if self._matching_event(existing, payload):
+                    return event_id
+                raise RuntimeError("Conflito de evento sem equivalência de conteúdo") from None
             raise
 
 

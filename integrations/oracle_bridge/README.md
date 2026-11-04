@@ -105,3 +105,13 @@ Isso é entrega conservadora **at-most-once automático**, não garantia de
 recebimento. `bridge.reconcile` permite marcar estado após verificação
 humana, sem expor os conteúdos. A CI testa reinício, migração SQLite antiga,
 tentativa duplicada, payload sigiloso e troca de estado.
+
+## Correção Google Calendar (ciclo 4)
+
+- ID estável de evento é codificado em **base32hex**, não hexdigest,
+  respeitando os caracteres [0-9a-v] exigidos pela API Google.
+- No HTTP 409, o serviço faz leitura de \`events.get\` e somente confirma
+  sucesso se ID, título e instantes de início/fim corresponderem; conflitos
+  divergentes ou não verificáveis falham sem afirmar criação.
+- Datas sem fuso, duração inválida e título/chave vazios são rejeitados
+  antes da rede. Não houve chamadas reais à conta Google neste ciclo.
