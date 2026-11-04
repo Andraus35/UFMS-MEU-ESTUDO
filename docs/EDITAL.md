@@ -18,4 +18,6 @@ Edital PROGEP/UFMS nº 152 de 29/10/2026. Banca FAPEC. Prova objetiva 17/01/2027
 
 ## Busca do edital
 
+O índice derivado `edital/topic_index.json` conecta os 23 tópicos da configuração aos trechos literais do edital com offsets por página. Consulte `edital/INDEX.md` para roteamento por cargo, assunto, seção e página. Títulos e aliases são metadados derivados; não alteram a redação oficial. O validador `scripts/index_edital.py --check` integra o gate de CI e `scripts/benchmark_edital.py` executa consultas versionadas. A qualidade da transcrição de tabelas deve ser verificada no PDF original quando houver ambiguidade.
+
 Fonte integral na raiz: `EDITAL_UFMS_152_2026.md`. Índice de recuperação: `edital/INDEX.md`. Chunks: `edital/chunks/`. Manifest com página/offsets: `edital/manifest.json`. Consultar fragmentos relevantes e ampliar o contexto antes de concluir. Retificações exigem verificação própria.
