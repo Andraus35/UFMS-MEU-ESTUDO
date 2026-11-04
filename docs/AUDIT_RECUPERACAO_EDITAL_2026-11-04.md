@@ -33,11 +33,11 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 - Conjunto adicional **fora das frases de treino dos aliases**, mas preparado na mesma frente de engenharia (não equivale a auditoria externa independente): `tests/fixtures/adversarial_cases.json` com 17 contraprovas: recuperações lexicais, contaminação entre cargos, citações de leis que parecem números de item e conflitos explícitos.
 - `tests/test_adversarial.py` verifica isolamento e falha segura; `scripts/benchmark_adversarial.py` mede o conjunto adicional na CI.
 - Busca por `--cargo` agora impede leitura lexical dos programas de outros cargos **nas páginas 29–45**, mesmo sem `--area`. Para consultas com várias palavras, um único termo coincidente não basta no BM25. Se consulta e filtro identificam cargos distintos, ocorre erro explícito.
-- **Limitação residual conhecida:** quadro de vagas (p. 14–18) e atribuições (p. 20–28) ainda não têm intervalos específicos por linha de cargo. Um resultado lexical nessas páginas não deve ser interpretado como requisito do cargo sem conferência visual da linha da tabela.
+- **Limitação residual:** o quadro de vagas (p. 14–18) passou a ter recortes auditáveis para **523 e 324**, usando `edital/vagas_index.json`, `scripts/index_vagas.py` e a opção `--vagas-cargo`. As linhas dos **demais** cargos e as atribuições (p. 20–28) não foram indexadas campo a campo. Para os dois cargos-alvo, a qualificação integral deve continuar sendo cotejada com o PDF quando houver dúvida.
 
 ## 5. Consulta a fontes externas
 
-- Portal da banca FAPEC para o concurso UFMS: `https://portal.concurso.fundacaofapec.org.br/edital/ver/22`, consultado em 04/11/2026. A página mostra a publicação de abertura com etiqueta `001/2026`; **não presumir** que a numeração seja idêntica ao Edital PROGEP/UFMS nº 152/2026.
+- Portal da banca FAPEC para o concurso UFMS: `https://portal.concurso.fundacaofapec.org.br/edital/ver/22`, consultado em 04/11/2026. A página mostra etiqueta `001/2026`, embora o PDF disponibilizado ao estudante traga `152/2026`. O link **DOWNLOAD** do portal redireciona a um arquivo com o mesmo nome (`e5f1c2b364f19beadf2685d8fb836065.pdf`) do PDF original inspecionado, mas os bytes da cópia remota não foram obtidos para recalcular o hash. **Não equiparar a etiqueta ao número do ato nem afirmar equivalência criptográfica do download remoto sem verificá-lo.**
 - Boletim oficial UFMS: `https://boletimoficial.ufms.br/`.
 - Nenhuma retificação específica foi **comprovada** nesta inspeção pontual; isso **não comprova inexistência**. A fonte canônica não foi atualizada com atos externos.
 - Evitar confusão com outros órgãos da UFMS: há um Edital **152/2026-PROPP** (iniciação científica) que é **outro certame**, não retificação do Edital 152/2026-PROGEP.
@@ -52,5 +52,5 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 
 1. Reconfirmar HEAD exato e CI do PR #1, sem merge.
 2. Conferir novamente fonte oficial FAPEC/Boletim quanto à anomalia do Anexo II, registrando eventual ato separado.
-3. Avaliar se é necessário indexar linha/célula de vagas e requisitos dos cargos 523 e 324 para impedir contaminação em p. 14–18, com contraprovas e evidências.
+3. **Concluído:** indexação de linhas 523 e 324 com âncoras de código, vagas, localidade e alternativas de formação em `edital/vagas_index.json`. Para novas frentes, examinar a descrição sumária de atribuições dos cargos no Anexo IV (pp. 20–28) antes de estender o índice.
 4. Ampliar holdout com perguntas não usadas na construção dos aliases; manter testes adversariais e documento canônico intacto.
