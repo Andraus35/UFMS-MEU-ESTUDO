@@ -1,0 +1,75 @@
+{
+  "schema": "UFMS-TLC-STATIC-PREFLIGHT-1",
+  "label": "NOT_OFFICIAL_TLC_VALIDATION",
+  "official_sources": {
+    "validate_plan_py": "82f7c754fb9542e659e13a9732cf89d9a25def1f",
+    "validate_checks_py": "be14d1956cc5afaba6009608c71d7ec1a216c29f",
+    "validate_verification_py": "b2035193543df146dc5c714979b27a94972d8da4",
+    "lean_config_py": "b751517ba653478cd69330e590c8f0de7a739c24"
+  },
+  "findings": [
+    {
+      "id": "SHA_plan.md",
+      "status": "PASS",
+      "detail": "fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c"
+    },
+    {
+      "id": "SHA_checks.md",
+      "status": "PASS",
+      "detail": "50dff7d0f8ff6f9d6ce7a66ea624cd06d6a6f90bb8055be18dd74461b5481bc0"
+    },
+    {
+      "id": "APPROVAL_RECEIPT",
+      "status": "PASS",
+      "detail": "aceite externo vinculado a snapshot e checks, não incorporado no PLAN"
+    },
+    {
+      "id": "TLC_APPROVED_IN_SIBLING_PLAN",
+      "status": "BLOCKED",
+      "detail": "O validate_checks.py oficial exige uma linha **Approved**: YYYY-MM-DD - user: \"...\" no plan.md; arquivo separado não atende essa condição"
+    },
+    {
+      "id": "SECTIONS",
+      "status": "PASS",
+      "detail": {
+        "Checks": true,
+        "Coverage": true,
+        "Swept": true
+      }
+    },
+    {
+      "id": "CHECKS_27_AND_PROOFS",
+      "status": "PASS",
+      "detail": {
+        "total": 27,
+        "unique": 27,
+        "with_proof": 27
+      }
+    },
+    {
+      "id": "TLC_BUILD_EXECUTE_SINGLE_HEAD",
+      "status": "BLOCKED",
+      "detail": "PR #5 HEAD não possui scripts/ci_gate_contract.py, scripts/write_policy.py e scripts/validate.py; Build refere-se ao PR #1 em outro SHA"
+    },
+    {
+      "id": "COMPOSITION_MANIFEST_CURRENCY",
+      "status": "WARN",
+      "detail": "Manifesto antigo: foi produzido antes de v0.3-r1 e da aprovação; não pode ser recibo da candidata atual"
+    },
+    {
+      "id": "TLC_OFFICIAL_EXECUTION",
+      "status": "NOT_RUN",
+      "detail": "npx falhou EAI_AGAIN registry.npmjs.org; script oficial não executado"
+    },
+    {
+      "id": "INDEPENDENT_GQD",
+      "status": "PENDING",
+      "detail": "auditor independente ainda não examinou HEAD novo"
+    },
+    {
+      "id": "FUNCTIONAL_PROOFS",
+      "status": "NOT_RUN",
+      "detail": "0/27 provas funcionais da feature"
+    }
+  ]
+}

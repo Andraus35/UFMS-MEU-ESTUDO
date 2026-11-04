@@ -1,0 +1,47 @@
+{
+  "schema": "ufms-documentary-composition-snapshot-1",
+  "status": "FROZEN_DOCUMENTARY_REFERENCES_ONLY_NOT_AN_EXECUTED_COMPOSITE",
+  "repository": "Andraus35/UFMS-MEU-ESTUDO",
+  "as_of": "2026-11-04",
+  "candidate_at_audit_start": {
+    "pr": 5,
+    "commit_sha": "64a0a66d290f6fc7d01318403b6948f43adbe385",
+    "tree_sha": "e5c3607769ec29f92018c702756a9faf5dc6c332",
+    "approved_plan_sha256": "fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c",
+    "checks_sha256": "50dff7d0f8ff6f9d6ce7a66ea624cd06d6a6f90bb8055be18dd74461b5481bc0"
+  },
+  "approval_event": {
+    "text": "APROVO",
+    "date": "2026-11-04",
+    "presented_commit_sha": "aa66ac2945cc35c72bbd06401db977903dcbb3c4",
+    "plan_blob_git_sha1": "4257e971f1417cc82461cf3e9117c5598afb7967"
+  },
+  "dependencies": [
+    {
+      "role": "technical_read_only",
+      "pr": 1,
+      "commit_sha": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+      "checkout": "separate, no merge"
+    },
+    {
+      "role": "pedagogical_read_only",
+      "pr": 2,
+      "commit_sha": "6e1fa661a33565d580f99962c3510d5361decbe6",
+      "checkout": "separate, no merge"
+    },
+    {
+      "role": "independently_rejected_previous_spec",
+      "pr": 4,
+      "commit_sha": "0db458a50447c2a9f8e7131f402dc3be9c0db313",
+      "checkout": "read-only historical object"
+    }
+  ],
+  "assembly": "Read each component at exact SHA and hash bytes; create temporary separate worktrees; explicit per-file provenance; no single-Git-HEAD claim; any collision aborts; no external effects",
+  "actual_execution": false,
+  "official_tlc_validation": "NOT_RUN_EAI_AGAIN",
+  "independent_GQD": "PENDING_REAUDIT",
+  "VERIFY_C": "NOT_RUN",
+  "VERIFY_O": "BLOCKED",
+  "personal_results_writes_enabled": false,
+  "composition_digest_sha256": "28186579636dc3836ff553aa20f6a382ba4ee96dcf020b28ebef72e7bb2d4668"
+}

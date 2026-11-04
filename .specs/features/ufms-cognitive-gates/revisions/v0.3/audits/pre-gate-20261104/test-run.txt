@@ -1,0 +1,15 @@
+test_check_change_detected (test_tlc_preflight.PreflightTests.test_check_change_detected) ... ok
+test_composition_manifest_outdated (test_tlc_preflight.PreflightTests.test_composition_manifest_outdated) ... ok
+test_fake_approval_receipt_rejected (test_tlc_preflight.PreflightTests.test_fake_approval_receipt_rejected) ... ok
+test_frozen_hashes (test_tlc_preflight.PreflightTests.test_frozen_hashes) ... ok
+test_frozen_plan_change_detected_even_with_inline_marker (test_tlc_preflight.PreflightTests.test_frozen_plan_change_detected_even_with_inline_marker) ... ok
+test_gates_not_falsely_approved (test_tlc_preflight.PreflightTests.test_gates_not_falsely_approved) ... ok
+test_human_acceptance_receipt_binding (test_tlc_preflight.PreflightTests.test_human_acceptance_receipt_binding) ... ok
+test_no_false_runtime_success (test_tlc_preflight.PreflightTests.test_no_false_runtime_success) ... ok
+test_noop_proof_absence_detected (test_tlc_preflight.PreflightTests.test_noop_proof_absence_detected) ... ok
+test_official_inline_approval_blocked (test_tlc_preflight.PreflightTests.test_official_inline_approval_blocked) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.034s
+
+OK
