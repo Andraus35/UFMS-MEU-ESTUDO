@@ -240,3 +240,16 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   com comando externo delimitado por aspas simples.
 - Corrigida a chamada de inicialização SQLite com escape explícito de
   aspas duplas no argumento Python. Exigir CI real age/restore verde.
+
+## Decisão de escopo — simplicidade e custo zero (04/11/2026)
+
+- START atual do PR #3: `d64ef9bbf71526773e98069b6b04a6285b92f9ee`; PRs #1 e #2 independentes.
+- O usuário restringiu aplicativos Google ao indispensável e gratuito.
+- Seleção: **somente Google Agenda** integrada à Oracle; Telegram é
+  interface Android, SQLite é estado operacional, GitHub é fonte versionada.
+- Fora do escopo: Tasks, Sheets, Forms, Docs, Drive, Keep, Gmail, YouTube,
+  Chat, Meet, Apps Script e Gemini Notebook como dependências.
+- API OpenAI por token não é gratuita: manter LLM desligado; Gemini API
+  free-tier é somente candidata sujeita a consentimento e privacidade.
+- Nenhuma credencial, autorização OAuth ou serviço real foi alterado.
+- Fonte: `docs/integracoes/DECISAO_STACK_MINIMA_GRATUITA.md`.
