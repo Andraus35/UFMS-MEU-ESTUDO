@@ -21,11 +21,21 @@ Status: decisão de escopo; NÃO é homologação nem autorização de implanta�
 | --- | --- | --- |
 | Telegram Bot API | Interface Android Tutor/Coach, notificações e feedback | API gratuita |
 | Google Agenda (Calendar) | Compromissos visíveis no Android, somente calendário UFMS | API padrão sem cobrança dentro das cotas; monitorar limites |
+| Gemini Notebook (antigo NotebookLM) | Estudo de fontes oficiais, explicações e revisão no Android | **Manter no acesso padrão gratuito**, sem assinatura e sem integração API obrigatória |
 | GitHub (repositório existente) | Fonte versionada de edital, estratégia, regras e código | Plano já disponível; não criar serviços pagos |
 | Oracle Cloud | Execução da ponte em infraestrutura própria | Apenas instância e serviços elegíveis Always Free; não assumir capacidade garantida |
 | SQLite + Python | Registro operacional, lembretes e progresso consentido | Software livre, sem serviço SaaS |
 
-**Google Agenda é o único app Google com integração de conta aprovada.**
+**Duas ferramentas Google são mantidas: Google Agenda e Gemini Notebook.**
+Apenas o **Agenda** tem integração de conta automatizada prevista no protótipo
+Oracle. O **Gemini Notebook** permanece disponível ao aluno como ferramenta
+Android/web de estudo, usando o plano padrão gratuito, **sem assinatura,
+conector obrigatório, sincronização de dados pessoais ou API**. Fontes
+públicas/permitidas poderão ser importadas manualmente para notebooks de
+estudo; o uso não pressupõe que Tutor e Coach tenham acesso ao conteúdo do
+Notebook. Caso uma API oficial de integração seja proposta no futuro,
+exigir validação de acesso, gratuidade, cota, consentimento e testes.
+
 Calendário deve ser secundário, criado pela aplicação, usando escopo
 `calendar.app.created` sempre que suficiente. Não acessar agenda pessoal
 principal, contatos ou e-mails. OAuth do servidor Oracle é separado do
@@ -40,10 +50,27 @@ aplicativo externo em status Testing (7 dias).
 - Google Docs/Drive/Keep: material estratégico já tem fonte versionada
   no GitHub; importação de PDF por Android pode ocorrer manualmente.
 - Gmail/Contacts/YouTube/Google Chat/Meet: fora do escopo necessário.
-- Gemini Notebook/NotebookLM: sem dependência, assinatura ou API exigida.
 - Apps Script: não necessário porque os gatilhos e regras estão na Oracle.
+- Recursos premium do Gemini Notebook: fora do escopo; quando a cota
+  gratuita terminar, aguardar renovação, nunca fazer upgrade automático.
 - Provedor de IA com preço por token (inclusive OpenAI Responses API):
   **NÃO habilitar na Oracle** com a política de custo zero.
+
+## Uso pedagógico do Gemini Notebook (sem automação obrigatória)
+
+- Importar edital e materiais **públicos e cuja utilização seja autorizada**,
+  preferencialmente com identificação de fonte, revisão e data.
+- Consultar os documentos para esclarecer dúvidas, gerar revisões e
+  estudar por perguntas, sem presumir que conteúdos gerados são prova da fonte.
+- Evitar dados pessoais sensíveis e respostas do aluno sem consentimento
+  informado específico. O Tutor/Coach não deve afirmar ter consultado
+  notebooks que não acessou.
+- A experiência Android tem recursos limitados frente à versão web; manter
+  a opção do navegador para funcionalidades não disponíveis no aplicativo.
+- O plano sem assinatura tem limites de uso sujeitos a mudança; respeitar
+  os limites gratuitos em vez de contratar Plus/Pro/Ultra.
+- Gemini Notebook **não é** a mesma coisa que Gemini Developer API: manter
+  o aplicativo não habilita automaticamente motor de IA dos bots Oracle.
 
 ## Motor conversacional: gate específico ainda aberto
 
@@ -79,9 +106,17 @@ mas **sem afirmar conversa com IA habilitada**.
   https://core.telegram.org/
 - Gemini API preços e privacidade:
   https://ai.google.dev/gemini-api/docs/pricing
+- Google: Gemini Notebook renomeado em julho/2026:
+  https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/
+- Google: plano padrão gratuito do Gemini Notebook:
+  https://support.google.com/gemininotebook/answer/16213268?hl=pt-BR
+- Google: limites de uso do Gemini Notebook no Android:
+  https://support.google.com/gemininotebook/answer/17670842?co=GENIE.Platform%3DAndroid
 
 ## Critérios de aceite futuro
 
+- Preservar Google Agenda **e Gemini Notebook gratuito** na seleção mínima;
+  não criar integração programática para o Notebook sem novo gate.
 - Não incluir novas integrações Google sem justificar necessidade concreta.
 - Testar bloqueio de funcionalidades de API paga, custos e cotas.
 - Confirmar escopo OAuth mínimo e que alertas não dependem de assinatura.

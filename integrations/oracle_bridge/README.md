@@ -234,3 +234,15 @@ O módulo \`bridge.ops_backup\` implementa:
 
 **Operação e contraprovas:** consulte
 [OPS-01 — Procedimento operacional](../../docs/integracoes/OPS01_BACKUP_ORACLE_v0.5.md).
+
+## Aplicativo Android complementar mantido — Gemini Notebook
+
+O aluno pode usar o **Gemini Notebook (antigo NotebookLM)** para estudar
+fontes públicas e autorizadas, fazer perguntas e revisar conteúdos pelo
+Android/web no acesso **padrão gratuito**, sem assinatura. Ele complementa
+os bots Tutor/Coach, mas **não está automaticamente integrado** à ponte
+Oracle e não fornece ao modelo dos bots acesso a seus notebooks.
+O único aplicativo Google com integração de conta prevista no MVP é
+**Google Agenda**. Os limites gratuitos do Gemini Notebook devem ser
+respeitados, sem upgrade automático e sem novas credenciais nesta etapa.
+Veja [decisão de ferramentas mínimas](../../docs/integracoes/DECISAO_STACK_MINIMA_GRATUITA.md).

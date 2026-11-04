@@ -253,3 +253,22 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   free-tier é somente candidata sujeita a consentimento e privacidade.
 - Nenhuma credencial, autorização OAuth ou serviço real foi alterado.
 - Fonte: `docs/integracoes/DECISAO_STACK_MINIMA_GRATUITA.md`.
+
+## Retificação expressa de escopo — manter Gemini Notebook (04/11/2026)
+
+- START verificado no PR #3: `f2bd8f1377a62d39b9c7d694898af50de8e185d0`; sem merge.
+- A decisão anterior de não manter Gemini Notebook no escopo foi
+  **substituída** por instrução expressa do usuário nesta conversa.
+- Núcleo mínimo: Google Agenda (integração Calendar API prevista) **e**
+  Gemini Notebook/antigo NotebookLM (ferramenta de estudo no Android/web,
+  nível padrão gratuito, sem assinaturas e sem integração por API obrigatória).
+- Telegram, Oracle Always Free, GitHub e SQLite permanecem conforme já
+  previsto. Não adicionar Google Tasks, Forms, Sheets, Docs, Drive, Keep etc.
+- Gemini Notebook complementa Tutor e Coach na consulta de fontes e revisão,
+  porém **não** concede acesso automático aos notebooks do usuário e não
+  substitui o motor conversacional ainda desligado na Oracle.
+- Confirmado em documentação oficial do Google: acesso padrão sem custo
+  financeiro, com limites e funcionalidades específicas; sem upgrade automático.
+- Atualizados `DECISAO_STACK_MINIMA_GRATUITA.md`, README e handoff;
+  nenhuma credencial, permissão, serviço externo ou conteúdo pessoal alterado.
+- Próximo gate: CI/documental do commit exato; PR #3 segue draft.
