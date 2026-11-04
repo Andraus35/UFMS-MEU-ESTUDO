@@ -220,3 +220,14 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - **Gate pendente:** confirmar CI e readback no novo SHA; auditoria
   independente; procedimentos de OCI Vault/IAM, envio e restore reais,
   rotação de backup e teste de recuperação autorizados.
+
+## OPS-01 — Primeira contraprova de execução Docker (corretiva)
+
+- HEAD anterior `0d3c33b8e282f7d22a70b29eaf4a587a7a0dfe4d`.
+- CI `41825087345`: 3 matrizes Python aprovadas; `container-smoke`
+  falhou porque o comando `docker run` seguinte não reutilizava o banco
+  sintético criado no contêiner descartável anterior.
+- Correção do workflow: criar DB sintético dentro da mesma execução
+  que chama `age backup/verify/restore`. Não modificar código criptográfico
+  com base em falha de montagem do teste.
+- Exigir novo readback e CI verde em SHA exato.
