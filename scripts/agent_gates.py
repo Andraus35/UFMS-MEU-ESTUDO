@@ -32,6 +32,20 @@ ROADMAP_STATES = frozenset({
 })
 
 
+ROADMAP_APPROVED_BASELINE = {
+    "RM-00": ("P0", "em_andamento", "Bootstrap e branch protection verificados; faltam gate independente de workflow alterável, implementação nos orquestradores e parecer externo"),
+    "RM-01": ("P0", "implementado_nao_homologado", "Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo"),
+    "RM-02": ("P0", "bloqueado", "IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI"),
+    "RM-03": ("P1", "planejado", "Projeção reprodutível, origem e incerteza claras, sem inferir domínio"),
+    "RM-04": ("P1", "planejado", "Ranking determinístico por snapshot e política, justificativas auditáveis, sem dupla contagem"),
+    "RM-05": ("P1", "planejado", "Filtros realistas, fallback e estado do caderno sem inventar ID externo"),
+    "RM-06": ("P1", "planejado", "Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis"),
+    "RM-07": ("P1", "bloqueado", "Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional"),
+    "RM-08": ("P2", "bloqueado", "Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos"),
+    "RM-09": ("P2", "planejado", "Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3"),
+    "RM-10": ("P2", "bloqueado", "Privacidade, autorização, observações reais e avaliação prudente de utilidade"),
+}
+
 def validate_roadmap_text(contents):
     """Rejeita cabeçalhos-placeholder e fila incompleta ou contraditória."""
     if not isinstance(contents, str):
@@ -57,6 +71,8 @@ def validate_roadmap_text(contents):
             raise ValueError("Status de roadmap inválido: " + code)
         if len(done) < 25:
             raise ValueError("Critério de aceite vazio ou superficial: " + code)
+        if ROADMAP_APPROVED_BASELINE.get(code) != (priority, status, done):
+            raise ValueError("Mudança estratégica exige baseline auditada: " + code)
         seen[code] = True
     if tuple(seen) != ROADMAP_ITEMS:
         raise ValueError("Fila de roadmap incompleta, reordenada ou adulterada")
