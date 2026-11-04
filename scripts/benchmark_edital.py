@@ -10,6 +10,7 @@ def run(root=ROOT):
     positive=negative=0
     chars=0
     failures=[]
+    first_misses=[]
     for c in cases:
         results=search(c['query'],limit=3,cargo=c['cargo'],area=c['area'],
                        root=root,full=True)
@@ -24,6 +25,8 @@ def run(root=ROOT):
         match=(lambda r:r['page']==c['page']) if c['type']=='rule' else (
             lambda r:r.get('topic_id')==c['topic_id'] and r['page']==c['page'])
         if results and match(results[0]):good_at_1+=1
+        else:first_misses.append({'query':c['query'],'expected_page':c['page'],
+                                  'first_page':results[0]['page'] if results else None})
         if any(match(r) for r in results):good_at_3+=1
         else:failures.append({'query':c['query'],'issue':'not_in_top3',
                               'chunks':[r['chunk_id'] for r in results]})
@@ -38,6 +41,7 @@ def run(root=ROOT):
         'full_document_characters':len(source),
         'retrieval_vs_full_for_each_query':round(
             chars/(len(source)*len(cases)),6),
+        'top1_misses':first_misses,
         'failures':failures}
     return report
 
