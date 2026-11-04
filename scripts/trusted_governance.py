@@ -96,7 +96,25 @@ def evaluate(pr_number, head_sha, base_sha, paths, comments, pubkey_b64=""):
         raise ValueError("Missing PR files or empty diff")
     if not isinstance(comments, list):
         raise ValueError("Missing approval comments")
-    modified = {_path(p) for p in paths}
+    # GitHub reports renamed files with current *and* previous names.
+    # A protected file removed by renaming must never disappear from the diff gate.
+    modified = set()
+    for item in paths:
+        if not isinstance(item, dict):
+            raise ValueError("PR file record must contain GitHub filename and status")
+        status = item.get("status")
+        if status not in {"added", "modified", "removed", "renamed", "changed", "copied"}:
+            raise ValueError("Unknown PR file change status")
+        current = _path(item.get("filename"))
+        modified.add(current)
+        old_name = item.get("previous_filename")
+        if status == "renamed":
+            if not isinstance(old_name, str) or old_name == current:
+                raise ValueError("Renamed file without distinct previous_filename")
+            modified.add(_path(old_name))
+        elif old_name is not None:
+            # A non-renamed record with a previous path is suspicious; fail closed.
+            raise ValueError("Unexpected previous_filename outside rename")
     frozen = sorted(modified & LOCKED)
     if frozen:
         raise ValueError("Immutable trusted gate modified: " + ", ".join(frozen))
@@ -155,26 +173,57 @@ def get_collection(path, token, max_pages=10):
     raise ValueError("Collection exceeds maximum audited page count")
 
 
+def _identity(metadata, number, head, base):
+    if not isinstance(metadata, dict):
+        raise ValueError("Malformed PR metadata")
+    if (metadata.get("number") != number
+            or metadata.get("base", {}).get("ref") != "main"
+            or metadata.get("base", {}).get("sha") != base
+            or metadata.get("head", {}).get("sha") != head
+            or metadata.get("state") != "open"):
+        raise ValueError("PR identity / event SHA mismatch")
+    count = metadata.get("changed_files")
+    if type(count) is not int or not 1 <= count <= 3000:
+        raise ValueError("Missing or excessive changed_files")
+    return count
+
+
 def enforce(env):
     token = env.get("GITHUB_TOKEN")
     if not token:
         raise ValueError("Missing read-only GitHub token")
     if env.get("GITHUB_REPOSITORY") != REPOSITORY:
         raise ValueError("Unexpected repository")
+    if env.get("GITHUB_EVENT_NAME") != "pull_request_target":
+        raise ValueError("Untrusted event type for privileged gate")
     pr_number = int(env["PR_NUMBER"])
     head = _check_sha(env["PR_HEAD_SHA"], "Event HEAD")
     base = _check_sha(env["PR_BASE_SHA"], "Event BASE")
-    metadata = get_json(f"repos/{REPOSITORY}/pulls/{pr_number}", token)
-    if (metadata.get("number") != pr_number
-            or metadata.get("base", {}).get("ref") != "main"
-            or metadata.get("base", {}).get("sha") != base
-            or metadata.get("head", {}).get("sha") != head
-            or metadata.get("state") != "open"):
-        raise ValueError("PR identity / event SHA mismatch")
-    paths = [x.get("filename") for x in get_collection(
-        f"repos/{REPOSITORY}/pulls/{pr_number}/files", token)]
-    comments = get_collection(f"repos/{REPOSITORY}/issues/{pr_number}/comments", token)
-    return evaluate(pr_number, head, base, paths, comments,
+    endpoint = f"repos/{REPOSITORY}/pulls/{pr_number}"
+    count = _identity(get_json(endpoint, token), pr_number, head, base)
+
+    records = get_collection(f"{endpoint}/files", token, max_pages=30)
+    if len(records) != count:
+        raise ValueError("Partial or inconsistent PR diff: changed_files mismatch")
+    # Reject duplicate file records even if the count was manipulated.
+    names = [record.get("filename") if isinstance(record, dict) else None
+             for record in records]
+    if None in names or len(set(names)) != len(names):
+        raise ValueError("Malformed or duplicated PR files")
+
+    comments = get_collection(
+        f"repos/{REPOSITORY}/issues/{pr_number}/comments", token,
+        max_pages=30)
+    # Identity and count MUST still match after the separate API reads.
+    if _identity(get_json(endpoint, token), pr_number, head, base) != count:
+        raise ValueError("PR diff changed during governance evaluation")
+    branch = get_json(f"repos/{REPOSITORY}/branches/main", token)
+    if not isinstance(branch, dict) or branch.get("protected") is not True:
+        raise ValueError("Main branch protection not independently confirmed")
+    if branch.get("commit", {}).get("sha") != base:
+        raise ValueError("Main branch advanced while evaluating PR")
+
+    return evaluate(pr_number, head, base, records, comments,
                     env.get("UFMS_APPROVAL_PUBKEY_B64", ""))
 
 
