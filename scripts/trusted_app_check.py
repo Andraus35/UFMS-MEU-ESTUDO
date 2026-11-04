@@ -128,7 +128,8 @@ def verify_one(pr_number, installation, app_id, public_key):
     try:
         enforce(env)
         verdict, explanation = "success", "Trusted-base policy passed"
-    except (ValueError, TypeError, KeyError):
+    except Exception:
+        # Fail closed even for unforeseen policy exceptions; never label success.
         pass
 
     # Prevent reporting a success when HEAD/base move after evaluation.
@@ -220,7 +221,7 @@ def main():
     if lock_path.is_symlink():
         raise SystemExit("BLOCKED: unsafe lock file")
     lock_path.parent.mkdir(parents=True, exist_ok=True)
-    fd = os.open(str(lock_path), os.O_CREAT | os.O_RDWR, 0o600)
+    fd = os.open(str(lock_path), os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     with os.fdopen(fd, "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         try:
