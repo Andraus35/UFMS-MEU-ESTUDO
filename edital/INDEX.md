@@ -14,7 +14,12 @@
 
 | Pergunta | Páginas do edital |
 |---|---|
-| Inscrição, taxas, prova, regras, recursos, datas, cotas | 1–13 |
+| Regras, cronograma, cotas e demais procedimentos | 1–13 |
+| Inscrição e pagamento | **2–3** |
+| Prova objetiva e horários de ingresso | **8–9** |
+| Eliminação e classificação | **9–10** |
+| Recursos administrativos | **10–11** (e referências posteriores) |
+| Remuneração inicial (Anexo I) | **12** |
 | Vagas, formação e lotação | 14–18 |
 | Cargo **523** — vaga e requisito | **15** |
 | Cargo **324** — vaga e requisito | **18** |
