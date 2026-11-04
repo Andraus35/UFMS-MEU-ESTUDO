@@ -99,3 +99,12 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - Não há API key no repositório; testes usam stub HTTP e mensagens fictícias.
 - Próximo gate: CI exata; depois auditoria de privacidade/custo e integração
   ao motor pedagógico apenas com contexto real autorizado.
+
+## Ciclo 6 desta retomada — validação do artefato Docker
+
+- START esperado: \`698424f5204d16a88f1d0002e2db0c1a3a15cba3\`;
+  CI anterior 2/2 runs com três matrizes cada, PASS.
+- Gate de container adicionado ao workflow: Docker build da imagem Oracle,
+  execução não-root, timezone Campo Grande e SQLite em /data.
+- Sem privilégios Oracle, sem credenciais pessoais e sem produção.
+- Verificar o resultado no commit exato; se falhar, corrigir com novo commit.

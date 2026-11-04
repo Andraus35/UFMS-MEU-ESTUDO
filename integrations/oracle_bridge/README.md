@@ -137,3 +137,12 @@ tentativa duplicada, payload sigiloso e troca de estado.
   chunks do edital, resultados pessoais ou handoff dos PRs #1 e #2. Essa
   integração demanda versionamento, consentimento, provedor de contexto
   autorizado, persistência e testes antes de afirmar continuidade real.
+
+## Gate de contêiner (ciclo 6)
+
+A CI passa a testar a imagem real com \`docker build --pull\` e inicialização
+como usuário não-root. O teste verifica imports de Tutor/Coach, persistência
+SQLite em \`/data\`, política de opt-in desativada e base de fusos
+\`America/Campo_Grande\`. O smoke não envolve credenciais, rede Telegram,
+conta Google ou chamadas reais à OpenAI API. Não é validação de produção
+Oracle nem substitui os testes ponta a ponta consentidos.

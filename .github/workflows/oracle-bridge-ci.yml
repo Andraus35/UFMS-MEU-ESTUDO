@@ -32,3 +32,24 @@ jobs:
         env:
           PYTHONHASHSEED: ${{ matrix.hash_seed }}
         run: PYTHONPATH=. python -m unittest discover -s tests -v
+
+  container-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir imagem Docker usada na Oracle
+        run: docker build --pull -t ufms-oracle-bridge:ci integrations/oracle_bridge
+      - name: Verificar imports, fuso e SQLite como usuário não-root
+        run: |
+          docker run --rm --entrypoint python ufms-oracle-bridge:ci -c "
+          from zoneinfo import ZoneInfo
+          from bridge.gateway import Store
+          from bridge.agents import INSTRUCTIONS
+          from bridge.proactive import ProactiveOutbox
+          assert ZoneInfo('America/Campo_Grande').key == 'America/Campo_Grande'
+          s = Store('/data/ci-smoke.sqlite3')
+          o = ProactiveOutbox(s, 123)
+          assert set(INSTRUCTIONS) == {'tutor','coach'}
+          assert o.enabled() is False
+          print('docker smoke ok')
+          "
