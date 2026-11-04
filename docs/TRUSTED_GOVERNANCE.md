@@ -1,69 +1,136 @@
-# RM-00 — Âncora independente para governança
+# NC-PR9-01 — Âncora de governança fora do GitHub Actions
 
-**PROPOSTO:** este controle está em um PR próprio. Ainda não está na main, não é required check e não homologa o PR #9.
+**STATUS: PROPOSTA CORRIGIDA NO PR #10; NÃO INSTALADA; NÃO HOMOLOGADA.**
+Este documento não autoriza merge nem substitui auditoria G0/GQ-H.
 
-## Propriedades
+## Arquitetura de confiança
 
-- Workflow \`.github/workflows/trusted-governance.yml\` usa \`pull_request_target\`, faz checkout **somente da base protegida**, nunca do código do PR, e usa token de leitura. Analisa diff/identidade/comentários obtidos pelo GitHub REST, sem executar qualquer código candidato.
-- Arquivos estratégicos (\`ROADMAP.md\`, \`AGENTS.md\`, settings, rules/guardrails, hooks, CI e validadores) exigem assinatura **Ed25519** de uma mensagem contendo PR, HEAD e base exatos.
-- A chave **privada** deve existir somente no Termux do proprietário. O GitHub guarda apenas a chave **pública** na variável administrativa de Actions \`UFMS_APPROVAL_PUBKEY_B64\`. Comentário GitHub sem assinatura não serve como autorização.
-- O próprio gate (\`scripts/trusted_governance.py\`, workflow e teste) não pode ser alterado por PR ordinário, mesmo com assinatura. Manutenção exige operação administrativa excepcional, auditoria distinta e autorização humana.
-- A assinatura atesta uma decisão humana identificada, **não** correção semântica do roadmap, auditoria independente ou autorização de merge.
+O workflow original \`pull_request_target\` foi **retirado da candidata**.
+Uma verificação obrigatória emitida pelo aplicativo genérico GitHub Actions pode
+ser confundida com outro job de mesmo nome. Além disso, a política para
+\`pull_request_target\` em repositórios públicos mudará em 02/12/2026.
+Nenhuma das duas características é aceitável como âncora autoritativa.
 
-## Implantação em etapas
+A solução proposta é uma **GitHub App própria e separada**, hospedada em um
+checkout congelado e revisado fora das branches candidatas, por exemplo na
+Oracle Cloud (conta gratuita, se já disponível).
 
-1. Auditar independentemente **este PR de âncora**, aprovar e somente então integrá-lo à main por decisão humana expressa. Manter \`validate\` obrigatório.
-2. Gerar chave exclusiva no Termux (não compartilhar \`private.pem\` com agentes, GitHub ou chat):
+- \`scripts/trusted_governance.py\` valida PR, HEAD, base, \`changed_files\`,
+  todas as páginas do diff, nomes atuais e anteriores, comentários de autorização
+  Ed25519 e uma segunda leitura da identidade no mesmo HEAD/base.
+- \`scripts/trusted_app_check.py\` autentica-se como a **GitHub App específica**,
+  obtém token efêmero limitado ao repositório e publica o check
+  \`ufms-governance/app-verified\` no HEAD, com \`app.id\` conferido.
+- \`--all --once\` varre PRs abertos periodicamente, sem webhook, porta de
+  entrada pública ou segredo injetado em workflow de PR. Erros levam a falha
+  ou ausência de check, **nunca à produção intencional de sucesso**.
+- Cada parecer de autoria humana assina, com chave Ed25519 guardada
+  **somente no Termux**, a string
+  \`GOVERNANCE-REVIEWED PR=<numero> HEAD=<sha40> BASE=<sha40>\`.
+- A chave privada RSA da GitHub App é **outra chave**, separada da Ed25519:
+  ela deve ficar somente no host confiável (Oracle), com permissões 0600.
+  Nunca levar qualquer chave privada a este chat, ao repositório ou ao LLM.
+- \`scripts/trusted_governance.py\`, \`scripts/trusted_app_check.py\` e os testes
+  de ambos são caminhos LOCKED; alterações futuras exigem processo
+  excepcional fora da rotina, nova revisão externa e decisão humana.
 
-   \`\`\`sh
-   pkg install -y openssl
-   mkdir -p "$HOME/.config/ufms-governance"
-   chmod 700 "$HOME/.config/ufms-governance"
-   openssl genpkey -algorithm Ed25519 -out "$HOME/.config/ufms-governance/private.pem"
-   chmod 600 "$HOME/.config/ufms-governance/private.pem"
-   openssl pkey -in "$HOME/.config/ufms-governance/private.pem" -pubout -out "$HOME/.config/ufms-governance/public.pem"
-   gh variable set UFMS_APPROVAL_PUBKEY_B64 -R Andraus35/UFMS-MEU-ESTUDO -b "$(base64 < "$HOME/.config/ufms-governance/public.pem" | tr -d '\n')"
-   \`\`\`
+**Limites:** uma assinatura prova posse da chave e identidade do objeto, não
+a avaliação semântica nem independência humana do auditor. Um administrador
+com privilégios completos pode alterar a proteção ou desativar a App; uma
+máquina Oracle comprometida pode emitir checks falsos como a App. A aplicação
+de check obrigatório, App ID esperado e isolamento de credenciais deve ser
+comprovada em ambiente real. **Até lá NC-PR9-01 permanece aberta.**
 
-   Fazer backup offline protegido. A perda da chave exige processo administrativo auditado para substituí-la.
-3. Reacionar o PR #9 (editar a descrição) e confirmar que o check \`trusted-governance\` é produzido pela branch-base, **falhando por falta de assinatura**.
-4. Somente após essa prova, o proprietário adiciona \`trusted-governance\` à proteção da main como check obrigatório **além de \`validate\`**, sem remover proteções existentes. Confirmar por leitura autenticada. **Não usar** \`scripts/protect_main.py --apply\` sem revisar: ele substitui a lista de checks existente.
-5. Manter o PR #9 draft. Somente após **reauditoria independente APROVADA** e autorização humana específica, assinar o seu SHA exato.
+## Sequência operacional (cada etapa tem gate próprio)
 
-## Assinatura no Termux após auditoria APROVADA
+1. **Reauditar o PR #10 corrigido em SHA congelado.** Não instalar código
+   de commit mutável nem mesclar candidatos reprovados. Somente após
+   autorização humana específica, integrar código revisado na main.
+2. **Registrar uma GitHub App** em https://github.com/settings/apps
+   com nome único, acesso a **somente** \`Andraus35/UFMS-MEU-ESTUDO\` e
+   permissões repositório: Checks **read/write**, Pull requests **read**,
+   Issues **read**, Metadata **read**. Sem Contents write, Administration
+   write, Secrets ou Workflows. Sem webhook (verificador por polling).
+   Instalar a App na conta proprietária e gerar uma **chave RSA privada
+   da App**, armazenada apenas no Oracle com permissão 0600.
+3. **Ativar ambiente independente no Oracle**: sistema Linux com Python 3.11+
+   e OpenSSL, cópia isolada do código no **SHA auditado** em diretório
+   não gravável por Tutor/Coach, token App guardado só no serviço.
+   Variáveis restritas:
+   \`UFMS_GITHUB_APP_ID\` (ID numérico da App),
+   \`UFMS_GITHUB_APP_KEY_FILE\` (caminho da chave RSA),
+   \`UFMS_APPROVAL_PUBKEY_B64\` (chave pública Ed25519 previamente
+   gerada no Termux). Não usar o mesmo GitHub token pessoal dos agentes.
+4. **Primeiro ensaio manual, sem exigir check ainda**:
+   \`python scripts/trusted_app_check.py --all --once\`.
+   Um PR de governança sem assinatura deve receber \`failure\`, o esperado.
+   No GitHub, consultar o check emitido e comprovar \`name\`,
+   \`head_sha\`, \`conclusion\`, \`app.id\` e origem da App.
+   A saída pode terminar em código 1 enquanto PRs aguardam assinatura.
+5. **Automatizar**: executar \`--all --once\` a cada 2–5 minutos via
+   cron ou systemd timer em host Oracle com usuário dedicado, diretório
+   de código somente leitura, chaves sem leitura para os LLMs.
+   Cada ciclo lê o estado atual e só reutiliza o check se tiver
+   exatamente o mesmo PR/HEAD/base, resultado e App ID.
+   Testar adição/remoção de assinatura e novo push.
+6. **Somente depois do check real e de nova auditoria**, configurar
+   branch protection com **dois checks obrigatórios**:
+   \`validate\` da GitHub Actions, App ID 15368;
+   \`ufms-governance/app-verified\`, App ID **da App própria**.
+   Usar o PATCH restrito de \`required_status_checks\`, não substituir
+   a regra completa por \`scripts/protect_main.py --apply\`.
+   Ler de volta toda a proteção autenticada e testar PR sem assinatura,
+   PR assinado válido, SHA novo, nome duplicado originado em Actions,
+   app offline e comportamento após mudança de base.
+7. Fazer **reauditoria independente** e autorização humana para cada merge,
+   preservando bloqueio de dados individuais e de execuções externas.
 
-A mensagem deve ser exatamente \`GOVERNANCE-REVIEWED PR=<numero> HEAD=<sha40> BASE=<sha40>\`.
+## Comandos Termux — somente após App instalada e auditoria aprovada
 
-   \`\`\`sh
-   REPO=Andraus35/UFMS-MEU-ESTUDO
-   PR=9
-   HEAD=$(gh pr view "$PR" -R "$REPO" --json headRefOid --jq .headRefOid)
-   BASE=$(gh api "repos/$REPO/pulls/$PR" --jq .base.sha)
-   gh pr diff "$PR" -R "$REPO"
-   MSG="GOVERNANCE-REVIEWED PR=$PR HEAD=$HEAD BASE=$BASE"
-   MSGFILE=$(mktemp); SIGFILE=$(mktemp)
-   printf %s "$MSG" > "$MSGFILE"
-   openssl pkeyutl -sign -rawin -inkey "$HOME/.config/ufms-governance/private.pem" -in "$MSGFILE" -out "$SIGFILE"
-   SIGNATURE=$(base64 < "$SIGFILE" | tr -d '\n')
-   rm -f "$MSGFILE" "$SIGFILE"
-   gh pr comment "$PR" -R "$REPO" --body "$MSG SIG=$SIGNATURE"
-   \`\`\`
+A chave Ed25519 já foi criada localmente pelo proprietário; **não a recriar**.
+O comando abaixo utiliza APENAS a chave pública:
 
-A assinatura e o comentário são públicos; nunca publicar a chave privada. Qualquer novo HEAD/base exige outra assinatura.
+\`\`\`sh
+PUB="$HOME/.config/ufms-governance/public.pem"
+test -s "$PUB" || { echo "Chave pública ausente"; exit 1; }
+sha256sum "$PUB"
+base64 < "$PUB" | tr -d '\n'
+\`\`\`
 
-## Riscos não resolvidos
+O resultado de base64 é público e será configurado **no serviço da App no
+Oracle**, não em um workflow de PR. A chave \`private.pem\` NUNCA é transmitida.
 
-- **NC-PR9-02:** sem Tutor/Coach operacionais e um broker central com tokens exclusivos, não há garantia de START universal. Restringir agentes consultivos a somente leitura, bloquear rotas diretas de escrita, impor bootstrap/recibo no executor e testar ações recusadas.
-- **NC-PR9-03 a 06:** modelo de transições, sincronização estratégica, preflight API e prova administrativa completa seguem pendentes.
-- A política de \`pull_request_target\` em repositórios públicos está sujeita a restrições anunciadas pelo GitHub para **02/12/2026**. Verificar se o workflow efetivamente roda **antes de torná-lo required**, e migrar a App externa confiável se necessário.
+Depois de instalada a App e auditado o check, a alteração administrativa
+restrita poderá ser feita no Termux, com \`APP_ID\` verificado na página da
+App (não inventar um valor):
 
+\`\`\`sh
+REPO=Andraus35/UFMS-MEU-ESTUDO
+APP_ID=<ID_NUMERICO_VERIFICADO>
+gh api "repos/$REPO/branches/main/protection/required_status_checks"
+# Revisar a configuração antes de QUALQUER PATCH.
+# Não executar alteração até haver check real e autorização humana específica.
+\`\`\`
 
-## Riscos adicionais identificados na revisão do mecanismo
+Um PATCH futuro deve preservar \`validate\` e acrescentar o check da App com
+\`app_id\` específico; fazer readback da configuração integral e testes de
+bloqueio antes de declarar ativo.
 
-**NÃO declarar este workflow uma âncora infalsificável.** Um check de GitHub Actions exigido apenas por nome e pelo aplicativo GitHub Actions pode, conforme configuração do repositório, ser confundido com outro job de nome idêntico introduzido pelo autor do PR. Portanto, a instalação deste workflow por si só **não encerra NC-PR9-01**. Uma implementação de produção exige confirmar o vínculo do check ao workflow confiável e evitar duplicidade/spoof de contexto, preferencialmente mediante **GitHub App verificadora distinta, com identidade própria e permissões mínimas**, ou uma política de workflow obrigatório aplicada fora do PR. Enquanto isso não for demonstrado, manter revisão independente e não homologar.
+## Ensaios aceitos e evidências insuficientes
 
-**A chave pública em variável do Actions não é secreta, mas sua substituição administrativa é um risco:** a chave deve ser revisada por outro canal e gerenciada separadamente das credenciais dos agentes. Os agentes de IA jamais recebem a chave privada do Termux ou permissão administrativa de substituir o check e sua origem.
+- **Código:** testes unitários e negativos de renomeação de arquivo LOCKED,
+  alteração semântica, paginação incompleta, corrida de HEAD/base,
+  assinatura obsoleta, ausência de chave e check de App ID falso.
+- **Infraestrutura:** nenhuma execução de GitHub App externa, criação
+  de App, instalação administrativa ou required check da App foi realizada
+  por esta entrega. A CI \`validate\` atual é verificação do código candidato.
+- **Riscos residuais:** conflito de privilégios do próprio proprietário,
+  disponibilidade do Oracle, expiração de tokens, alteração de permissões,
+  e checks já emitidos enquanto o serviço está indisponível. Um check antigo
+  pode persistir; exigir auditoria operacional de cobertura de eventos antes
+  de considerar o ciclo resistente a indisponibilidade.
 
-**Prazo de execução:** a política padrão do GitHub para \`pull_request_target\` em repositórios públicos será aplicada a partir de **02/12/2026**, com testes de bloqueio em novembro de 2026. Verificar e autorizar estritamente o evento no painel de Actions Policies quando apropriado. Não tornar o workflow um check obrigatório antes de comprovar que continuará sendo executado.
-
-**Estado preciso:** CI do PR significa apenas testes no código candidato. Instalação do workflow, assinatura administrativa e bloqueio efetivo de mutantes coordenados são etapas distintas e **ainda não realizadas**.
+**NC-PR9-02 separada:** o PR #11 contém apenas broker local sem efeitos;
+nenhum Tutor/Coach real está obrigado a usá-lo até restringir todas as
+credenciais e implantar o supervisor. A App de governança não substitui essa
+restrição de execução.
