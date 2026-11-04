@@ -1,0 +1,76 @@
+# Ponte UFMS: Telegram + Google Calendar (MVP isolado)
+
+**Estado:** proposta técnica EXECUTÁVEL EM TESTES LOCAIS; NÃO implantada na Oracle,
+NÃO conectada ao Tutor/Coach LLM, NÃO autorizada no Google Calendar remoto.
+O PR fica em draft e não deve ser mesclado sem auditoria independente e aceite humano.
+
+## Escopo
+
+- Dois bots Telegram distintos para Tutor/Coach; somente conversas privadas do
+  ID autorizado. Não existem endpoints públicos nem acesso a terceiros.
+- Comandos `/start`, `/ajuda`, `/status`, `/lembrete`, `/cancelar`,
+  `/pausar`, `/retomar`, `/evento`.
+- SQLite persistente para lembretes e offsets de atualização, retomada após restart.
+- Mensagens proativas são as de lembretes explicitamente registrados; o canal
+  está preparado para futura integração com o motor de IA, que NÃO está implementada.
+- Google OAuth de acesso offline é **independente** da conexão ChatGPT.
+  Criação de calendário secundário por comando local explícito e, depois,
+  criação de eventos somente no calendário de ID configurado.
+
+## Executar testes (sem chamadas de rede)
+
+```bash
+cd integrations/oracle_bridge
+PYTHONPATH=. python -m unittest discover -s tests -v
+```
+
+## Configuração (operador, na Oracle)
+
+1. Criar dois bots no BotFather e iniciar conversa privada com cada um.
+2. Obter o `user_id` numérico via procedimento de confiança do Telegram; nunca
+   expor tokens ou IDs pessoais em issues, commits ou logs.
+3. Copiar `.env.example` para `.env` **somente no servidor** e proteger com
+   permissões restritas, preferencialmente usar um gerenciador de segredos.
+4. Opcional: configurar Google OAuth de aplicativo próprio com acesso offline.
+   Usar consentimento humano, `calendar.app.created` para o calendário criado
+   pela aplicação e escopo `calendar.events.freebusy` somente se se decidir
+   ler disponibilidade dos demais calendários. O MVP **não lê** eventos pessoais.
+5. Uma única vez, após OAuth: `python -m bridge.cli provision-calendar`;
+   armazenar ID retornado em `UFMS_GOOGLE_CALENDAR_ID`. Esta ação CRIA
+   um calendário real; não execute repetidamente.
+6. `docker compose up -d --build` na VM. Implantar **uma única réplica**:
+   offset, agendamento e envio ainda não suportam múltiplas instâncias.
+7. Não configurar webhook nos mesmos bots: esta versão usa `getUpdates`
+   por long polling. Não abrir porta pública ou expor a aplicação.
+8. Fazer backup criptografado do volume SQLite e validar restauração.
+
+## Limitações e riscos conhecidos
+
+- Sem credenciais, os bots não iniciam. Google OAuth e BotFather requerem
+  intervenção humana explícita.
+- O campo de fuso é obrigatório nas datas ISO; períodos usam UTC internamente.
+- Se o Telegram receber a mensagem, mas a confirmação falhar, pode haver
+  reenvio na retomada. Sem garantia exactly-once; analisar idempotência do
+  envio no próximo gate.
+- Falta política de retenção, telemetria segura, quotas antispam, integração
+  ao estado do Tutor e Coach e validação ponta a ponta na Oracle.
+- O MVP não é um agente LLM: texto livre apenas retorna ajuda.
+- A conta Google conectada no ChatGPT não disponibiliza tokens para esta VM.
+- Apenas alertas de lembretes originados no Telegram são executados; nenhum
+  check-in de IA é disparado automaticamente nesta versão.
+- Operações que falharem remotamente não devem ser declaradas concluídas.
+- Não inserir dados de desempenho reais antes de validar privacidade/consentimento.
+
+## Fontes oficiais
+
+- Telegram Bot API: https://core.telegram.org/bots/api
+- Google OAuth offline: https://developers.google.com/identity/protocols/oauth2/web-server
+- Escopos Calendar: https://developers.google.com/workspace/calendar/api/auth
+- Calendars.insert: https://developers.google.com/workspace/calendar/api/v3/reference/calendars/insert
+
+## Próximo gate técnico
+
+G0: testar cenários adversariais; G1: verificar OAuth/escopos e segredo no
+ambiente; G2: ponta a ponta Telegram com dois bots, recuperação após reinício;
+G3: calendário secundário e evento real autorizados; G4: integração com
+motor pedagógico pós-PR #1/#2; G5: piloto e aceite humano.
