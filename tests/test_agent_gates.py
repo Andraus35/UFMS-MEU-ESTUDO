@@ -65,7 +65,7 @@ class AgentGateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "vazio"):
                 check_bootstrap(root)
             (root / "ROADMAP.md").write_text("placeholder", encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "Seção obrigatória"):
+            with self.assertRaisesRegex(ValueError, "truncado/placeholder"):
                 check_bootstrap(root)
 
     def test_roadmap_omitido_ou_fora_de_ordem_falha(self):
