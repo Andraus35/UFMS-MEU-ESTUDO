@@ -10,7 +10,7 @@ Persistir o contexto entre sessões, orientar cadernos de questões no TEC Concu
 - **A IA não consulta as contas TEC/Qconcursos automaticamente.** O estudante cria o caderno e entrega resultados exportados ou resumidos.
 - **Não são armazenadas questões ou comentários integrais de plataformas privadas.** Apenas metadados, links, decisões e resultados permitidos.
 - **Sem dados pessoais no repositório público.** Antes de registrar desempenho individual, torne o repositório **privado**.
-- **Alterações estruturais por PR**, sem merge sem aprovação. Resultados podem ser registrados por fluxo ordinário autorizado após tornar o repositório privado.
+- **Alterações estruturais por PR**, sem merge sem aprovação. Resultados individuais continuam **bloqueados** mesmo em repositório privado. A futura liberação exige autorização explícita, verificação atual da visibilidade e revisão do gate.
 
 ## Iniciar uma sessão
 
@@ -29,6 +29,8 @@ python scripts/rebuild.py --check
 ```
 
 `settings.json` é **configuração própria deste projeto**, não um arquivo reconhecido automaticamente por todas as ferramentas de IA. Os hooks exigem registro explícito no ambiente ou execução via workflow/script.
+
+A CI inclui `scripts/write_policy.py --check` e os contratos verificáveis de bootstrap/hooks. Ver `docs/OPERACAO.md` para START/DELIVERY e para as limitações de execução automática.
 
 ## Fonte e limites
 
