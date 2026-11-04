@@ -14,6 +14,15 @@
 **Ponto de corte:** sem confirmação de commit, a próxima sessão trata a escrita como pendente, não como finalizada.
 
 
+## Autonomia cognitiva e gates proporcionais
+
+Para comunicação com o estudante, diferenciar:
+- **ORIENTACAO / NONE:** proposta do LLM, verificação automática de escopo/fonte/dados e entrega sem aprovação humana por mensagem.
+- **ROTINA_AUTORIZADA / TOOL:** envio pela Zapia ao proprietário e lembrete de agenda somente após implantação comprovada de conector e autorização prévia de escopo; o gateway valida destino, quotas, duplicação e readback. Uma rotina autorizada não pede confirmação individual a cada mensagem.
+- **SENSIVEL / TOOL:** mudanças estruturais, divulgação a terceiros, acesso a dados pessoais e integração de código exigem controles mais fortes e aprovação humana quando aplicável.
+
+A falha de um canal externo não deve paralisar cognição/orientação sem efeito externo. Este documento especifica o contrato; não afirma que Zapia ou o executor real já estejam funcionando. Manter bloqueada a gravação de resultados individuais enquanto a política vigente não a habilitar com privacidade comprovada.
+
 ## START/DELIVERY — contrato local verificável
 
 1. **START em checkout local:** conferir HEAD/branch e os dez arquivos obrigatórios; `python scripts/bootstrap.py` lê os bytes e informa SHA-256 por arquivo; `python scripts/roadmap_gate.py --check` valida referências ao roadmap. Antes de trabalhar, ler ROADMAP do mesmo HEAD e identificar item RM. Conferir a CI vinculada ao HEAD exato.

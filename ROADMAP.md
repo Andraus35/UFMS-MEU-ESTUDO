@@ -3,6 +3,18 @@
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
+## Autonomia cognitiva e gates proporcionais
+
+**Diretriz do proprietário (04/11/2026):** uso pessoal; Zapia é a interface pretendida de comunicação. O Tutor e o Coach têm liberdade para raciocinar, escolher intervenções, adaptar métodos e elaborar orientações, sem solicitar aprovação humana para cada mensagem. A liberdade cognitiva não equivale a acesso irrestrito a credenciais, arquivos ou serviços.
+
+- **ORIENTACAO (efeito NONE):** explicações, diagnósticos, feedback, planejamento adaptativo e mensagens informativas podem ser entregues automaticamente ao estudante depois do gate de evidência, escopo e integridade. Não criar um gate `NEEDS_APPROVAL` para cada resposta comum.
+- **ROTINA_AUTORIZADA (efeito TOOL):** mensagens ao próprio estudante pela Zapia e lembretes na agenda, quando integrações oficiais estiverem comprovadas, podem ser automáticos **dentro de consentimento prévio, destinatário/canal permitido, limites, minimização de dados, idempotência e readback**. A autorização é de escopo/rotina, não por mensagem. Sem conector autorizado ou credencial isolada, registrar `NOT_IMPLEMENTED`; não alegar envio.
+- **SENSIVEL (efeito TOOL):** alterar políticas/credenciais, publicar a terceiros, expor dados pessoais ou integrar à `main` requer gate específico e autorização humana expressa quando prevista. Uma aprovação da atividade de estudo não concede poderes de administração.
+- **Privacidade invariável:** este repositório é público; persistência de resultados pessoais permanece bloqueada até uma solução privada e verificável. O histórico não pode ser preenchido com dados inventados.
+- **Controle proporcional:** aplicar GP-0/GP-1/GP-2/GP-3/GP-4/GP-5 às evidências e entregas pertinentes, sem converter testes de infraestrutura ou documentação em aprovação operacional do Tutor/Coach. Falha em ação sensível não bloqueia automaticamente orientação pedagógica independente daquela ação.
+
+**Estado:** contrato documental para reconciliar PRs #9/#11/#5; não constitui integração real com Zapia, não reclassifica aprovações anteriores e não autoriza merge/deploy. A solução de duas GitHub Apps do PR #10 permanece proposta separada, não pré-requisito para toda orientação cognitiva.
+
 ## Governança e leitura obrigatória
 
 1. **Antes de qualquer trabalho operacional**, todo agente participante (Tutor, Coach, engenheiro documental, pedagógico, auditor ou integrador) deve recuperar e interpretar `AGENTS.md` e **`ROADMAP.md`** do HEAD atual, nessa ordem, e consultar os demais arquivos obrigatórios em `settings.json`.

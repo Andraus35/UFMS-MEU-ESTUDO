@@ -191,3 +191,12 @@ Não atualizar este documento com estados não confirmados nem copiar conversas 
 - **Bloqueador administrativo:** a conexão do agente não expõe mutação de branch protection. Executar `python scripts/protect_main.py --apply --confirm Andraus35/UFMS-MEU-ESTUDO` com `gh` autenticado no ambiente do proprietário; então `--check` e GET da branch `main` devem confirmar proteção real.
 - **Revisão humana:** o PR foi criado pelo próprio usuário mantenedor; exigir uma aprovação GitHub formal obrigatória de um único mantenedor cria deadlock. A política padrão exige PR e CI sem contador de aprovação; usar `--approvals 1` somente após habilitar revisor independente distinto.
 - **Conformidade cognitiva:** nenhum script comprova compreensão semântica de um LLM. A integração de qualquer outro agente deve impor bootstrap no seu orquestrador e bloquear credenciais de escrita direta.
+
+## Checkpoint — distinção cognição/efeitos e saneamento dos PRs (04/11/2026)
+
+- **Origem:** pedido do proprietário para reconciliar autonomia dos Tutor/Coach com gates proporcionais, usando Zapia como interface pretendida; antes do trabalho, PR #9 estava em draft no HEAD `110c69992f5d9980d15b1c8c1cfabd8cc1cf019d`, base `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`.
+- **Escopo desta candidata:** explicitar categorias `ORIENTACAO`, `ROTINA_AUTORIZADA`, `SENSIVEL` em ROADMAP/AGENTS/OPERACAO e criar contraprovas documentais, sem habilitar chamadas externas, gravação pessoal ou merge.
+- **Dependências abertas:** PR #11 contém apenas broker START read-only; PR #10 contém arquitetura opcional de duas Apps ainda não implantada; PR #5 especifica Cognitive Gates com r3 não aprovada; PR #4 é snapshot histórico. Não transferir aprovações entre SHAs.
+- **Evidências de entrega:** criação de commit, execução dos hooks locais, CI no novo HEAD e readback continuam a confirmar após a publicação. Escrita via API GitHub não executa hooks locais. Até a CI, estado `PENDING`, nunca `PASS`.
+- **Próxima etapa:** confirmar SHA/CI do PR #9; revisar compatibilidade com #11 e #5; só depois decidir saneamento/fechamento das demais candidatas, sem merge automático.
+
