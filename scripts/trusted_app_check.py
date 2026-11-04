@@ -13,7 +13,6 @@ import os
 import re
 import subprocess
 import sys
-import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -168,8 +167,15 @@ def main():
     pubkey = os.environ.get("UFMS_APPROVAL_PUBKEY_B64", "")
     if not pubkey:
         raise SystemExit("BLOCKED: missing public verification key")
-    # Hold a local lock to prevent concurrent cron passes using stale status.
-    with tempfile.TemporaryFile() as lock:
+    # Persistent flock path: tempfile.TemporaryFile creates a DIFFERENT
+    # inode per process and cannot serialize concurrent cron jobs.
+    lock_path = Path(os.environ.get(
+        "UFMS_CHECK_LOCK_FILE", str(Path.home() / ".ufms-trusted-app.lock")))
+    if lock_path.is_symlink():
+        raise SystemExit("BLOCKED: unsafe lock file")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(str(lock_path), os.O_CREAT | os.O_RDWR, 0o600)
+    with os.fdopen(fd, "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         try:
             jwt = app_jwt(appid, keyfile)
