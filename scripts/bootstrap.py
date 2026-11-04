@@ -10,14 +10,19 @@ except ModuleNotFoundError:
 
 def run(root=ROOT):
     cfg = load_json(root / "settings.json")
-    missing = [p for p in cfg["bootstrap"]["mandatory"] if not (root / p).is_file()]
-    if missing:
-        raise ValueError("Arquivos obrigatórios ausentes: " + ", ".join(missing))
+    try:
+        from agent_gates import check_bootstrap, check_hook_contract
+    except ModuleNotFoundError:
+        from scripts.agent_gates import check_bootstrap, check_hook_contract
+    digests = check_bootstrap(root)
+    check_hook_contract(root)
     state = load_json(root / "state/CURRENT.json")
     concursos = load_json(root / "config/concursos.json")
     return {
         "bootstrap": "verificado_localmente",
         "obrigatorios": cfg["bootstrap"]["mandatory"],
+        "sha256_dos_arquivos": digests,
+        "hooks_com_interface": ["before_write", "after_write", "checkpoint"],
         "cargos": [c["codigo"] for c in concursos["cargos"]],
         "prova": concursos["prova_data"],
         "event_count": state["event_count"],
