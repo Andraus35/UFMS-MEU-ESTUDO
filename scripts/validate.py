@@ -59,7 +59,12 @@ def validate(root=ROOT):
     except ModuleNotFoundError:
         from scripts.index_atribuicoes import validate as check_atribuicoes
     indexed_atribuicoes = check_atribuicoes(root)
-    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados; {indexed} tópicos indexados; {indexed_vagas} linhas de vagas validadas; {indexed_atribuicoes} atribuições validadas"
+    try:
+        from validate_fontes_oficiais import validate as check_sources
+    except ModuleNotFoundError:
+        from scripts.validate_fontes_oficiais import validate as check_sources
+    official_observations,verified_amendments,open_alerts = check_sources(root)
+    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados; {indexed} tópicos indexados; {indexed_vagas} linhas de vagas validadas; {indexed_atribuicoes} atribuições validadas; {official_observations} observações de fonte; {verified_amendments} retificações verificadas; {open_alerts} alerta preservado"
 
 
 if __name__ == "__main__":
