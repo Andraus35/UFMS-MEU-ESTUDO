@@ -51,3 +51,10 @@ O resultado correto nessa base é `BLOCKED` por ROADMAP ausente. Não fornecer c
 5. Comprovar comportamento do Tutor/Coach em modo real, incluindo versão, prioridades, bloqueios e eventuais recusas.
 
 **Veredito atual:** controle preventivo local de escopo restrito, ainda não a garantia universal exigida pela auditoria.
+
+## Endurecimento adversarial da última rodada
+
+- A API pública `verify_start(root, trusted_head)` **não aceita mais substituições** de SHA observado ou de verificação de checkout limpo. Mocking é realizado somente nos testes, fora do código de produção.
+- O `AgentBroker` revalida SHA, checkout limpo e documentos obrigatórios **antes de cada solicitação permitida** e também antes de entregar o contexto para o modelo. Um recibo antigo não permanece válido após mudança de HEAD ou de ROADMAP.
+- Testes sintéticos verificam alteração posterior do roadmap, mudança de HEAD, leitura incompleta, symlink e bloqueio total de comandos externos.
+- **Não confundir** esse mecanismo local com a instalação de um executor de Tutor/Coach, isolamento de tokens ou prova de que agentes não consigam operar por interfaces externas. A P0 do fluxo real só fecha depois de implantação auditada e testes E2E autorizados.
