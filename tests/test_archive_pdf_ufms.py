@@ -132,6 +132,23 @@ class ArchiveOfficialPdfTests(unittest.TestCase):
         self.assertFalse(item["normative_revision_verified"])
         self.assertEqual(item["comparison_status"],"digest_mismatch")
 
+    def test_falso_hash_esperado_no_recibo_direto_e_rejeitado(self):
+        expected=json.loads((ROOT/"edital/manifest.json").read_text(encoding="utf-8"))["source_pdf_sha256"]
+        item=archive_response(HttpResponse(self.pdf),expected,self.folder,acquisition="direct_https")
+        path=Path(item["receipt_path"])
+        data=json.loads(path.read_text(encoding="utf-8"))
+        data["sha256_expected"]=self.sha
+        data["comparison_status"]="digest_match"
+        path.write_text(json.dumps(data),encoding="utf-8")
+        with self.assertRaisesRegex(ValueError,"manifesto canônico"):
+            verify_archive(path)
+
+    def test_rollback_se_recibo_de_aquisicao_direta_nao_passa_readback(self):
+        with self.assertRaisesRegex(ValueError,"manifesto canônico"):
+            archive_response(HttpResponse(self.pdf),self.sha,self.folder,
+                             acquisition="direct_https")
+        self.assertEqual(list(self.folder.iterdir()),[])
+
     def test_redirect_resulta_em_inconclusao_sem_arquivos(self):
         opener=Mock()
         opener.open.return_value=HttpResponse(self.pdf,url="https://outra-pagina.example/documento.pdf")
