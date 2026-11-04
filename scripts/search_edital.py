@@ -107,6 +107,10 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
     if area=='especificos' and cargo is None:
         raise ValueError('Informe --cargo para conhecimentos específicos')
     if not 1<=limit<=20: raise ValueError('Limite inválido')
+    # Consultas que nomeiam outro cargo contradizem o filtro explícito: falha segura.
+    declared=re.search(r'\b(?:cargo|c[oó]digo)\s*(?:n[º°.]?\s*)?(523|324)\b',query,re.I)
+    if cargo and declared and declared.group(1)!=cargo:
+        raise ValueError('Cargo da consulta contradiz --cargo')
     index=topic_index(root)
     chunks=load(root)
     selected=[t for t in index['topics']
@@ -155,7 +159,10 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
             if not tf:continue
             idf=math.log(1+(n-df[w]+0.5)/(df[w]+0.5))
             score+=idf*(tf*2.2)/(tf+1.2*(0.25+0.75*length/avg))
-        if score<=0:continue
+        # BM25 de correspondência em apenas uma palavra de consultas longas
+        # produz falsos positivos, especialmente ao comparar cargos vizinhos.
+        if score<=0 or (len(wanted)>=3 and sum(w in cnt for w in wanted)<2):
+            continue
         if cargo and 'cargo_'+cargo in c['categories']:score*=1.35
         if cargo and 'conhecimentos_gerais' in c['categories']:score*=1.1
         excerpt=next((line.strip() for line in c['search_body'].splitlines()
