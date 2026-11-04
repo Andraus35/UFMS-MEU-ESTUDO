@@ -1,0 +1,97 @@
+{
+  "record_type": "execucao_local_isolada_sintetica",
+  "executed_date": "2026-11-04",
+  "repository": "Andraus35/UFMS-MEU-ESTUDO",
+  "technical_head": "42530c1680fb328fb9064235d475d2951c3a7c51",
+  "pedagogical_fixture_head": "02610d347a46bb8435b845fe07afc6b90f059e72",
+  "source_git_blobs": {
+    "scripts/core.py": "28649e5b649c239cb03d748ab5822c352ddfe1db",
+    "config/topics.csv": "d733ec5af292934fa4efa0e892470c27603065f6",
+    "docs/pedagogia/FIXTURES_INGESTAO_GP1_2026-11-04.json": "bd060fd2263c686e7dc4f56bf0c97f5fc5112dfc"
+  },
+  "method": "Copias locais reconstruidas/extradas e verificadas por hash Git blob SHA-1 antes de executar validate_events e rebuild em memoria com Python; as tres fixtures ainda nao implementadas foram classificadas NOT_IMPLEMENTED sem execucao.",
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_implemented": 3
+  },
+  "results": [
+    {
+      "id": "IGP-01",
+      "status": "PASS",
+      "observation": "Recomendação pendente, nenhum resultado atribuído"
+    },
+    {
+      "id": "IGP-02",
+      "status": "PASS",
+      "observation": "Resultado desagregado consolidado corretamente"
+    },
+    {
+      "id": "IGP-03",
+      "status": "PASS",
+      "observation": "Resultado agregado sem imputação de acerto por tópico"
+    },
+    {
+      "id": "IGP-04",
+      "status": "PASS",
+      "observation": "Correção substitui projeção anterior"
+    },
+    {
+      "id": "IGP-05",
+      "status": "PASS",
+      "observation": "Rejeição por total inconsistente"
+    },
+    {
+      "id": "IGP-06",
+      "status": "PASS",
+      "observation": "Rejeição de acertos por tópico acima do total"
+    },
+    {
+      "id": "IGP-07",
+      "status": "PASS",
+      "observation": "Rejeição de tópico fora de recomendação"
+    },
+    {
+      "id": "IGP-08",
+      "status": "PASS",
+      "observation": "Rejeição de resultado duplicado do mesmo caderno"
+    },
+    {
+      "id": "IGP-09",
+      "status": "PASS",
+      "observation": "Rejeição de timestamp sem fuso"
+    },
+    {
+      "id": "IGP-10",
+      "status": "PASS",
+      "observation": "Bloqueio de resultado pessoal sem autorização de validação"
+    },
+    {
+      "id": "IGP-11",
+      "status": "PASS",
+      "observation": "Rejeição de correção não vinculada ao evento anterior"
+    },
+    {
+      "id": "IGP-12",
+      "status": "NOT_IMPLEMENTED",
+      "observation": "Normalização de convenção de relatório ainda depende de adaptador"
+    },
+    {
+      "id": "IGP-13",
+      "status": "NOT_IMPLEMENTED",
+      "observation": "Identidade independente de tentativa ainda carece de schema"
+    },
+    {
+      "id": "IGP-14",
+      "status": "NOT_IMPLEMENTED",
+      "observation": "Distinguir attempt_at de recorded_at exige contrato de engenharia"
+    }
+  ],
+  "limits": [
+    "Execucao local isolada, nao GitHub Actions neste commit",
+    "Fixtures sinteticas sem dados pessoais",
+    "allow_private=true somente em testes de memoria, nao libera escrita",
+    "11 casos avaliados; 3 contratos de software futuro nao foram executados",
+    "A aprovacao integral GP-1, GP-2 e GP-3 nao e demonstrada"
+  ]
+}

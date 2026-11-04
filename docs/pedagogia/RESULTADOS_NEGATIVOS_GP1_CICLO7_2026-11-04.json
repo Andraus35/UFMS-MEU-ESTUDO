@@ -1,0 +1,41 @@
+{
+  "kind": "negative_capability_probes",
+  "source": "synthetic_only",
+  "date": "2026-11-04",
+  "repo": "Andraus35/UFMS-MEU-ESTUDO",
+  "technical_head_tested": "b312a1f9f2110d3d75810e45b414b85c8e775445",
+  "technical_head_rechecked": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+  "git_blobs_confirmed_unchanged": {
+    "scripts/core.py": "28649e5b649c239cb03d748ab5822c352ddfe1db",
+    "config/topics.csv": "d733ec5af292934fa4efa0e892470c27603065f6",
+    "tests/test_harness.py": "00288b757073e87b47c4ce7223704a168843b389"
+  },
+  "executor_git_blob": "28db1cdd26515697fa8c87feedba00a15e4338a2",
+  "local_original_receipt_sha256": "0d3ba65dd9bb8f1f18d04dd6c63f6df8892f5c198b56c84ab8fedb4e71a2e9c9",
+  "note": "This is a transcribed summary, not a byte-identical copy of the local receipt",
+  "observations": [
+    {
+      "id": "IGP-12",
+      "status": "GAP_REPRODUCED",
+      "observed": "ValueError: total out-fict-12 deve ser inteiro não negativo",
+      "interpretation": "Core rejects noncanonical external report; not a proof of absent adapter elsewhere"
+    },
+    {
+      "id": "IGP-13",
+      "status": "GAP_REPRODUCED",
+      "observed": "ValueError: Resultado duplicado para caderno NOTEBOOK-FICT-01; use correção",
+      "interpretation": "Second independent attempt uses same caderno_id and is rejected"
+    },
+    {
+      "id": "IGP-14",
+      "status": "GAP_REPRODUCED",
+      "observed": "Malformed attempt_at accepted; last_event_at remains event timestamp",
+      "interpretation": "Optional attempt time not validated by current core"
+    }
+  ],
+  "summary": {
+    "gap_reproduced": 3,
+    "unexpected": 0,
+    "desired_contract_pass": 0
+  }
+}

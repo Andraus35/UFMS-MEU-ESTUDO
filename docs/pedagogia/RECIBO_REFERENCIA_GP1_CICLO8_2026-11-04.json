@@ -1,0 +1,37 @@
+{
+  "kind": "isolated_reference_and_legacy_regression",
+  "date": "2026-11-04",
+  "repo": "Andraus35/UFMS-MEU-ESTUDO",
+  "technical_head": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+  "pedagogical_parent": "66c218f91548ef4316b024930186036cece5fa49",
+  "source_blobs": {
+    "core.py": "28649e5b649c239cb03d748ab5822c352ddfe1db",
+    "config/topics.csv": "d733ec5af292934fa4efa0e892470c27603065f6",
+    "fixtures.json": "bd060fd2263c686e7dc4f56bf0c97f5fc5112dfc"
+  },
+  "reference_blobs": {
+    "gp1_reference.py": "224ed8e1c13299a3acf078e30e0877b48577ddfc",
+    "test_gp1_reference.py": "e16b95754f6b4c6d45756e92f797a70e2405e2d5"
+  },
+  "reference_archive_sha256": "dc3dc599a8aba4536de89311ffd4fb71725b6d745d92d98339a58aed3c201adb",
+  "results": {
+    "reference_local": {
+      "passed": 15,
+      "failed": 0,
+      "executed": 15,
+      "integrated": false
+    },
+    "legacy_core_local": {
+      "PASS": 11,
+      "FAIL": 0,
+      "NOT_IMPLEMENTED": 3
+    }
+  },
+  "limitations": [
+    "Only synthetic data",
+    "Reference code not committed to PR #1 or PR #2",
+    "No integrated harness or GitHub Actions test for reference",
+    "Three contracts remain NOT_IMPLEMENTED in original core",
+    "Allow synthetic marker is not production access control"
+  ]
+}
