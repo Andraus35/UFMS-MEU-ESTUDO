@@ -9,7 +9,17 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from trusted_governance import evaluate, approval_text, get_collection, signature_comment
+from trusted_governance import (
+    evaluate as evaluate_records, enforce, approval_text, get_collection,
+    signature_comment,
+)
+
+
+def evaluate(pr, head, base, paths, comments, pubkey_b64=""):
+    """Legacy unit fixture adapter; production enforce only accepts API records."""
+    records = [dict(filename=path, status="modified") for path in paths]
+    return evaluate_records(pr, head, base, records, comments, pubkey_b64)
+
 
 HEAD = "a" * 40
 BASE = "b" * 40
@@ -101,6 +111,91 @@ class TrustedGovernanceTests(unittest.TestCase):
                 evaluate(PR, HEAD, BASE, [path], [])
         with self.assertRaisesRegex(ValueError, "empty diff"):
             evaluate(PR, HEAD, BASE, [], [])
+
+    def test_renomear_arquivo_protegido_nao_desativa_gate(self):
+        for old in ("scripts/trusted_governance.py",
+                    ".github/workflows/trusted-governance.yml",
+                    "tests/test_trusted_governance.py"):
+            for new in ("templates/disabled.txt", "docs/untrusted.md"):
+                with self.subTest(old=old, new=new):
+                    rec = [{"filename": new, "previous_filename": old,
+                            "status": "renamed"}]
+                    with self.assertRaisesRegex(ValueError, "Immutable"):
+                        evaluate_records(PR, HEAD, BASE, rec, [self.signed()], self.pubkey)
+
+    def test_renomear_documento_estrategico_requer_assinatura(self):
+        rec = [{"filename": "templates/hidden.md",
+                "previous_filename": "ROADMAP.md", "status": "renamed"}]
+        with self.assertRaisesRegex(ValueError, "Ed25519"):
+            evaluate_records(PR, HEAD, BASE, rec, [], self.pubkey)
+        self.assertTrue(evaluate_records(PR, HEAD, BASE, rec, [self.signed()],
+                                         self.pubkey)["signed_review"])
+
+    def test_renomeacao_sem_origem_e_status_anomalo_rejeitados(self):
+        records = [
+            [{"filename": "templates/hidden.md", "status": "renamed"}],
+            [{"filename": "templates/hidden.md", "status": "suspicious"}],
+            [{"filename": "templates/hidden.md", "status": "added",
+              "previous_filename": "ROADMAP.md"}],
+            [{"filename": "/bad", "status": "removed"}],
+        ]
+        for record in records:
+            with self.subTest(record=record), self.assertRaises(ValueError):
+                evaluate_records(PR, HEAD, BASE, record, [], self.pubkey)
+
+    def test_diff_incompleto_com_metadados_de_mais_arquivos_rejeitado(self):
+        self._enforce_fake(changed=2, files=[
+            {"filename": "templates/only-one.md", "status": "modified"}],
+            raises="changed_files mismatch")
+
+    def test_captura_corrida_de_head_e_de_base(self):
+        self._enforce_fake(second_head="0"*40, raises="identity")
+        self._enforce_fake(second_base="0"*40, raises="identity")
+        self._enforce_fake(actual_main="0"*40, raises="advanced")
+
+    def test_erro_de_listagem_duplicada_rejeitado(self):
+        x = {"filename": "templates/example.md", "status": "modified"}
+        self._enforce_fake(changed=2, files=[x, x], raises="duplicated")
+
+    def test_snapshot_estavel_em_operacao_nao_sensivel(self):
+        result = self._enforce_fake()
+        self.assertEqual(result["result"], "pass")
+        self.assertEqual(result["protected_files"], 0)
+
+    def test_recusa_evento_que_nao_e_da_base_protegida(self):
+        self._enforce_fake(event_name="pull_request", raises="Untrusted event")
+        self._enforce_fake(protected=False, raises="protection")
+
+    def _enforce_fake(self, changed=1, files=None, second_head=None,
+                      second_base=None, actual_main=None, event_name="pull_request_target",
+                      protected=True, raises=None):
+        files = files if files is not None else [
+            {"filename": "templates/harmless.txt", "status": "modified"}]
+        initial = {"number": PR, "base": {"ref": "main", "sha": BASE},
+                   "head": {"sha": HEAD}, "state": "open", "changed_files": changed}
+        final = {"number": PR, "base": {"ref": "main", "sha": second_base or BASE},
+                 "head": {"sha": second_head or HEAD}, "state": "open",
+                 "changed_files": changed}
+        calls = {"pr": 0}
+        def api(path, token):
+            if path.endswith(f"/pulls/{PR}"):
+                calls["pr"] += 1
+                return initial if calls["pr"] == 1 else final
+            if path.endswith("/branches/main"):
+                return {"protected": protected, "commit": {"sha": actual_main or BASE}}
+            raise AssertionError("Unexpected API path: " + path)
+        def collection(path, token, max_pages=10):
+            return files if path.endswith("/files") else []
+        env = {"GITHUB_TOKEN": "mock-token", "GITHUB_REPOSITORY":
+               "Andraus35/UFMS-MEU-ESTUDO", "GITHUB_EVENT_NAME": event_name,
+               "PR_NUMBER": str(PR), "PR_HEAD_SHA": HEAD, "PR_BASE_SHA": BASE}
+        with mock.patch("trusted_governance.get_json", side_effect=api), \
+             mock.patch("trusted_governance.get_collection", side_effect=collection):
+            if raises:
+                with self.assertRaisesRegex(ValueError, raises):
+                    enforce(env)
+            else:
+                return enforce(env)
 
     def test_limite_de_paginacao_e_falha_fechada(self):
         with mock.patch("trusted_governance.get_json", return_value=[{}]*100):
