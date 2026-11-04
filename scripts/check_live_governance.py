@@ -41,7 +41,7 @@ def github_get(path):
         raise EvidenceMissing("GitHub returned malformed JSON") from exc
 
 
-def status_fresh(run, now):
+def status_fresh(run, now, max_age_seconds=600):
     stamp = run.get("completed_at")
     if not isinstance(stamp, str):
         return False
@@ -50,12 +50,45 @@ def status_fresh(run, now):
         if when.tzinfo is None:
             return False
         seconds = now - when.timestamp()
-        return 0 <= seconds <= 600
+        return 0 <= seconds <= max_age_seconds
     except (ValueError, OverflowError, TypeError):
         return False
 
 
-def assert_check(runs, name, appid, merge_sha, external_id, now):
+def complete_check_runs(get, path, max_pages=100):
+    """Fetch a complete bounded check history, refusing pagination anomalies."""
+    all_runs, seen_ids, expected = [], set(), None
+    for page in range(1, max_pages + 1):
+        url = path if page == 1 else f"{path}&page={page}"
+        try:
+            response = get(url)
+        except Exception as exc:
+            raise EvidenceMissing("Incomplete check-run listing: page unavailable") from exc
+        if not isinstance(response, dict):
+            raise EvidenceMissing("Incomplete check-run listing: malformed page")
+        count = response.get("total_count")
+        batch = response.get("check_runs")
+        if (type(count) is not int or count < 0 or
+                not isinstance(batch, list) or len(batch) > 100):
+            raise EvidenceMissing("Incomplete check-run listing: invalid count/page")
+        if expected is None:
+            expected = count
+        if count != expected:
+            raise EvidenceMissing("Incomplete check-run listing: count changed")
+        for item in batch:
+            if (not isinstance(item, dict) or
+                    type(item.get("id")) is not int or item["id"] in seen_ids):
+                raise EvidenceMissing("Incomplete check-run listing: duplicate/invalid ID")
+            seen_ids.add(item["id"])
+        all_runs.extend(batch)
+        if len(all_runs) == expected:
+            return all_runs
+        if len(all_runs) > expected or len(batch) != 100:
+            raise EvidenceMissing("Incomplete check-run listing: short/inconsistent page")
+    raise EvidenceMissing("Incomplete check-run listing: page limit exceeded")
+
+
+def assert_check(runs, name, appid, merge_sha, external_id, now, max_age_seconds=600):
     matched = [c for c in runs if isinstance(c, dict) and c.get("name") == name]
     require(matched, "Check absent on test merge: " + name)
     require(all(c.get("app", {}).get("id") == appid for c in matched),
@@ -64,7 +97,7 @@ def assert_check(runs, name, appid, merge_sha, external_id, now):
     require(latest.get("head_sha") == merge_sha, "Check attached to wrong SHA")
     require(latest.get("status") == "completed" and latest.get("conclusion") == "success",
             "Latest required check is not successful: " + name)
-    require(status_fresh(latest, now), "Check timestamp exceeds snapshot freshness window")
+    require(status_fresh(latest, now, max_age_seconds), "Check timestamp exceeds snapshot freshness window")
     if external_id is not None:
         require(latest.get("external_id") == external_id, "PR identity mismatch in App check")
     return {"name": name, "app_id": appid, "check_id": latest.get("id"),
@@ -121,13 +154,10 @@ def verify_snapshot(number, expected_head, expected_base, app_id, get=github_get
     require(commit.get("sha") == merge
             and [p.get("sha") for p in commit.get("parents", [])] == [base, head],
             "Synthetic merge parents mismatch")
-    collection = get(f"{prefix}/commits/{merge}/check-runs?per_page=100")
-    runs = collection.get("check_runs") if isinstance(collection, dict) else None
-    require(isinstance(runs, list) and collection.get("total_count", len(runs)) == len(runs),
-            "Incomplete check-run listing")
+    runs = complete_check_runs(get, f"{prefix}/commits/{merge}/check-runs?per_page=100")
     external_id = f"pr{number}:{head}:{base}:{merge}"
     checked = [
-        assert_check(runs, "validate", ACTION_APP_ID, merge, None, now),
+        assert_check(runs, "validate", ACTION_APP_ID, merge, None, now, 7 * 24 * 3600),
         assert_check(runs, APP_CHECK, app_id, merge, external_id, now),
     ]
     pr2, branch2 = get(pr_path), get(f"{prefix}/branches/main")
@@ -136,6 +166,8 @@ def verify_snapshot(number, expected_head, expected_base, app_id, get=github_get
             and pr2.get("merge_commit_sha") == merge
             and branch2.get("commit", {}).get("sha") == base,
             "PR/base moved during evidence collection")
+    # Check freshness here is evidence, NOT the native GitHub merge decision.
+    # The required checks must also be present on GitHub's selected SHA.
     return {"snapshot": "PASS_AT_INSTANT_ONLY", "pr": number, "head": head,
             "base": base, "merge": merge, "checks": checked,
             "merge_authorized": False,

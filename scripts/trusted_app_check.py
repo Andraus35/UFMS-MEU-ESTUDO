@@ -151,6 +151,38 @@ def refuse_shared_head(pr_number, head, installation):
             raise ValueError("Two open PRs share one HEAD; no authorization allowed")
 
 
+def complete_check_runs(get, path, max_pages=100):
+    """Bounded, exhaustive REST pagination; never reuse an incomplete result."""
+    all_runs, seen_ids, expected = [], set(), None
+    for page in range(1, max_pages + 1):
+        url = path if page == 1 else f"{path}&page={page}"
+        try:
+            response = get(url)
+        except Exception as exc:
+            raise ValueError("Incomplete or malformed GitHub check history: page unavailable") from exc
+        if not isinstance(response, dict):
+            raise ValueError("Incomplete or malformed GitHub check history")
+        count, batch = response.get("total_count"), response.get("check_runs")
+        if (type(count) is not int or count < 0 or
+                not isinstance(batch, list) or len(batch) > 100):
+            raise ValueError("Incomplete or malformed GitHub check history")
+        if expected is None:
+            expected = count
+        if count != expected:
+            raise ValueError("Incomplete or malformed GitHub check history: count changed")
+        for item in batch:
+            if (not isinstance(item, dict) or
+                    type(item.get("id")) is not int or item["id"] in seen_ids):
+                raise ValueError("Incomplete or malformed GitHub check history: invalid/duplicate ID")
+            seen_ids.add(item["id"])
+        all_runs.extend(batch)
+        if len(all_runs) == expected:
+            return all_runs
+        if len(all_runs) > expected or len(batch) != 100:
+            raise ValueError("Incomplete or malformed GitHub check history: short page")
+    raise ValueError("Incomplete or malformed GitHub check history: page limit exceeded")
+
+
 def verify_one(pr_number, installation, app_id, public_key):
     if type(pr_number) is not int or pr_number <= 0:
         raise ValueError("Invalid PR")
@@ -209,15 +241,10 @@ def verify_one(pr_number, installation, app_id, public_key):
     external_id = f"pr{pr_number}:{head}:{base}:{merge_sha}"
     # Do not flood GitHub with duplicate checks on every periodic poll.
     # Importantly, only a check from OUR dedicated GitHub App can be reused.
-    history = api_json(
-        "GET", f"repos/{REPOSITORY}/commits/{merge_sha}/check-runs?per_page=100",
-        installation)
-    if (not isinstance(history, dict)
-            or not isinstance(history.get("check_runs"), list)
-            or type(history.get("total_count")) is not int
-            or history["total_count"] != len(history["check_runs"])):
-        raise ValueError("Incomplete or malformed GitHub check history")
-    own = [x for x in history["check_runs"]
+    history = complete_check_runs(
+        lambda path: api_json("GET", path, installation),
+        f"repos/{REPOSITORY}/commits/{merge_sha}/check-runs?per_page=100")
+    own = [x for x in history
            if isinstance(x, dict) and x.get("name") == CHECK_NAME
            and isinstance(x.get("app"), dict)
            and x["app"].get("id") == int(app_id)]

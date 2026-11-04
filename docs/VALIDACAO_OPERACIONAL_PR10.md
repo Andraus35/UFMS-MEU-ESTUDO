@@ -56,3 +56,28 @@ administrativo, além de controle operacional ou redesenho da autorização.
 **Não foi configurada GitHub App, Oracle Cloud ou Branch Protection nesta
 entrega.** A chave privada Ed25519 fica somente no Termux do proprietário; a
 chave RSA da App, somente no host do serviço. Nunca expor ambas ao ChatGPT.
+
+## Correção NC-PR10-09 — critérios de idade e histórico paginado
+
+A verificação read-only diferencia os requisitos: `validate` permite até
+sete dias (limite documentado pelo GitHub), enquanto
+`ufms-governance/app-verified` tem **10 minutos apenas para o relatório
+administrativo**, não para o servidor. Histórico de check-runs é paginado até
+100 páginas de 100 itens com detecção de IDs duplicados, contagem inconsistente
+ou páginas faltantes. Acima do limite, a consulta **falha com bloqueio**.
+
+### Bloqueador adicional de integração CI/App
+
+Evidência de 04/11/2026, candidata 7c436ac: o job de pull_request fez checkout
+do merge sintético `2144b6b5...`, mas a API de checks registrou `validate`
+somente no HEAD `7c436ac...`. A consulta ao SHA de merge sintético devolveu
+zero checks. Se a App publicar check sobre o merge sintético, a proteção GitHub
+passará a exigir checks sobre aquele SHA; não se deve presumir que o
+`validate` encontrado apenas no HEAD satisfará o requisito. O verificador
+continua falhando sem ambos no SHA selecionado. Antes de instalar a regra,
+projetar e ensaiar atestação de CI no SHA exigido pelo GitHub, com emissor
+confiável e App ID esperado, sem conceder permissões de status write a
+workflows executados de código não confiável.
+
+**Não homologar** ao obter sucesso em testes simulados. Sem GitHub App instalada,
+configuração administrativa e teste E2E, manter o PR em draft e merge bloqueado.

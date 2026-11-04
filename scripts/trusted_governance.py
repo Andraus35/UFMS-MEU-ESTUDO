@@ -26,6 +26,7 @@ LOCKED = frozenset({
     "tests/test_trusted_app_real_crypto.py",
     "scripts/check_live_governance.py",
     "tests/test_check_live_governance.py",
+    "tests/test_check_history_pagination.py",
 })
 SENSITIVE_EXACT = frozenset({
     "AGENTS.md", "ROADMAP.md", "settings.json",

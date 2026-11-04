@@ -76,6 +76,18 @@ class LiveEvidenceTests(unittest.TestCase):
         check["app"]["id"] = 15368
         self.must_fail("source ambiguous")
 
+    def test_validate_older_than_ten_minutes_still_valid(self):
+        path = f"{self.prefix}/commits/{MERGE}/check-runs?per_page=100"
+        self.values[path]["check_runs"][0]["completed_at"] = datetime.fromtimestamp(
+            NOW - 1800, timezone.utc).isoformat()
+        self.assertEqual(self.run_probe()["snapshot"], "PASS_AT_INSTANT_ONLY")
+
+    def test_validate_older_than_seven_days_rejected(self):
+        path = f"{self.prefix}/commits/{MERGE}/check-runs?per_page=100"
+        self.values[path]["check_runs"][0]["completed_at"] = datetime.fromtimestamp(
+            NOW - 7*86400 - 1, timezone.utc).isoformat()
+        self.must_fail("freshness")
+
     def test_old_success_denied_as_snapshot(self):
         check = self.values[f"{self.prefix}/commits/{MERGE}/check-runs?per_page=100"]["check_runs"][1]
         check["completed_at"] = datetime.fromtimestamp(

@@ -94,3 +94,18 @@ engenharia adicional e ensaios reais.
   https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue
 - GitHub Docs — Managing a branch protection rule:
   https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule
+
+## Limite adicional de uma merge queue
+
+A fila cria um novo SHA para o grupo no momento do enfileiramento e pode evitar
+que um check antigo do HEAD autorize outro objeto de integração. **Não fornece
+revogação instantânea depois de um check verde no próprio merge-group**: uma
+autorização revogada entre a aprovação do grupo e a integração continua
+sujeita às regras nativas de validade de checks. Assim, migração sem um
+protocolo de autorização e ensaio E2E não encerra a não conformidade.
+
+A CI atual é executada com o código do merge sintético, mas seu check
+`validate` aparece no HEAD. Uma App que emitir check no sintético poderá
+mudar o SHA utilizado pelo GitHub para os checks obrigatórios. Não ativar a
+proteção proposta até reconciliar todos os checks obrigatórios no mesmo
+commit verificado no servidor.
