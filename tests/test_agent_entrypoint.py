@@ -34,7 +34,7 @@ class EntryGateTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("Documento válido de teste.", encoding="utf-8")
         (self.root / "AGENTS.md").write_text(
-            "# Contrato\n1. \`AGENTS.md\`\n2. \`ROADMAP.md\`\n", encoding="utf-8"
+            "# Contrato\n1. `AGENTS.md`\n2. `ROADMAP.md`\n", encoding="utf-8"
         )
         (self.root / "ROADMAP.md").write_text(fake_roadmap(), encoding="utf-8")
         (self.root / "settings.json").write_text(
