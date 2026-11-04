@@ -1,7 +1,7 @@
 # Rules — núcleo obrigatório
 
 1. **Fonte de verdade:** eventos versionados e arquivos atuais, nunca a recordação informal do chat.
-2. **Bootstrap:** conferir os sete arquivos previstos em `settings.json` antes da primeira decisão operacional de uma sessão/chamada; estado do mesmo commit ou reportar inconsistência.
+2. **Bootstrap:** conferir os nove arquivos previstos em `settings.json` antes da primeira decisão operacional de uma sessão/chamada; estado do mesmo commit ou reportar inconsistência.
 3. **Idempotência:** um `event_id` não pode ser processado duas vezes. Um segundo resultado do mesmo caderno exige correção explícita vinculada ao evento original.
 4. **Escrita condicionada:** verificar autorização, visibilidade privada para resultados reais, validação local, gravação e commit resultante. Não fazer merge de PR sem ordem explícita.
 5. **Mudanças de governança:** `AGENTS.md`, `rules/`, `guardrails/` e `settings.json` só mudam por revisão humana. Decisões pedagógicas ordinárias não exigem PR individual.
