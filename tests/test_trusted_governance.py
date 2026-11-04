@@ -42,7 +42,7 @@ class TrustedGovernanceTests(unittest.TestCase):
         return {"body": body, "user": {"login": login, "id": actor_id, "type": "User"}}
 
     def test_documentacao_comum_sem_assinatura(self):
-        self.assertFalse(evaluate(PR, HEAD, BASE, ["docs/suporte.md"], [])["signed_review"])
+        self.assertFalse(evaluate(PR, HEAD, BASE, ["templates/suporte.md"], [])["signed_review"])
 
     def test_caminhos_sensiveis_requerem_chave_humana(self):
         for path in ("ROADMAP.md", "AGENTS.md", "settings.json",
