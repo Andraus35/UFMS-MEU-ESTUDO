@@ -12,6 +12,11 @@ REFERENCES = (
     "AGENTS.md", "README.md", "rules/CORE.md", "memory/INDEX.md",
     "docs/OPERACAO.md", ".github/copilot-instructions.md",
 )
+READING_CONTRACTS = {
+    "AGENTS.md": "2. `ROADMAP.md`",
+    "README.md": "dez arquivos do bootstrap",
+    "docs/OPERACAO.md": "dez arquivos obrigatórios",
+}
 
 def verify(root=ROOT):
     root = Path(root)
@@ -21,6 +26,9 @@ def verify(root=ROOT):
     for path in REFERENCES:
         if "ROADMAP.md" not in (root / path).read_text(encoding="utf-8"):
             raise ValueError("Referência ao roadmap ausente: " + path)
+    for path, marker in READING_CONTRACTS.items():
+        if marker not in (root / path).read_text(encoding="utf-8"):
+            raise ValueError("Contrato de leitura desatualizado: " + path)
     return hashes["ROADMAP.md"]
 
 if __name__ == "__main__":

@@ -28,5 +28,16 @@ class RoadmapGateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Referência ao roadmap ausente"):
                 verify(ROOT)
 
+    def test_nove_arquivos_reprova_contrato(self):
+        read = Path.read_text
+        def mutated(path, *args, **kwargs):
+            text = read(path, *args, **kwargs)
+            if str(path).endswith("docs/OPERACAO.md"):
+                return text.replace("dez arquivos obrigatórios", "nove arquivos obrigatórios")
+            return text
+        with patch.object(Path, "read_text", mutated):
+            with self.assertRaisesRegex(ValueError, "Contrato de leitura desatualizado"):
+                verify(ROOT)
+
 if __name__ == "__main__":
     unittest.main()

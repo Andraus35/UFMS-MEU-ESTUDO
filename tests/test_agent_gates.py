@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract
+from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract, validate_roadmap_text
 from hooks import before_write, after_write, checkpoint
 
 
@@ -77,6 +77,25 @@ class AgentGateTests(unittest.TestCase):
                 (root / "settings.json").write_text(json.dumps({"bootstrap": {"mandatory": variant}}), encoding="utf-8")
                 with self.assertRaisesRegex(ValueError, "ordem"):
                     check_bootstrap(root)
+
+    def test_roadmap_fila_real_integra_e_e_valida(self):
+        contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        self.assertTrue(validate_roadmap_text(contents))
+
+    def test_mutantes_de_fila_nao_podem_passar(self):
+        original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        mutants = (
+            original.replace("| RM-10 |", "| RM-09 |"),
+            original.replace("| RM-04 |", "| RM-99 |"),
+            original.replace("| RM-03 | P1 |", "| RM-03 | P9 |"),
+            original.replace("| RM-03 | P1 |", "| RM-03 | P1 |", 1).replace(
+                "| planejado |", "| ESTADO_FALSO |", 1),
+            original.split("## Fila de execução")[0],
+        )
+        for mutation in mutants:
+            with self.subTest(length=len(mutation)):
+                with self.assertRaises(ValueError):
+                    validate_roadmap_text(mutation)
 
     def test_hook_sem_interface_run_falha(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -5,6 +5,7 @@ nem registra hooks nativos no GitHub ou na ferramenta de IA.
 """
 import ast
 import hashlib
+import re
 from pathlib import Path
 
 try:
@@ -24,6 +25,44 @@ ROADMAP_SECTIONS = (
     "## Fila de execução",
     "## Critérios de promoção",
 )
+ROADMAP_ITEMS = tuple(f"RM-{n:02d}" for n in range(11))
+ROADMAP_STATES = frozenset({
+    "planejado", "em_andamento", "implementado_nao_homologado",
+    "bloqueado", "homologado",
+})
+
+
+def validate_roadmap_text(contents):
+    """Rejeita cabeçalhos-placeholder e fila incompleta ou contraditória."""
+    if not isinstance(contents, str):
+        raise ValueError("Roadmap não é texto")
+    if len(contents.encode("utf-8")) < 3000:
+        raise ValueError("Roadmap truncado/placeholder")
+    for heading in ROADMAP_SECTIONS:
+        if contents.count(heading) != 1:
+            raise ValueError("Seção obrigatória do roadmap ausente/duplicada: " + heading)
+    seen = {}
+    for line in contents.splitlines():
+        if not re.match(r"^\\|\\s*RM-\\d+", line):
+            continue
+        columns = [item.strip() for item in line.strip().split("|")[1:-1]]
+        if len(columns) != 5:
+            raise ValueError("Linha de roadmap inválida: " + line[:60])
+        code, priority, _, status, done = columns
+        if code in seen:
+            raise ValueError("ID de roadmap duplicado: " + code)
+        if priority not in ("P0", "P1", "P2"):
+            raise ValueError("Prioridade inválida: " + code)
+        if status not in ROADMAP_STATES:
+            raise ValueError("Status de roadmap inválido: " + code)
+        if len(done) < 25:
+            raise ValueError("Critério de aceite vazio ou superficial: " + code)
+        seen[code] = True
+    if tuple(seen) != ROADMAP_ITEMS:
+        raise ValueError("Fila de roadmap incompleta, reordenada ou adulterada")
+    return True
+
+
 HOOK_FILES = {
     "before_write": "hooks/before_write.py",
     "after_write": "hooks/after_write.py",
@@ -61,9 +100,7 @@ def check_bootstrap(root=ROOT):
         except UnicodeDecodeError as exc:
             raise ValueError("Bootstrap não UTF-8: " + name) from exc
         if name == "ROADMAP.md":
-            for heading in ROADMAP_SECTIONS:
-                if raw.decode("utf-8").count(heading) != 1:
-                    raise ValueError("Seção obrigatória do roadmap ausente/duplicada: " + heading)
+            validate_roadmap_text(raw.decode("utf-8"))
         hashes[name] = hashlib.sha256(raw).hexdigest()
     return hashes
 

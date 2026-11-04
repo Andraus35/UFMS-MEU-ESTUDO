@@ -16,7 +16,7 @@
 
 ## START/DELIVERY — contrato local verificável
 
-1. **START em checkout local:** conferir HEAD/branch e os nove arquivos obrigatórios; `python scripts/bootstrap.py` lê os bytes e informa SHA-256 por arquivo; `python scripts/roadmap_gate.py --check` valida referências ao roadmap. Antes de trabalhar, ler ROADMAP do mesmo HEAD e identificar item RM. Conferir a CI vinculada ao HEAD exato.
+1. **START em checkout local:** conferir HEAD/branch e os dez arquivos obrigatórios; `python scripts/bootstrap.py` lê os bytes e informa SHA-256 por arquivo; `python scripts/roadmap_gate.py --check` valida referências ao roadmap. Antes de trabalhar, ler ROADMAP do mesmo HEAD e identificar item RM. Conferir a CI vinculada ao HEAD exato.
 2. **Pré-escrita autorizada:** executar `python hooks/before_write.py` e `python scripts/write_policy.py --check`. Falha interrompe operação; não usar direct-write como atalho. **Não registrar resultados pessoais**: `personal_results_writes_enabled` permanece `false`, e alterar só a flag reprova a CI.
 3. **DELIVERY:** executar `python hooks/after_write.py`, `python hooks/checkpoint.py` e testes; conferir persistência remota por SHA exato após commit. Atualizar handoff com evidências e limitações, nunca com êxito presumido.
 4. **Limite de implementação:** os scripts de hook são *invocáveis e testados*, mas **não são automaticamente registrados** por GitHub, ChatGPT ou outro agente. Um agente que escreva diretamente pela API pode ignorar o preflight. A CI fornece um gate de validação após o push; proteções de branch e autorização humana seguem necessárias para impedir bypass/merge.
