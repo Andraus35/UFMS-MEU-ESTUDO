@@ -86,7 +86,8 @@ class FakeGitHub:
                     "object": {"sha": self.refs[number]}}
         if endpoint.startswith("commits/") and endpoint.endswith("/check-runs?per_page=100"):
             sha = endpoint.split("/")[1]
-            return {"check_runs": copy.deepcopy(self.checks.get(sha, []))}
+            items = copy.deepcopy(self.checks.get(sha, []))
+            return {"total_count": len(items), "check_runs": items}
         if endpoint.startswith("commits/"):
             sha = endpoint.split("/")[-1]
             return {"sha": sha, "parents": [{"sha": p} for p in self.parents[sha]]}
@@ -298,6 +299,19 @@ class AdversarialGitHubAppTests(unittest.TestCase):
         self.assertEqual(revoked["conclusion"], "failure")
         self.assertEqual([x["conclusion"] for x in self.fake.published],
                          ["success", "failure"])
+
+    def test_truncated_check_history_is_rejected_before_green(self):
+        real_api = self.fake.api
+        def attack(method, path, token, payload=None):
+            response = real_api(method, path, token, payload)
+            if method == "GET" and "/check-runs?" in path:
+                response["total_count"] = len(response["check_runs"]) + 1
+            return response
+        with mock.patch("trusted_app_check.api_json", side_effect=attack), \
+             mock.patch("trusted_app_check.enforce", return_value=None):
+            with self.assertRaisesRegex(ValueError, "Incomplete"):
+                verify_one(9, "installation", APP_ID, "pubkey")
+        self.assertEqual(self.fake.published, [])
 
     def test_app_check_readback_must_identify_own_app_not_actions(self):
         original = self.fake.api

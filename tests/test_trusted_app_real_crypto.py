@@ -72,7 +72,8 @@ class SignedGithubFixture:
         if tail == f"commits/{MERGE}":
             return {"sha": MERGE, "parents": [{"sha": p} for p in self.merge_parents]}
         if tail == f"commits/{MERGE}/check-runs?per_page=100":
-            return {"check_runs": copy.deepcopy(self.checks)}
+            return {"total_count": len(self.checks),
+                    "check_runs": copy.deepcopy(self.checks)}
         raise AssertionError("Unexpected App request " + tail)
 
     def gh_policy(self, path, token):

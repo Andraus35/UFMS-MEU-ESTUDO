@@ -236,7 +236,7 @@ class ExternalAppTests(unittest.TestCase):
                                                   timezone.utc).isoformat()),
                         "conclusion": "failure" if policy_error or shared_head else "success",
                         "external_id": f"pr{PR}:{HEAD}:{BASE}:{MERGE}",
-                    }]} if own_check else {"check_runs": []}
+                    }], "total_count": 1} if own_check else {"check_runs": [], "total_count": 0}
                 hits += 1
                 if hits == 2 and after_read_error:
                     raise ValueError("network unavailable")

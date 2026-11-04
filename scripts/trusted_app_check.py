@@ -212,8 +212,11 @@ def verify_one(pr_number, installation, app_id, public_key):
     history = api_json(
         "GET", f"repos/{REPOSITORY}/commits/{merge_sha}/check-runs?per_page=100",
         installation)
-    if not isinstance(history, dict) or not isinstance(history.get("check_runs"), list):
-        raise ValueError("Cannot verify previous check source")
+    if (not isinstance(history, dict)
+            or not isinstance(history.get("check_runs"), list)
+            or type(history.get("total_count")) is not int
+            or history["total_count"] != len(history["check_runs"])):
+        raise ValueError("Incomplete or malformed GitHub check history")
     own = [x for x in history["check_runs"]
            if isinstance(x, dict) and x.get("name") == CHECK_NAME
            and isinstance(x.get("app"), dict)
