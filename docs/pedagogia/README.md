@@ -1,6 +1,6 @@
 # Especificação pedagógica — UFMS MEU ESTUDO
 
-**Versão de referência:** v1.2 — 04/11/2026  
+**Versão de referência:** v1.3 — 04/11/2026  
 **Estado:** PROPOSTA DOCUMENTAL; não equivale a implementação, aprovação do método ou operação autônoma do tutor.  
 **Escopo:** preparação adaptativa por questões para os cargos UFMS 523 e 324.
 
@@ -9,7 +9,8 @@
 1. [Método de aprendizagem v1.0](METODO_v1.0.md): objetivos, princípios, modalidades de caderno e interação com plataformas.
 2. [Protocolo de decisão v1.1](PROTOCOLO_DECISAO_v1.1.md): prioridades por assunto, concorrência entre cargos, camadas determinística e adaptativa.
 3. [Modelo de evidências v1.2](MODELO_EVIDENCIAS_v1.2.md): resultados, incerteza, proveniência, retenção e comparação.
-4. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): testes de cenário para implementação posterior.
+4. [Estratégia competitiva v1.3](ESTRATEGIA_COMPETITIVA_v1.3.md): dois cargos, riscos eliminatórios, matriz de prioridades, prova em dois turnos e cenários.
+5. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): testes de cenário para implementação posterior.
 
 ## Hierarquia e limites
 

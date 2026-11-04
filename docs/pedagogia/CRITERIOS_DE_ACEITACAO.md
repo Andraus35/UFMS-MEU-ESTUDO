@@ -35,3 +35,22 @@
 - Nenhuma alegação de acurácia preditiva, probabilidade de aprovação ou eficácia causal sem estudo apropriado.
 
 **Gate:** aprovação de documentação, implementação verificável e validação operacional são etapas independentes. Documento committed ≠ método executando.
+
+## Cenários competitivos complementares — v1.3 (pendentes de implementação)
+
+| ID | Situação | Saída exigida |
+|---|---|---|
+| COMP-01 | Inglês sem diagnóstico; resultados fortes em específicos | Verificar risco de nota zero e propor diagnóstico, sem desviar para sempre o estudo |
+| COMP-02 | Valor de 40 pontos em específicos | Não transformar pesos da prova em proporções fixas de horas |
+| COMP-03 | Conteúdos de educação superior em 523 e 324 parecem similares | Confirmar equivalência textual por subtópico antes de compartilhar desempenho |
+| COMP-04 | Bom desempenho em 523, 324 não avaliado | Estado do 324 permanece desconhecido; avaliar recorte próprio |
+| COMP-05 | Um caderno comprovadamente comum foi resolvido | Uma tentativa persistida; múltiplos vínculos sem contagem duplicada |
+| COMP-06 | Legislação comum apresenta esquecimento após intervalo | Considerar recuperação independente com benefício conjunto |
+| COMP-07 | Simulado do turno da manhã foi bom, tarde foi fraco | Não inferir causa; comparar conteúdo, fadiga relatada e condições |
+| COMP-08 | Área eliminatória fragilizada e conteúdo específico lucrativo | Considerar risco eliminatório antes do ganho esperado, sem negligência permanente de outros assuntos |
+| COMP-09 | Pouco tempo e temas ainda desconhecidos | Roteamento por impacto, incerteza e cobertura, sem inventar histórico ou calendário obrigatório |
+| COMP-10 | Duas alternativas pedagogicamente elegíveis em empate | Escolha ponderada só quando permitida, com pesos e semente registrados |
+| COMP-11 | Retificação muda assunto ou condição de aprovação | Revalidar mapeamentos e bloquear decisão fundada na versão obsoleta |
+| COMP-12 | Questões novas insuficientes em banca alvo | Expansão transparente de filtros; jamais inventar estoque da plataforma |
+
+Todos os exemplos são **fictícios**. CI documental aprovada não equivale a validação dessas decisões em produção.
