@@ -17,7 +17,7 @@ from trusted_app_check import (
 )
 from trusted_governance import REPOSITORY
 
-PR, HEAD, BASE = 9, "a"*40, "b"*40
+PR, HEAD, BASE, MERGE = 9, "a"*40, "b"*40, "c"*40
 APP_ID = "456789"
 
 
@@ -90,7 +90,7 @@ class ExternalAppTests(unittest.TestCase):
         self.assertEqual(result["conclusion"], "success")
         self.assertEqual(result["check_name"], CHECK_NAME)
         self.assertEqual(result["app_id"], int(APP_ID))
-        self.assertEqual(posts[0]["head_sha"], HEAD)
+        self.assertEqual(posts[0]["head_sha"], MERGE)
         self.assertEqual(posts[0]["conclusion"], "success")
 
     def test_policy_denial_emits_failure_not_success(self):
@@ -136,18 +136,44 @@ class ExternalAppTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Duplicate"):
                 list_open_pr_numbers("token")
 
+    def test_shared_head_between_prs_forces_failure(self):
+        result, posts = self._simulate(shared_head=True)
+        self.assertEqual(result["conclusion"], "failure")
+        self.assertEqual(posts[0]["conclusion"], "failure")
+        self.assertEqual(posts[0]["head_sha"], MERGE)
+
+    def test_check_is_per_pr_merge_not_reusable_from_head(self):
+        result, posts = self._simulate()
+        self.assertEqual(result["merge_sha"], MERGE)
+        self.assertEqual(posts[0]["head_sha"], MERGE)
+        self.assertNotEqual(posts[0]["head_sha"], HEAD)
+        self.assertIn(f"pr{PR}:{HEAD}:{BASE}:{MERGE}",
+                      posts[0]["external_id"])
+
+    def test_wrong_synthetic_merge_parents_rejected(self):
+        with self.assertRaisesRegex(ValueError, "merge parents"):
+            self._simulate(wrong_merge_parents=True)
+
+    def test_missing_test_merge_is_fail_closed(self):
+        with self.assertRaisesRegex(ValueError, "merge SHA"):
+            self._simulate(missing_merge=True)
+
     def test_check_api_unavailable_must_not_claim_success(self):
         with self.assertRaisesRegex(ValueError, "cannot create check"):
             self._simulate(post_error=True)
 
     def _simulate(self, policy_error=False, after_head=None, after_base=None,
                   response_app_id=None, after_read_error=False, post_error=False,
-                  own_check=False, own_id=None):
+                  own_check=False, own_id=None,
+                  shared_head=False, wrong_merge_parents=False,
+                  missing_merge=False):
         first = {"number": PR, "state": "open", "head": {"sha": HEAD},
-                 "base": {"ref": "main", "sha": BASE}}
+                 "base": {"ref": "main", "sha": BASE},
+                 "merge_commit_sha": None if missing_merge else MERGE}
         after = {"number": PR, "state": "open",
                  "head": {"sha": after_head or HEAD},
-                 "base": {"ref": "main", "sha": after_base or BASE}}
+                 "base": {"ref": "main", "sha": after_base or BASE},
+                 "merge_commit_sha": MERGE}
         hits = 0
         posts = []
         def fake_api(method, path, token, payload=None):
@@ -155,12 +181,22 @@ class ExternalAppTests(unittest.TestCase):
             self.assertEqual(token, "installation")
             self.assertTrue(path.startswith("repos/"+REPOSITORY+"/"))
             if method == "GET":
+                if path.endswith(f"/git/ref/pull/{PR}/merge"):
+                    return {"ref": f"refs/pull/{PR}/merge",
+                            "object": {"sha": MERGE}}
+                if path.endswith(f"/commits/{MERGE}"):
+                    return {"sha": MERGE, "parents": [
+                        {"sha": "0"*40 if wrong_merge_parents else BASE},
+                        {"sha": HEAD}]}
+                if path.endswith(f"/pulls/{PR+1}"):
+                    return {"number": PR+1, "head": {"sha": HEAD},
+                            "state": "open"}
                 if "/check-runs" in path:
                     return {"check_runs": [{
                         "id": 999, "app": {"id": own_id or int(APP_ID)},
                         "status": "completed", "name": CHECK_NAME,
-                        "conclusion": "failure" if policy_error else "success",
-                        "external_id": f"pr{PR}:{HEAD}:{BASE}",
+                        "conclusion": "failure" if policy_error or shared_head else "success",
+                        "external_id": f"pr{PR}:{HEAD}:{BASE}:{MERGE}",
                     }]} if own_check else {"check_runs": []}
                 hits += 1
                 if hits == 2 and after_read_error:
@@ -175,10 +211,12 @@ class ExternalAppTests(unittest.TestCase):
                         "conclusion": payload["conclusion"]}
             raise AssertionError("Unexpected method")
         with mock.patch("trusted_app_check.api_json", side_effect=fake_api):
-            with mock.patch("trusted_app_check.enforce") as policy:
-                if policy_error:
-                    policy.side_effect = ValueError("no signed authorization")
-                return verify_one(PR, "installation", APP_ID, "pubkey"), posts
+            with mock.patch("trusted_app_check.list_open_pr_numbers",
+                            return_value=[PR, PR+1] if shared_head else [PR]):
+                with mock.patch("trusted_app_check.enforce") as policy:
+                    if policy_error:
+                        policy.side_effect = ValueError("no signed authorization")
+                    return verify_one(PR, "installation", APP_ID, "pubkey"), posts
 
 
 if __name__ == "__main__":
