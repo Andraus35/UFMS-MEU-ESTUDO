@@ -56,3 +56,14 @@ A assinatura e o comentário são públicos; nunca publicar a chave privada. Qua
 - **NC-PR9-02:** sem Tutor/Coach operacionais e um broker central com tokens exclusivos, não há garantia de START universal. Restringir agentes consultivos a somente leitura, bloquear rotas diretas de escrita, impor bootstrap/recibo no executor e testar ações recusadas.
 - **NC-PR9-03 a 06:** modelo de transições, sincronização estratégica, preflight API e prova administrativa completa seguem pendentes.
 - A política de \`pull_request_target\` em repositórios públicos está sujeita a restrições anunciadas pelo GitHub para **02/12/2026**. Verificar se o workflow efetivamente roda **antes de torná-lo required**, e migrar a App externa confiável se necessário.
+
+
+## Riscos adicionais identificados na revisão do mecanismo
+
+**NÃO declarar este workflow uma âncora infalsificável.** Um check de GitHub Actions exigido apenas por nome e pelo aplicativo GitHub Actions pode, conforme configuração do repositório, ser confundido com outro job de nome idêntico introduzido pelo autor do PR. Portanto, a instalação deste workflow por si só **não encerra NC-PR9-01**. Uma implementação de produção exige confirmar o vínculo do check ao workflow confiável e evitar duplicidade/spoof de contexto, preferencialmente mediante **GitHub App verificadora distinta, com identidade própria e permissões mínimas**, ou uma política de workflow obrigatório aplicada fora do PR. Enquanto isso não for demonstrado, manter revisão independente e não homologar.
+
+**A chave pública em variável do Actions não é secreta, mas sua substituição administrativa é um risco:** a chave deve ser revisada por outro canal e gerenciada separadamente das credenciais dos agentes. Os agentes de IA jamais recebem a chave privada do Termux ou permissão administrativa de substituir o check e sua origem.
+
+**Prazo de execução:** a política padrão do GitHub para \`pull_request_target\` em repositórios públicos será aplicada a partir de **02/12/2026**, com testes de bloqueio em novembro de 2026. Verificar e autorizar estritamente o evento no painel de Actions Policies quando apropriado. Não tornar o workflow um check obrigatório antes de comprovar que continuará sendo executado.
+
+**Estado preciso:** CI do PR significa apenas testes no código candidato. Instalação do workflow, assinatura administrativa e bloqueio efetivo de mutantes coordenados são etapas distintas e **ainda não realizadas**.
