@@ -15,7 +15,7 @@ from .agents import configured_agent
 from .checkins import generate_generic_checkins
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib import request
+from urllib import error, request
 
 UTC = timezone.utc
 BOTS = ("tutor", "coach")
@@ -187,10 +187,14 @@ class Telegram:
         endpoint = "https://api.telegram.org/bot" + self._token + "/" + method
         req = request.Request(endpoint, data=json.dumps(payload).encode(),
                               headers={"Content-Type": "application/json"}, method="POST")
-        # Não registrar URLs/exceções em logs: URL contém credencial.
-        with request.urlopen(req, timeout=timeout) as reply:
-            result = json.load(reply)
-        if not result.get("ok"):
+        # URLs Telegram carregam o token; nunca propagar erro HTTP cru.
+        try:
+            with request.urlopen(req, timeout=timeout) as reply:
+                result = json.load(reply)
+        except (error.HTTPError, error.URLError, TimeoutError, OSError,
+                ValueError, TypeError, KeyError):
+            raise RuntimeError("Falha de transporte do Telegram; entrega não confirmada") from None
+        if not isinstance(result, dict) or not result.get("ok"):
             raise RuntimeError("Telegram não confirmou a operação")
         return result["result"]
 

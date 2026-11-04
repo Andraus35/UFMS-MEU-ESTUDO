@@ -187,3 +187,14 @@ apaga metadados locais \`llm_requests\` e não cancela um HTTP já enviado.
 Permissão para conversas é independente da permissão para alertas proativos
 e do OAuth Google Calendar. Ver
 [gate de privacidade](../../docs/integracoes/CONSENTIMENTO_IA_v0.3.md).
+
+
+## Segurança do transporte Telegram (gate técnico)
+
+- O cliente HTTP converte falhas de transporte/HTTP/JSON em mensagem genérica
+  sem URL ou parâmetros; a URL de chamada do Telegram contém o token do bot.
+- O traceback exposto para esse tipo de falha não inclui o token quando a
+  exceção é encadeada como \`from None\`; verificar logs de infraestrutura
+  antes de produção, pois outras camadas podem registrar URLs.
+- Resposta \`ok:false\` nunca confirma envio. Isso preserva a política
+  conservadora de mensagens \`uncertain\`.

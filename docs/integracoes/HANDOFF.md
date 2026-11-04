@@ -158,3 +158,14 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - Novas contraprovas: nenhum texto sem opt-in; opt-in/revogação cruzados entre
   papéis; chamada direta bloqueada; metadados removidos; servidor desabilitado.
 - CI e readback remoto obrigatórios no novo SHA. Sem merge/produção.
+
+
+## Complemento do gate de privacidade — transporte Telegram
+
+- START verificado: \`f2b89d051577eccf17280b0eb88fdc98190e68d0\`.
+- Análise: URL Bot API inclui token, e falhas HTTP cruas poderiam vazar
+  dados ao traceback ou logs. Agora há sanitização da exceção no cliente.
+- Contraprovas com token sintético: traceback e mensagem sem credencial,
+  falha HTTP 401 e resposta \`ok:false\` não tratadas como sucesso.
+- Os logs de infraestrutura e serviços externos continuam fora deste teste;
+  requer auditoria de implantação em VM.

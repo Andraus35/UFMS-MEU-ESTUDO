@@ -1,9 +1,13 @@
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
+from unittest.mock import patch
+from urllib.error import HTTPError
+import traceback
+import io
 from pathlib import Path
 
-from bridge.gateway import Store, dispatch_due, handle_update, parse_time
+from bridge.gateway import Store, Telegram, dispatch_due, handle_update, parse_time
 
 
 class FakeTelegram:
@@ -90,6 +94,35 @@ class BridgeTests(unittest.TestCase):
         handle_update("coach", self.update(private=False), self.store,
                       self.bot, 123, now=self.now)
         self.assertEqual(self.bot.messages, [])
+
+    def test_telegram_token_not_exposed_in_transport_failure(self):
+        secret = "123456:TOP_SECRET_NEVER_LOG"
+        client = Telegram(secret)
+        failing_url = f"https://api.telegram.org/bot{secret}/sendMessage"
+        http_error = HTTPError(failing_url, 401, "Unauthorized", {}, io.BytesIO(b""))
+        with patch("bridge.gateway.request.urlopen", side_effect=http_error):
+            try:
+                client.send(123, "Privado")
+            except RuntimeError as exc:
+                message = str(exc)
+                stack = "".join(traceback.format_exception(exc))
+                self.assertNotIn(secret, message)
+                self.assertNotIn(secret, stack)
+            else:
+                self.fail("A chamada deve falhar")
+
+    def test_telegram_malformed_response_is_not_confirmed(self):
+        client = Telegram("fake-token")
+        class FakeResult:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def read(self):
+                return b'{"ok":false}'
+        with patch("bridge.gateway.request.urlopen", return_value=FakeResult()):
+            with self.assertRaises(RuntimeError):
+                client.send(123, "teste")
 
     def test_distinct_agents_and_idempotent_store(self):
         due = self.now + timedelta(days=2)
