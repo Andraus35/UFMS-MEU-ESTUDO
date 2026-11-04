@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.1-proposal",
+  "status": "DOCUMENTARY_COMPOSITION_ONLY_NOT_EXECUTED",
+  "repository": "Andraus35/UFMS-MEU-ESTUDO",
+  "as_of": "2026-11-04",
+  "components": [
+    {
+      "role": "spec_rejected",
+      "pr": 4,
+      "commit_sha": "0db458a50447c2a9f8e7131f402dc3be9c0db313",
+      "tree_sha": "2ea0c7ea9cb46307f61f05f76d5a1bbb46465606",
+      "ref_semantics": "EXACT_SHA_NO_BRANCH_FALLBACK",
+      "subtree": ".specs/features/ufms-cognitive-gates"
+    },
+    {
+      "role": "technical_read_only",
+      "pr": 1,
+      "commit_sha": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+      "ref_semantics": "EXACT_SHA_NO_BRANCH_FALLBACK",
+      "subtree": "repo_root"
+    },
+    {
+      "role": "pedagogical_read_only",
+      "pr": 2,
+      "commit_sha": "6e1fa661a33565d580f99962c3510d5361decbe6",
+      "ref_semantics": "EXACT_SHA_NO_BRANCH_FALLBACK",
+      "subtree": "docs/pedagogia"
+    }
+  ],
+  "order": [
+    "technical_read_only",
+    "pedagogical_read_only",
+    "spec_rejected"
+  ],
+  "assembly": "NO_GIT_MERGE; three read-only worktrees; load each by exact SHA; compare file digests; use absolute paths or explicit contexts for tests; do not treat a union of different commit SHAs as a single integrated HEAD",
+  "collision_policy": "FAIL_CLOSED",
+  "proof_attribution": "Every proof must identify source commit SHA and Git tree, fixture SHA, candidate/proposal digest and execution environment; no report from PR4 alone proves technical runtime",
+  "approval_provenance": "User said APROVO to PLAN v0.2; independent byte-to-chat snapshot binding not established; v0.3 requires new human approval",
+  "ci_status": "NOT_RUN_FOR_COMPOSITION",
+  "operational": {
+    "gateway": "NOT_IMPLEMENTED_ON_PR4",
+    "llm_trials": "NOT_RUN",
+    "personal_results_writes_enabled": false
+  },
+  "composition_digest": "sha256:df305951bb814772fe479ccb81273c95f13c07f6452de9730b7aba2509cce8b2",
+  "candidate_plan_sha256": "6152838146e6dae761b09836bb75d2ebda72f393aa35def470527ad340af08a1",
+  "auditor_report_source_sha256": "eac2d030896bf6c19cda9965aca609ae407ae2326ca459f648b33daa44b045d2"
+}

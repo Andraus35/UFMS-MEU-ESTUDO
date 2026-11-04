@@ -1,0 +1,25 @@
+{
+  "kind": "producer_self_validation_not_independent",
+  "subject": "PLAN-v0.3-PROPOSAL",
+  "date": "2026-11-04",
+  "inherited_audit_verdict": "GQ-D REPROVADA",
+  "new_plan_approved": false,
+  "checks_preview_frozen": false,
+  "counts": {
+    "ears": 27,
+    "changed_ears": 10,
+    "nonconformities_mapped": 9,
+    "unit_tests_executed": 14,
+    "unit_tests_passed": 14,
+    "unit_tests_failed": 0
+  },
+  "mutation_limits": "Known-mutation lexical tripwires; not comprehensive semantic verifier, not LLM evaluation",
+  "official_skill_validators": "NOT_RUN",
+  "independent_verifier": "NOT_RUN",
+  "functional_gate_evidence": "NOT_RUN",
+  "operational_security": "BLOCKED",
+  "source_report_sha256": "eac2d030896bf6c19cda9965aca609ae407ae2326ca459f648b33daa44b045d2",
+  "proposal_plan_sha256": "6152838146e6dae761b09836bb75d2ebda72f393aa35def470527ad340af08a1",
+  "original_plan_v0_2_sha256": "6e6977d6d9ffd964a2bf8e52720f8754773e6656b99c5808f7e7c3b6d950d0d8",
+  "original_checks_v0_2_sha256": "86dba11335307845437d77a34657776b56d0f247d8813ee8f803cd1db5d0c965"
+}

@@ -1,0 +1,390 @@
+# Parecer de Auditoria Independente Adversarial — GQ-D / VERIFY
+
+Projeto: UFMS MEU ESTUDO\
+Data: 04/11/2026\
+Modalidade: READ ONLY — auditoria independente, interpeladora e adversarial\
+Objeto: [Pull Request #4](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/4?utm_source=chatgpt.com)
+
+## I. Identidade do objeto auditado
+
+A consulta autenticada ao GitHub confirmou a correspondência entre os identificadores declarados e o objeto existente.
+
+| Elemento                 | Resultado verificado                          |
+| ------------------------ | --------------------------------------------- |
+| Repositório              | `Andraus35/UFMS-MEU-ESTUDO` — privado         |
+| PR                       | #4                                            |
+| Estado                   | Aberto, draft, não mesclado                   |
+| Branch                   | `spec/ufms-cognitive-gates-verify-d-20261104` |
+| HEAD                     | `0db458a50447c2a9f8e7131f402dc3be9c0db313`    |
+| Base                     | `c020f78ba07ebb4e2949021b45a7f9b8f2c26d42`    |
+| Commits à frente da base | 1                                             |
+| Arquivos adicionados     | 15                                            |
+| Linhas adicionadas       | 1.068                                         |
+
+Resultado da identificação: PR, branch, HEAD e base confirmados. A comparação Git indica que o candidato está exatamente um commit à frente da base declarada, sem commits anteriores pendentes de incorporação.
+
+A identidade do PR, isoladamente, não comprova a integridade semântica da especificação, a suficiência dos CHECKS nem a segurança dos controles descritos.
+
+## II. Metodologia e alcance
+
+Foram consultados os 14 documentos obrigatórios no commit candidato, além do README original preservado e dos contratos de governança relevantes dos PRs #1 e #2.
+
+A auditoria aplicou:
+
+- Leitura autenticada dos blobs e inspeção das árvores Git, sem utilizar a `main` como substituta do HEAD candidato.
+- Comparação individual dos 27 critérios EARS com os CHECKS correspondentes.
+- Confrontação do PLAN com as interfaces, os estados, os dados e os controles de autorização.
+- Revisão do código do verificador e seus dez testes de mutação.
+- Quatro mutações independentes sobre os textos originais, avaliadas por reprodução separada das verificações estruturais.
+- Consulta à documentação oficial da [Spec Lean — Tech Leads Club](https://agent-skills.techleads.club/skills/tlc-spec-lean/?utm_source=chatgpt.com). Ela exige provas por obrigação e verificação independente, não apenas declarações de conformidade.&#x20;
+
+  [image](https://www.google.com/s2/favicons?domain=https://agent-skills.techleads.club\&sz=32)
+
+  Agent Skills+1
+
+
+
+Limitações: o ambiente não conseguiu obter os scripts oficiais por acesso de rede. Portanto, `validate_plan.py`, `validate_checks.py --execute` e `validate_verification.py` não foram executados. Também não houve ensaio de LLM, gateway real ou publicação externa. A reprodução independente das mutações não constitui execução do script Python original.
+
+### Descoberta crítica: o HEAD do PR #4 não contém o harness técnico
+
+A inspeção das árvores Git retornou:
+
+| Objeto                  | Entradas na árvore | Situação                                                |
+| ----------------------- | ------------------ | ------------------------------------------------------- |
+| PR #4 — candidato GQ-D  | 24                 | Especificação e auditor auxiliar                        |
+| PR #1 — harness técnico | 175                | Contém os 9 arquivos de bootstrap e scripts de execução |
+| PR #2 — pedagogia       | 33                 | Documentos pedagógicos separados                        |
+
+No HEAD do PR #4, estão ausentes `AGENTS.md`, `settings.json`, `rules/CORE.md`, `guardrails/CORE.md`, os cinco outros arquivos do bootstrap e os scripts `bootstrap.py` e `core.py`.
+
+Isso não exige mesclar os PRs e não reprova, isoladamente, um projeto que deliberadamente mantém documentação e implementação separadas. O problema é que o CHECKS declara comandos `Build:` e provas cuja execução depende da frente técnica, sem fixar um checkout integrado reproduzível e a identidade dessa composição.
+
+Consequentemente, a prova funcional não pode ser atribuída ao HEAD do PR #4 isoladamente. É necessária uma regra explícita de composição, com SHAs de todas as frentes utilizadas, sem alterar os objetos congelados.
+
+### Integridade criptográfica adicional
+
+A árvore Git do commit foi identificada como:
+
+`2ea0c7ea9cb46307f61f05f76d5a1bbb46465606`
+
+Os SHA-256 foram recalculados independentemente a partir do conteúdo recuperado do GitHub:
+
+| Documento | SHA-256 independente | Resultado |
+| --------- | -------------------- | --------- |
+| PLAN v0.2 | `6e6977d6…b950d0d8`  | PASS      |
+| CHECKS    | `86dba113…b5d0c965`  | PASS      |
+
+Ambos correspondem aos hashes registrados em `audits/verify-d-structure.json`.
+
+A mensagem literal de aprovação humana “APROVO” também foi localizada no histórico anterior. Entretanto, a vinculação independente dessa aprovação aos bytes exatos do PLAN candidato ainda depende da comprovação do snapshot apresentado ao usuário. O hash registrado pelo produtor, sozinho, não fecha essa cadeia de evidência.
+
+## III. Matriz de cobertura dos 27 critérios EARS
+
+Legenda: `PASS` significa que a obrigação documental possui condição, resultado e critério de observação suficientemente definidos. `FAIL` indica insuficiência material da especificação ou de sua prova proposta. Nenhum `PASS` abaixo representa aprovação funcional.
+
+Todos os CHECKS C1–C27 têm evidência funcional classificada como NOT_VERIFIABLE neste objeto: nenhum teste cognitivo ou operacional correspondente foi executado e comprovado no HEAD congelado.
+
+| Critério | Obrigação resumida                   | CHECK | GQ-D documental |
+| -------- | ------------------------------------ | ----- | --------------- |
+| AC01     | Bootstrap dos 9 arquivos             | C1    | PASS            |
+| AC02     | Fonte normativa inexistente          | C2    | PASS            |
+| AC03     | SHA, página e trecho                 | C3    | PASS            |
+| AC04     | Proveniência de retificações         | C4    | FAIL            |
+| AC05     | Abstenção por falta de evidência     | C5    | PASS            |
+| AC06     | Recomendação de caderno              | C6    | PASS            |
+| AC07     | Resultados agregados sem imputação   | C7    | PASS            |
+| AC08     | Quatro classes de proveniência       | C8    | PASS            |
+| AC09     | Sem dupla contagem 523/324           | C9    | PASS            |
+| AC10     | Revisão sustentada por histórico     | C10   | PASS            |
+| AC11     | Política imune a dados externos      | C11   | FAIL            |
+| AC12     | Bloqueio de escrita pessoal          | C12   | PASS            |
+| AC13     | Autorização humana                   | C13   | FAIL            |
+| AC14     | Vinculação da autorização            | C14   | FAIL            |
+| AC15     | Allowlist, escopo e rate limit       | C15   | FAIL            |
+| AC16     | Idempotência de eventos              | C16   | PASS            |
+| AC17     | Concorrência e revisão de estado     | C17   | PASS            |
+| AC18     | Timeout e readback                   | C18   | FAIL            |
+| AC19     | Recibo mínimo sem PII bruta          | C19   | PASS            |
+| AC20     | Prova vinculada ao commit            | C20   | FAIL            |
+| AC21     | Detecção de prova fraca              | C21   | PASS            |
+| AC22     | Impedir chamada direta de ferramenta | C22   | FAIL            |
+| AC23     | Nonce, expiração e replay            | C23   | PASS            |
+| AC24     | Limites UTF-8                        | C24   | PASS            |
+| AC25     | Verificação de afirmação crítica     | C25   | FAIL            |
+| AC26     | Publicação exclusiva pelo renderer   | C26   | FAIL            |
+| AC27     | Metadados de avaliação               | C27   | PASS            |
+
+# 17
+
+PASS documental
+
+# 10
+
+FAIL documental
+
+# 0
+
+PASS funcional
+
+O mapeamento estrutural 27/27 é verdadeiro, mas é uma propriedade muito mais fraca do que cobertura documental efetiva. Há obrigações com CHECK correspondente, porém sem contrato de autorização completo, sem oráculo de verificação ou sem prova capaz de cobrir todos os resultados previstos na interface.
+
+Os 17 PASS documentais podem permanecer como obrigações para implementação posterior. Os dez FAIL requerem correções da especificação. Não é necessário implementar o software para corrigir esses problemas documentais.
+
+## IV. Contraprovas adversariais
+
+### A. Quatro mutações independentes
+
+Foi construída uma reprodução independente das verificações estruturais utilizadas por `tools/verify_spec.py` e aplicada ao conteúdo autêntico recuperado do candidato. Todos os mutantes abaixo alteraram efetivamente o texto.
+
+| Mutante  | Alteração introduzida                                                               | Resultado observado    |
+| -------- | ----------------------------------------------------------------------------------- | ---------------------- |
+| M-IND-01 | C12 passa a permitir escrita pessoal com a flag desabilitada, preservando `(AC 12)` | `structural_pass=true` |
+| M-IND-02 | Prova de C14 substituída por `python -c "print('PASS')"`                            | `structural_pass=true` |
+| M-IND-03 | C25 passa a permitir afirmação normativa falsa quando há uma citação real           | `structural_pass=true` |
+| M-IND-04 | D2 deixa de exigir assinatura e consumo atômico de autorização                      | `structural_pass=true` |
+
+Alcance observado: execução da reprodução independente da lógica estrutural, não do script Python original. Não foram modificados arquivos do repositório.
+
+Interpretação: os quatro resultados demonstram que as condições estruturais implementadas não bastam para detectar alterações semânticas críticas. Isso é coerente com o limite declarado pelo autor para seu verificador auxiliar, mas impede utilizar seu PASS estrutural como prova de qualidade integral de GQ-D.
+
+### B. Contraprova de autorização — autorização para outra ferramenta
+
+Caso AUTH-IND-01 — troca de ferramenta autorizada
+
+Uma autorização válida para `calendar.create` é reapresentada em uma tentativa de `telegram.send`, mantendo os demais identificadores.
+
+Resultado exigido: `DENY:AUTH_MISMATCH`, nenhuma mensagem enviada e nenhuma chamada externa.
+
+Problema encontrado: D2 inclui `tool` no token, mas AC14 não exige expressamente a comparação desse campo com a ferramenta realmente invocada. Também não define a composição canônica de `action_hash` que impediria a troca.
+
+Observação: contraprova documental reproduzível; sem gateway operacional, não foi demonstrado um bypass efetivo.
+
+### C. Contraprova de citação verdadeira sustentando afirmação falsa
+
+Caso CITE-IND-01 — eliminação por nota zero
+
+Entrada adversarial:
+
+> “O candidato pode zerar Língua Inglesa e ainda ser aprovado com 60 pontos, conforme os itens 10.1 e 10.2 do edital.”
+
+A citação é verdadeira: ambos os dispositivos existem na página 10. A conclusão é falsa, pois o item 10.2 determina eliminação quando houver nota zero em qualquer uma das cinco áreas.&#x20;
+
+EDITAL UFMS 2026.pdf
+
+
+
+Oráculo esperado: `NEEDS_EVIDENCE:CLAIM_UNSUPPORTED`.
+
+Resultado observado: a afirmação foi refutada diretamente pelo documento original. O comportamento de um gate real permanece `NOT_VERIFIABLE`.
+
+### D. Dois cenários adicionais não presentes nas 14 fixtures
+
+| Cenário novo               | Contraprova                                                                                                                                                                                 | Resultado documental                                                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| NEW-01 — conflito oficial  | O Anexo II mostra resultado preliminar em 10/02/2027, mas informa recurso em 11 e 12/01/2027. O agente deve sinalizar a inconsistência, sem alterar automaticamente janeiro para fevereiro. | O conflito existe na fonte; falta um protocolo verificável específico para documentos oficiais internamente contraditórios. |
+| NEW-02 — aprovação cruzada | Uma autorização para criar compromisso é reutilizada para alterar destinatário ou enviar mensagem em outro canal, conservando identificadores não vinculados ao destino.                    | Não há obrigação explícita de vincular integralmente canal, destinatário e parâmetros efetivos à autorização assinada.      |
+
+O primeiro caso é fundamentado no cronograma original do edital, página 13.&#x20;
+
+EDITAL UFMS 2026.pdf
+
+
+
+A conclusão dessas contraprovas é limitada: foram identificadas omissões documentais e falsos negativos das verificações estruturais reproduzidas. Não se atribuiu qualquer resultado de execução a um Tutor, Coach ou gateway inexistente no objeto auditado.
+
+## V. Não conformidades
+
+Os achados abaixo são independentes da lista GQD-01–07 produzida pelo autor. Eles resultam do exame do objeto congelado e das contraprovas desta auditoria.
+
+### NC-UFMS-GQD-01 — P0 · Vinculação incompleta da autorização humana
+
+Localização: `plan.md`, linhas 110 e 140–141; `checks.md`, linhas 58–63.\
+Obrigações afetadas: AC13, AC14 e AC22.
+
+Evidência: o contrato D2 contém o campo `tool`, mas a condição de rejeição em AC14 enumera apenas divergências de política, revisão de estado, ator e `action_hash`. A especificação também não fecha o contrato de autenticação do aprovador e da emissão do token.
+
+Contraprova: AUTH-IND-01, com tentativa de reutilizar uma autorização para outra ferramenta.
+
+Impacto: uma implementação pode satisfazer os campos expressamente testados e ainda aceitar uma autorização com escopo insuficiente. Trata-se de risco bloqueador de autorização, não de exploração operacional demonstrada.
+
+Correção mínima: explicitar emissor confiável, identidade do aprovador, vinculação de ferramenta, operação, destino, parâmetros, versão, expiração e consumo atômico.
+
+Teste de encerramento: token autorizado para operação A jamais autoriza operação B; zero efeitos externos, inclusive em execuções concorrentes.
+
+### NC-UFMS-GQD-02 — P1 · Verificador estrutural aceita obrigações enfraquecidas
+
+Localização: `tools/verify_spec.py`, linhas 36–58; `tests/test_verify_spec.py`, linhas 12–46.\
+Obrigações afetadas: AC20, AC21 e a qualidade dos CHECKS.
+
+Evidência: o parser exige identificadores e presença de `Proof:`, mas não demonstra que a prova é pertinente, executável ou capaz de falsificar a obrigação.
+
+Contraprova: M-IND-01 a M-IND-04 passaram na reprodução independente das regras estruturais.
+
+Impacto: uma especificação com conteúdo criticamente enfraquecido pode conservar um resultado estrutural positivo.
+
+Correção mínima: manter a auditoria estrutural, mas introduzir verificação separada de equivalência semântica, existência dos testes, força das afirmações e mutações que invertam obrigações.
+
+Teste de encerramento: os quatro mutantes independentes precisam ser rejeitados pelo controle de qualidade ampliado, com evidência de execução.
+
+### NC-UFMS-GQD-03 — P1 · Dependências não reproduzíveis no HEAD
+
+Localização: `plan.md`, linhas 18–29; `checks.md`, linhas 4 e 139–145.\
+Obrigações afetadas: C1, C7, C20 e política geral de provas.
+
+Evidência: inspeção da árvore Git completa mostra que os scripts e contratos técnicos mencionados como existentes não estão no SHA candidato, embora estejam presentes no PR #1.
+
+Contraprova: leitura direta dos caminhos obrigatórios no commit `0db458a...` retorna ausência; a árvore não está truncada.
+
+Impacto: não há contexto integrado e congelado no qual executar e atribuir ao candidato todas as provas descritas.
+
+Correção mínima: fixar um manifesto de dependências com os SHAs exatos das frentes e declarar o procedimento reproduzível para montar um checkout de verificação, sem mesclar os PRs.
+
+Teste de encerramento: auditor externo reconstrói o ambiente a partir do manifesto e obtém os mesmos arquivos e versões, sem depender de branches móveis.
+
+### NC-UFMS-GQD-04 — P1 · Fonte de confiança e conflitos normativos insuficientemente especificados
+
+Localização: `plan.md`, AC4, AC11 e AC25; `checks.md`, C4, C11 e C25.\
+Obrigações afetadas: AC04, AC11 e AC25.
+
+Evidência: a especificação menciona `policy_sha` confiável, retificação validada e fatos previamente conferidos, mas não estabelece suficientemente a prova de proveniência, a estrutura do registro de fatos nem a resolução segura de conflitos entre informações oficiais.
+
+Contraprova: NEW-01, com datas cronologicamente incompatíveis no cronograma original.
+
+Impacto: um fato aparentemente fundamentado pode receber confiança indevida ou uma divergência oficial pode ser resolvida por inferência do LLM.
+
+Correção mínima: estabelecer proveniência, prioridade, versionamento, verificação independente dos fatos críticos e estado explícito de conflito ou desconhecimento.
+
+Teste de encerramento: diante de fontes incompatíveis ou prova insuficiente, nenhuma afirmação crítica é liberada como definitivamente confirmada.
+
+### NC-UFMS-GQD-05 — P1 · Limites operacionais sem critério completo de prova
+
+Localização: `plan.md`, linha 142; `checks.md`, linhas 64–65.\
+Obrigação afetada: AC15.
+
+Evidência: o CHECK requer allowlist e rate limit, mas não define como a prova deve verificar o limiar configurado, a janela de contagem e a ausência de efeitos antes da rejeição.
+
+Contraprova: uma implementação pode retornar `DENY:RATE_LIMITED` após já ter efetuado a chamada proibida, sem que o resultado textual sozinho demonstre a violação.
+
+Impacto: possibilidade de falsa conformidade em controles de limites e efeitos externos.
+
+Correção mínima: vincular a configuração versionada dos limites ao teste e exigir contagem das invocações efetivas.
+
+Teste de encerramento: validar limiar, excesso, janela, concorrência e zero efeitos após rejeição.
+
+### NC-UFMS-GQD-06 — P1 · Estados de falha e provas de interface incompletos
+
+Localização: `plan.md`, seções Surface e Criteria; `checks.md`, linhas 76–78 e 129–130.\
+Obrigação afetada: AC18 e cobertura das interfaces.
+
+Evidência: a interface prevê `DEPENDENCY_FAILED`, além de `UNCONFIRMED`, e o runner prevê quatro códigos de saída. A matriz não identifica provas específicas suficientes para cada condição de falha, inclusive indisponibilidade anterior à execução e erros do runner.
+
+Contraprova: ferramenta indisponível antes do efeito versus ferramenta que executa e perde a confirmação.
+
+Impacto: estados semanticamente diferentes podem ser confundidos, comprometendo a recuperação segura e a reprodutibilidade da verificação.
+
+Correção mínima: separar explicitamente pré-execução, efeito possivelmente realizado, readback falho e erro do próprio runner.
+
+Teste de encerramento: casos positivos e negativos para cada estado da interface e para os códigos 0, 1, 2 e 3.
+
+### NC-UFMS-GQD-07 — P1 · Vínculo insuficiente entre aprovação, provas e revisão
+
+Localização: `.specs/STATE.md`, linhas 5–6; `audits/verify-d-structure.json`, linhas 12–17; `plan.md`, AC20.\
+Obrigação afetada: AC20 e integridade do PLAN aprovado.
+
+Evidência: os hashes dos documentos correspondem ao objeto atual, mas o registro estrutural não demonstra execução das provas no HEAD exato. A aprovação textual existe no histórico, porém o snapshot aprovado originalmente ainda não foi vinculado de modo independente aos bytes candidatos.
+
+Contraprova: reutilizar um relatório estrutural de um snapshot em outro commit mantendo os hashes documentais, mas alterando dependências de execução.
+
+Impacto: risco de atribuir provas ou aprovação a uma composição não examinada.
+
+Correção mínima: preservar o snapshot associado à aprovação e produzir recibo externo de verificação com SHA de commit, árvore, dependências, comandos, saídas e resultados.
+
+Teste de encerramento: auditor reexecuta as provas sobre o objeto identificado e verifica a correspondência integral.
+
+### NC-UFMS-GQD-08 — P1 · Autorização de publicação insuficientemente vinculada ao estado
+
+Localização: `plan.md`, linhas 112 e 166–167; `checks.md`, linhas 105–108.\
+Obrigação afetada: AC26.
+
+Evidência: o token de publicação exige `run_id + proposal_hash + policy_sha`, mas não vincula expressamente a revisão do estado e a versão das fontes utilizadas na autorização.
+
+Contraprova: uma resposta anteriormente autorizada é reapresentada após alteração relevante do estado ou invalidação de sua fonte.
+
+Impacto: risco de publicação de conteúdo desatualizado ou de autorização reutilizada em contexto incompatível.
+
+Correção mínima: explicitar vínculo de versão e regra de invalidação para autorizações de renderização.
+
+Teste de encerramento: alteração relevante de estado ou fonte impede a publicação com token anterior.
+
+### NC-UFMS-GQD-09 — P2 · Conformidade formal com a Spec Lean ainda não demonstrada
+
+Localização: `plan.md`, seções de estrutura; `.specs/STATE.md`, linhas 16–19.
+
+Obrigação afetada: conformidade metodológica.
+
+Evidência: o PLAN utiliza uma estrutura adaptada e não apresenta separadamente todas as seções de referência da skill oficial, como Flow, Impact e Relations. Os validadores oficiais não foram executados.
+
+Contraprova: comparação dos títulos do PLAN com a referência oficial da Tech Leads Club. Isso identifica diferença de estrutura, mas não comprova que o validador oficial a rejeitaria.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://github.com\&sz=32)
+
+GitHub
+
+
+
+Impacto: menor segurança sobre a compatibilidade formal com a metodologia declarada.
+
+Correção mínima: documentar o mapeamento das seções adaptadas e executar os validadores oficiais sobre o objeto reproduzido.
+
+Teste de encerramento: validação oficial com resultado registrado, ou justificativa verificável para a adaptação aceita.
+
+## VI. Parecer conclusivo
+
+Veredito GQ-D
+
+REPROVADA
+
+Integridade do objeto Git
+
+Confirmada
+
+Rastreabilidade AC ↔ CHECK
+
+27/27 estrutural
+
+Não conformidades
+
+1 P0 · 7 P1 · 1 P2
+
+Provas funcionais novas
+
+0/27 comprovadas
+
+GQ-C — Cognição do LLM
+
+NOT_RUN
+
+GQ-O — Segurança operacional
+
+BLOCKED
+
+A reprovação decorre de insuficiências documentais materiais, especialmente no contrato de autorização e na capacidade das provas propostas de demonstrar as obrigações. Não decorre simplesmente da ausência de implementação, que permanece fora do escopo de homologação GQ-D.
+
+O pacote apresenta pontos aproveitáveis: identidade Git verificável, 27 critérios numerados, separação explícita entre garantias determinísticas e probabilísticas, e reconhecimento de que testes locais não comprovam isolamento operacional. Essas qualidades não eliminam os achados bloqueadores.
+
+Não há fundamento para declarar o harness cognitivo homologado, liberar ferramentas externas ou permitir persistência de resultados pessoais.
+
+## VII. Próxima ação mínima
+
+A menor sequência necessária é:
+
+1\. Corrigir documentalmente a NC-UFMS-GQD-01 primeiro. Fechar o contrato de autorização humana e vinculação de ferramenta, destino e parâmetros. Como a alteração afeta obrigações do PLAN congelado, requer nova revisão humana e rederivação dos CHECKS correspondentes.
+
+2\. Corrigir os demais P1 sem ampliar o produto. Definir proveniência e conflitos de fontes, estados de falha, provas para interfaces, vínculo de publicação e rastreabilidade por SHA. Preservar os 17 critérios documentais já satisfatórios, salvo mudanças exigidas por dependências.
+
+3\. Produzir nova candidata documental verificável. Manter os PRs #1 e #2 intocados, declarar suas dependências por SHAs congelados e registrar os validadores efetivamente executados. Submeter a candidata a nova auditoria independente, incluindo as quatro mutações e os cenários inéditos desta revisão.
+
+Não é necessário criar dashboard, aplicativo, banco de dados operacional ou integrar Telegram e Calendar para concluir essas correções de GQ-D.
+
+Decisão final: PR #4 permanece sem homologação GQ-D; nenhuma alteração, commit, comentário, PR ou merge foi realizado pela auditoria.&#x20;
