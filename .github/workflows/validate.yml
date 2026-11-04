@@ -18,6 +18,8 @@ jobs:
         run: python scripts/chunk_edital.py --check
       - name: Validar linhas do quadro de vagas
         run: python scripts/index_vagas.py --check
+      - name: Validar atribuições literais do Anexo IV
+        run: python scripts/index_atribuicoes.py --check
       - name: Testar regras de integridade
         run: python -m unittest discover -s tests -v
       - name: Medir recuperação do edital
