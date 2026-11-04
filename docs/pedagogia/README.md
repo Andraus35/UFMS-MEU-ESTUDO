@@ -30,9 +30,11 @@
 22. [Contraprovas IGP-12–14, ciclo 6](CONTRAPROVAS_INGESTAO_GP1_CICLO6_2026-11-04.md): lacunas verificadas no código técnico atual e critérios de implementação.
 23. [Contraprovas executadas IGP-12–14](EXECUCAO_NEGATIVA_GP1_CICLO7_2026-11-04.md): três lacunas reproduzidas e novo HEAD técnico reconciliado.
 24. [Recibo de execução negativa](RESULTADOS_NEGATIVOS_GP1_CICLO7_2026-11-04.json): observações e hashes dos insumos.
-25. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
-26. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
-27. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
+25. [Referência isolada GP-1, ciclo 8](REFERENCIA_GP1_CICLO8_2026-11-04.md): protótipo local com 15 testes verdes, regressões legadas e limites de integração.
+26. [Recibo da referência GP-1](RECIBO_REFERENCIA_GP1_CICLO8_2026-11-04.json): hashes e contagens verificadas.
+27. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
+28. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
+29. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
 
 ## Hierarquia e limites
 
