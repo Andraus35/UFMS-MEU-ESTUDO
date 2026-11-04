@@ -87,3 +87,42 @@ Este documento **não acrescenta** novos cenários aos 102 existentes; acrescent
 - Não editar PR #1, `main`, arquivo canônico do edital, `settings.json`, `rules/` ou dados de estudante nesta sessão.
 
 **Próxima ação pedagógica concreta:** usar um diagnóstico inicial por questões **sem armazenar resultado pessoal no GitHub enquanto a escrita estiver bloqueada**, se o estudante desejar iniciar; ou aguardar da engenharia uma verificação reproduzível de ENG-00/ENG-01 para fechar o parecer.
+
+## 5. Complemento de conferência das fontes oficiais — 04/11/2026
+
+**Objetivo:** verificar especificamente a discrepância de identificação entre UFMS/FAPEC e os prazos operacionais do edital, sem sugerir que foi concluída a revisão de retificações. Este complemento atualiza evidências, **não** revisa os vereditos GP-0/GP-1.
+
+### Identidade do documento
+
+1. **UFMS, fonte primária e PDF inspecionado:** https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf — página 1 traz `EDITAL PROGEP/UFMS Nº 152, DE 29 DE OUTUBRO DE 2026`. Arquivo exibido com 47 páginas no visualizador utilizado.
+2. **FAPEC, página específica do concurso:** https://portal.concurso.fundacaofapec.org.br/edital/ver/22 — continua exibindo `EDITAL PROGEP/UFMS N.º 001/2026 - Edital de Abertura`, com data 30/10/2026.
+3. **FAPEC, link DOWNLOAD fornecido pela própria página:** `https://concurso.fundacaofapec.org.br/arquivo.php?file=edital%2F1%2F22%2Fe5f1c2b364f19beadf2685d8fb836065.pdf`. A consulta retornou redirecionamento a objeto S3 com URL temporária que **não foi acessível** pelo mecanismo de consulta. Não houve leitura do PDF da FAPEC, hash ou cotejo byte a byte.
+4. **Busca sobre retificações no escopo do concurso:** não surgiu documento positivo e inequívoco nas buscas realizadas. Isso **não significa** confirmação de inexistência de retificações nem conferência exaustiva de boletins/portal.
+
+**Resultado da verificação:** discrepância de rótulo **confirmada**, equivalência de documentos **NÃO VERIFICÁVEL NESTA CONSULTA**, efeito normativo **DESCONHECIDO**. Manter o PDF original da UFMS como fonte de referência já verificada e não renomear/fundir documentos; a outra sessão deverá baixar oficialmente o arquivo FAPEC com acesso legítimo, conferir página inicial, escopo, assinatura e hash.
+
+### Anexo II — cronograma original verificado visualmente
+
+**Fonte:** PDF da UFMS acima, página 13 do documento (página 12 em índice iniciado em zero), Anexo II, inspecionada em captura visual.
+
+| Etapa original | Período/data constante do PDF |
+|---|---|
+| Inscrições | 04/11 a 04/12/2026 |
+| Solicitação de isenção | 04 a 11/11/2026 |
+| Resultado preliminar de isenção | 18/11/2026 |
+| Pagamento da inscrição | Até 07/12/2026 |
+| Divulgação do ensalamento e convocação | 11/01/2027 |
+| Provas objetivas | 17/01/2027 |
+
+As datas acima pertencem à **redação original**, sujeita a eventuais atos posteriores. O fato de ser 04/11/2026 torna especialmente relevante não esperar implementação do tutor para tomar providências de inscrição; este documento não realiza inscrição nem presume que o estudante já esteja inscrito.
+
+**Anomalia adicional identificada no texto original:** o mesmo Anexo II apresenta um período de recurso indicado como `11 e 12/01/2027` para resultado preliminar de procedimento divulgado em `10/02/2027`, uma ordem cronológica incompatível na leitura literal. Tratar como **possível erro de data a esclarecer** por fonte oficial; **não corrigir automaticamente para fevereiro**, nem alterar calendário/regras por suposição. Essa anomalia afeta etapas posteriores à prova, não altera o intervalo de inscrições confirmado no próprio texto.
+
+### Encaminhamento e estado
+
+- **GP-0 permanece PENDENTE** para retificações, equivalência do arquivo FAPEC e reconciliação cronológica. O edital original foi confirmado quanto aos pontos aqui listados.
+- **GP-1 permanece PENDENTE**, sem nova inspeção técnica nesta atualização; ver a seção 2 e os SHAs do último readback de código.
+- **Sem alteração de fonte canônica, configuração, scripts, histórico, PR técnico ou permissões de escrita.**
+- Não acrescentar novos casos ao catálogo de 102 critérios: são **evidências de verificação**, a serem vinculadas aos pacotes ENG-00/GP-0 já cadastrados.
+
+**Próxima evidência necessária:** obter o arquivo oficial FAPEC e seu SHA-256, identificar o conteúdo de abertura e quaisquer retificações aplicáveis, depois verificar cronograma e anexos dos cargos 523/324 no objeto normativo atualizado.

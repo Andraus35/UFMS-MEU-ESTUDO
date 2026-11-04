@@ -19,7 +19,7 @@
 11. [Plano técnico por gates v1.8](PLANO_IMPLEMENTACAO_GATES_v1.8.md): pacotes ENG-00–ENG-08, dependências, entregas e critérios de pronto.
 12. [Rastreabilidade de testes v1.8](RASTREABILIDADE_GATES_v1.8.md): 102 cenários vinculados a GP-0..GP-5.
 13. [Prompt de transferência técnica v1.8](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md): retomada READ ONLY e primeira tarefa da outra sessão.
-14. [Verificação parcial GP-0/GP-1](VERIFICACAO_GP0_GP1_2026-11-04.md): conferência de edital oficial e leitura dos contratos técnicos no HEAD observado.
+14. [Verificação parcial GP-0/GP-1](VERIFICACAO_GP0_GP1_2026-11-04.md): fontes UFMS/FAPEC, cronograma original, anomalias documentais e contratos técnicos no SHA observado.
 15. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
 16. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
 17. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
