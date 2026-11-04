@@ -52,6 +52,22 @@ class TopicIndexTests(unittest.TestCase):
                     self.assertEqual(matches[0]['source_sha'],
                                      self.index['source_git_blob_sha'])
 
+    def test_item_numerado_resolve_para_pagina_correta(self):
+        casos={'3.6':2,'3.8':3,'9.2':8,'9.5':9,'10.2':10,'13.10':11}
+        for numero,pagina in casos.items():
+            with self.subTest(numero=numero):
+                found=search(numero+' edital UFMS',root=ROOT,full=True)
+                self.assertTrue(found)
+                self.assertEqual(found[0]['route'],'literal_item_marker')
+                self.assertEqual(found[0]['item'],numero)
+                self.assertEqual(found[0]['page'],pagina)
+                self.assertTrue(found[0]['text'].lstrip().startswith(numero+'.'))
+                self.assertLessEqual(len(found[0]['text']),450)
+
+    def test_item_nao_existente_nao_e_inventado(self):
+        found=search('99.999.999',root=ROOT)
+        self.assertFalse(any(x.get('route')=='literal_item_marker' for x in found))
+
     def test_cargo_523_nao_importa_conteudo_524(self):
         r=search(topic='523-10',cargo='523',area='especificos',full=True,root=ROOT)
         self.assertTrue(r)
