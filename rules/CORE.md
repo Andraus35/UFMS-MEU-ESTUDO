@@ -12,3 +12,5 @@
 10. **Compactação:** checkpoints contêm fatos e referências, não transcrições completas; contexto pode ser recuperado por assunto e janela temporal.
 
 11. **Edital obrigatório:** conferir a fonte integral da raiz, ler `edital/INDEX.md` e os trechos aplicáveis. Não afirmar leitura integral quando apenas trechos foram recuperados.
+12. **Gates START/DELIVERY:** bootstrap e preflight antes de mutações autorizadas; postflight, checkpoint e readback do SHA depois. GitHub Actions valida alterações, mas não garante que agentes externos invocaram os hooks nativos.
+13. **Resultados pessoais:** qualquer tentativa de ativar a flag individual deve falhar no gate até homologação explícita da política, com verificação administrativa de privacidade no momento da escrita.
