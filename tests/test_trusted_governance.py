@@ -80,6 +80,15 @@ class TrustedGovernanceTests(unittest.TestCase):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "Immutable"):
                 evaluate(PR, HEAD, BASE, [path], [self.signed()], self.pubkey)
 
+    def test_dependencias_indiretas_exigem_assinatura(self):
+        for path in ("scripts/core.py", "scripts/rebuild.py",
+                     "tests/test_ci_gate_contract.py", "state/CURRENT.json",
+                     "edital/manifest.json", "config/topics.csv",
+                     "docs/pedagogia/PLANO_GATES.md", "memory/HANDOFF.md",
+                     "docs/auditorias/PARECER.md", ".github/copilot-instructions.md"):
+            with self.subTest(path=path), self.assertRaisesRegex(ValueError, "Ed25519"):
+                evaluate(PR, HEAD, BASE, [path], [], self.pubkey)
+
     def test_mutacao_coordenada_da_ci_requer_assinatura(self):
         with self.assertRaisesRegex(ValueError, "Ed25519"):
             evaluate(PR, HEAD, BASE, [".github/workflows/validate.yml",
