@@ -187,3 +187,14 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   não houve exclusão de dados pessoais. Auditoria independente G0 pendente.
 - Próxima pendência: proteção de backup criptografado, limites de credenciais
   e operação Oracle somente com autorização humana.
+
+### Regressões identificadas na CI inicial do RATE-01
+
+- HEAD anterior da correção: `64ac735f3f24a3bbbd9e62948fe14a324d530f0a`.
+- Run `41820131216` reportou três falhas de testes, não homologável.
+- Regressão de compatibilidade: chaves legadas curtas `t-1` eram válidas;
+  restaura-se o limite mínimo anterior, mantendo chave não vazia.
+- Filtro de janela móvel: contagem passa a exigir
+  `last_24h < created_utc <= agora`, evitando contar registros futuros
+  em testes com relógio controlado; mantém `BEGIN IMMEDIATE`.
+- Próximo gate: reler SHA e exigir CI SUCCESS no commit corretivo.

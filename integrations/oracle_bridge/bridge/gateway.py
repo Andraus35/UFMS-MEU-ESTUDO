@@ -96,7 +96,7 @@ class Store:
             raise ValueError("Lembrete exige data com fuso")
         if not isinstance(body, str) or not 1 <= len(body.strip()) <= 500:
             raise ValueError("Mensagem deve ter entre 1 e 500 caracteres")
-        if not isinstance(key, str) or not 4 <= len(key) <= 160:
+        if not isinstance(key, str) or not 1 <= len(key) <= 160:
             raise ValueError("Chave idempotente inválida")
         at = now or datetime.now(UTC)
         if at.tzinfo is None or at.utcoffset() is None:
@@ -119,8 +119,8 @@ class Store:
             if active >= MAX_ACTIVE_REMINDERS_PER_USER:
                 raise ValueError("Limite de lembretes ativos atingido; cancele ou conclua algum")
             recent = db.execute("""SELECT COUNT(*) AS n FROM reminders
-                WHERE chat_id=? AND created_utc>?""",
-                (chat_id, last_24h)).fetchone()["n"]
+                WHERE chat_id=? AND created_utc>? AND created_utc<=?""",
+                (chat_id, last_24h, iso_now)).fetchone()["n"]
             if recent >= MAX_NEW_REMINDERS_PER_24H:
                 raise ValueError("Limite de novos lembretes nas últimas 24 horas atingido")
             cursor = db.execute("""INSERT INTO reminders
