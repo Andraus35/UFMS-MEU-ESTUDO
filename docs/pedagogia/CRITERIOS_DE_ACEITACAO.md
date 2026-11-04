@@ -104,3 +104,28 @@ Todos os exemplos são **fictícios**. CI documental aprovada não equivale a va
 | FIQ-18 | Uma área domina recomendações sucessivas sem ganho novo | Sinalizar concentração, considerar alternativas sem quota rígida |
 
 **Total após esta especificação: 68 cenários documentados** (PED 20 + COMP 12 + SIM 10 + EFA 8 + FIQ 18), **não executados como testes do motor pedagógico**. Exemplos são fictícios.
+
+## Cenários do protocolo de cadernos e devolução — v1.6 (não executados)
+
+| ID | Entrada ou situação | Resultado exigido |
+|---|---|---|
+| CDO-01 | Recomendação gerada, mas estudante ainda não criou caderno | Estado `recommended`; não declarar `created_confirmed` |
+| CDO-02 | Usuário informa ID de caderno na plataforma | Separar ID interno de recomendação, ID externo e ID de evento |
+| CDO-03 | Plataforma não disponibiliza filtro de dificuldade | Omitir/refinar sem presumir suporte; preservar escopo |
+| CDO-04 | FAPEC tem poucas questões pertinentes, segundo usuário | Relaxar refinamentos em ordem e indicar bancas comparáveis com ressalva |
+| CDO-05 | Só há questões fora do edital | Bloquear equivalência normativa; não apresentar como cobertura oficial |
+| CDO-06 | Caderno para diagnóstico | Tentativa inicial sem consulta, interpretação limitada ao observado |
+| CDO-07 | Caderno guiado com comentários consultados | Registrar ajuda, sem dizer que há recuperação independente |
+| CDO-08 | Resultado 12 corretas, 3 erradas, 0 em branco, total 15 | Validar contagens segundo convenção expressa; não inventar tópicos |
+| CDO-09 | Resultado só “80%”, sem número de questões | Não derivar contagens inteiras por adivinhação |
+| CDO-10 | Relatório de “respondidas” exclui as em branco | Conservar convenção; não rejeitar com regra incompatível |
+| CDO-11 | CSV do TEC/Qconcursos com colunas não identificadas | Solicitar/marcar mapeamento; não inventar esquema |
+| CDO-12 | Dados por área, sem distribuição por tópico | Métricas só até área; nenhuma decomposição fictícia |
+| CDO-13 | Resultado global de caderno comum a 523/324 | Uma tentativa; múltiplos vínculos conceituais somente se comprovados |
+| CDO-14 | Caderno pendente idêntico ao que seria recomendado | Evitar recomendação duplicada; reutilizar ou substituir com justificativa |
+| CDO-15 | Estudante cancela caderno antes de resolver | Preservar decisão histórica; nenhuma tentativa concluída inferida |
+| CDO-16 | Relatório contraditório (total inferior à soma de contagens) | Pedir correção mínima; não validar nem ajustar números |
+| CDO-17 | Resultados pessoais não estão autorizados para escrita | Dar feedback, mas não afirmar persistência nem atualizar histórico |
+| CDO-18 | Apenas “10 certas, 5 erradas; novas, sem consulta”, com caderno pendente inequívoco | Aceitar devolução curta e solicitar apenas o campo realmente indispensável |
+
+**Total pedagógico documentado após v1.6:** 86 cenários (PED 20 + COMP 12 + SIM 10 + EFA 8 + FIQ 18 + CDO 18), ainda não convertidos em testes executáveis nem validados com dados reais.
