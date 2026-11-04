@@ -1,0 +1,1135 @@
+{
+  "schema_version": "1.0",
+  "source": "EDITAL_UFMS_152_2026.md",
+  "source_git_blob_sha": "a4129cceabd20fc119625d71b1c1599b3ce644e1",
+  "source_pdf_sha256": "c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675",
+  "page_count": 47,
+  "max_chunk_chars": 7200,
+  "chunks": [
+    {
+      "id": "p01-c01",
+      "path": "edital/chunks/p01-c01.md",
+      "page": 1,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 6937,
+      "characters": 6937,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p02-c01",
+      "path": "edital/chunks/p02-c01.md",
+      "page": 2,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 6287,
+      "characters": 6287,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p03-c01",
+      "path": "edital/chunks/p03-c01.md",
+      "page": 3,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 6953,
+      "characters": 6953,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p04-c01",
+      "path": "edital/chunks/p04-c01.md",
+      "page": 4,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 3757,
+      "characters": 3757,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p04-c02",
+      "path": "edital/chunks/p04-c02.md",
+      "page": 4,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 3757,
+      "char_end": 7260,
+      "characters": 3503,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p05-c01",
+      "path": "edital/chunks/p05-c01.md",
+      "page": 5,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4124,
+      "characters": 4124,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p05-c02",
+      "path": "edital/chunks/p05-c02.md",
+      "page": 5,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4124,
+      "char_end": 7590,
+      "characters": 3466,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p06-c01",
+      "path": "edital/chunks/p06-c01.md",
+      "page": 6,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 5956,
+      "characters": 5956,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p07-c01",
+      "path": "edital/chunks/p07-c01.md",
+      "page": 7,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 6800,
+      "characters": 6800,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p08-c01",
+      "path": "edital/chunks/p08-c01.md",
+      "page": 8,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6457,
+      "characters": 6457,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p08-c02",
+      "path": "edital/chunks/p08-c02.md",
+      "page": 8,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6457,
+      "char_end": 8299,
+      "characters": 1842,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p09-c01",
+      "path": "edital/chunks/p09-c01.md",
+      "page": 9,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 7097,
+      "characters": 7097,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p10-c01",
+      "path": "edital/chunks/p10-c01.md",
+      "page": 10,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 5485,
+      "characters": 5485,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p11-c01",
+      "path": "edital/chunks/p11-c01.md",
+      "page": 11,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 6559,
+      "characters": 6559,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p12-c01",
+      "path": "edital/chunks/p12-c01.md",
+      "page": 12,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 2813,
+      "characters": 2813,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p13-c01",
+      "path": "edital/chunks/p13-c01.md",
+      "page": 13,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 4245,
+      "characters": 4245,
+      "categories": [
+        "edital",
+        "regras_e_cronograma"
+      ]
+    },
+    {
+      "id": "p14-c01",
+      "path": "edital/chunks/p14-c01.md",
+      "page": 14,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6762,
+      "characters": 6762,
+      "categories": [
+        "edital",
+        "cargos_e_vagas"
+      ]
+    },
+    {
+      "id": "p14-c02",
+      "path": "edital/chunks/p14-c02.md",
+      "page": 14,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6762,
+      "char_end": 13461,
+      "characters": 6699,
+      "categories": [
+        "edital",
+        "cargos_e_vagas"
+      ]
+    },
+    {
+      "id": "p15-c01",
+      "path": "edital/chunks/p15-c01.md",
+      "page": 15,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5811,
+      "characters": 5811,
+      "categories": [
+        "edital",
+        "cargos_e_vagas",
+        "cargo_523"
+      ]
+    },
+    {
+      "id": "p15-c02",
+      "path": "edital/chunks/p15-c02.md",
+      "page": 15,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5811,
+      "char_end": 11585,
+      "characters": 5774,
+      "categories": [
+        "edital",
+        "cargos_e_vagas",
+        "cargo_523"
+      ]
+    },
+    {
+      "id": "p16-c01",
+      "path": "edital/chunks/p16-c01.md",
+      "page": 16,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4389,
+      "characters": 4389,
+      "categories": [
+        "edital",
+        "cargos_e_vagas"
+      ]
+    },
+    {
+      "id": "p16-c02",
+      "path": "edital/chunks/p16-c02.md",
+      "page": 16,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4389,
+      "char_end": 8746,
+      "characters": 4357,
+      "categories": [
+        "edital",
+        "cargos_e_vagas"
+      ]
+    },
+    {
+      "id": "p17-c01",
+      "path": "edital/chunks/p17-c01.md",
+      "page": 17,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6127,
+      "characters": 6127,
+      "categories": [
+        "edital",
+        "cargos_e_vagas"
+      ]
+    },
+    {
+      "id": "p17-c02",
+      "path": "edital/chunks/p17-c02.md",
+      "page": 17,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6127,
+      "char_end": 12354,
+      "characters": 6227,
+      "categories": [
+        "edital",
+        "cargos_e_vagas"
+      ]
+    },
+    {
+      "id": "p18-c01",
+      "path": "edital/chunks/p18-c01.md",
+      "page": 18,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 7032,
+      "characters": 7032,
+      "categories": [
+        "edital",
+        "cargos_e_vagas",
+        "cargo_324"
+      ]
+    },
+    {
+      "id": "p18-c02",
+      "path": "edital/chunks/p18-c02.md",
+      "page": 18,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 7032,
+      "char_end": 14056,
+      "characters": 7024,
+      "categories": [
+        "edital",
+        "cargos_e_vagas",
+        "cargo_324"
+      ]
+    },
+    {
+      "id": "p19-c01",
+      "path": "edital/chunks/p19-c01.md",
+      "page": 19,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 50,
+      "characters": 50,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p20-c01",
+      "path": "edital/chunks/p20-c01.md",
+      "page": 20,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4616,
+      "characters": 4616,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p20-c02",
+      "path": "edital/chunks/p20-c02.md",
+      "page": 20,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4616,
+      "char_end": 9326,
+      "characters": 4710,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p21-c01",
+      "path": "edital/chunks/p21-c01.md",
+      "page": 21,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4952,
+      "characters": 4952,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p21-c02",
+      "path": "edital/chunks/p21-c02.md",
+      "page": 21,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4952,
+      "char_end": 9236,
+      "characters": 4284,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p22-c01",
+      "path": "edital/chunks/p22-c01.md",
+      "page": 22,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4142,
+      "characters": 4142,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p22-c02",
+      "path": "edital/chunks/p22-c02.md",
+      "page": 22,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4142,
+      "char_end": 10159,
+      "characters": 6017,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p23-c01",
+      "path": "edital/chunks/p23-c01.md",
+      "page": 23,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6070,
+      "characters": 6070,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p23-c02",
+      "path": "edital/chunks/p23-c02.md",
+      "page": 23,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6070,
+      "char_end": 9967,
+      "characters": 3897,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p24-c01",
+      "path": "edital/chunks/p24-c01.md",
+      "page": 24,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4563,
+      "characters": 4563,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p24-c02",
+      "path": "edital/chunks/p24-c02.md",
+      "page": 24,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4563,
+      "char_end": 10469,
+      "characters": 5906,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p25-c01",
+      "path": "edital/chunks/p25-c01.md",
+      "page": 25,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 3779,
+      "characters": 3779,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p25-c02",
+      "path": "edital/chunks/p25-c02.md",
+      "page": 25,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 3779,
+      "char_end": 7557,
+      "characters": 3778,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p26-c01",
+      "path": "edital/chunks/p26-c01.md",
+      "page": 26,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5644,
+      "characters": 5644,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p26-c02",
+      "path": "edital/chunks/p26-c02.md",
+      "page": 26,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5644,
+      "char_end": 10267,
+      "characters": 4623,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p27-c01",
+      "path": "edital/chunks/p27-c01.md",
+      "page": 27,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5357,
+      "characters": 5357,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p27-c02",
+      "path": "edital/chunks/p27-c02.md",
+      "page": 27,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5357,
+      "char_end": 10743,
+      "characters": 5386,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p28-c01",
+      "path": "edital/chunks/p28-c01.md",
+      "page": 28,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5198,
+      "characters": 5198,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p28-c02",
+      "path": "edital/chunks/p28-c02.md",
+      "page": 28,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5198,
+      "char_end": 10485,
+      "characters": 5287,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p29-c01",
+      "path": "edital/chunks/p29-c01.md",
+      "page": 29,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 3721,
+      "characters": 3721,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "conhecimentos_gerais"
+      ]
+    },
+    {
+      "id": "p29-c02",
+      "path": "edital/chunks/p29-c02.md",
+      "page": 29,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 3721,
+      "char_end": 8248,
+      "characters": 4527,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "conhecimentos_gerais"
+      ]
+    },
+    {
+      "id": "p30-c01",
+      "path": "edital/chunks/p30-c01.md",
+      "page": 30,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5661,
+      "characters": 5661,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p30-c02",
+      "path": "edital/chunks/p30-c02.md",
+      "page": 30,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5661,
+      "char_end": 10499,
+      "characters": 4838,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p31-c01",
+      "path": "edital/chunks/p31-c01.md",
+      "page": 31,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5816,
+      "characters": 5816,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p31-c02",
+      "path": "edital/chunks/p31-c02.md",
+      "page": 31,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5816,
+      "char_end": 11903,
+      "characters": 6087,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p32-c01",
+      "path": "edital/chunks/p32-c01.md",
+      "page": 32,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4803,
+      "characters": 4803,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p32-c02",
+      "path": "edital/chunks/p32-c02.md",
+      "page": 32,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4803,
+      "char_end": 9808,
+      "characters": 5005,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p33-c01",
+      "path": "edital/chunks/p33-c01.md",
+      "page": 33,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6303,
+      "characters": 6303,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p33-c02",
+      "path": "edital/chunks/p33-c02.md",
+      "page": 33,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6303,
+      "char_end": 12535,
+      "characters": 6232,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p34-c01",
+      "path": "edital/chunks/p34-c01.md",
+      "page": 34,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5032,
+      "characters": 5032,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p34-c02",
+      "path": "edital/chunks/p34-c02.md",
+      "page": 34,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5032,
+      "char_end": 11966,
+      "characters": 6934,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p35-c01",
+      "path": "edital/chunks/p35-c01.md",
+      "page": 35,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6629,
+      "characters": 6629,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "cargo_523"
+      ]
+    },
+    {
+      "id": "p35-c02",
+      "path": "edital/chunks/p35-c02.md",
+      "page": 35,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6629,
+      "char_end": 11929,
+      "characters": 5300,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "cargo_523"
+      ]
+    },
+    {
+      "id": "p36-c01",
+      "path": "edital/chunks/p36-c01.md",
+      "page": 36,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6327,
+      "characters": 6327,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "cargo_523"
+      ]
+    },
+    {
+      "id": "p36-c02",
+      "path": "edital/chunks/p36-c02.md",
+      "page": 36,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6327,
+      "char_end": 12663,
+      "characters": 6336,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "cargo_523"
+      ]
+    },
+    {
+      "id": "p37-c01",
+      "path": "edital/chunks/p37-c01.md",
+      "page": 37,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5724,
+      "characters": 5724,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p37-c02",
+      "path": "edital/chunks/p37-c02.md",
+      "page": 37,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5724,
+      "char_end": 11830,
+      "characters": 6106,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p38-c01",
+      "path": "edital/chunks/p38-c01.md",
+      "page": 38,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6394,
+      "characters": 6394,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p38-c02",
+      "path": "edital/chunks/p38-c02.md",
+      "page": 38,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6394,
+      "char_end": 12750,
+      "characters": 6356,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p39-c01",
+      "path": "edital/chunks/p39-c01.md",
+      "page": 39,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6496,
+      "characters": 6496,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p39-c02",
+      "path": "edital/chunks/p39-c02.md",
+      "page": 39,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6496,
+      "char_end": 12029,
+      "characters": 5533,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p40-c01",
+      "path": "edital/chunks/p40-c01.md",
+      "page": 40,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5309,
+      "characters": 5309,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p40-c02",
+      "path": "edital/chunks/p40-c02.md",
+      "page": 40,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5309,
+      "char_end": 9478,
+      "characters": 4169,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p41-c01",
+      "path": "edital/chunks/p41-c01.md",
+      "page": 41,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 5876,
+      "characters": 5876,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p41-c02",
+      "path": "edital/chunks/p41-c02.md",
+      "page": 41,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 5876,
+      "char_end": 11847,
+      "characters": 5971,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p42-c01",
+      "path": "edital/chunks/p42-c01.md",
+      "page": 42,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6027,
+      "characters": 6027,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p42-c02",
+      "path": "edital/chunks/p42-c02.md",
+      "page": 42,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6027,
+      "char_end": 12142,
+      "characters": 6115,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p43-c01",
+      "path": "edital/chunks/p43-c01.md",
+      "page": 43,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6773,
+      "characters": 6773,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p43-c02",
+      "path": "edital/chunks/p43-c02.md",
+      "page": 43,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6773,
+      "char_end": 11793,
+      "characters": 5020,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p44-c01",
+      "path": "edital/chunks/p44-c01.md",
+      "page": 44,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 6392,
+      "characters": 6392,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p44-c02",
+      "path": "edital/chunks/p44-c02.md",
+      "page": 44,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 6392,
+      "char_end": 12665,
+      "characters": 6273,
+      "categories": [
+        "edital",
+        "conteudo_programatico"
+      ]
+    },
+    {
+      "id": "p45-c01",
+      "path": "edital/chunks/p45-c01.md",
+      "page": 45,
+      "segment": 1,
+      "segments_on_page": 2,
+      "char_start": 0,
+      "char_end": 4438,
+      "characters": 4438,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "cargo_324"
+      ]
+    },
+    {
+      "id": "p45-c02",
+      "path": "edital/chunks/p45-c02.md",
+      "page": 45,
+      "segment": 2,
+      "segments_on_page": 2,
+      "char_start": 4438,
+      "char_end": 8238,
+      "characters": 3800,
+      "categories": [
+        "edital",
+        "conteudo_programatico",
+        "cargo_324"
+      ]
+    },
+    {
+      "id": "p46-c01",
+      "path": "edital/chunks/p46-c01.md",
+      "page": 46,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 5257,
+      "characters": 5257,
+      "categories": [
+        "edital"
+      ]
+    },
+    {
+      "id": "p47-c01",
+      "path": "edital/chunks/p47-c01.md",
+      "page": 47,
+      "segment": 1,
+      "segments_on_page": 1,
+      "char_start": 0,
+      "char_end": 3766,
+      "characters": 3766,
+      "categories": [
+        "edital"
+      ]
+    }
+  ]
+}

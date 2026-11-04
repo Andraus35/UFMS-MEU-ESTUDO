@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.2.0",
+  "source": "Edital PROGEP/UFMS nº 152, de 29/10/2026, Anexos II, III e V",
+  "retificacoes_verificadas": false,
+  "banca": "FAPEC",
+  "prova_data": "2027-01-17",
+  "local_time_zone": "America/Campo_Grande",
+  "exam_city_choice": "a definir pelo estudante na inscrição",
+  "shared_exam": {"questions": 60, "points": 100, "duration_minutes": 240, "minimum_points": 50, "cannot_zero_any_area": true},
+  "areas": [
+    {"name": "Português", "questions": 15, "points": 15},
+    {"name": "Inglês", "questions": 5, "points": 5},
+    {"name": "Legislação", "questions": 10, "points": 20},
+    {"name": "Raciocínio Lógico", "questions": 10, "points": 20},
+    {"name": "Conhecimentos Específicos", "questions": 20, "points": 40}
+  ],
+  "cargos": [
+    {"codigo": "523", "nome": "Analista em Educação / Administração e Informação / Gestão Pública", "nivel": "superior", "turno": "manha", "lotacao": "Campo Grande", "vagas": 29, "requisito_resumo": "Curso superior em Gestão Pública está listado; verificar Anexo III integral"},
+    {"codigo": "324", "nome": "Técnico em Educação / Processos Educacionais / Assuntos Estudantis", "nivel": "medio", "turno": "tarde", "lotacao": "Campo Grande", "vagas": 18, "requisito_resumo": "Ensino médio completo"}
+  ]
+}

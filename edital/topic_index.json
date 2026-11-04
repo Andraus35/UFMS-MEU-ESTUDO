@@ -1,0 +1,564 @@
+{
+  "schema_version": "1.0",
+  "classification": "derived_non_normative",
+  "source": "EDITAL_UFMS_152_2026.md",
+  "source_git_blob_sha": "a4129cceabd20fc119625d71b1c1599b3ce644e1",
+  "source_pdf_sha256": "c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675",
+  "description": "Índice derivado dos 23 blocos de config/topics.csv; offsets são intervalos exatos dentro de chunks, não alterações no edital.",
+  "topics": [
+    {
+      "topic_id": "GER-PORT",
+      "title": "Língua Portuguesa",
+      "area": "gerais",
+      "cargo_ids": [
+        "523",
+        "324"
+      ],
+      "aliases": [
+        "gramatica",
+        "interpretacao de texto",
+        "redacao oficial"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p29-c01",
+          "path": "edital/chunks/p29-c01.md",
+          "page": 29,
+          "chunk_char_start": 229,
+          "chunk_char_end": 1178,
+          "page_char_start": 229,
+          "page_char_end": 1178
+        }
+      ]
+    },
+    {
+      "topic_id": "GER-ING",
+      "title": "Língua Inglesa",
+      "area": "gerais",
+      "cargo_ids": [
+        "523",
+        "324"
+      ],
+      "aliases": [
+        "ingles",
+        "compreensao em ingles"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p29-c01",
+          "path": "edital/chunks/p29-c01.md",
+          "page": 29,
+          "chunk_char_start": 3227,
+          "chunk_char_end": 3568,
+          "page_char_start": 3227,
+          "page_char_end": 3568
+        }
+      ]
+    },
+    {
+      "topic_id": "GER-LEG",
+      "title": "Legislação geral e normas da UFMS",
+      "area": "gerais",
+      "cargo_ids": [
+        "523",
+        "324"
+      ],
+      "aliases": [
+        "normas ufms",
+        "regime juridico servidor",
+        "lei 8112"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p29-c01",
+          "path": "edital/chunks/p29-c01.md",
+          "page": 29,
+          "chunk_char_start": 1178,
+          "chunk_char_end": 2299,
+          "page_char_start": 1178,
+          "page_char_end": 2299
+        }
+      ]
+    },
+    {
+      "topic_id": "GER-RLM",
+      "title": "Raciocínio Lógico",
+      "area": "gerais",
+      "cargo_ids": [
+        "523",
+        "324"
+      ],
+      "aliases": [
+        "logica",
+        "matematica",
+        "proposicoes logicas"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p29-c01",
+          "path": "edital/chunks/p29-c01.md",
+          "page": 29,
+          "chunk_char_start": 2299,
+          "chunk_char_end": 3227,
+          "page_char_start": 2299,
+          "page_char_end": 3227
+        }
+      ]
+    },
+    {
+      "topic_id": "523-01",
+      "title": "Administração Pública e Organização Administrativa",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "organizacao administrativa",
+        "administracao indireta"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p35-c02",
+          "path": "edital/chunks/p35-c02.md",
+          "page": 35,
+          "chunk_char_start": 4887,
+          "chunk_char_end": 5300,
+          "page_char_start": 11516,
+          "page_char_end": 11929
+        },
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 0,
+          "chunk_char_end": 129,
+          "page_char_start": 0,
+          "page_char_end": 129
+        }
+      ]
+    },
+    {
+      "topic_id": "523-02",
+      "title": "Planejamento Governança e Políticas Públicas",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "politicas publicas",
+        "governanca publica",
+        "analise swot"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 129,
+          "chunk_char_end": 655,
+          "page_char_start": 129,
+          "page_char_end": 655
+        }
+      ]
+    },
+    {
+      "topic_id": "523-03",
+      "title": "Gestão da Qualidade de Processos e de Projetos",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "gestao de processos",
+        "pdca",
+        "5w2h"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 655,
+          "chunk_char_end": 1089,
+          "page_char_start": 655,
+          "page_char_end": 1089
+        }
+      ]
+    },
+    {
+      "topic_id": "523-04",
+      "title": "Organização da Educação Superior",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "autonomia universitaria",
+        "ldb ensino superior"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 1089,
+          "chunk_char_end": 1303,
+          "page_char_start": 1089,
+          "page_char_end": 1303
+        }
+      ]
+    },
+    {
+      "topic_id": "523-05",
+      "title": "Gestão de Pessoas e Comportamento Organizacional",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "gestao por competencias",
+        "clima organizacional"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 1303,
+          "chunk_char_end": 1715,
+          "page_char_start": 1303,
+          "page_char_end": 1715
+        }
+      ]
+    },
+    {
+      "topic_id": "523-06",
+      "title": "Orçamento e Administração Financeira Pública",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "financas publicas",
+        "ppa",
+        "ldo",
+        "loa",
+        "orcamento publico"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 1715,
+          "chunk_char_end": 2220,
+          "page_char_start": 1715,
+          "page_char_end": 2220
+        }
+      ]
+    },
+    {
+      "topic_id": "523-07",
+      "title": "Administração de Recursos Materiais e Patrimoniais",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "almoxarifado",
+        "estoque de seguranca"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 2220,
+          "chunk_char_end": 2621,
+          "page_char_start": 2220,
+          "page_char_end": 2621
+        }
+      ]
+    },
+    {
+      "topic_id": "523-08",
+      "title": "Licitações e Contratos Administrativos",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "compras publicas",
+        "contratacoes publicas",
+        "licitacao"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 2621,
+          "chunk_char_end": 3123,
+          "page_char_start": 2621,
+          "page_char_end": 3123
+        }
+      ]
+    },
+    {
+      "topic_id": "523-09",
+      "title": "Informação Documentação e Governo Digital",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "governo digital",
+        "lgpd",
+        "gestao documental"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 3123,
+          "chunk_char_end": 3725,
+          "page_char_start": 3123,
+          "page_char_end": 3725
+        }
+      ]
+    },
+    {
+      "topic_id": "523-10",
+      "title": "Direitos dos Usuários e Qualidade dos Serviços Públicos",
+      "area": "especificos",
+      "cargo_ids": [
+        "523"
+      ],
+      "aliases": [
+        "direitos do usuario",
+        "servico publico atendimento"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p36-c01",
+          "path": "edital/chunks/p36-c01.md",
+          "page": 36,
+          "chunk_char_start": 3725,
+          "chunk_char_end": 4101,
+          "page_char_start": 3725,
+          "page_char_end": 4101
+        }
+      ]
+    },
+    {
+      "topic_id": "324-01",
+      "title": "Organização e Funcionamento da Educação Superior",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "ldb educacao superior",
+        "funcionamento universidade"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 107,
+          "chunk_char_end": 247,
+          "page_char_start": 4545,
+          "page_char_end": 4685
+        }
+      ]
+    },
+    {
+      "topic_id": "324-02",
+      "title": "Organização e Procedimentos Acadêmicos da Graduação da UFMS",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "rotinas academicas graduacao",
+        "regulamento graduacao"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 247,
+          "chunk_char_end": 755,
+          "page_char_start": 4685,
+          "page_char_end": 5193
+        }
+      ]
+    },
+    {
+      "topic_id": "324-03",
+      "title": "Matrícula de Ingressantes na Graduação",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "calouro",
+        "ingresso na graduacao",
+        "documentos matricula"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 755,
+          "chunk_char_end": 1144,
+          "page_char_start": 5193,
+          "page_char_end": 5582
+        }
+      ]
+    },
+    {
+      "topic_id": "324-04",
+      "title": "Organização e Procedimentos Acadêmicos da Pós-Graduação Stricto Sensu da UFMS",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "mestrado e doutorado",
+        "pos graduacao stricto sensu"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 1144,
+          "chunk_char_end": 1745,
+          "page_char_start": 5582,
+          "page_char_end": 6183
+        }
+      ]
+    },
+    {
+      "topic_id": "324-05",
+      "title": "Documentação e Comunicação Oficial",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "correspondencia oficial",
+        "documentos oficiais"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 1745,
+          "chunk_char_end": 1968,
+          "page_char_start": 6183,
+          "page_char_end": 6406
+        }
+      ]
+    },
+    {
+      "topic_id": "324-06",
+      "title": "Conduta Estudantil",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "disciplina discente",
+        "comportamento estudantil",
+        "regulamento de conduta"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 1968,
+          "chunk_char_end": 2272,
+          "page_char_start": 6406,
+          "page_char_end": 6710
+        }
+      ]
+    },
+    {
+      "topic_id": "324-07",
+      "title": "Noções de Administração e Organização do Trabalho",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "rotina administrativa",
+        "organizacao do trabalho"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 2272,
+          "chunk_char_end": 2739,
+          "page_char_start": 6710,
+          "page_char_end": 7177
+        }
+      ]
+    },
+    {
+      "topic_id": "324-08",
+      "title": "Atendimento ao Público e Comunicação Interpessoal",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "comunicacao interpessoal",
+        "atendimento estudantes"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 2739,
+          "chunk_char_end": 3272,
+          "page_char_start": 7177,
+          "page_char_end": 7710
+        }
+      ]
+    },
+    {
+      "topic_id": "324-09",
+      "title": "Noções de Administração de Recursos Materiais e Patrimoniais",
+      "area": "especificos",
+      "cargo_ids": [
+        "324"
+      ],
+      "aliases": [
+        "controle de estoque",
+        "patrimonio publico"
+      ],
+      "locations": [
+        {
+          "chunk_id": "p45-c02",
+          "path": "edital/chunks/p45-c02.md",
+          "page": 45,
+          "chunk_char_start": 3272,
+          "chunk_char_end": 3800,
+          "page_char_start": 7710,
+          "page_char_end": 8238
+        }
+      ]
+    }
+  ]
+}

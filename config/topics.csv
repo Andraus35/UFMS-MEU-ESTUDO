@@ -1,0 +1,24 @@
+topic_id,area,cargo_ids,disciplina,bloco,titulo,sobreposicao,fonte
+GER-PORT,gerais,523|324,Português,0,Língua Portuguesa,portugues,Anexo V p.29
+GER-ING,gerais,523|324,Inglês,0,Língua Inglesa,ingles,Anexo V p.29
+GER-LEG,gerais,523|324,Legislação,0,Legislação geral e normas da UFMS,legislacao,Anexo V p.29
+GER-RLM,gerais,523|324,Raciocínio Lógico,0,Raciocínio Lógico,raciocinio,Anexo V p.29
+523-01,especificos,523,Específicos 523,1,Administração Pública e Organização Administrativa,administracao,Anexo V pp.35-36
+523-02,especificos,523,Específicos 523,2,Planejamento Governança e Políticas Públicas,planejamento,Anexo V p.36
+523-03,especificos,523,Específicos 523,3,Gestão da Qualidade de Processos e de Projetos,processos,Anexo V p.36
+523-04,especificos,523,Específicos 523,4,Organização da Educação Superior,ldb_superior,Anexo V p.36
+523-05,especificos,523,Específicos 523,5,Gestão de Pessoas e Comportamento Organizacional,pessoas,Anexo V p.36
+523-06,especificos,523,Específicos 523,6,Orçamento e Administração Financeira Pública,orcamento,Anexo V p.36
+523-07,especificos,523,Específicos 523,7,Administração de Recursos Materiais e Patrimoniais,materiais,Anexo V p.36
+523-08,especificos,523,Específicos 523,8,Licitações e Contratos Administrativos,contratos,Anexo V p.36
+523-09,especificos,523,Específicos 523,9,Informação Documentação e Governo Digital,documentacao,Anexo V p.36
+523-10,especificos,523,Específicos 523,10,Direitos dos Usuários e Qualidade dos Serviços Públicos,atendimento,Anexo V p.36
+324-01,especificos,324,Específicos 324,1,Organização e Funcionamento da Educação Superior,ldb_superior,Anexo V p.45
+324-02,especificos,324,Específicos 324,2,Organização e Procedimentos Acadêmicos da Graduação da UFMS,graduacao,Anexo V p.45
+324-03,especificos,324,Específicos 324,3,Matrícula de Ingressantes na Graduação,matricula,Anexo V p.45
+324-04,especificos,324,Específicos 324,4,Organização e Procedimentos Acadêmicos da Pós-Graduação Stricto Sensu da UFMS,posgraduacao,Anexo V p.45
+324-05,especificos,324,Específicos 324,5,Documentação e Comunicação Oficial,documentacao,Anexo V p.45
+324-06,especificos,324,Específicos 324,6,Conduta Estudantil,conduta,Anexo V p.45
+324-07,especificos,324,Específicos 324,7,Noções de Administração e Organização do Trabalho,administracao,Anexo V p.45
+324-08,especificos,324,Específicos 324,8,Atendimento ao Público e Comunicação Interpessoal,atendimento,Anexo V p.45
+324-09,especificos,324,Específicos 324,9,Noções de Administração de Recursos Materiais e Patrimoniais,materiais,Anexo V p.45

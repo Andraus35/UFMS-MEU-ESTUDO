@@ -1,0 +1,238 @@
+{
+  "schema_version": "1.0",
+  "description": "Consultas diagnósticas determinísticas; sinônimos são atalhos derivados e não conteúdo normativo.",
+  "cases": [
+    {
+      "query": "interpretação de texto",
+      "cargo": "523",
+      "area": "gerais",
+      "topic_id": "GER-PORT",
+      "page": 29,
+      "type": "alias"
+    },
+    {
+      "query": "compreensão em inglês",
+      "cargo": "324",
+      "area": "gerais",
+      "topic_id": "GER-ING",
+      "page": 29,
+      "type": "alias"
+    },
+    {
+      "query": "regime jurídico servidor lei 8112",
+      "cargo": "523",
+      "area": "gerais",
+      "topic_id": "GER-LEG",
+      "page": 29,
+      "type": "alias"
+    },
+    {
+      "query": "matemática proposicional",
+      "cargo": "324",
+      "area": "gerais",
+      "topic_id": "GER-RLM",
+      "page": 29,
+      "type": "alias"
+    },
+    {
+      "query": "organização administrativa",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-01",
+      "page": 35,
+      "type": "alias"
+    },
+    {
+      "query": "governança pública",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-02",
+      "page": 36,
+      "type": "alias"
+    },
+    {
+      "query": "ferramenta 5w2h",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-03",
+      "page": 36,
+      "type": "alias"
+    },
+    {
+      "query": "autonomia universitária",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-04",
+      "page": 36,
+      "type": "alias"
+    },
+    {
+      "query": "orçamento público ppa",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-06",
+      "page": 36,
+      "type": "alias"
+    },
+    {
+      "query": "compras públicas e pregão",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-08",
+      "page": 36,
+      "type": "alias"
+    },
+    {
+      "query": "governo digital lgpd",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": "523-09",
+      "page": 36,
+      "type": "alias"
+    },
+    {
+      "query": "rotinas acadêmicas graduação",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-02",
+      "page": 45,
+      "type": "alias"
+    },
+    {
+      "query": "calouro na universidade",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-03",
+      "page": 45,
+      "type": "alias"
+    },
+    {
+      "query": "mestrado e doutorado",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-04",
+      "page": 45,
+      "type": "alias"
+    },
+    {
+      "query": "disciplina discente",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-06",
+      "page": 45,
+      "type": "alias"
+    },
+    {
+      "query": "atendimento estudantes",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-08",
+      "page": 45,
+      "type": "alias"
+    },
+    {
+      "query": "controle de estoque",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-09",
+      "page": 45,
+      "type": "alias"
+    },
+    {
+      "query": "Organização e Funcionamento da Educação Superior",
+      "cargo": "324",
+      "area": "especificos",
+      "topic_id": "324-01",
+      "page": 45,
+      "type": "literal"
+    },
+    {
+      "query": "xxyyzzinexistente",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": null,
+      "page": null,
+      "type": "negative"
+    },
+    {
+      "query": "endodontia apicectomia",
+      "cargo": "523",
+      "area": "especificos",
+      "topic_id": null,
+      "page": null,
+      "type": "negative"
+    },
+    {
+      "query": "3.6 candidato recolher taxa de inscrição",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 2,
+      "type": "rule"
+    },
+    {
+      "query": "3.8 inscrição efetivada confirmação pagamento rede bancária",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 3,
+      "type": "rule"
+    },
+    {
+      "query": "9.2 Prova Objetiva duração 4 quatro horas",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 8,
+      "type": "rule"
+    },
+    {
+      "query": "9.5 fechamento dos portões pontualmente às 8h 14h",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 9,
+      "type": "rule"
+    },
+    {
+      "query": "10.2 eliminado candidato obtiver nota zero cinco áreas",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 10,
+      "type": "rule"
+    },
+    {
+      "query": "13.10 anulação de questões recursos administrativos",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 11,
+      "type": "rule"
+    },
+    {
+      "query": "ANEXO I QUADRO DE REMUNERAÇÃO vencimento básico inicial",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 12,
+      "type": "rule"
+    },
+    {
+      "query": "523 29 Campo Grande Gestão Pública",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 15,
+      "type": "rule"
+    },
+    {
+      "query": "324 18 Campo Grande Ensino Médio completo",
+      "cargo": null,
+      "area": null,
+      "topic_id": null,
+      "page": 18,
+      "type": "rule"
+    }
+  ]
+}

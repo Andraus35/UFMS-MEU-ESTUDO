@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "description": "Avaliação adversarial adicional. Consultas independentes dos aliases e do benchmark inicial; origem esperada verificada no PDF/trechos canônicos.",
+  "cases": [
+    {
+      "query": "gestão por resultados eficiência eficácia efetividade",
+      "cargo": "523",
+      "area": "especificos",
+      "page": 36,
+      "kind": "positive",
+      "expected_text": "Gestão por resultados",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "estudo técnico preliminar termo de referência",
+      "cargo": "523",
+      "area": "especificos",
+      "page": 36,
+      "kind": "positive",
+      "expected_text": "estudo técnico preliminar",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "Plano Plurianual Lei de Diretrizes Orçamentárias",
+      "cargo": "523",
+      "area": "especificos",
+      "page": 36,
+      "kind": "positive",
+      "expected_text": "Plano Plurianual",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "Constituição Federal art. 207 indissociabilidade",
+      "cargo": "523",
+      "area": "especificos",
+      "page": 36,
+      "kind": "positive",
+      "expected_text": "art. 207",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "Resolução nº 497-Coun",
+      "cargo": "324",
+      "area": "especificos",
+      "page": 45,
+      "kind": "positive",
+      "expected_text": "Resolução nº 497-",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "Instrução Normativa nº 88-Prograd",
+      "cargo": "324",
+      "area": "especificos",
+      "page": 45,
+      "kind": "positive",
+      "expected_text": "88-Prograd",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "Lei nº 9.394/1996 educação superior",
+      "cargo": "324",
+      "area": "especificos",
+      "page": 45,
+      "kind": "positive",
+      "expected_text": "9.394",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "administração de conflitos acessibilidade não discriminação",
+      "cargo": "324",
+      "area": "especificos",
+      "page": 45,
+      "kind": "positive",
+      "expected_text": "administração de conflitos",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "responsabilidades e procedimentos Resolução 497-Coun",
+      "cargo": "324",
+      "area": "especificos",
+      "page": 45,
+      "kind": "positive",
+      "expected_text": "procedimentos previstos no Regulamento",
+      "expected_route": "bm25"
+    },
+    {
+      "query": "irrigação endodôntica hipoclorito sódio",
+      "cargo": "523",
+      "area": null,
+      "forbidden_chunk": "p36-c02",
+      "kind": "isolation"
+    },
+    {
+      "query": "CEUA CONCEA 3Rs",
+      "cargo": "324",
+      "area": null,
+      "forbidden_chunk": "p45-c01",
+      "kind": "isolation"
+    },
+    {
+      "query": "Política Nacional de Cultura Viva territorialização",
+      "cargo": "523",
+      "area": "especificos",
+      "kind": "negative"
+    },
+    {
+      "query": "endodontia apicectomia",
+      "cargo": "523",
+      "area": null,
+      "kind": "isolation",
+      "forbidden_chunk": "p36-c02"
+    },
+    {
+      "query": "Código 527 endodontia",
+      "cargo": "523",
+      "area": "especificos",
+      "kind": "negative"
+    },
+    {
+      "query": "código 523 gestão pública",
+      "cargo": "324",
+      "area": "especificos",
+      "kind": "conflict"
+    },
+    {
+      "query": "Lei nº 14.133/2021",
+      "cargo": "523",
+      "area": null,
+      "forbidden_route": "literal_item_marker",
+      "kind": "not_item"
+    },
+    {
+      "query": "Lei nº 9.394/1996",
+      "cargo": "324",
+      "area": null,
+      "forbidden_route": "literal_item_marker",
+      "kind": "not_item"
+    }
+  ]
+}
