@@ -179,3 +179,11 @@ Não atualizar este documento com estados não confirmados nem copiar conversas 
 - **Contrato alterado:** `ROADMAP.md` é a segunda leitura de dez arquivos obrigatórios; `scripts/agent_gates.py` detecta ausência, conteúdo vazio, seções e ordem divergentes. `scripts/roadmap_gate.py --check` confronta referências em documentos estratégicos. Novos testes cobrem contraprovas.
 - **Pendente de comprovação no encerramento desta entrega:** CI no HEAD e readback do PR. Escritas feitas via API GitHub, sem execução local de hooks; não afirmar equivalência de garantias.
 - **Limite:** verificação de bytes não prova compreensão semântica; `main` sem branch protection e agentes externos podem contornar scripts locais. Resultados pessoais continuam bloqueados.
+
+## Evidência incremental — proteção de main preparada (04/11/2026)
+
+- O PR #9 registrou CI `validate` com sucesso em duas execuções no SHA `3106819840d4ebfe1dcc27736009b4af48f44341`. Novos commits precisam de nova CI no HEAD exato; não herdar a aprovação anterior.
+- Foram adicionados `scripts/protect_main.py`, seus testes adversariais, `docs/PROTECAO_MAIN.md` e `.github/copilot-instructions.md`. `scripts/roadmap_gate.py` verifica também a presença da instrução Copilot.
+- **Bloqueador administrativo:** a conexão do agente não expõe mutação de branch protection. Executar `python scripts/protect_main.py --apply --confirm Andraus35/UFMS-MEU-ESTUDO` com `gh` autenticado no ambiente do proprietário; então `--check` e GET da branch `main` devem confirmar proteção real.
+- **Revisão humana:** o PR foi criado pelo próprio usuário mantenedor; exigir uma aprovação GitHub formal obrigatória de um único mantenedor cria deadlock. A política padrão exige PR e CI sem contador de aprovação; usar `--approvals 1` somente após habilitar revisor independente distinto.
+- **Conformidade cognitiva:** nenhum script comprova compreensão semântica de um LLM. A integração de qualquer outro agente deve impor bootstrap no seu orquestrador e bloquear credenciais de escrita direta.

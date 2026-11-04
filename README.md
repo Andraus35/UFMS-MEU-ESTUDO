@@ -35,6 +35,18 @@ A CI inclui `scripts/write_policy.py --check` e os contratos verificáveis de bo
 
 Para escritas pela API, a política de pré-validação, a auditoria da CI e os limites de proteção administrativa estão documentados em [`docs/API_WRITE_GOVERNANCE.md`](docs/API_WRITE_GOVERNANCE.md). O adaptador é voluntário: não intercepta chamadas externas, não substitui autenticação/verificação independente e não libera dados pessoais.
 
+## Proteção da branch principal
+
+O workflow `validate` já aprovou o PR #9, mas tornar esse check **obrigatório no servidor** exige administração do repositório. O procedimento verificável está em [`docs/PROTECAO_MAIN.md`](docs/PROTECAO_MAIN.md). Para um administrador autenticado em checkout revisado:
+
+```powershell
+python scripts/protect_main.py --plan
+python scripts/protect_main.py --apply --confirm Andraus35/UFMS-MEU-ESTUDO
+python scripts/protect_main.py --check
+```
+
+**Importante:** só `--apply` modifica configurações no GitHub; executar o comando requer a ação explícita do proprietário. O contrato do Copilot consultivo está em `.github/copilot-instructions.md`; ele não é enforcement de servidor nem garante interpretação por LLM.
+
 ## Roadmap estratégico
 
 A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam sua ausência, placeholder, ordem incorreta e referências removidas. Isso **não obriga agentes externos** a executar o bootstrap: a proteção administrativa de `main` permanece pendente.

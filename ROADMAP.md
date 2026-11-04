@@ -8,8 +8,9 @@
 1. **Antes de qualquer trabalho operacional**, todo agente participante (Tutor, Coach, engenheiro documental, pedagógico, auditor ou integrador) deve recuperar e interpretar `AGENTS.md` e **`ROADMAP.md`** do HEAD atual, nessa ordem, e consultar os demais arquivos obrigatórios em `settings.json`.
 2. Em checkout local, executar `python scripts/bootstrap.py` e `python scripts/roadmap_gate.py --check` no START; verificar hash SHA-256 e identificar o item RM e eventuais bloqueadores. Sem checkout, ler os arquivos via GitHub autenticado e registrar HEAD e SHA de cada fonte. Se faltar leitura, integridade ou contexto, **não executar decisões nem mutações**.
 3. Na entrega, atualizar este roadmap se houver alteração relevante de estado, dependência ou prioridade; registrar evidência do commit no `memory/HANDOFF.md`. Nenhum status será promovido apenas porque um documento ou teste de infraestrutura existe.
-4. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem e integridade local; isso não prova compreensão semântica por LLM. Scripts locais e CI não são uma barreira obrigatória para agentes externos ou pushes diretos. A `main` estava desprotegida na auditoria de 04/11/2026; proteção administrativa com PR, revisão e check `validate` exigido continua pendente.
-5. Não publicar resultados pessoais enquanto o repositório for público nem habilitar flag por simples alteração. Nenhum merge/deploy sem autorização humana. O PR #3 de ponte Oracle/Telegram está encerrado fora de escopo, sem autorização para retomada.
+4. **Preparação administrativa:** `scripts/protect_main.py` e `docs/PROTECAO_MAIN.md` oferecem aplicação autenticada da proteção de `main`, com leitura posterior e testes adversariais. A execução do comando pelo proprietário ainda é necessária; a existência do script não equivale à configuração remota. `.github/copilot-instructions.md` amplia as instruções para o Copilot consultivo, sem criar uma barreira universal.
+5. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem e integridade local; isso não prova compreensão semântica por LLM. Scripts locais e CI não são uma barreira obrigatória para agentes externos ou pushes diretos. A `main` estava desprotegida na auditoria de 04/11/2026; proteção administrativa com PR, revisão e check `validate` exigido continua pendente.
+6. Não publicar resultados pessoais enquanto o repositório for público nem habilitar flag por simples alteração. Nenhum merge/deploy sem autorização humana. O PR #3 de ponte Oracle/Telegram está encerrado fora de escopo, sem autorização para retomada.
 
 ## Estado observado
 
@@ -33,7 +34,7 @@ Fotografia em `main`, commit **`676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`** (rev
 
 | ID | P | Frente / gate | Estado de partida | Definition of Done |
 |---|---|---|---|---|
-| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Checklist obrigatório de 10 arquivos; testes de ausência, ordem e adulteração; CI no HEAD e handoff; branch protection pendente até configuração administrativa |
+| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Bootstrap e CI testados; aplicação administrativa de branch protection ainda pendente e não substituída por scripts locais |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |

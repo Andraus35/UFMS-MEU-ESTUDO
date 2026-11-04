@@ -54,6 +54,7 @@ def verify_security_contract(root=ROOT):
         "scripts/validate.py": ("verify_write_policy(root)", "check_hook_contract(root)"),
         "scripts/rebuild.py": ("verify_write_policy(root)",),
         "scripts/roadmap_gate.py": ("def verify(", "check_bootstrap(root)"),
+        "scripts/protect_main.py": ("def protection_policy(", "def verify_protection("),
         "scripts/write_policy.py": ("def verify_write_policy(",),
         "scripts/api_write_guard.py": ("def check_proposal(", "def check_readback("),
     }

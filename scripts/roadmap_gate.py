@@ -8,7 +8,10 @@ except ModuleNotFoundError:
     from scripts.agent_gates import BOOTSTRAP_FILES, check_bootstrap
     from scripts.core import ROOT
 
-REFERENCES = ("AGENTS.md", "README.md", "rules/CORE.md", "memory/INDEX.md", "docs/OPERACAO.md")
+REFERENCES = (
+    "AGENTS.md", "README.md", "rules/CORE.md", "memory/INDEX.md",
+    "docs/OPERACAO.md", ".github/copilot-instructions.md",
+)
 
 def verify(root=ROOT):
     root = Path(root)
