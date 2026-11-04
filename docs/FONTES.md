@@ -3,6 +3,8 @@
 Fonte primária: **Edital PROGEP/UFMS nº 152, de 29 de outubro de 2026**, Concurso Público para Técnicos-Administrativos em Educação, com sete anexos.
 
 - Banca e publicações: <https://portal.concurso.fundacaofapec.org.br/>
+- Edital original também publicado pela UFMS (PDF institucional, 47 páginas): <https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf> — título e Anexo II cotejados, **SHA dos bytes remotos ainda não verificado**.
+- Página de divulgação institucional: <https://www.ufms.br/ufms-lanca-154-vagas-em-concurso-de-tecnicos-em-educacao-para-fortalecer-a-educacao-superior-em-ms/>
 - Publicações institucionais: <https://boletimoficial.ufms.br/>
 - Manual de atos oficiais: <https://www.ufms.br/manual-de-atos-e-correspondencias/>
 - TEC Concursos: <https://www.tecconcursos.com.br/>
