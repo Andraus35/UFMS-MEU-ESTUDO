@@ -1,4 +1,4 @@
-"""Busca lexical BM25 nos chunks, sem rede, embeddings ou dependências."""
+"""Busca em camadas: tópico/alias -> BM25 -> expansão controlada; sem serviços externos."""
 import argparse
 import collections
 import json
@@ -7,13 +7,20 @@ import re
 import unicodedata
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[1]
-FENCE=chr(96)*3
-STOP={'a','as','o','os','e','de','da','das','do','dos','em','na','nas','no','nos','para','por','com','um','uma','que','ou','ao','aos','sobre'}
+ROOT = Path(__file__).resolve().parents[1]
+FENCE = chr(96) * 3
+STOP = {'a','as','o','os','e','de','da','das','do','dos','em','na','nas',
+        'no','nos','para','por','com','um','uma','que','ou','ao','aos','sobre'}
 
 def terms(value):
-    text=''.join(ch for ch in unicodedata.normalize('NFKD',value.casefold()) if not unicodedata.combining(ch))
-    return [w for w in re.findall(r'[a-z0-9]+',text) if len(w)>1 and w not in STOP]
+    text = ''.join(ch for ch in unicodedata.normalize('NFKD', value.casefold())
+                   if not unicodedata.combining(ch))
+    return [w for w in re.findall(r'[a-z0-9]+', text) if len(w)>1 and w not in STOP]
+
+def normalized(value):
+    return ' '.join(re.findall(r'[a-z0-9]+',
+        ''.join(ch for ch in unicodedata.normalize('NFKD',value.casefold())
+                if not unicodedata.combining(ch))))
 
 def load(root=ROOT):
     manifest=json.loads((root/'edital/manifest.json').read_text(encoding='utf-8'))
@@ -26,49 +33,146 @@ def load(root=ROOT):
         chunks.append({**meta,'body':match.group(1)})
     return chunks
 
-def search(query,limit=4,cargo=None,root=ROOT):
+def topic_index(root=ROOT):
+    index=json.loads((root/'edital/topic_index.json').read_text(encoding='utf-8'))
+    manifest=json.loads((root/'edital/manifest.json').read_text(encoding='utf-8'))
+    if index['source_git_blob_sha'] != manifest['source_git_blob_sha']:
+        raise ValueError('Índice de tópicos incompatível com a fonte')
+    return index
+
+def _topic_locations(index, cargo=None, area=None):
+    for t in index['topics']:
+        if cargo is not None and cargo not in t['cargo_ids']:
+            continue
+        if area is not None and t['area'] != area:
+            continue
+        for loc in t['locations']:
+            yield t, loc
+
+def _views(chunks, index, cargo, area):
+    """Exclui conteúdo de outros cargos de chunks compartilhados, ao recortar as áreas."""
+    ranges=collections.defaultdict(list)
+    for topic, loc in _topic_locations(index,cargo,area):
+        ranges[loc['chunk_id']].append((loc['chunk_char_start'],loc['chunk_char_end']))
+    views=[]
+    for c in chunks:
+        relevant=ranges.get(c['id'])
+        if area is not None and not relevant:
+            continue
+        if relevant:
+            # Os tópicos oficiais formam intervalos adjacentes por programa.
+            spans=sorted(relevant)
+            body='\n'.join(c['body'][a:b] for a,b in spans)
+        else:
+            body=c['body']
+        views.append({**c, 'search_body':body})
+    return views
+
+def _neighbors(chunk, chunks):
+    same=[c for c in chunks if c['page']==chunk['page']]
+    return [{'chunk_id':c['id'],'path':c['path'],'page':c['page']}
+            for c in same if abs(c['segment']-chunk['segment'])==1]
+
+def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False,neighbors=False):
     if cargo not in (None,'523','324'): raise ValueError('Cargo inválido')
+    if area not in (None,'gerais','especificos'): raise ValueError('Área inválida')
+    if area=='especificos' and cargo is None:
+        raise ValueError('Informe --cargo para conhecimentos específicos')
     if not 1<=limit<=20: raise ValueError('Limite inválido')
-    wanted=set(terms(query))
-    if not wanted: return []
+    index=topic_index(root)
     chunks=load(root)
-    cnts=[collections.Counter(terms(c['body'])) for c in chunks]
+    selected=[t for t in index['topics']
+              if (cargo is None or cargo in t['cargo_ids'])
+              and (area is None or t['area']==area)]
+    by_topic={t['topic_id']:t for t in selected}
+    source_sha=index['source_git_blob_sha']
+    if topic is not None:
+        if topic not in by_topic: raise ValueError('Tópico ausente ou incompatível: '+topic)
+        return direct_results([by_topic[topic]],chunks,'topic_id',limit,source_sha,full,neighbors)
+    normalized_query=normalized(query)
+    if not normalized_query:return []
+    # Roteamento direto exige título completo, ID exato ou alias com limites de palavra.
+    ranked=[]
+    for t in selected:
+        candidates=[t['title']]+t['aliases']+[t['topic_id']]
+        hits=[len(normalized(s)) for s in candidates
+              if normalized(s) and ' '+normalized(s)+' ' in ' '+normalized_query+' ']
+        if hits:ranked.append((max(hits),t))
+    if ranked:
+        ranked.sort(key=lambda pair:(-pair[0],pair[1]['topic_id']))
+        max_match=ranked[0][0]
+        return direct_results([t for score,t in ranked if score==max_match],
+                              chunks,'derived_alias_or_title',limit,source_sha,full,neighbors)
+    wanted=set(terms(query))
+    if not wanted:return []
+    views=_views(chunks,index,cargo,area)
+    cnts=[collections.Counter(terms(c['search_body'])) for c in views]
     lengths=[sum(c.values()) for c in cnts]
-    n=len(chunks); average=sum(lengths)/n if n else 1
+    n=len(views)
+    if not n:return []
+    avg=sum(lengths)/n or 1
     df={w:sum(w in c for c in cnts) for w in wanted}
     ranked=[]
-    for chunk,cnt,length in zip(chunks,cnts,lengths):
-        score=0
+    for c,cnt,length in zip(views,cnts,lengths):
+        score=0.0
         for w in wanted:
             tf=cnt[w]
-            if not tf: continue
+            if not tf:continue
             idf=math.log(1+(n-df[w]+0.5)/(df[w]+0.5))
-            score+=idf*(tf*2.2)/(tf+1.2*(0.25+0.75*length/average))
-        if score<=0: continue
-        if cargo and f'cargo_{cargo}' in chunk['categories']: score*=1.35
-        if cargo and 'conhecimentos_gerais' in chunk['categories']: score*=1.1
-        excerpt=next((line.strip() for line in chunk['body'].splitlines()
+            score+=idf*(tf*2.2)/(tf+1.2*(0.25+0.75*length/avg))
+        if score<=0:continue
+        if cargo and 'cargo_'+cargo in c['categories']:score*=1.35
+        if cargo and 'conhecimentos_gerais' in c['categories']:score*=1.1
+        excerpt=next((line.strip() for line in c['search_body'].splitlines()
                       if len(line.strip())>16 and wanted.intersection(terms(line))),'')[:220]
-        ranked.append({'chunk_id':chunk['id'],'path':chunk['path'],
-                       'page':chunk['page'],'score':round(score,3),
-                       'excerpt':excerpt,'source':'EDITAL_UFMS_152_2026.md'})
+        result={'chunk_id':c['id'],'path':c['path'],'page':c['page'],
+                'score':round(score,3),'excerpt':excerpt,
+                'source':'EDITAL_UFMS_152_2026.md','source_sha':source_sha,
+                'route':'bm25','classification':'source_excerpt'}
+        if full:result['text']=c['search_body']
+        if neighbors:result['adjacent_chunks']=_neighbors(c,chunks)
+        ranked.append(result)
     ranked.sort(key=lambda x:(-x['score'],x['page'],x['chunk_id']))
     return ranked[:limit]
 
+def direct_results(topics,chunks,why,limit,source_sha,full=False,neighbors=False):
+    by_id={c['id']:c for c in chunks}
+    results=[]
+    for topic in topics:
+        for loc in topic['locations']:
+            c=by_id[loc['chunk_id']]
+            passage=c['body'][loc['chunk_char_start']:loc['chunk_char_end']]
+            result={'chunk_id':c['id'],'path':c['path'],'page':c['page'],
+                    'score':1.0,'excerpt':' '.join(passage.split())[:220],
+                    'source':'EDITAL_UFMS_152_2026.md','source_sha':source_sha,
+                    'route':why,'topic_id':topic['topic_id'],
+                    'classification':'derived_routing_with_literal_excerpt',
+                    'page_char_start':loc['page_char_start'],
+                    'page_char_end':loc['page_char_end']}
+            if full:result['text']=passage
+            if neighbors:result['adjacent_chunks']=_neighbors(c,chunks)
+            results.append(result)
+            if len(results)>=limit:return results
+    return results
+
 def page_text(page,root=ROOT):
     chunks=[c for c in load(root) if c['page']==page]
-    if not chunks: raise ValueError('Página não encontrada')
+    if not chunks:raise ValueError('Página não encontrada')
     return '\n'.join(f"[{c['path']}]\n{c['body']}" for c in chunks)
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('query',nargs='?')
-    parser.add_argument('--limit',type=int,default=4)
-    parser.add_argument('--cargo',choices=['523','324'])
-    parser.add_argument('--page',type=int,choices=range(1,48))
-    a=parser.parse_args()
-    if a.page: print(page_text(a.page))
-    elif a.query: print(json.dumps(search(a.query,a.limit,a.cargo),ensure_ascii=False,indent=2))
-    else: parser.error('Informe uma consulta ou --page')
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('query',nargs='?',default='')
+    p.add_argument('--limit',type=int,default=4)
+    p.add_argument('--cargo',choices=['523','324'])
+    p.add_argument('--area',choices=['gerais','especificos'])
+    p.add_argument('--topic',help='ID de config/topics.csv, por exemplo 523-06')
+    p.add_argument('--page',type=int,choices=range(1,48))
+    p.add_argument('--full',action='store_true',help='Incluir texto literal do trecho selecionado')
+    p.add_argument('--neighbors',action='store_true',help='Indicar chunks adjacentes para expansão')
+    a=p.parse_args()
+    if a.page:print(page_text(a.page))
+    elif a.query or a.topic:print(json.dumps(search(a.query,a.limit,a.cargo,ROOT,a.topic,a.area,a.full,a.neighbors),ensure_ascii=False,indent=2))
+    else:p.error('Informe uma consulta, --topic ou --page')
 
-if __name__=="__main__": main()
+if __name__=='__main__':main()
