@@ -52,6 +52,27 @@ O programa obtém o SHA-256 esperado de `edital/manifest.json`, recusa redirecio
 
 A sonda não é um gate online da CI: testes determinísticos offline exercitam 12 cenários sem dependência de serviços externos. A CI não deve tornar-se frágil por indisponibilidade de rede; a execução real exige ambiente com acesso externo e registro de evidência. Mesmo um digest remoto igual registrado em logs não preenche automaticamente os campos `verified` do JSON: o gate atual requer a preservação dos bytes oficiais e auditoria separada antes de liberar equivalência normativa.
 
+## Arquivamento externo de bytes oficiais — evidência recuperável
+
+`scripts/archive_pdf_ufms.py` amplia a sonda anterior para guardar **bytes efetivamente recebidos** da URL fixa da UFMS e um recibo JSON lado a lado. Exige Python 3.11, HTTPS, resposta não redirecionada, HTTP 200, tipo PDF, limites de tamanho e assinatura/EOF de PDF; não modifica `edital/fontes_oficiais.json`, nem a fonte canônica, nem habilita retificações automaticamente.
+
+Em um ambiente com acesso à URL institucional, crie previamente uma pasta **fora do checkout Git** e execute:
+
+```bash
+mkdir -p /tmp/ufms-evidencias
+python scripts/archive_pdf_ufms.py --live --out-dir /tmp/ufms-evidencias
+```
+
+Se os bytes forem recebidos e validados, serão salvos com nome derivado do SHA-256 (`ufms152-2026-<SHA>.pdf`), juntamente com `ufms152-2026-<SHA>.json`. A escrita usa criação exclusiva, sem sobrescrever evidência existente; o arquivo é relido e rehashed após a gravação. Para reconferir o pacote:
+
+```bash
+python scripts/archive_pdf_ufms.py --verify /tmp/ufms-evidencias/ufms152-2026-<SHA>.json
+```
+
+Estados de `--live`: **0** = `archived_digest_match` (hash igual à cópia original do estudante, arquivo e recibo guardados), **2** = `archived_digest_mismatch` (hash diferente, preservar evidência e investigar), **3** = `unverifiable` (consulta, escrita ou readback inconclusivo). Não interpretar 3 como inexistência nem 0 como homologação jurídica ou incorporação de retificação. Não publicar o recibo `offline_fixture` dos testes como prova de aquisição HTTPS oficial. O JSON identifica o método da aquisição, mas não é assinado por autoridade externa, portanto não constitui atestação independente da origem.
+
+Há **17 contraprovas offline** em `tests/test_archive_pdf_ufms.py`, incluindo duplicação, adulteração de PDF e recibo, URL redirecionada, diretório inseguro, rollback após falha no readback, hash esperado forjado e diferença entre teste offline e coleta direta. O validador compara o hash esperado também com o manifesto canônico, não apenas com um valor declarado no recibo. A CI executa os testes, mas **não** o download remoto; a comparação real continua pendente até execução em ambiente com conectividade e revisão da evidência.
+
 ## Ferramentas e estados de saída
 
 - `python scripts/validate_fontes_oficiais.py --check` é **offline**: verifica identidade original, hashes, datas literais do alerta e consistência do registro; participa do gate de CI.
