@@ -15,6 +15,8 @@
 
 No portal da FAPEC, a publicação de 30/10/2026 aparece como `EDITAL PROGEP/UFMS N. º 001/2026 - Edital de Abertura`. O documento original fornecido pelo estudante ostenta `EDITAL PROGEP/UFMS nº 152, de 29/10/2026`. **A relação entre as numerações não foi comprovada por ato específico**. O link DOWNLOAD do portal redireciona para arquivo com mesmo nome, mas a comparação do hash da cópia hospedada ainda não foi possível. Não considerar nomes de arquivos prova de igualdade de bytes.
 
+**Gate de evidência (04/11/2026):** o validador offline bloqueia agora qualquer promoção da observação FAPEC para `remote_pdf_equivalence=verified` por simples edição do JSON, mesmo que o hash declarado coincida com o SHA-256 do PDF enviado pelo estudante. O mesmo vale para o status `observed_listing_remote_pdf_hash_verified` isolado. Até que exista arquivo oficial preservado, origem verificável e recomputação dos bytes, o estado deve permanecer `unverified`, hash remoto nulo e `observed_listing_not_remote_pdf_hash_verified`. Esta checagem evita falso positivo, mas **não calcula nem valida os bytes de uma URL externa**. Duas contraprovas específicas testam os casos de falsificação declarativa.
+
 ## ALERTA-DOC-01 — divergência temporal preservada
 
 Na página **13**, Anexo II, do PDF original:

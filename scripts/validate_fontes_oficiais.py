@@ -56,15 +56,12 @@ def validate(root=ROOT):
     for obs in observations:
         if obs["page_url"]!=FAPEC_URL or not _official_url(obs["page_url"]):
             raise ValueError("Origem de observação do portal inválida")
-        if obs["remote_pdf_equivalence"]=="verified":
-            if obs["download_bytes_sha256"]!=orig["original_pdf_sha256"]:
-                raise ValueError("Equivalência remota sem hash exato")
-        elif obs["remote_pdf_equivalence"]!="unverified" or obs["download_bytes_sha256"] is not None:
-            raise ValueError("Equivalência remota declarada sem verificação")
-        if obs["status"] not in (
-                "observed_listing_not_remote_pdf_hash_verified",
-                "observed_listing_remote_pdf_hash_verified"):
-            raise ValueError("Status de observação externo não reconhecido")
+        # Um SHA copiado ao JSON nao comprova os bytes hospedados na origem.
+        # Sem arquivo remoto arquivado e hash recalculado, falhar fechado.
+        if (obs["remote_pdf_equivalence"]!="unverified" or
+            obs["download_bytes_sha256"] is not None or
+            obs["status"]!="observed_listing_not_remote_pdf_hash_verified"):
+            raise ValueError("Equivalência remota sem prova independente dos bytes oficiais")
         if obs["verified_amendment_found"] is True and not data["verified_amendments"]:
             raise ValueError("Retificação declarada sem evidência verificada")
     if not data["open_alerts"]:

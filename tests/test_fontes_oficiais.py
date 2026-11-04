@@ -65,9 +65,23 @@ class FontesOficiaisTests(unittest.TestCase):
             self._mutate(resolved)
 
     def test_equivalencia_remota_sem_bytes_e_rejeitada(self):
-        with self.assertRaisesRegex(ValueError,"sem hash exato"):
+        with self.assertRaisesRegex(ValueError,"prova independente"):
             self._mutate(lambda d:d["publication_observations"][0].__setitem__(
                 "remote_pdf_equivalence","verified"))
+
+    def test_hash_autodeclarado_nao_comprova_bytes_oficiais(self):
+        def forjar(data):
+            obs=data["publication_observations"][0]
+            obs["remote_pdf_equivalence"]="verified"
+            obs["download_bytes_sha256"]=data["canonical"]["original_pdf_sha256"]
+            obs["status"]="observed_listing_remote_pdf_hash_verified"
+        with self.assertRaisesRegex(ValueError,"prova independente"):
+            self._mutate(forjar)
+
+    def test_status_verificado_sem_bytes_nao_e_aceito(self):
+        with self.assertRaisesRegex(ValueError,"prova independente"):
+            self._mutate(lambda d:d["publication_observations"][0].__setitem__(
+                "status","observed_listing_remote_pdf_hash_verified"))
 
     def test_publicacao_referencia_dominios_permitidos(self):
         self.assertTrue(_official_url(
