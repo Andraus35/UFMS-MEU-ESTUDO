@@ -9,6 +9,7 @@
 | PDF original do estudante | `e5f1c2b364f19beadf2685d8fb836065.pdf`, 47 páginas | **Bytes verificados**: SHA-256 `c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675` |
 | Transcrição canônica | `EDITAL_UFMS_152_2026.md` | Git blob `a4129cceabd20fc119625d71b1c1599b3ce644e1`; 81 chunks reversíveis |
 | Página do concurso | <https://portal.concurso.fundacaofapec.org.br/edital/ver/22> | **Listagem observada** em 04/11/2026; não verificada a integridade do PDF remoto |
+| PDF institucional UFMS | <https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf> | **47 páginas e título conferidos via publicação institucional**; Anexo II p. 13 preserva a mesma inconsistência; **SHA dos bytes oficiais não calculado** |
 | Publicações da UFMS | <https://boletimoficial.ufms.br/> | Fonte institucional para pesquisa, **não auditada exaustivamente** nesta entrega |
 | Retificações oficiais | `edital/fontes_oficiais.json.verified_amendments` | **Zero documentos comprovados/importados** até o checkpoint; isso não afirma inexistência |
 
