@@ -44,7 +44,12 @@ def validate(root=ROOT):
     except ModuleNotFoundError:
         from scripts.chunk_edital import validate as check_edital
     chunks = check_edital(root)
-    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados"
+    try:
+        from index_edital import validate as check_topic_index
+    except ModuleNotFoundError:
+        from scripts.index_edital import validate as check_topic_index
+    indexed = check_topic_index(root)
+    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados; {indexed} tópicos indexados"
 
 
 if __name__ == "__main__":
