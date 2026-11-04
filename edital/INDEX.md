@@ -24,6 +24,8 @@
 | Cargo **523** — vaga e requisito | **15** |
 | Cargo **324** — vaga e requisito | **18** |
 | Atribuições de cargos | 20–28 |
+| Atribuições do **523** (Anexo IV) | **23** |
+| Atribuições do **324** (Anexo IV) | **28** |
 | Conhecimentos gerais — 523 e 324 | **29** |
 | Conteúdo específico **523** | **35–36** |
 | Conteúdo específico **324** | **45** |
@@ -62,6 +64,15 @@ O arquivo `edital/vagas_index.json` é um **índice derivado não normativo**, l
 - `python scripts/index_vagas.py --write`: regenera o índice a partir das âncoras declaradas, sem modificar o edital ou seus chunks.
 
 **Regra de segurança:** não assumir que requisitos impressos nas linhas dos cargos 522, 524, 323 ou 325 se aplicam aos códigos 523 ou 324. A formatação vertical da tabela original deve ser verificada no PDF em casos de dúvida; os rótulos normalizados, coordenadas e classificações do índice são derivados, não normativos. Uma pergunta que identifique simultaneamente os dois cargos deve ser dividida em duas recuperações em vez de receber uma resposta parcial.
+
+## Atribuições literais dos cargos (Anexo IV)
+
+- `edital/atribuicoes_index.json` é um índice **derivado, não normativo**, com origem Git/PDF, página, chunk, offsets, caracteres e SHA-256 do recorte exato. Não altera o texto canônico.
+- Cargo **523**, página **23**, chunk `p23-c01`: `python scripts/search_edital.py --atribuicoes-cargo 523 --full`. O recorte exclui a Produção Cultural anterior e a descrição do cargo Gestão Pública (Campus) que vem em seguida.
+- Cargo **324**, página **28**, chunk `p28-c02`: `python scripts/search_edital.py --atribuicoes-cargo 324 --full`. O recorte exclui a descrição anterior de Veterinária e Zootecnia e o rodapé do documento.
+- Consultas `"Quais as atribuições do cargo 523?"` ou `"Funções do cargo 324"` são encaminhadas diretamente aos respectivos trechos. Caso a mesma consulta misture **atribuições** e **requisitos**, o buscador exige separação para não apresentar uma resposta parcial.
+- Mesmo na busca BM25 com `--cargo 523` ou `--cargo 324`, as páginas **20–28** são limitadas ao trecho de atribuições do cargo selecionado. O texto completo permanece acessível via `--page` quando for preciso revisar o PDF original.
+- Reproduzir e verificar com `python scripts/index_atribuicoes.py --write` e `python scripts/index_atribuicoes.py --check`. A CI valida o manifesto, os recortes e testes adversariais; retificações continuam sendo fontes separadas.
 
 ## Localização e comandos
 
