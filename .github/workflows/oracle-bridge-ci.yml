@@ -61,7 +61,7 @@ jobs:
             age-keygen -o /tmp/ci-identity 2>/dev/null >/dev/null
             RECIPIENT="$(age-keygen -y /tmp/ci-identity)"
             # Cada docker run usa filesystem novo: inicializar DB neste mesmo contêiner.
-            python -c "from bridge.gateway import Store; Store('/data/ci-smoke.sqlite3')"
+            python -c "from bridge.gateway import Store; Store(\"/data/ci-smoke.sqlite3\")"
             python -m bridge.ops_backup backup \
               --db /data/ci-smoke.sqlite3 --output /data/ci-snapshot.age \
               --recipient "$RECIPIENT"

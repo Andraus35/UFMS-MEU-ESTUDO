@@ -231,3 +231,12 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   que chama `age backup/verify/restore`. Não modificar código criptográfico
   com base em falha de montagem do teste.
 - Exigir novo readback e CI verde em SHA exato.
+
+## OPS-01 — CI corretiva de quoting shell
+
+- START anterior: `ed2d09fab67ad8c384bc2d479e5442654f6d6265`.
+- `41825229929`: Python 3×93 PASS; Docker build e smoke básico PASS,
+  mas cenário age parou antes do backup por aspas shell incompatíveis
+  com comando externo delimitado por aspas simples.
+- Corrigida a chamada de inicialização SQLite com escape explícito de
+  aspas duplas no argumento Python. Exigir CI real age/restore verde.
