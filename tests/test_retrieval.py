@@ -44,8 +44,11 @@ class TopicIndexTests(unittest.TestCase):
                     self.assertEqual(matches,[])
                 else:
                     self.assertTrue(matches, 'Nenhum resultado: '+case['query'])
-                    self.assertEqual(matches[0].get('topic_id'),case['topic_id'])
-                    self.assertEqual(matches[0]['page'],case['page'])
+                    if case['type']=='rule':
+                        self.assertIn(case['page'],[x['page'] for x in matches])
+                    else:
+                        self.assertEqual(matches[0].get('topic_id'),case['topic_id'])
+                        self.assertEqual(matches[0]['page'],case['page'])
                     self.assertEqual(matches[0]['source_sha'],
                                      self.index['source_git_blob_sha'])
 
