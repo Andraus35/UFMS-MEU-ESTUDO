@@ -268,3 +268,18 @@ mensagens pelo caminho normal do bot nesta entrega.
 Os testes são de protocolo e respostas sintéticas. Sem uso de chave real,
 sem chamadas à nuvem Google, sem acesso ao Gemini Notebook, sem cobrança
 ou integração com dados pessoais. <https://ai.google.dev/gemini-api/docs/pricing>.
+
+## LLM opcional — GitHub Copilot SDK (LLM-ALT-01)
+
+Registrado como **alternativa futura e desligada** ao Gemini Developer API,
+para teste apenas com a franquia **Copilot Free** já disponível, se elegível.
+Não é um recurso incluído automaticamente no GitHub Pro, não oferece
+servidor persistente e não é sinônimo de LLM gratuito ilimitado.
+
+**O SDK não está instalado nem importado pelo gateway**; `copilot_sdk`
+não pode ser selecionado em `configured_agent`. O teste de elegibilidade
+da conta GitHub, orçamento de uso adicional zero, OAuth e isolamento
+de ferramentas ainda não ocorreu. Nenhum token GitHub ou recurso novo
+foi configurado. Manter Oracle e Gemini Notebook como previstos.
+
+Ver [contrato e testes exigidos](../../docs/integracoes/COPILOT_SDK_OPCAO_v0.1.md).

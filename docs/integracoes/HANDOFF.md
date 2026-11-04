@@ -272,3 +272,21 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - Atualizados `DECISAO_STACK_MINIMA_GRATUITA.md`, README e handoff;
   nenhuma credencial, permissão, serviço externo ou conteúdo pessoal alterado.
 - Próximo gate: CI/documental do commit exato; PR #3 segue draft.
+
+## LLM-ALT-01 — alternativa Copilot SDK registrada (04/11/2026)
+
+- START exato no PR #3: `67bef6013c4e86eba938ac4a9fdff42d683007e3`; draft, sem merge.
+- Instrução do usuário: adicionar GitHub Copilot SDK como opção adicional
+  de LLM, sem substituir a principal Gemini Developer API e sem assinatura.
+- A alternativa **Copilot Free + SDK** foi catalogada somente para
+  investigação posterior; conta/franquia/custos reais NÃO confirmados.
+- `GitHub Pro` NÃO é assinatura Copilot Pro; Copilot SDK não oferece
+  hospedagem permanente e nunca recebe acesso ao repositório privado.
+- Padrão fail-closed: `configured_agent` aceita apenas `gemini`;
+  `copilot`/`copilot_sdk` seguem indisponíveis, sem import do SDK,
+  OAuth, token, rede, custos, ferramentas ou alteração no gateway.
+- Critérios de comparação, segurança e custo zero em
+  `docs/integracoes/COPILOT_SDK_OPCAO_v0.1.md`; README e arquitetura
+  atualizados; testes offline de bloqueio adicionados.
+- Preservar PR #1/#2 e estado do PR #3 draft; exigir SHA final, CI e
+  auditoria G0 independente antes de promover a opção.

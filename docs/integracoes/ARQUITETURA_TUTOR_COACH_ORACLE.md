@@ -58,3 +58,18 @@ sem permitir que a saída do modelo execute comandos diretamente.
 - Definir rotina de comunicação livre (tipos e limites) sem transformar
   acompanhamento em compulsão ou penalização de pausas.
 - Vincular PR técnico ao contrato pedagógico v1.7 e aos futuros papéis Tutor/Coach.
+
+## Motores LLM — opções candidatas (LLM-ALT-01)
+
+A escolha de motor não altera a arquitetura mínima Android/Oracle.
+**Candidato principal:** Gemini Developer API Free Tier, sob gates de
+privacidade, custo e consentimento. **Candidato secundário desligado:**
+Copilot SDK com Copilot Free, sujeito a elegibilidade, créditos gratuitos,
+autenticação e testes. Não adicionar motor duplo simultâneo, serviços
+pagos, segundo servidor, nem dar acesso aos arquivos do repositório.
+
+Qualquer runtime de inferência futuro precisa aceitar **somente texto**,
+sem ferramentas nativas, shell, edição, MCP, ações GitHub ou capacidades
+de agenda; delegações devem ocorrer pelo gateway determinístico sob
+consentimento explícito. Contrato LLM-ALT-01:
+`docs/integracoes/COPILOT_SDK_OPCAO_v0.1.md`.

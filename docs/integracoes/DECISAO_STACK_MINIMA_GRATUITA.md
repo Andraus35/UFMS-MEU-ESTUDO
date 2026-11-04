@@ -122,3 +122,23 @@ mas **sem afirmar conversa com IA habilitada**.
 - Confirmar escopo OAuth mínimo e que alertas não dependem de assinatura.
 - Não ativar IA nem fazer implantação OCI sem autorização do operador.
 - Preservar PRs #1/#2 e manter PR #3 draft até auditoria independente.
+
+## Alternativa LLM opcional — Copilot SDK (LLM-ALT-01)
+
+O **GitHub Copilot SDK** passa a compor a fila de alternativas como
+**opção secundária, experimental e totalmente desligada**. Não significa
+assinar GitHub Pro ou Copilot Pro; a hipótese a testar futuramente é a
+franquia limitada do **Copilot Free**. O SDK requer autenticação adequada,
+não fornece nuvem permanente e consome créditos; BYOK pode gerar custo
+externo. Não substituir a Gemini Developer API gratuita como candidata
+principal ou o Gemini Notebook como biblioteca pedagógica.
+
+Nenhum token GitHub, permissão de GitHub Actions, ferramenta de código,
+MCP ou acesso ao repositório será concedido ao motor Tutor/Coach.
+A opção futura precisa operar apenas com texto, com ferramentas nativas
+e customizadas bloqueadas e sem cobrança/upgrade adicional. Até auditoria
+independente e aceite operacional, `configured_agent` **não** seleciona
+`copilot_sdk` e retorna `None` para esse provedor.
+
+Contrato, fontes oficiais e contraprovas:
+`docs/integracoes/COPILOT_SDK_OPCAO_v0.1.md`.
