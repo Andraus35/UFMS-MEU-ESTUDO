@@ -62,6 +62,11 @@ class AgentBridge:
         start = now.astimezone(UTC).date().isoformat() + "T00:00:00+00:00"
         with self.store.connect() as db:
             db.execute("BEGIN IMMEDIATE")
+            consent = db.execute(
+                "SELECT value FROM settings WHERE key='llm_consent'"
+            ).fetchone()
+            if consent is None or consent["value"] != "1":
+                return "Conversa com IA desativada. Use /ativar_ia para autorizar."
             # Armazenar apenas ID e data, nunca o texto nem a resposta.
             db.execute("DELETE FROM llm_requests WHERE created_utc<?",
                        ((now - timedelta(days=30)).astimezone(UTC).isoformat(),))

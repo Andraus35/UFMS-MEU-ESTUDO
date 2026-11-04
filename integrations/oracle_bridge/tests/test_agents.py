@@ -35,7 +35,9 @@ class AgentTests(unittest.TestCase):
         self.temp.cleanup()
 
     def bridge(self, max_per_day=30):
-        return AgentBridge("fake-key","fake-model",self.store,max_per_day=max_per_day)
+        agent = AgentBridge("fake-key","fake-model",self.store,max_per_day=max_per_day)
+        self.store.set_llm_consent(True)
+        return agent
 
     def test_disabled_by_default(self):
         with patch.dict("os.environ",{},clear=True):
@@ -106,9 +108,62 @@ class AgentTests(unittest.TestCase):
         agent=FakeAgent()
         update={"update_id":11,"message":{
             "from":{"id":123},"chat":{"id":123,"type":"private"},"text":"Como estudar?"}}
+        self.store.set_llm_consent(True)
         handle_update("coach",update,self.store,tg,123,agent=agent,now=self.now)
         self.assertEqual(agent.calls,[("coach","Como estudar?","coach:11")])
         self.assertEqual(tg.sent,[(123,"Resposta fictícia")])
+
+    def test_text_without_consent_never_leaves_telegram(self):
+        tg=MockTelegram()
+        agent=FakeAgent()
+        update={"update_id":200,"message":{
+            "from":{"id":123},"chat":{"id":123,"type":"private"},"text":"Dados pessoais."}}
+        handle_update("tutor",update,self.store,tg,123,agent=agent,now=self.now)
+        self.assertEqual(agent.calls,[])
+        self.assertIn("/ativar_ia",tg.sent[-1][1])
+
+    def test_explicit_opt_in_and_revocation_by_commands(self):
+        tg=MockTelegram()
+        agent=FakeAgent()
+        def message(number, body):
+            return {"update_id":number,"message":{"from":{"id":123},
+                "chat":{"id":123,"type":"private"},"text":body}}
+        handle_update("coach",message(201,"/ativar_ia"),self.store,tg,123,agent=agent,now=self.now)
+        self.assertTrue(self.store.llm_consent())
+        handle_update("coach",message(202,"Olá"),self.store,tg,123,agent=agent,now=self.now)
+        self.assertEqual(len(agent.calls),1)
+        handle_update("tutor",message(203,"/desativar_ia"),self.store,tg,123,agent=agent,now=self.now)
+        self.assertFalse(self.store.llm_consent())
+        handle_update("coach",message(204,"Novo texto"),self.store,tg,123,agent=agent,now=self.now)
+        self.assertEqual(len(agent.calls),1)
+
+    def test_direct_agent_call_fails_closed_without_consent(self):
+        agent=self.bridge()
+        self.store.set_llm_consent(False)
+        with patch.object(agent,"_request_response") as network:
+            self.assertIn("/ativar_ia",agent.answer("tutor","Não enviar",
+                                              "tutor:205",now=self.now))
+            network.assert_not_called()
+
+    def test_revocation_deletes_request_metadata(self):
+        agent=self.bridge()
+        with patch.object(agent,"_request_response",return_value={
+            "output":[{"type":"message","content":[{"type":"output_text","text":"ok"}]}]
+        }):
+            agent.answer("tutor","Oi","tutor:206",now=self.now)
+        with self.store.connect() as db:
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM llm_requests").fetchone()[0],1)
+        self.store.set_llm_consent(False)
+        with self.store.connect() as db:
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM llm_requests").fetchone()[0],0)
+
+    def test_server_disabled_cannot_activate_via_command(self):
+        tg=MockTelegram()
+        update={"update_id":207,"message":{"from":{"id":123},
+            "chat":{"id":123,"type":"private"},"text":"/ativar_ia"}}
+        handle_update("tutor",update,self.store,tg,123,agent=None,now=self.now)
+        self.assertFalse(self.store.llm_consent())
+        self.assertIn("indisponível",tg.sent[-1][1])
 
     def test_commands_never_become_model_calls(self):
         tg=MockTelegram()

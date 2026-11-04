@@ -143,3 +143,18 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   e não cria evento duplicado, comportamento correto.
 - Corrigida a expectativa para 0. Comprovação necessária no novo SHA;
   não herdar PASS de runs anteriores.
+
+
+## Ciclo seguinte — privacidade na interface de IA
+
+- START no PR #3: \`9976b7db92ee86fece350a4f72e4715678b247e2\`
+  aberto draft, não mesclado. PRs #1 e #2 independentes.
+- NC-PV-01: habilitar \`UFMS_LLM_ENABLED\` na Oracle habilitava encaminhar
+  texto do Telegram à API sem opt-in do usuário no chat. **Corrigido
+  por contrato no código proposto**: /ativar_ia, /desativar_ia, /ia_status,
+  consentimento global separado da outbox e verificação transacional no módulo.
+- Revogação limpa metadados de requisições; chamadas já em voo não são
+  revertíveis. Sem exposição de segredos ou execução real da API.
+- Novas contraprovas: nenhum texto sem opt-in; opt-in/revogação cruzados entre
+  papéis; chamada direta bloqueada; metadados removidos; servidor desabilitado.
+- CI e readback remoto obrigatórios no novo SHA. Sem merge/produção.

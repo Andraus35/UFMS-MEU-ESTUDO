@@ -175,3 +175,15 @@ está **desligado**. Horários-piloto: Tutor 18h, Coach 19h no fuso
   check-ins cancelados.
 - Não chamar esses check-ins de coaching adaptativo: falta conexão com
   evidências e feedback real do motor pedagógico.
+
+
+## Consentimento separado para conversas com IA (gate de privacidade)
+
+Mesmo com \`UFMS_LLM_ENABLED=1\`, textos privados **não** são enviados à
+Responses API até o estudante usar \`/ativar_ia\` em um dos bots autorizados.
+O consentimento cobre Tutor e Coach; pode ser consultado em \`/ia_status\`
+e revogado em \`/desativar_ia\`. A revogação impede novas requisições,
+apaga metadados locais \`llm_requests\` e não cancela um HTTP já enviado.
+Permissão para conversas é independente da permissão para alertas proativos
+e do OAuth Google Calendar. Ver
+[gate de privacidade](../../docs/integracoes/CONSENTIMENTO_IA_v0.3.md).

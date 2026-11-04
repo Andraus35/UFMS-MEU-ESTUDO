@@ -148,6 +148,23 @@ class Store:
               WHERE bot=? AND chat_id=? AND status='pending'""", (bot, chat_id)).fetchone()
             return row["n"]
 
+    def llm_consent(self) -> bool:
+        """Consentimento para encaminhar texto do Telegram ao provedor de IA."""
+        with self.connect() as db:
+            item = db.execute("SELECT value FROM settings WHERE key='llm_consent'").fetchone()
+            return bool(item and item["value"] == "1")
+
+    def set_llm_consent(self, enabled: bool) -> None:
+        """Revogação limpa metadados de chamadas já registrados, se existentes."""
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            db.execute("""INSERT INTO settings(key,value) VALUES('llm_consent',?)
+                ON CONFLICT(key) DO UPDATE SET value=excluded.value""",
+                ("1" if enabled else "0",))
+            if not enabled and db.execute("""SELECT 1 FROM sqlite_master
+                WHERE type='table' AND name='llm_requests'""").fetchone():
+                db.execute("DELETE FROM llm_requests")
+
     def paused(self) -> bool:
         with self.connect() as db:
             row = db.execute("SELECT value FROM settings WHERE key='paused'").fetchone()
@@ -190,6 +207,7 @@ class Telegram:
 HELP = (
     "Comandos: /status, /pausar, /retomar, /alertas, /ativar_alertas, /desativar_alertas, "
     "/lembrete AAAA-MM-DDTHH:MM-04:00 | mensagem, "
+    "/ia_status, /ativar_ia, /desativar_ia, "
     "/cancelar ID, /evento início | fim | título. "
     "Por ora este bot é uma ponte de agendamento, não uma IA autônoma."
 )
@@ -218,6 +236,23 @@ def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
             answer = (f"{bot.capitalize()}: " +
                       ("pausado" if store.paused() else "ativo") +
                       f"; lembretes pendentes: {store.pending(bot, chat_id)}.")
+        elif command == "/ia_status":
+            answer = ("Conversas com IA: " +
+                      ("autorizadas" if store.llm_consent() and agent is not None
+                       else "desativadas") +
+                      ". O envio de texto ao provedor depende de autorização explícita.")
+        elif command == "/ativar_ia":
+            if agent is None:
+                answer = "IA ainda indisponível no servidor Oracle; nenhum texto foi enviado."
+            else:
+                store.set_llm_consent(True)
+                answer = ("IA autorizada: mensagens de texto enviadas aos bots poderão ser "
+                          "processadas pela API externa de IA, com cobrança separada. "
+                          "Use /desativar_ia para revogar.")
+        elif command == "/desativar_ia":
+            store.set_llm_consent(False)
+            answer = ("IA desativada; mensagens posteriores não serão encaminhadas à API. "
+                      "Pedidos já enviados podem estar em processamento.")
         elif command == "/alertas":
             answer = ("Alertas proativos: " +
                       ("ativados" if outbox is not None and outbox.enabled() else "desativados") +
@@ -267,7 +302,11 @@ def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
                 answer = f"Evento confirmado no calendário UFMS (ID {event_id})."
         else:
             if raw and not raw.startswith("/") and agent is not None:
-                answer = agent.answer(bot, raw, f"{bot}:{update_id}")
+                if store.llm_consent():
+                    answer = agent.answer(bot, raw, f"{bot}:{update_id}")
+                else:
+                    answer = ("Para conversar com IA, autorize primeiro /ativar_ia. "
+                              "Isso envia o texto à API externa de IA.")
             else:
                 answer = ("Motor de IA indisponível ou comando desconhecido. " + HELP)
     except ValueError as exc:
