@@ -12,6 +12,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Verificar bloqueio de resultados pessoais
+        run: python scripts/write_policy.py --check
       - name: Validar estrutura e dados
         run: python scripts/validate.py
       - name: Validar integridade do edital
