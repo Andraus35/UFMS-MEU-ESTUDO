@@ -172,3 +172,10 @@ Não atualizar este documento com estados não confirmados nem copiar conversas 
 - **Efeito:** a ponte própria Oracle/Telegram é retirada do backlog, dos gates operacionais ativos e do planejamento de integração. Os testes e documentos deste PR não foram incorporados à `main`. Seu histórico pode permanecer arquivado na branch até eventual exclusão explícita da referência; encerrar PR não elimina a branch nem apaga commits.
 - **Escopo vigente:** harness, Tutor/Coach, Gemini Notebook, Zapia e integrações gratuitas autorizadas; sem retomada automática de Oracle/Telegram pelo PR #3.
 - PRs #4 e #5 permanecem independentes, não mesclados e sujeitos aos seus gates documentais. Nenhuma mudança nas regras de privacidade ou na flag `personal_results_writes_enabled=false`.
+
+## Checkpoint proposto — roadmap obrigatório na raiz (04/11/2026)
+
+- **Base:** `main` em `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`. Branch de proposta `docs/roadmap-required-bootstrap-20261104`, ainda sem autorização para merge.
+- **Contrato alterado:** `ROADMAP.md` é a segunda leitura de dez arquivos obrigatórios; `scripts/agent_gates.py` detecta ausência, conteúdo vazio, seções e ordem divergentes. `scripts/roadmap_gate.py --check` confronta referências em documentos estratégicos. Novos testes cobrem contraprovas.
+- **Pendente de comprovação no encerramento desta entrega:** CI no HEAD e readback do PR. Escritas feitas via API GitHub, sem execução local de hooks; não afirmar equivalência de garantias.
+- **Limite:** verificação de bytes não prova compreensão semântica; `main` sem branch protection e agentes externos podem contornar scripts locais. Resultados pessoais continuam bloqueados.

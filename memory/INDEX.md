@@ -1,5 +1,7 @@
 # Índice de memória — carregamento seletivo
 
+- `ROADMAP.md` (na raiz): **ler sempre depois de AGENTS.md, antes de qualquer atividade operacional**, conferindo prioridades RM e bloqueadores.
+
 - `memory/HANDOFF.md`: último checkpoint, pendências e próxima ação; **ler sempre**.
 - `state/CURRENT.json`: estado consolidado e cursor de eventos; **ler sempre**.
 - `memory/PROFILE.md`: preferências e restrições duradouras, não pessoais/sensíveis; ler quando necessário.
