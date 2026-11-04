@@ -67,6 +67,24 @@ class VagasTests(unittest.TestCase):
             search('Requisitos do cargo 523',cargo='324',root=ROOT)
         with self.assertRaisesRegex(ValueError,'não indexado'):
             search_vaga('524',root=ROOT)
+        with self.assertRaisesRegex(ValueError,'múltiplos cargos'):
+            search('Comparar vagas do cargo 523 com cargo 324',root=ROOT)
+
+    def test_mutacao_do_indice_derivado_e_detectada(self):
+        import tempfile
+        import copy
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            (root/'edital').mkdir()
+            for name in ('EDITAL_UFMS_152_2026.md','edital/manifest.json'):
+                (root/name).symlink_to(ROOT/name)
+            (root/'edital/chunks').symlink_to(ROOT/'edital/chunks',target_is_directory=True)
+            altered=copy.deepcopy(self.index)
+            altered['entries'][0]['vacancies']=30
+            (root/'edital/vagas_index.json').write_text(
+                json.dumps(altered,ensure_ascii=False),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'Índice de vagas divergente'):
+                validate(root)
 
     def test_custo_de_contexto(self):
         src=(ROOT/'EDITAL_UFMS_152_2026.md').read_text(encoding='utf-8')
