@@ -26,5 +26,7 @@ jobs:
         run: python scripts/benchmark_edital.py
       - name: Medir recuperação adversarial independente dos aliases
         run: python scripts/benchmark_adversarial.py
+      - name: Medir separação entre Anexos III IV V
+        run: python scripts/benchmark_anexos.py
       - name: Confirmar projeções reproduzíveis
         run: python scripts/rebuild.py --check
