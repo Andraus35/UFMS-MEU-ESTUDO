@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "description": "Contraprovas do isolamento semântico e documental dos Anexos III, IV e V. Resultados esperados são rotas e âncoras, não respostas pedagógicas.",
+  "description": "Contraprovas do isolamento semântico e documental dos Anexos III, IV e V, inclusive múltiplos numerais romanos. Resultados esperados são rotas e âncoras, não respostas pedagógicas.",
   "cases": [
     {
       "query": "Anexo III do cargo 523",
@@ -134,6 +134,16 @@
     },
     {
       "query": "Anexo V e requisitos do cargo 324",
+      "cargo": "324",
+      "kind": "conflict"
+    },
+    {
+      "query": "Anexos III e IV do cargo 523",
+      "cargo": "523",
+      "kind": "conflict"
+    },
+    {
+      "query": "Anexos III, IV e V do cargo 324",
       "cargo": "324",
       "kind": "conflict"
     }
