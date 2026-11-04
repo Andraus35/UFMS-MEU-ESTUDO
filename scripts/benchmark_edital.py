@@ -21,7 +21,8 @@ def run(root=ROOT):
                                   'chunks':[r['chunk_id'] for r in results]})
             continue
         positive+=1
-        match=lambda r:r.get('topic_id')==c['topic_id'] and r['page']==c['page']
+        match=(lambda r:r['page']==c['page']) if c['type']=='rule' else (
+            lambda r:r.get('topic_id')==c['topic_id'] and r['page']==c['page'])
         if results and match(results[0]):good_at_1+=1
         if any(match(r) for r in results):good_at_3+=1
         else:failures.append({'query':c['query'],'issue':'not_in_top3',
