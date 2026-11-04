@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.2.0",
+  "event_count": 0,
+  "event_cursor": null,
+  "last_event_at": null,
+  "last_result_caderno_id": null,
+  "results_count": 0,
+  "pending_cadernos": [],
+  "pending_reviews": {},
+  "knowledge_status": "unknown_until_evidence"
+}

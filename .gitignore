@@ -1,0 +1,25 @@
+# Segredos e dados privados
+.env
+.env.*
+*.pem
+*.key
+credentials*
+secrets*
+
+# Dados originais do aluno e plataformas
+private/
+raw/
+exports/
+screenshots/
+relatorios-brutos/
+*.sqlite
+*.db
+
+# Python e temporários
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+*.tmp

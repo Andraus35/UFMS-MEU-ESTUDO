@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.2.0",
+  "project_url": "https://github.com/users/Andraus35/projects/2",
+  "owner": "Andraus35",
+  "project_number": 2,
+  "access": "unverified_by_available_connector",
+  "role": "optional_visual_dashboard",
+  "source_of_truth": "repository_event_log",
+  "sync": "disabled_until_supported"
+}

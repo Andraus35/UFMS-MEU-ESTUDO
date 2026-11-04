@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.2.0",
+  "project": "UFMS-MEU-ESTUDO",
+  "agent": {"mode": "adaptive", "human_in_the_loop": true},
+  "bootstrap": {"mandatory": ["AGENTS.md", "settings.json", "rules/CORE.md", "guardrails/CORE.md", "memory/INDEX.md", "memory/HANDOFF.md", "state/CURRENT.json"], "target_tokens": 3000},
+  "context": {"load_history_on_demand": true, "checkpoint_after_meaningful_change": true, "never_assume_persistence": true},
+  "study": {"fixed_schedule": false, "fixed_repetition_intervals": false, "adaptive_blocks": true, "require_result_evidence": true},
+  "storage": {"repository_must_be_private_for_personal_results": true, "personal_results_writes_enabled": false, "events_directory": "state/events", "state_file": "state/CURRENT.json", "progress_file": "state/PROGRESS.csv"},
+  "source_priority": ["edital_e_retificacoes", "legislacao_e_normas_vigentes_no_edital", "gabarito_oficial_da_questao", "comentario_docente_verificado", "explicacao_ia_identificada"],
+  "hooks": {"native_registration_required": true, "before_write": "hooks/before_write.py", "after_write": "hooks/after_write.py", "checkpoint": "hooks/checkpoint.py"}
+}
