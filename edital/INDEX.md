@@ -24,6 +24,25 @@
 | Conteúdo específico **324** | **45** |
 | Admissão e documentos | 46–47 |
 
+## Índice temático derivado e recorte preciso
+
+- `edital/topic_index.json` relaciona **23 tópicos** de `config/topics.csv` a **24 intervalos de texto** em chunks, com cargo, página e offsets no chunk e na página. Não é uma nova versão normativa.
+- Conhecimentos gerais dos dois cargos: intervalos dentro de `p29-c01`; o restante da página 29 contém programas de outros cargos.
+- Conteúdos específicos 523: `p35-c02` (início) e `p36-c01` (continuação), **recortados** para excluir os cargos 522 e 524–526.
+- Conteúdos específicos 324: intervalo em `p45-c02`, excluindo o programa anterior na mesma página.
+- Aliases para sinônimos são **metadados de busca derivados**: resultados exibem trecho literal e proveniência; o alias isolado não comprova um fato.
+- O índice é regenerável com `python scripts/index_edital.py --write` e verificado com `--check`; o gate `scripts/validate.py` falha se o documento e o índice divergirem.
+
+### Busca econômica em camadas
+
+1. Conhecendo o ID: `python scripts/search_edital.py --topic 523-06 --cargo 523 --area especificos --full`. Isso retorna somente o intervalo sobre orçamento, com página e offsets.
+2. Por título ou sinônimo: `python scripts/search_edital.py "disciplina discente" --cargo 324 --area especificos`; `python scripts/search_edital.py "matemática" --area gerais`.
+3. Sem rota exata: o BM25 busca lexicalmente e, com `--cargo` e `--area especificos`, restringe a análise aos intervalos pertinentes ao cargo informado.
+4. Se o trecho estiver incompleto: `--neighbors` identifica os chunks adjacentes, a recuperar somente quando necessários; `--page 36` mostra a página completa para desambiguação.
+5. Sem evidência suficiente: devolver resultado vazio/pendência. Não converter similaridade em afirmação normativa nem presumir retificações.
+
+`python scripts/benchmark_edital.py` mede Hit@1, Hit@3, negativos e volume de caracteres recuperados em consultas diagnósticas versionadas em `tests/fixtures/retrieval_cases.json`. A métrica não representa recall universal nem comprova fidelidade do PDF original; tabelas devem ser cotejadas com o arquivo primário.
+
 ## Localização e comandos
 
 - `edital/manifest.json`: índice máquina-legível com IDs, páginas, offsets e categorias; **81 chunks**.
