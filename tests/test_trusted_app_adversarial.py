@@ -230,6 +230,75 @@ class AdversarialGitHubAppTests(unittest.TestCase):
         self.assertEqual(result["conclusion"], "failure")
         self.assertEqual(self.fake.published[-1]["conclusion"], "failure")
 
+    def full_stack(self, records, comments=(), allow_signature=False):
+        """Actual enforce() + verify_one(); only GitHub I/O and crypto isolated."""
+        import trusted_governance
+        from trusted_governance import approval_text
+        from trusted_app_check import verify_one
+        repo = REPOSITORY
+        pr = self.fake.prs[9]
+        author = {"id": trusted_governance.OWNER_ID,
+                  "login": trusted_governance.OWNER_LOGIN, "type": "User"}
+        attestation = approval_text(9, HEAD_A, BASE) + " SIG=" + "YQ=="
+        normalized = []
+        for item in comments:
+            normalized.append({"body": attestation if item == "valid" else item,
+                               "user": copy.deepcopy(author)})
+        def get_json(path, token):
+            if path == f"repos/{repo}/pulls/9":
+                return {**copy.deepcopy(pr), "changed_files": len(records)}
+            if path == f"repos/{repo}/branches/main":
+                return {"protected": True, "commit": {"sha": BASE}}
+            raise AssertionError("Unexpected governance REST path: " + path)
+        def get_collection(path, token, max_pages=10):
+            if path.endswith("/files"):
+                return copy.deepcopy(records)
+            if path.endswith("/comments"):
+                return copy.deepcopy(normalized)
+            raise AssertionError("Unexpected governance collection " + path)
+        with mock.patch("trusted_app_check.api_json", side_effect=self.fake.api):
+            with mock.patch("trusted_governance.get_json", side_effect=get_json):
+                with mock.patch("trusted_governance.get_collection",
+                                side_effect=get_collection):
+                    with mock.patch("trusted_governance.verify_signature",
+                                    return_value=allow_signature):
+                        return verify_one(9, "installation", APP_ID, "public-key")
+
+    def test_full_stack_governance_without_signature_denied(self):
+        result = self.full_stack([
+            {"filename": "ROADMAP.md", "status": "modified"}])
+        self.assertEqual(result["conclusion"], "failure")
+        self.assertEqual(self.fake.published[-1]["head_sha"], MERGE_A)
+
+    def test_full_stack_valid_signature_on_same_snapshot_passes(self):
+        result = self.full_stack([
+            {"filename": "ROADMAP.md", "status": "modified"}],
+            comments=["valid"], allow_signature=True)
+        self.assertEqual(result["conclusion"], "success")
+        self.assertEqual(self.fake.published[-1]["app"]["id"], int(APP_ID))
+
+    def test_full_stack_lockfile_rename_denied_even_if_signed(self):
+        result = self.full_stack([
+            {"filename": "templates/inactive.py", "status": "renamed",
+             "previous_filename": "scripts/trusted_governance.py"}],
+            comments=["valid"], allow_signature=True)
+        self.assertEqual(result["conclusion"], "failure")
+
+    def test_full_stack_duplicate_files_rejected(self):
+        rec = {"filename": "templates/x.md", "status": "modified"}
+        result = self.full_stack([rec, rec])
+        self.assertEqual(result["conclusion"], "failure")
+
+    def test_full_stack_revocation_after_green_publishes_failure(self):
+        record = {"filename": "ROADMAP.md", "status": "modified"}
+        approved = self.full_stack([record], comments=["valid"],
+                                   allow_signature=True)
+        self.assertEqual(approved["conclusion"], "success")
+        revoked = self.full_stack([record])
+        self.assertEqual(revoked["conclusion"], "failure")
+        self.assertEqual([x["conclusion"] for x in self.fake.published],
+                         ["success", "failure"])
+
     def test_app_check_readback_must_identify_own_app_not_actions(self):
         original = self.fake.api
         def altered(method, path, token, payload=None):
