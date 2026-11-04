@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import os
 from datetime import datetime, timedelta, timezone
-from urllib import request
+from urllib import error, request
 
 UTC = timezone.utc
 
@@ -47,6 +47,7 @@ class AgentBridge:
         if not 1 <= max_per_day <= 200:
             raise ValueError("Quota inválida")
         self._api_key = api_key
+        self.provider = "openai"
         self.model = model
         self.store = store
         self.max_per_day = max_per_day
@@ -67,6 +68,12 @@ class AgentBridge:
             ).fetchone()
             if consent is None or consent["value"] != "1":
                 return "Conversa com IA desativada. Use /ativar_ia para autorizar."
+            if self.provider == "gemini":
+                permission = db.execute(
+                    "SELECT value FROM settings WHERE key='gemini_data_consent'"
+                ).fetchone()
+                if permission is None or permission["value"] != "1":
+                    return "Envio ao Google desativado; consulte /politica_gemini e use /ativar_gemini."
             # Armazenar apenas ID e data, nunca o texto nem a resposta.
             db.execute("DELETE FROM llm_requests WHERE created_utc<?",
                        ((now - timedelta(days=30)).astimezone(UTC).isoformat(),))
@@ -118,20 +125,83 @@ class AgentBridge:
         quota = self._reserve(role, request_key, now or datetime.now(UTC))
         if quota is not None:
             return quota
-        result = self._request_response({
+        result = self._request_response(self._make_payload(role, text.strip()))
+        return self.extract_text(result)
+
+    def _make_payload(self, role: str, text: str) -> dict:
+        return {
             "model": self.model,
             "instructions": INSTRUCTIONS[role],
-            "input": [{"role":"user","content":text.strip()}],
+            "input": [{"role": "user", "content": text}],
             "max_output_tokens": 600,
-            "store": False
-        })
-        return self.extract_text(result)
+            "store": False,
+        }
+
+
+class GeminiAgentBridge(AgentBridge):
+    """Somente modelo com documentação de Free Tier e texto simples."""
+
+    FREE_MODEL_ALLOWLIST = frozenset({"gemini-3.5-flash-lite"})
+
+    def __init__(self, api_key: str, model: str, store, max_per_day: int = 10):
+        if model not in self.FREE_MODEL_ALLOWLIST:
+            raise ValueError("Modelo Gemini não aprovado para teste gratuito")
+        super().__init__(api_key, model, store, max_per_day=max_per_day)
+        self.provider = "gemini"
+
+    def _make_payload(self, role: str, text: str) -> dict:
+        return {
+            "systemInstruction": {"parts": [{"text": INSTRUCTIONS[role]}]},
+            "contents": [{"role": "user", "parts": [{"text": text}]}],
+            "generationConfig": {"maxOutputTokens": 512, "temperature": 0.4},
+        }
+
+    def _request_response(self, payload: dict) -> dict:
+        req = request.Request(
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            + self.model + ":generateContent",
+            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+            method="POST",
+            headers={"Content-Type": "application/json",
+                     "x-goog-api-key": self._api_key},
+        )
+        try:
+            with request.urlopen(req, timeout=20) as response:
+                return json.load(response)
+        except (error.HTTPError, error.URLError, TimeoutError, OSError,
+                ValueError, KeyError, TypeError):
+            raise RuntimeError("Gemini indisponível ou cota atingida; entrega não confirmada") from None
+
+    @staticmethod
+    def extract_text(result: dict) -> str:
+        if not isinstance(result, dict) or not result.get("candidates"):
+            raise RuntimeError("Gemini não retornou uma resposta confirmada")
+        first = result["candidates"][0]
+        if not isinstance(first, dict) or first.get("finishReason") not in (None, "STOP"):
+            raise RuntimeError("Resposta Gemini interrompida ou bloqueada")
+        parts = (first.get("content") or {}).get("parts") or []
+        blocks = [item["text"] for item in parts
+                  if isinstance(item, dict) and isinstance(item.get("text"), str)]
+        message = "\n".join(blocks).strip()
+        if not message:
+            raise RuntimeError("Resposta Gemini vazia")
+        return message[:3500]
 
 
 def configured_agent(store):
+    """Custo zero: nunca instancia a API OpenAI paga pela configuração."""
     if os.getenv("UFMS_LLM_ENABLED", "") != "1":
         return None
-    key = os.getenv("UFMS_OPENAI_API_KEY", "")
-    model = os.getenv("UFMS_OPENAI_MODEL", "gpt-6-luna")
-    limit = int(os.getenv("UFMS_LLM_DAILY_LIMIT", "30"))
-    return AgentBridge(key, model, store, max_per_day=limit)
+    if os.getenv("UFMS_LLM_PROVIDER", "") != "gemini":
+        return None
+    if (os.getenv("UFMS_GEMINI_FREE_PROJECT_ATTESTED", "") != "1"
+            or os.getenv("UFMS_GEMINI_PRIVACY_REVIEWED", "") != "1"):
+        return None
+    key = os.getenv("UFMS_GEMINI_API_KEY", "")
+    model = os.getenv("UFMS_GEMINI_MODEL", "")
+    limit = os.getenv("UFMS_LLM_DAILY_LIMIT", "10")
+    if not key or model not in GeminiAgentBridge.FREE_MODEL_ALLOWLIST:
+        return None
+    if not limit.isdecimal() or not 1 <= int(limit) <= 20:
+        return None
+    return GeminiAgentBridge(key, model, store, max_per_day=int(limit))

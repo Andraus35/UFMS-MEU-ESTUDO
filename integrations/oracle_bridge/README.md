@@ -246,3 +246,25 @@ O único aplicativo Google com integração de conta prevista no MVP é
 **Google Agenda**. Os limites gratuitos do Gemini Notebook devem ser
 respeitados, sem upgrade automático e sem novas credenciais nesta etapa.
 Veja [decisão de ferramentas mínimas](../../docs/integracoes/DECISAO_STACK_MINIMA_GRATUITA.md).
+
+## PoC Gemini Developer API — somente backend, sem conexão real
+
+O módulo `GeminiAgentBridge` implementa payload REST de texto em
+`generateContent` para `gemini-3.5-flash-lite` (modelo listado no Free
+Tier em 04/11/2026). Continua **desativado por padrão** e requer parâmetros
+explícitos `UFMS_LLM_ENABLED=1`, `UFMS_LLM_PROVIDER=gemini`,
+`UFMS_GEMINI_FREE_PROJECT_ATTESTED=1`,
+`UFMS_GEMINI_PRIVACY_REVIEWED=1`, chave e modelo reconhecido.
+A configuração não seleciona API OpenAI faturada e removeu o identificador
+não verificado de modelo. Os flags de confirmação são somente declarações;
+**não garantem** que a conta Google esteja sem cobrança.
+
+**Estado da integração:** PoC isolada, sem habilitação de conversas no gateway
+Telegram. O módulo exige consentimento específico `gemini_data_consent`
+e consentimento LLM na transação SQLite, mas o comando Telegram de
+consentimento específico ainda não foi integrado: a API não pode receber
+mensagens pelo caminho normal do bot nesta entrega.
+
+Os testes são de protocolo e respostas sintéticas. Sem uso de chave real,
+sem chamadas à nuvem Google, sem acesso ao Gemini Notebook, sem cobrança
+ou integração com dados pessoais. <https://ai.google.dev/gemini-api/docs/pricing>.
