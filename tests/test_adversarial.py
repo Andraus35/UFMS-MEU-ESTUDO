@@ -25,7 +25,11 @@ class AdversarialRetrievalTests(unittest.TestCase):
                 hits=search(c['query'],**kwargs)
                 if c['kind']=='positive':
                     self.assertTrue(hits,'Sem recuperação para '+c['query'])
-                    self.assertIn(c['page'],[h['page'] for h in hits])
+                    matching=[h for h in hits if h['page']==c['page']
+                              and c['expected_text'].casefold() in ' '.join(
+                                  h.get('text','').casefold().split())
+                              and h['route']==c['expected_route']]
+                    self.assertTrue(matching,'Evidência literal não recuperada: '+c['query'])
                 elif c['kind']=='negative':
                     self.assertEqual(hits,[],'Resultado indevido para '+c['query'])
                 elif c['kind']=='isolation':
