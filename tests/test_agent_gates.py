@@ -66,6 +66,10 @@ class AgentGateTests(unittest.TestCase):
             settings = {"hooks": {"native_registration_required": True,
                                    **HOOK_FILES, "checkpoint": "hooks/other.py"}}
             (root / "settings.json").write_text(json.dumps(settings), encoding="utf-8")
+            for name in HOOK_FILES.values():
+                p = root / name
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text("def run(): pass\\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "divergente"):
                 check_hook_contract(root)
 
