@@ -71,7 +71,7 @@
       "area": "especificos",
       "page": 45,
       "kind": "positive",
-      "expected_text": "não discriminação",
+      "expected_text": "administração de conflitos",
       "expected_route": "bm25"
     },
     {
