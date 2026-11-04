@@ -16,6 +16,8 @@ jobs:
         run: python scripts/validate.py
       - name: Validar integridade do edital
         run: python scripts/chunk_edital.py --check
+      - name: Validar linhas do quadro de vagas
+        run: python scripts/index_vagas.py --check
       - name: Testar regras de integridade
         run: python -m unittest discover -s tests -v
       - name: Medir recuperação do edital
