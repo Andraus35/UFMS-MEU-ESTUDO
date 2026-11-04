@@ -277,7 +277,10 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
     # usar similaridade lexical como substituto da evidência normativa.
     target=(declared.group(1) if declared else cargo)
     query_clean=normalized(query)
-    ann_mentions=re.findall(r'\banexos?\s+(iii|iv|v)\b',query_clean)
+    # Capturar TODOS os numerais romanos em pedidos sobre múltiplos anexos.
+    # "Anexos III e IV" não pode ser respondido como se pedisse somente III.
+    ann_mentions=(re.findall(r'\b(iii|iv|v)\b',query_clean)
+                  if re.search(r'\banexos?\b',query_clean) else [])
     annex_name={"iii":"III","iv":"IV","v":"V"}
     explicit_annexes={annex_name[x] for x in ann_mentions}
     role_intents=set(explicit_annexes)
