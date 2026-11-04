@@ -24,7 +24,7 @@
       "kind": "positive"
     },
     {
-      "query": "art. 207 autonomia universitária",
+      "query": "Constituição Federal art. 207 indissociabilidade",
       "cargo": "523",
       "area": "especificos",
       "page": 36,
@@ -52,14 +52,14 @@
       "kind": "positive"
     },
     {
-      "query": "comunicação interpessoal conflitos atendimento",
+      "query": "administração de conflitos acessibilidade não discriminação",
       "cargo": "324",
       "area": "especificos",
       "page": 45,
       "kind": "positive"
     },
     {
-      "query": "regulamento de conduta estudante UFMS",
+      "query": "responsabilidades e procedimentos Resolução 497-Coun",
       "cargo": "324",
       "area": "especificos",
       "page": 45,
@@ -89,7 +89,8 @@
       "query": "endodontia apicectomia",
       "cargo": "523",
       "area": null,
-      "kind": "negative"
+      "kind": "isolation",
+      "forbidden_chunk": "p36-c02"
     },
     {
       "query": "Código 527 endodontia",
@@ -101,7 +102,7 @@
       "query": "código 523 gestão pública",
       "cargo": "324",
       "area": "especificos",
-      "kind": "negative"
+      "kind": "conflict"
     },
     {
       "query": "Lei nº 14.133/2021",
