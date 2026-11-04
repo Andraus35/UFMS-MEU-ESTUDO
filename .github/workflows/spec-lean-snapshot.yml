@@ -87,6 +87,26 @@ jobs:
           }
           tail -n 20 "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log"
           echo 'PLAN_R2_PROPOSAL_FORMAL_PASS_NOT_APPROVAL'
+      - name: Conferir CHECKS r2 preview sem falsificar aprovacao
+        shell: bash
+        run: |
+          set -uo pipefail
+          FILE='.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/checks-preview.md'
+          LOG="$RUNNER_TEMP/tlc-reports/checks-r2-preview.log"
+          set +e
+          python "$RUNNER_TEMP/tlc-official/validate_checks.py" "$FILE" --root . > "$LOG" 2>&1
+          CODE=$?
+          set -e
+          tail -n 45 "$LOG"
+          if [ "$CODE" -ne 1 ]; then
+            echo "CHECKS_R2_UNEXPECTED_EXIT=$CODE"
+            exit 1
+          fi
+          if ! grep -Fq 'plan.md has no' "$LOG" || ! grep -Fq 'validate_checks: 1 error(s)' "$LOG"; then
+            echo 'CHECKS_R2_HAS_ERRORS_BEYOND_EXPECTED_MISSING_APPROVAL'
+            exit 1
+          fi
+          echo 'CHECKS_R2_PREVIEW_ONLY_MISSING_HUMAN_APPROVAL_NOT_OFFICIALLY_APPROVED'
       - name: Executar validadores oficiais em ambos os objetos
         shell: bash
         run: |
