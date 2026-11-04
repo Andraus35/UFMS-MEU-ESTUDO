@@ -56,9 +56,24 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 - `edital/atribuicoes_index.json` é derivado e não normativo; `scripts/index_atribuicoes.py` verifica limites literais, fonte e hashes. `scripts/search_edital.py` fornece roteamento por cargo e restringe BM25 do Anexo IV, quando há filtro de cargo, aos trechos verificados.
 - `tests/test_atribuicoes.py` adiciona **8 testes** de integridade, contaminação, busca, mutação e custo de contexto; a CI integra `scripts/index_atribuicoes.py --check`. Testes são evidência técnica, **não** parecer de auditoria independente.
 
-## 7. Próxima retomada técnica
+## 7. Contraprovas cruzadas entre anexos — 04/11/2026
+
+**Objetivo:** impedir falsa equivalência entre requisito de ingresso (Anexo III), descrição de atribuições (Anexo IV) e conteúdo da prova (Anexo V) para os cargos 523 e 324.
+
+- A busca admite `--anexo III|IV|V --cargo 523|324`, com `--area` apenas para o Anexo V; `--anexo` não deve ser combinado com consulta textual, `--topic` ou seletores concorrentes.
+- A rota `search_programa` lista **todos os tópicos aplicáveis**: 523 — 14 (4 gerais + 10 específicos), 324 — 13 (4 gerais + 9 específicos). Ela retorna página, ID, chunk, offsets e pequeno excerto; `--full` recupera os trechos literais. Esse inventário **não** cria conteúdo curricular nem plano de estudos.
+- Perguntas que misturam duas ou três naturezas documentais são rejeitadas, não respondidas parcialmente. A `tests/fixtures/annex_cases.json` contém **21 contraprovas**: 15 rotas positivas e 6 conflitos.
+- `tests/test_anexos.py` acrescenta **7 testes** de rotas explícitas, recuperação integral, offsets, isolamento e falha segura; a CI executa `scripts/benchmark_anexos.py`.
+- **Defeito encontrado na primeira execução de CI:** a consulta `responsabilidades e procedimentos Resolução 497-Coun` estava explicitamente sob `--area especificos`, mas foi inicialmente confundida com Anexo IV. A CI [41793492274](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41793492274) **falhou**, motivando a correção para respeitar o escopo programático. A falha histórica permanece documentada.
+- **Evidência confirmada após correção:** GitHub Actions [41793859691](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41793859691), SHA `3db50c23b058b0219f27362e7a0b65dd974b3837`: **56/56 testes**, benchmark cruzado **21/21** (15/15 positivos, 6/6 conflitos), benchmark inicial Hit@1 27/27 e adversarial 9/9. Auditoria e testes foram preparados pela mesma frente; não equivalem a avaliação externa cega.
+
+### Verificação pontual de publicação oficial — 04/11/2026
+
+O portal de editais da [FAPEC](https://portal.concurso.fundacaofapec.org.br/edital/ver/22) mostra a publicação de abertura sob etiqueta **001/2026**, datada de 30/10/2026; o PDF do estudante traz Edital PROGEP/UFMS **152/2026**, de 29/10/2026. Não se deve presumir correspondência de numeração nem equivalência de bytes sem baixar e conferir o arquivo remoto. **Na página oficial consultada, não foi identificada retificação que esclareça o ALERTA-DOC-01** sobre o recurso de heteroidentificação do Anexo II, p. 13. Essa inspeção pontual não comprova inexistência de ato em outros locais ou após a consulta. A anomalia permanece pendente, sem modificação normativa.
+
+## 8. Próxima retomada técnica
 
 1. Reconfirmar HEAD exato e CI do PR #1, sem merge.
 2. Conferir novamente fonte oficial FAPEC/Boletim quanto à anomalia do Anexo II, registrando eventual ato separado.
-3. **Concluído:** indexação de linhas de vagas e requisitos 523/324 e das atribuições literais do Anexo IV. Próxima frente: contraprovas de falsas equivalências entre atribuições, programa de conhecimentos específicos e requisito de ingresso.
+3. **Concluído:** indexação das linhas III, atribuições IV e dos tópicos V, com 21 contraprovas de não equivalência. Próximo passo: verificar fontes primárias da FAPEC/UFMS para eventual esclarecimento ou retificação do ALERTA-DOC-01 e conferir a identidade dos bytes oficiais, sem aplicar alterações automáticas.
 4. Ampliar holdout com perguntas não usadas na construção dos aliases; manter testes adversariais e documento canônico intacto.
