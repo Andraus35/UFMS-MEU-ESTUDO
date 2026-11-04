@@ -145,7 +145,13 @@ def verify_one(pr_number, installation, app_id, public_key):
     head = _check_sha(metadata.get("head", {}).get("sha"), "PR HEAD")
     base = _check_sha(metadata.get("base", {}).get("sha"), "PR BASE")
     merge_sha = merge_target(pr_number, metadata, installation)
-    refuse_shared_head(pr_number, head, installation)
+    head_is_unique = False
+    try:
+        refuse_shared_head(pr_number, head, installation)
+        head_is_unique = True
+    except (ValueError, KeyError, TypeError):
+        # Emit failure on the target merge SHA instead of retaining old success.
+        pass
 
     # Use the same fail-closed policy, but the App, rather than Actions, is the
     # attested check run SOURCE. A failing evaluation still publishes failure.
@@ -161,7 +167,10 @@ def verify_one(pr_number, installation, app_id, public_key):
     verdict, explanation = "failure", "Policy check failed (fail closed)"
     try:
         enforce(env)
-        verdict, explanation = "success", "Trusted-base policy passed"
+        if head_is_unique:
+            verdict, explanation = "success", "Trusted-base policy passed"
+        else:
+            verdict, explanation = "failure", "Shared HEAD or PR enumeration failed"
     except Exception:
         # Fail closed even for unforeseen policy exceptions; never label success.
         pass
