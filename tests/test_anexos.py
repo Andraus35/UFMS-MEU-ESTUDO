@@ -105,6 +105,8 @@ class AnnexSeparationTests(unittest.TestCase):
             search("Anexo III do cargo 523",cargo="324",root=ROOT)
         with self.assertRaisesRegex(ValueError,"Cargo não indexado"):
             search_anexo("524","III",root=ROOT)
+        with self.assertRaisesRegex(ValueError,"sem consulta textual"):
+            search("Anexo IV do cargo 523",cargo="523",anexo="III",root=ROOT)
 
     def test_conteudo_nao_e_atribuicao_nem_escolaridade(self):
         for cargo in ("523","324"):
