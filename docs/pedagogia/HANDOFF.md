@@ -1,46 +1,45 @@
 # Handoff da sessão de estratégia pedagógica — UFMS
 
 **Checkpoint:** 04/11/2026, fuso America/Campo_Grande.  
-**Status:** pacote pedagógico de transferência à engenharia v1.8 documentado; não significa tutor implementado.
+**Status:** especificação v1.8 preservada; **verificação parcial e externa GP-0/GP-1 concluída no escopo documentado**, sem aprovação dos gates ou implementação.
 
-## START desta entrega (objetos consultados)
+## START desta entrega — objeto observado
 
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`.
-- PR pedagógico [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2`, aberto em draft e não mesclado.
-- HEAD **anterior** à entrega: `7c4c346426ffadc73deb535eb772701422b3c93b`. O SHA novo deve ser obtido pelo readback do PR/commit; este documento não pode incluir seu próprio SHA futuro.
-- PR técnico [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1), aberto e não mesclado no início. HEAD observado: `4317103ab91fae43c7e07cf5527d6ecbcc5681d7`, sujeito a alterações posteriores.
-- A matriz de reconciliação v1.7 baseou-se em HEAD técnico histórico `18a81bacd6163e6d510e58c00f2a55e77051b3ca`; **não** considerar essa fotografia como estado atual.
-- Sem merge, sem alteração da main ou do PR #1 nesta entrega.
+- PR pedagógico: [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2`, aberto em draft, não mesclado.
+- HEAD **anterior** ao commit desta entrega: `db2a7fba1c86bc8e988854a0cde759d4036624ee`. Reconsultar HEAD final remotamente; arquivo não pode conter seu próprio SHA futuro.
+- PR técnico independente: [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1), branch `setup/harness-memory-v0-2`, aberto em draft; HEAD lido: `ab5394acf4343ecb7848d16b64876f493cb530b3`.
+- main observada: `c020f78ba07ebb4e2949021b45a7f9b8f2c26d42`.
+- Nenhum merge ou edição de PR #1 autorizada.
 
-## Especificação consolidada
+## Acervo pedagógico vigente
 
-- v1.0 [Método](METODO_v1.0.md); v1.1 [Decisão](PROTOCOLO_DECISAO_v1.1.md); v1.2 [Evidências](MODELO_EVIDENCIAS_v1.2.md); v1.3 [Competitiva](ESTRATEGIA_COMPETITIVA_v1.3.md).
-- v1.4 [Simulados](PROTOCOLO_SIMULADOS_v1.4.md) e [Eficácia](AVALIACAO_EFICACIA_v1.4.md).
-- v1.5 [Fila](FILA_DINAMICA_v1.5.md); v1.6 [Cadernos/resultados](CADERNOS_RESULTADOS_v1.6.md).
-- v1.7 [Contrato](CONTRATO_PRONTIDAO_v1.7.md) e [Reconciliação](MATRIZ_RECONCILIACAO_v1.7.md).
-- **v1.8 [Plano de implementação](PLANO_IMPLEMENTACAO_GATES_v1.8.md), [Rastreabilidade](RASTREABILIDADE_GATES_v1.8.md) e [Prompt técnico](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md).**
-- [CRITERIOS_DE_ACEITACAO.md](CRITERIOS_DE_ACEITACAO.md): **102 cenários documentados**, não executados como suíte pedagógica; GP-0..GP-5 ainda não homologados.
+- Documentos v1.0–v1.8 conforme [README.md](README.md); não houve substituição silenciosa de versão nem reescrita das 102 referências de cenários.
+- **Novo relatório:** [VERIFICACAO_GP0_GP1_2026-11-04.md](VERIFICACAO_GP0_GP1_2026-11-04.md). É uma verificação factual limitada, e não nova versão metodológica.
+- [CRITERIOS_DE_ACEITACAO.md](CRITERIOS_DE_ACEITACAO.md): **102 cenários documentados**, ainda não executados integralmente como suíte pedagógica.
+- Protocolo obrigatório de commit + handoff: [PROTOCOLO_ENTREGA_CONTINUIDADE.md](PROTOCOLO_ENTREGA_CONTINUIDADE.md).
 
-## Entrega deste commit
+## Principais constatações desta entrega
 
-Acrescentar os três documentos v1.8, atualizar README e este handoff **no mesmo commit**, mantendo `CRITERIOS_DE_ACEITACAO.md` sem novos casos (o pacote mapeia casos existentes para evitar duplicações).
+1. PDF primário da UFMS confirmado: https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf (Edital 152 de 29/10/2026, 47 páginas). Quadro 60 questões/100 pontos/4 h, corte 50%, eliminação por nota zero por área e turnos, na redação original.
+2. **Retificações não exaustivamente verificadas:** `config/concursos.json` ainda indica `retificacoes_verificadas=false` no SHA técnico observado.
+3. Página pública da FAPEC lista `001/2026` enquanto PDF primário é `152/2026`; arquivo da FAPEC não foi baixado para cotejo, sem conclusão de identidade.
+4. Nove arquivos exigidos em `settings.json`/`AGENTS.md` vs sete citados em `rules/CORE.md`/`docs/OPERACAO.md`, divergência real no HEAD lido.
+5. `scripts/core.py`: validação e projeção parcial existentes, mas não evidência E0–E4 ou fila adaptativa implementadas nessa rotina.
+6. `personal_results_writes_enabled=false` e `state/CURRENT.json` com zero resultados/eventos nesse SHA.
 
-**Evidência pendente até readback:** confirmar o SHA final, os cinco blobs e a situação de CI. Não interpretar uma simples lista de requisitos como testes executados.
+**Vereditos:** GP-0 parcialmente verificado para a versão original, atualidade/retificações pendentes; GP-1 pendente. GP-2..GP-5 não homologados. Não foi executado teste local ou piloto nesta entrega.
 
-## Estado e bloqueios
+## Arquivos previstos neste commit
 
-- As decisões pedagógicas estão documentadas, mas o motor operacional não foi demonstrado.
-- Escopo normativo/retificações: requer conferência oficial antes de uso final (GP-0).
-- Mapeamento técnico de IDs, datas, estados, convenções e permissão de escrita: GP-1 pendente.
-- GP-2 e GP-3: motor e suíte adversarial por implementar/verificar; GP-4/5: ciclo/piloto não realizados.
-- Não habilitar gravação pessoal, criar contas, acessar bancos privados por scraping ou concluir merge por inferência.
+- Novo `VERIFICACAO_GP0_GP1_2026-11-04.md`.
+- `README.md` e `HANDOFF.md` sincronizados com a verificação.
+- `CRITERIOS_DE_ACEITACAO.md` permanece com 102 casos; nenhum caso duplicado.
 
-## Próximo passo
+**Readback obrigatório:** confirmar SHA final do PR #2 e os três arquivos, links e CI correspondente antes de declarar persistência.
 
-**Outra sessão técnica:** seguir [PROMPT_TRANSFERENCIA_TECNICA_v1.8.md](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md), ler HEADs atuais, auditar GP-0/GP-1 e decidir proposta de implementação isolada.
+## Próxima retomada
 
-**Esta sessão pedagógica:** evitar proliferar novos métodos sem evidência. Revisar decisões de implementação somente se surgirem divergências concretas e começar estudos por questões com devoluções humanas quando operacionalmente autorizadas.
+Para engenharia: reconsultar PR #1 e fontes oficiais; executar ENG-00/ENG-01 com testes de integridade, sem mexer nos dados privados e sem merge. Para planejamento pedagógico: a especificação está suficiente para propor diagnósticos manuais sem gravar desempenho enquanto escrita pessoal estiver desabilitada.
 
-## Retomada
-
-Consultar o HEAD atual do PR #2 e o índice pedagógico, este handoff e o protocolo START/DELIVERY no mesmo SHA. Cada nova entrega substantiva mantém commit próprio + atualização de handoff + readback. Não misturar trabalho pedagógico com edição técnica do PR #1 e não realizar merge sem ordem expressa.
+Não usar este relatório como confirmação da ausência de retificações, ou como certificação de prontidão técnica.
