@@ -2,6 +2,7 @@
 import base64
 import json
 import os
+from datetime import datetime, timezone
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from trusted_app_check import (
     CHECK_NAME, app_jwt, installation_token, verify_one, list_open_pr_numbers,
+    recently_completed, MAX_CHECK_REUSE_SECONDS,
 )
 from trusted_governance import REPOSITORY
 
@@ -123,6 +125,21 @@ class ExternalAppTests(unittest.TestCase):
         self.assertFalse(report2.get("reused_verified_check", False))
         self.assertEqual(len(posts2), 1)
 
+    def test_old_green_check_is_not_reused_by_live_app(self):
+        _, posts = self._simulate(own_check=True, stale_check=True)
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0]["conclusion"], "success")
+
+    def test_local_freshness_ttl_rejects_expired_or_invalid_timestamp(self):
+        now = 1700000000
+        from datetime import timedelta
+        sample = {"completed_at": datetime.fromtimestamp(
+            now, timezone.utc).isoformat()}
+        self.assertTrue(recently_completed(sample, now=now+10))
+        self.assertFalse(recently_completed(sample, now=now+MAX_CHECK_REUSE_SECONDS+1))
+        self.assertFalse(recently_completed({"completed_at": "not-a-date"}, now=now))
+        self.assertFalse(recently_completed({}, now=now))
+
     def test_open_pr_pagination_and_anomalies(self):
         def first(method, path, token, payload=None):
             return [{"number": 9}, {"number": 10}]
@@ -166,7 +183,7 @@ class ExternalAppTests(unittest.TestCase):
                   response_app_id=None, after_read_error=False, post_error=False,
                   own_check=False, own_id=None,
                   shared_head=False, wrong_merge_parents=False,
-                  missing_merge=False):
+                  missing_merge=False, stale_check=False):
         first = {"number": PR, "state": "open", "head": {"sha": HEAD},
                  "base": {"ref": "main", "sha": BASE},
                  "merge_commit_sha": None if missing_merge else MERGE}
@@ -195,6 +212,10 @@ class ExternalAppTests(unittest.TestCase):
                     return {"check_runs": [{
                         "id": 999, "app": {"id": own_id or int(APP_ID)},
                         "status": "completed", "name": CHECK_NAME,
+                        "head_sha": MERGE,
+                        "completed_at": (
+                            datetime.fromtimestamp(1 if stale_check else __import__("time").time(),
+                                                  timezone.utc).isoformat()),
                         "conclusion": "failure" if policy_error or shared_head else "success",
                         "external_id": f"pr{PR}:{HEAD}:{BASE}:{MERGE}",
                     }]} if own_check else {"check_runs": []}
