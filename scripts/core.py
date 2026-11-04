@@ -63,6 +63,7 @@ def validate_events(events, topics, allow_private=False):
     seen = {}
     results = {}
     recommendations = set()
+    recommendation_topics = {}
     for event in events:
         eid = event.get("event_id")
         kind = event.get("type")
@@ -86,6 +87,7 @@ def validate_events(events, topics, allow_private=False):
             if cid in recommendations:
                 raise ValueError(f"Caderno recomendado duas vezes: {cid}")
             recommendations.add(cid)
+            recommendation_topics[cid] = set(selected)
         if kind in {"resultado_recebido", "resultado_corrigido"}:
             total = count_integer(event.get("total"), f"total {eid}")
             correct = count_integer(event.get("acertos"), f"acertos {eid}")
@@ -98,6 +100,8 @@ def validate_events(events, topics, allow_private=False):
                 raise ValueError(f"topic_results inválido em {eid}")
             assigned = set()
             summed = 0
+            summed_correct = 0
+            summed_errors = 0
             for entry in breakdown:
                 if not isinstance(entry, dict):
                     raise ValueError(f"Entrada topic_results inválida em {eid}")
@@ -110,8 +114,21 @@ def validate_events(events, topics, allow_private=False):
                 if topic_correct > attempted:
                     raise ValueError(f"Mais acertos que tentativas em {eid}")
                 summed += attempted
-            if summed > total:
-                raise ValueError(f"Soma por tópico supera total em {eid}")
+                summed_correct += topic_correct
+                summed_errors += attempted - topic_correct
+            if summed > correct + errors:
+                raise ValueError(f"Soma de tentativas por tópico supera questões respondidas em {eid}")
+            if summed_correct > correct:
+                raise ValueError(f"Acertos por tópico superam acertos totais em {eid}")
+            if summed_errors > errors:
+                raise ValueError(f"Erros por tópico superam erros totais em {eid}")
+            # Quando o caderno tem recomendação registrada, não aceitar tópicos
+            # estranhos ao escopo recomendado. Resultados sem recomendação prévia
+            # seguem permitidos, mas não ganham escopo inferido automaticamente.
+            if cid in recommendation_topics:
+                authorized = recommendation_topics[cid]
+                if not assigned.issubset(authorized) or (selected and not set(selected).issubset(authorized)):
+                    raise ValueError(f"Tópico fora da recomendação do caderno {cid}")
             if kind == "resultado_recebido":
                 if cid in results:
                     raise ValueError(f"Resultado duplicado para caderno {cid}; use correção")
