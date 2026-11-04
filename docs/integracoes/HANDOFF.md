@@ -74,3 +74,15 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   datas sem UTC offset, intervalo invertido.
 - Fonte: https://developers.google.com/workspace/calendar/api/v3/reference/events
 - Nenhum evento real criado; validar CI/readback no novo SHA.
+
+## Ciclo 4 desta retomada — correção de teste não determinístico
+
+- START esperado: \`54dfc79a94cd30a09c41f2fe793ab56b091d372a\`.
+- No SHA anterior, dois runs da CI divergiram: run \`41795395690\` FAIL,
+  run \`41795401235\` PASS. A causa observada foi um teste antigo que gerava
+  início e fim com duas chamadas a \`datetime.now()\`, podendo produzir
+  intervalo nulo. A validação de intervalo do Calendar está correta.
+- O teste agora usa instante fixo com duração de 1h. CI executa matriz
+  com PYTHONHASHSEED 0, 11 e 97 para detectar mais instabilidade.
+- Todas as execuções da matriz devem passar no SHA exato; a existência de
+  um PASS isolado não cancela o FAIL anterior.

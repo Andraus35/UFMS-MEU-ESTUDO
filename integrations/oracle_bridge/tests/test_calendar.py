@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
 from bridge.google_calendar import GoogleCalendar
@@ -20,11 +20,11 @@ class CalendarTests(unittest.TestCase):
             results.append((path, payload))
             return {"id": payload["id"]}
 
+        start = datetime(2026, 11, 5, 14, tzinfo=timezone.utc)
+        end = start + timedelta(hours=1)
         with patch.object(client, "_post", side_effect=fake_post):
-            first = client.create_event(datetime.now(timezone.utc), datetime.now(timezone.utc),
-                                        "Estudo", "tutor:42")
-            second = client.create_event(datetime.now(timezone.utc), datetime.now(timezone.utc),
-                                         "Estudo", "tutor:42")
+            first = client.create_event(start, end, "Estudo", "tutor:42")
+            second = client.create_event(start, end, "Estudo", "tutor:42")
         self.assertEqual(first, second)
         self.assertEqual(results[0][0], "/calendars/study%40example.com/events")
         self.assertEqual(len(first), 32)
