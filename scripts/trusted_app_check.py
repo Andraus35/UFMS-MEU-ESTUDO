@@ -11,6 +11,7 @@ import fcntl
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 import time
@@ -35,6 +36,8 @@ def app_jwt(app_id, private_key_file, now=None):
     key = Path(private_key_file)
     if not key.is_file() or key.is_symlink():
         raise ValueError("App private key missing or symlinked")
+    if stat.S_IMODE(key.stat().st_mode) & 0o077:
+        raise ValueError("App private key must be private (mode 0600)")
     t = int(time.time() if now is None else now)
     header = _b64url(b'{"alg":"RS256","typ":"JWT"}')
     claims = _b64url(json.dumps({
