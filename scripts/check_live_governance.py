@@ -104,7 +104,51 @@ def assert_check(runs, name, appid, merge_sha, external_id, now, max_age_seconds
             "completed_at": latest.get("completed_at")}
 
 
-def verify_snapshot(number, expected_head, expected_base, app_id, get=github_get, now=None):
+
+def exclusive_update_gate(get, prefix, merger_app_id, verifier_app_id):
+    """Only a distinct GitHub App may bypass main update restrictions."""
+    require(type(merger_app_id) is int and merger_app_id > 0
+            and merger_app_id not in (ACTION_APP_ID, verifier_app_id),
+            "Merger App must be distinct and positive")
+    records = get(f"{prefix}/rulesets?per_page=100")
+    require(isinstance(records, list) and len(records) <= 75,
+            "Incomplete repository ruleset listing")
+    matched = []
+    for summary in records:
+        if (not isinstance(summary, dict)
+                or type(summary.get("id")) is not int
+                or summary.get("target") != "branch"
+                or summary.get("enforcement") != "active"):
+            continue
+        detail = get(f"{prefix}/rulesets/{summary['id']}")
+        if (not isinstance(detail, dict)
+                or detail.get("id") != summary["id"]
+                or detail.get("target") != "branch"
+                or detail.get("enforcement") != "active"):
+            continue
+        selector = detail.get("conditions", {}).get("ref_name", {})
+        if (not isinstance(selector, dict)
+                or selector.get("include") not in
+                   (["refs/heads/main"], ["~DEFAULT_BRANCH"])
+                or selector.get("exclude") != []):
+            continue
+        rules = detail.get("rules")
+        if not isinstance(rules, list) or not any(
+                isinstance(rule, dict) and rule.get("type") == "update"
+                for rule in rules):
+            continue
+        if detail.get("bypass_actors") != [{
+                "actor_id": merger_app_id,
+                "actor_type": "Integration",
+                "bypass_mode": "always"}]:
+            continue
+        matched.append(summary["id"])
+    require(len(matched) == 1,
+            "Exclusive main update ruleset with designated merger App not proven")
+    return {"ruleset_id": matched[0], "merger_app_id": merger_app_id}
+
+
+def verify_snapshot(number, expected_head, expected_base, app_id, get=github_get, now=None, merger_app_id=None):
     require(type(number) is int and number > 0, "Invalid PR number")
     require(type(app_id) is int and app_id > 0 and app_id != ACTION_APP_ID,
             "External App ID must be distinct from GitHub Actions")
@@ -160,6 +204,7 @@ def verify_snapshot(number, expected_head, expected_base, app_id, get=github_get
         assert_check(runs, "validate", ACTION_APP_ID, merge, None, now, 7 * 24 * 3600),
         assert_check(runs, APP_CHECK, app_id, merge, external_id, now),
     ]
+    release_gate = exclusive_update_gate(get, prefix, merger_app_id, app_id)
     pr2, branch2 = get(pr_path), get(f"{prefix}/branches/main")
     require(pr2.get("head", {}).get("sha") == head
             and pr2.get("base", {}).get("sha") == base
@@ -170,6 +215,7 @@ def verify_snapshot(number, expected_head, expected_base, app_id, get=github_get
     # The required checks must also be present on GitHub's selected SHA.
     return {"snapshot": "PASS_AT_INSTANT_ONLY", "pr": number, "head": head,
             "base": base, "merge": merge, "checks": checked,
+            "exclusive_update_gate": release_gate,
             "merge_authorized": False,
             "offline_stale_green_risk": "OPEN_NOT_ENFORCED_BY_GITHUB"}
 
@@ -180,9 +226,11 @@ def main():
     parser.add_argument("--head", required=True)
     parser.add_argument("--base", required=True)
     parser.add_argument("--app-id", type=int, required=True)
+    parser.add_argument("--merger-app-id", type=int, required=True)
     args = parser.parse_args()
     try:
-        result = verify_snapshot(args.pr, args.head, args.base, args.app_id)
+        result = verify_snapshot(args.pr, args.head, args.base, args.app_id,
+                                 merger_app_id=args.merger_app_id)
     except (EvidenceMissing, TypeError, ValueError, KeyError, AttributeError) as exc:
         print("BLOCKED (no homologation): " + str(exc), file=sys.stderr)
         raise SystemExit(1)

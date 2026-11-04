@@ -109,3 +109,49 @@ A CI atual é executada com o código do merge sintético, mas seu check
 mudar o SHA utilizado pelo GitHub para os checks obrigatórios. Não ativar a
 proteção proposta até reconciliar todos os checks obrigatórios no mesmo
 commit verificado no servidor.
+
+## Opção C — bloqueio nativo de atualizações com App exclusiva (RECOMENDADA)
+
+**Proposta de arquitetura; sem implantação, sem prova E2E, sem homologação.**
+O repositório pessoal é público; rulesets de branch com `Restrict updates`
+e exceção nominal de GitHub App são oferecidos em repositórios públicos
+GitHub Free. Esta alternativa evita uma transferência de organização.
+
+1. Preservar uma App de atestação que só lê o repositório e publica checks;
+   nunca lhe conceder Contents:write.
+2. Criar uma **segunda GitHub App exclusivamente de integração** com
+   Contents:write, sem Administration:write. Guardar sua chave apenas em
+   host confiável, inacessível a agentes e workflows de PR.
+3. Criar um ruleset **ativo** para `refs/heads/main` com restrição `update`
+   e **somente** a App de integração na bypass list
+   (`actor_type=Integration`, `bypass_mode=always`). Não admitir
+   bypass de proprietário, administradores, outros atores ou Apps.
+   Manter checks e revisões obrigatórias em regra independente, sem bypass
+   administrativo, e conferir como GitHub acumula as regras.
+4. Serviço de integração separado revalida de forma **síncrona** comentário
+   Ed25519, PR/HEAD/base, revisão humana, autoria e SHAs dos checks,
+   estado atual de ruleset e política antes de chamar o merge com HEAD
+   esperado. Nunca aceitar um check verde de dez minutos como autorização
+   suficiente. Não executar nada sem aprovação humana expressa para SHA.
+5. Fora do ar, o serviço não solicita merge; a restrição nativa impede
+   atualizações da `main` por outros atores, mesmo diante de check verde
+   antigo. **Ainda exige teste real:** a UI de merge, API e push de
+   usuário/admin devem falhar e somente a App autorizada deve conseguir
+   integrar após revalidação.
+
+O dono ainda pode editar/retirar o ruleset por ter privilégio administrativo;
+esta capacidade não pode ser anulada por código do repositório. Também
+persistem risco de comprometimento de credencial da App e corrida entre a
+última leitura e a integração. Documentar esses limites, auditar E2E e
+monitorar alterações administrativas.
+
+**Não habilitar regra no projeto antes de ensaiar em branch de laboratório.**
+Antes da homologação verificar check `validate` sobre o SHA de merge
+sintético selecionado pelo GitHub; resultado apenas no HEAD não basta.
+O verificador read-only exige agora `--merger-app-id` e comprovação de
+ruleset restritivo exclusivo. Sem a segunda App e regras instaladas ele
+deve rejeitar, não declarar PASS.
+
+Referências:
+- https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets
+- https://docs.github.com/en/rest/pulls/pulls

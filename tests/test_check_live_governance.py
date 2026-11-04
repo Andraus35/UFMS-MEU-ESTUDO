@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/"scripts"))
 from check_live_governance import EvidenceMissing, verify_snapshot, APP_CHECK
 
-PR, HEAD, BASE, MERGE, APP = 10, "a"*40, "b"*40, "c"*40, 87654
+PR, HEAD, BASE, MERGE, APP, RELEASE_APP = 10, "a"*40, "b"*40, "c"*40, 87654, 97654
 NOW = 1700000000
 WHEN = datetime.fromtimestamp(NOW-5, timezone.utc).isoformat()
 
@@ -31,6 +31,16 @@ def fixture():
                 {"context": "validate", "app_id": 15368},
                 {"context": APP_CHECK, "app_id": APP},
             ]}},
+        f"{prefix}/rulesets?per_page=100": [
+            {"id": 91, "target": "branch", "enforcement": "active"}],
+        f"{prefix}/rulesets/91": {
+            "id": 91, "target": "branch", "enforcement": "active",
+            "conditions": {"ref_name": {"include": ["refs/heads/main"],
+                                        "exclude": []}},
+            "rules": [{"type": "update"}],
+            "bypass_actors": [{"actor_id": RELEASE_APP,
+                               "actor_type": "Integration",
+                               "bypass_mode": "always"}]},
         f"{prefix}/git/ref/pull/{PR}/merge": {
             "ref": f"refs/pull/{PR}/merge", "object": {"sha": MERGE}},
         f"{prefix}/commits/{MERGE}": {
@@ -55,7 +65,8 @@ class LiveEvidenceTests(unittest.TestCase):
 
     def run_probe(self):
         return verify_snapshot(PR, HEAD, BASE, APP,
-                               get=lambda p: copy.deepcopy(self.values[p]), now=NOW)
+                               get=lambda p: copy.deepcopy(self.values[p]), now=NOW,
+                               merger_app_id=RELEASE_APP)
 
     def must_fail(self, fragment):
         with self.assertRaisesRegex(EvidenceMissing, fragment):
@@ -139,6 +150,23 @@ class LiveEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(EvidenceMissing, "distinct"):
             verify_snapshot(PR, HEAD, BASE, 15368,
                             get=lambda p: copy.deepcopy(self.values[p]), now=NOW)
+
+    def test_no_update_ruleset_blocks(self):
+        self.values[f"{self.prefix}/rulesets?per_page=100"] = []
+        self.must_fail("Exclusive main update")
+
+    def test_admin_bypass_blocks(self):
+        self.values[f"{self.prefix}/rulesets/91"]["bypass_actors"].append(
+            {"actor_id": 1, "actor_type": "RepositoryRole", "bypass_mode": "always"})
+        self.must_fail("Exclusive main update")
+
+    def test_wrong_release_app_blocks(self):
+        self.values[f"{self.prefix}/rulesets/91"]["bypass_actors"][0]["actor_id"] = 123
+        self.must_fail("Exclusive main update")
+
+    def test_no_update_rule_blocks(self):
+        self.values[f"{self.prefix}/rulesets/91"]["rules"] = []
+        self.must_fail("Exclusive main update")
 
     def test_unknown_admin_api_403_denied(self):
         def get(path):

@@ -27,8 +27,10 @@ PR=10
 HEAD=$(gh pr view "$PR" -R "$REPO" --json headRefOid --jq .headRefOid)
 BASE=$(gh api "repos/$REPO/pulls/$PR" --jq .base.sha)
 APP_ID=<ID_DA_APP_PROPRIA_CONFERIDO_NO_GITHUB>
+MERGER_APP_ID=<ID_DA_APP_DE_INTEGRACAO_DISTINTA>
 python scripts/check_live_governance.py \
-  --pr "$PR" --head "$HEAD" --base "$BASE" --app-id "$APP_ID"
+  --pr "$PR" --head "$HEAD" --base "$BASE" \
+  --app-id "$APP_ID" --merger-app-id "$MERGER_APP_ID"
 ```
 
 O script exige os dois checks emitidos pelas Apps esperadas sobre o commit de
@@ -81,3 +83,12 @@ workflows executados de código não confiável.
 
 **Não homologar** ao obter sucesso em testes simulados. Sem GitHub App instalada,
 configuração administrativa e teste E2E, manter o PR em draft e merge bloqueado.
+
+## Ruleset exclusivo exigido na aceitação (arquitetura C proposta)
+
+A leitura administrativa só pode produzir `PASS_AT_INSTANT_ONLY` com
+ruleset de branch ativo, atualização da `main` restrita e **bypass único
+para App de integração distinta da App de checks**. Sem o ruleset,
+IDs de Apps reais e ensaios de bloqueio de usuário/admin, G0/GQ-H é
+PENDENTE. Um ruleset verificado por API não comprova sozinho enforcement
+real ou ausência de corrida.
