@@ -73,6 +73,32 @@ def _neighbors(chunk, chunks):
     return [{'chunk_id':c['id'],'path':c['path'],'page':c['page']}
             for c in same if abs(c['segment']-chunk['segment'])==1]
 
+def section_results(number,chunks,source_sha,limit=4,full=False,neighbors=False):
+    """Roteamento por item literal, sem inferir abrangência jurídica do item."""
+    if not re.fullmatch(r'[1-9][0-9]?(?:\.[0-9]{1,3}){1,3}',number):
+        raise ValueError('Item inválido')
+    marker=re.compile(r'(?m)^[ \t]*'+re.escape(number)+r'\.[ \t]+')
+    results=[]
+    for c in chunks:
+        for match in marker.finditer(c['body']):
+            start=match.start()
+            # Apresenta uma janela literal e pequena; se necessário, abrir o chunk inteiro.
+            end=min(len(c['body']),start+450)
+            fragment=c['body'][start:end]
+            result={'chunk_id':c['id'],'path':c['path'],'page':c['page'],
+                    'score':1.0,'excerpt':' '.join(fragment.split())[:220],
+                    'source':'EDITAL_UFMS_152_2026.md','source_sha':source_sha,
+                    'route':'literal_item_marker',
+                    'classification':'source_excerpt',
+                    'item':number,
+                    'page_char_start':c['char_start']+start,
+                    'page_char_end':c['char_start']+end}
+            if full:result['text']=fragment
+            if neighbors:result['adjacent_chunks']=_neighbors(c,chunks)
+            results.append(result)
+            if len(results)>=limit:return results
+    return results
+
 def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False,neighbors=False):
     if cargo not in (None,'523','324'): raise ValueError('Cargo inválido')
     if area not in (None,'gerais','especificos'): raise ValueError('Área inválida')
@@ -89,6 +115,13 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
     if topic is not None:
         if topic not in by_topic: raise ValueError('Tópico ausente ou incompatível: '+topic)
         return direct_results([by_topic[topic]],chunks,'topic_id',limit,source_sha,full,neighbors)
+    # Item explícito precede BM25, mas não atravessa filtros de áreas específicas.
+    if area is None:
+        item_match=re.search(r'(?<![\w.])([1-9][0-9]?(?:\.[0-9]{1,3}){1,3})(?![\d.])',query)
+        if item_match:
+            located=section_results(item_match.group(1),chunks,source_sha,
+                                    limit,full,neighbors)
+            if located:return located
     normalized_query=normalized(query)
     if not normalized_query:return []
     # Roteamento direto exige título completo, ID exato ou alias com limites de palavra.
