@@ -158,3 +158,20 @@ Oracle nem substitui os testes ponta a ponta consentidos.
   quando a revogação ocorre; não há cancelamento retroativo de rede.
   O estado é mantido para reconciliação. O serviço não deve prometer
   ausência absoluta de mensagens que já estavam em envio.
+
+## Check-ins genéricos e opt-in duplo (ciclo 8)
+
+O produtor \`bridge/checkins.py\` permite envio proativo sem um motor LLM
+com contexto, mas **somente** com \`UFMS_GENERIC_CHECKINS=1\` no servidor
+**e** \`/ativar_alertas\` na conversa privada do Telegram. Por padrão
+está **desligado**. Horários-piloto: Tutor 18h, Coach 19h no fuso
+\`America/Campo_Grande\`; ambos respeitam limite global e intervalo mínimo.
+
+- Mensagens perguntam se há dúvidas ou necessidade de ajustes; nunca
+  mencionam progresso, resultado, calendário ou erro que não tenham observado.
+- Cada bot gera no máximo uma chave por dia. Reinício fora dos 10 minutos
+  iniciais da janela não provoca check-in atrasado.
+- Cancelar consentimento descarta fila pendente. Reativação não ressuscita
+  check-ins cancelados.
+- Não chamar esses check-ins de coaching adaptativo: falta conexão com
+  evidências e feedback real do motor pedagógico.

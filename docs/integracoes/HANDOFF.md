@@ -121,3 +121,15 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   específicas de revogação/reentrada.
 - \`sending\` não é cancelável retroativamente e pode estar em trânsito.
 - Sem chamadas reais a Telegram, Google ou OpenAI; sem deploy Oracle.
+
+## Ciclo 8 desta retomada — produtor mínimo de avisos autônomos
+
+- START anterior: \`b8ba689ea7d9fa5d8205da8e1fc4c679542752fd\`;
+  CI anterior duas execuções SUCCESS (matriz + contêiner).
+- Adicionado gerador determinístico \`bridge/checkins.py\`, com agendamento
+  piloto Tutor 18h e Coach 19h no fuso Campo Grande, sem supor desempenho.
+- Opt-in duplo: UFMS_GENERIC_CHECKINS=1 na Oracle e /ativar_alertas pelo aluno.
+  Padrão desativado; sem catch-up após 10 minutos; chave por papel/dia.
+- Contraprovas com mock: não enviar sem consentimento, idempotência,
+  revogação, horários, ausência de progresso inventado.
+- Sem implantação nem mensagem real; conferir CI e readback remoto.

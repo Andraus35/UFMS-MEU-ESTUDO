@@ -12,6 +12,7 @@ import threading
 import time
 from .proactive import ProactiveOutbox, dispatch_proactive
 from .agents import configured_agent
+from .checkins import generate_generic_checkins
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib import request
@@ -322,10 +323,12 @@ def main():
     calendar = configured_calendar()
     outbox = ProactiveOutbox(store, int(allowed))
     agent = configured_agent(store)
+    checkins_enabled = os.getenv("UFMS_GENERIC_CHECKINS", "") == "1"
     for name, client in clients.items():
         threading.Thread(target=poll_loop, args=(name, client, store, int(allowed), calendar, outbox, agent),
                          daemon=True, name=f"poll-{name}").start()
     while True:
+        generate_generic_checkins(outbox, enabled=checkins_enabled)
         dispatch_due(store, clients)
         dispatch_proactive(outbox, clients)
         time.sleep(10)
