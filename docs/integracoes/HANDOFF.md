@@ -169,3 +169,21 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   falha HTTP 401 e resposta \`ok:false\` não tratadas como sucesso.
 - Os logs de infraestrutura e serviços externos continuam fora deste teste;
   requer auditoria de implantação em VM.
+
+## RATE-01 — entrega de cotas e retenção (04/11/2026)
+
+- START exato: PR #3 `31b101e06bb132f7905d1c52a82fe8723480004d`,
+  draft não mesclado. PRs #1/#2 continuam em branches independentes.
+- Limites de lembretes manuais: 20 novos por 24h e 30 ativos em conjunto
+  Tutor+Coach; ambos sob `BEGIN IMMEDIATE`, com replay idempotente exato.
+- Normalização de datas de vencimento para UTC; validação de entrada
+  inclusive quando a API de Store é chamada diretamente.
+- Migração aditiva de `finalized_utc`. Limpeza opcional `--apply`,
+  padrão dry-run e somente sent/cancelled cuja finalização provada excede
+  30 dias; estados uncertain/sending/pending preservados.
+- Novos testes com dados fictícios para quotas, migração, retenção, privacidade
+  e rejeição; validação por CI no SHA resultante **ainda obrigatória**.
+- Sem eventos reais no Google Agenda, Telegram, Oracle ou OpenAI;
+  não houve exclusão de dados pessoais. Auditoria independente G0 pendente.
+- Próxima pendência: proteção de backup criptografado, limites de credenciais
+  e operação Oracle somente com autorização humana.

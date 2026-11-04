@@ -198,3 +198,15 @@ e do OAuth Google Calendar. Ver
   antes de produção, pois outras camadas podem registrar URLs.
 - Resposta \`ok:false\` nunca confirma envio. Isso preserva a política
   conservadora de mensagens \`uncertain\`.
+
+## RATE-01 — Cotas e retenção de lembretes
+
+Implementado controle transacional por usuário: até 20 lembretes novos em 24h
+compartilhados entre os bots e até 30 ativos. Chaves de requisição idênticas
+não consomem nova cota; conteúdo divergente não pode reutilizar a chave.
+Os horários são normalizados para UTC. A manutenção de histórico é
+**manual por padrão** e começa em modo de visualização sem deletar dados;
+`--apply` remove somente lembretes finalizados há mais de 30 dias,
+nunca itens pendentes ou de confirmação incerta. Não há limpeza automática
+nem apagamento de backups. Ver
+[contrato RATE-01](../../docs/integracoes/RATE_RETENCAO_v0.4.md).

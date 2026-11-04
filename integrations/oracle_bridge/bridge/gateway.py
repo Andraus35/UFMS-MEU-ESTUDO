@@ -19,6 +19,10 @@ from urllib import error, request
 
 UTC = timezone.utc
 BOTS = ("tutor", "coach")
+# Proteções conservadoras contra filas infinitas e consumo de disco.
+MAX_ACTIVE_REMINDERS_PER_USER = 30
+MAX_NEW_REMINDERS_PER_24H = 20
+DEFAULT_RETENTION_DAYS = 30
 
 
 def parse_time(raw: str, now: datetime | None = None) -> datetime:
@@ -47,12 +51,18 @@ class Store:
               body TEXT NOT NULL, request_key TEXT NOT NULL UNIQUE,
               status TEXT NOT NULL DEFAULT 'pending',
               created_utc TEXT NOT NULL, sent_utc TEXT,
-              claimed_utc TEXT
+              claimed_utc TEXT, finalized_utc TEXT
             )""")
             # Migração não destrutiva do SQLite criado no MVP anterior.
             cols = {row["name"] for row in db.execute("PRAGMA table_info(reminders)")}
             if "claimed_utc" not in cols:
                 db.execute("ALTER TABLE reminders ADD COLUMN claimed_utc TEXT")
+            if "finalized_utc" not in cols:
+                db.execute("ALTER TABLE reminders ADD COLUMN finalized_utc TEXT")
+            db.execute("""CREATE INDEX IF NOT EXISTS idx_reminders_chat_status
+              ON reminders(chat_id,status)""")
+            db.execute("""CREATE INDEX IF NOT EXISTS idx_reminders_created
+              ON reminders(chat_id,created_utc)""")
             db.execute("""CREATE TABLE IF NOT EXISTS bot_offsets(
               bot TEXT PRIMARY KEY, next_offset INTEGER NOT NULL DEFAULT 0
             )""")
@@ -77,14 +87,47 @@ class Store:
               ON CONFLICT(bot) DO UPDATE SET next_offset=max(next_offset, excluded.next_offset)""",
               (bot, update_id + 1))
 
-    def schedule(self, bot: str, chat_id: int, due: datetime, body: str, key: str) -> int:
+    def schedule(self, bot: str, chat_id: int, due: datetime, body: str,
+                 key: str, now: datetime | None = None) -> int:
+        """Transação atômica: idempotência exata, cota diária e fila compartilhada."""
+        if bot not in BOTS or type(chat_id) is not int or chat_id <= 0:
+            raise ValueError("Identificação de lembrete inválida")
+        if not isinstance(due, datetime) or due.tzinfo is None or due.utcoffset() is None:
+            raise ValueError("Lembrete exige data com fuso")
+        if not isinstance(body, str) or not 1 <= len(body.strip()) <= 500:
+            raise ValueError("Mensagem deve ter entre 1 e 500 caracteres")
+        if not isinstance(key, str) or not 4 <= len(key) <= 160:
+            raise ValueError("Chave idempotente inválida")
+        at = now or datetime.now(UTC)
+        if at.tzinfo is None or at.utcoffset() is None:
+            raise ValueError("Relógio de referência exige fuso")
+        iso_now = at.astimezone(UTC).isoformat()
+        iso_due = due.astimezone(UTC).isoformat()
+        last_24h = (at.astimezone(UTC) - timedelta(hours=24)).isoformat()
         with self.connect() as db:
-            db.execute("""INSERT OR IGNORE INTO reminders
-              (bot,chat_id,due_utc,body,request_key,created_utc)
-              VALUES(?,?,?,?,?,?)""",
-              (bot, chat_id, due.isoformat(), body, key, datetime.now(UTC).isoformat()))
-            row = db.execute("SELECT id FROM reminders WHERE request_key=?", (key,)).fetchone()
-            return int(row["id"])
+            db.execute("BEGIN IMMEDIATE")
+            existing = db.execute("""SELECT id,bot,chat_id,due_utc,body
+                FROM reminders WHERE request_key=?""", (key,)).fetchone()
+            if existing is not None:
+                if (existing["bot"], existing["chat_id"], existing["due_utc"],
+                        existing["body"]) != (bot, chat_id, iso_due, body.strip()):
+                    raise ValueError("Chave reutilizada com conteúdo diferente")
+                return int(existing["id"])
+            active = db.execute("""SELECT COUNT(*) AS n FROM reminders
+                WHERE chat_id=? AND status IN ('pending','sending','uncertain')""",
+                (chat_id,)).fetchone()["n"]
+            if active >= MAX_ACTIVE_REMINDERS_PER_USER:
+                raise ValueError("Limite de lembretes ativos atingido; cancele ou conclua algum")
+            recent = db.execute("""SELECT COUNT(*) AS n FROM reminders
+                WHERE chat_id=? AND created_utc>?""",
+                (chat_id, last_24h)).fetchone()["n"]
+            if recent >= MAX_NEW_REMINDERS_PER_24H:
+                raise ValueError("Limite de novos lembretes nas últimas 24 horas atingido")
+            cursor = db.execute("""INSERT INTO reminders
+                (bot,chat_id,due_utc,body,request_key,created_utc)
+                VALUES(?,?,?,?,?,?)""",
+                (bot,chat_id,iso_due,body.strip(),key,iso_now))
+            return int(cursor.lastrowid)
 
     def due(self, now: datetime, limit: int = 15):
         with self.connect() as db:
@@ -109,9 +152,10 @@ class Store:
             return dict(row)
 
     def mark_sent(self, reminder_id: int):
+        at = datetime.now(UTC).isoformat()
         with self.connect() as db:
-            db.execute("UPDATE reminders SET status='sent',sent_utc=? WHERE id=? AND status='sending'",
-                       (datetime.now(UTC).isoformat(), reminder_id))
+            db.execute("""UPDATE reminders SET status='sent',sent_utc=?,finalized_utc=?
+                WHERE id=? AND status='sending'""", (at, at, reminder_id))
 
     def mark_uncertain(self, reminder_id: int):
         with self.connect() as db:
@@ -130,17 +174,55 @@ class Store:
             raise ValueError("Decisão inválida")
         status = "sent" if decision == "delivered" else "cancelled"
         with self.connect() as db:
-            updated = db.execute("""UPDATE reminders SET status=?
+            updated = db.execute("""UPDATE reminders SET status=?,finalized_utc=?
                 WHERE id=? AND status IN ('sending','uncertain')""",
-                (status, reminder_id))
+                (status, datetime.now(UTC).isoformat(), reminder_id))
             return updated.rowcount == 1
 
     def cancel(self, reminder_id: int, bot: str, chat_id: int) -> bool:
         with self.connect() as db:
-            result = db.execute("""UPDATE reminders SET status='cancelled'
+            result = db.execute("""UPDATE reminders SET status='cancelled',finalized_utc=?
               WHERE id=? AND bot=? AND chat_id=? AND status='pending'""",
-              (reminder_id, bot, chat_id))
+              (datetime.now(UTC).isoformat(), reminder_id, bot, chat_id))
             return result.rowcount == 1
+
+    def retention_report(self, now: datetime | None = None,
+                         days: int = DEFAULT_RETENTION_DAYS) -> dict:
+        """Contagens agregadas; não expõe chat_id, token, assunto ou mensagem."""
+        if not 7 <= days <= 365:
+            raise ValueError("Retenção exige prazo entre 7 e 365 dias")
+        at = now or datetime.now(UTC)
+        if at.tzinfo is None or at.utcoffset() is None:
+            raise ValueError("Relógio sem fuso")
+        cutoff = (at.astimezone(UTC) - timedelta(days=days)).isoformat()
+        with self.connect() as db:
+            eligible = db.execute("""SELECT COUNT(*) FROM reminders
+                WHERE status IN ('sent','cancelled')
+                AND COALESCE(finalized_utc,CASE WHEN status='sent' THEN sent_utc END)<?""",
+                (cutoff,)).fetchone()[0]
+            unresolved = db.execute("""SELECT COUNT(*) FROM reminders
+                WHERE status IN ('sending','uncertain')""").fetchone()[0]
+            pending = db.execute("""SELECT COUNT(*) FROM reminders
+                WHERE status='pending'""").fetchone()[0]
+        return {"eligible_finalized":eligible, "pending":pending,
+                "unresolved":unresolved, "retention_days":days}
+
+    def purge_finalized(self, *, now: datetime | None = None,
+                        days: int = DEFAULT_RETENTION_DAYS,
+                        apply: bool = False) -> dict:
+        """Purge explícito apenas de finalizados envelhecidos; sem autoexecução."""
+        stats = self.retention_report(now=now, days=days)
+        if not apply:
+            return {**stats, "deleted":0, "dry_run":True}
+        at = now or datetime.now(UTC)
+        cutoff = (at.astimezone(UTC) - timedelta(days=days)).isoformat()
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            count = db.execute("""DELETE FROM reminders
+                WHERE status IN ('sent','cancelled')
+                AND COALESCE(finalized_utc,CASE WHEN status='sent' THEN sent_utc END)<?""",
+                (cutoff,)).rowcount
+        return {**stats, "deleted":count, "dry_run":False}
 
     def pending(self, bot: str, chat_id: int) -> int:
         with self.connect() as db:
