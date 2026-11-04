@@ -62,6 +62,10 @@ def verify_archive(receipt_path):
         raise ValueError("Recibo não corresponde à identidade dos bytes")
     if d.get("source_document_url") != URL or d.get("normative_revision_verified") is not False:
         raise ValueError("Proveniência ou status normativo inválido")
+    if d.get("acquisition") == "direct_https":
+        original_sha = json.loads((ROOT/"edital/manifest.json").read_text(encoding="utf-8"))["source_pdf_sha256"]
+        if d["sha256_expected"] != original_sha:
+            raise ValueError("SHA-256 de referência diverge do manifesto canônico")
     pdf = receipt.parent / name
     if pdf.is_symlink() or not pdf.is_file():
         raise ValueError("Bytes arquivados ausentes ou symlink")
@@ -103,6 +107,7 @@ def archive_response(response, expected_sha, out_dir, acquisition="offline_fixtu
     tmp = None
     receipt_tmp = None
     created_pdf = None
+    created_receipt = None
     try:
         with tempfile.NamedTemporaryFile(dir=folder, prefix=".ufms-pdf-", suffix=".partial",
                                          delete=False) as stream:
@@ -142,15 +147,19 @@ def archive_response(response, expected_sha, out_dir, acquisition="offline_fixtu
             stream.flush()
             os.fsync(stream.fileno())
         os.link(receipt_tmp, receipt_final)
+        created_receipt = receipt_final
         verified = verify_archive(receipt_final)
         return {"status": "archived_"+verified["comparison_status"],
                 "receipt_path": str(receipt_final), "pdf_path": str(pdf_final),
                 "sha256": sha, "bytes_read": info["bytes_read"],
                 "normative_revision_verified": False}
     except Exception:
-        if created_pdf is not None and created_pdf.exists() and (
-            not (folder / (created_pdf.stem + ".json")).exists()):
-            created_pdf.unlink()
+        # Rollback apenas de arquivos que esta chamada criou, nunca de artefatos
+        # de terceiros já existentes no diretório de evidências.
+        if created_receipt is not None:
+            created_receipt.unlink(missing_ok=True)
+        if created_pdf is not None:
+            created_pdf.unlink(missing_ok=True)
         raise
     finally:
         for temp in (tmp, receipt_tmp):
