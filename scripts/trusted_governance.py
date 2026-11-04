@@ -21,6 +21,8 @@ LOCKED = frozenset({
     ".github/workflows/trusted-governance.yml",
     "scripts/trusted_governance.py",
     "tests/test_trusted_governance.py",
+    "scripts/trusted_app_check.py",
+    "tests/test_trusted_app_check.py",
 })
 SENSITIVE_EXACT = frozenset({
     "AGENTS.md", "ROADMAP.md", "settings.json",
@@ -194,7 +196,7 @@ def enforce(env):
         raise ValueError("Missing read-only GitHub token")
     if env.get("GITHUB_REPOSITORY") != REPOSITORY:
         raise ValueError("Unexpected repository")
-    if env.get("GITHUB_EVENT_NAME") != "pull_request_target":
+    if env.get("GITHUB_EVENT_NAME") not in {"pull_request_target", "trusted_github_app"}:
         raise ValueError("Untrusted event type for privileged gate")
     pr_number = int(env["PR_NUMBER"])
     head = _check_sha(env["PR_HEAD_SHA"], "Event HEAD")
