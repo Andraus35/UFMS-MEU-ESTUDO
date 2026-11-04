@@ -43,7 +43,7 @@ def validate_roadmap_text(contents):
             raise ValueError("Seção obrigatória do roadmap ausente/duplicada: " + heading)
     seen = {}
     for line in contents.splitlines():
-        if not re.match(r"^\\|\\s*RM-\\d+", line):
+        if not re.match(r"^\|\s*RM-\d+", line):
             continue
         columns = [item.strip() for item in line.strip().split("|")[1:-1]]
         if len(columns) != 5:
