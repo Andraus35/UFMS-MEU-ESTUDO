@@ -138,12 +138,32 @@ def verify_one(pr_number, installation, app_id, public_key):
     except (ValueError, AttributeError):
         verdict, explanation = "failure", "PR identity readback failed"
 
+    external_id = f"pr{pr_number}:{head}:{base}"
+    # Do not flood GitHub with duplicate checks on every periodic poll.
+    # Importantly, only a check from OUR dedicated GitHub App can be reused.
+    history = api_json(
+        "GET", f"repos/{REPOSITORY}/commits/{head}/check-runs?per_page=100",
+        installation)
+    if not isinstance(history, dict) or not isinstance(history.get("check_runs"), list):
+        raise ValueError("Cannot verify previous check source")
+    own = [x for x in history["check_runs"]
+           if isinstance(x, dict) and x.get("name") == CHECK_NAME
+           and isinstance(x.get("app"), dict)
+           and x["app"].get("id") == int(app_id)]
+    own.sort(key=lambda x: x.get("id", 0), reverse=True)
+    if own and (own[0].get("status") == "completed"
+                and own[0].get("conclusion") == verdict
+                and own[0].get("external_id") == external_id):
+        return {"pr": pr_number, "head": head, "conclusion": verdict,
+                "check_name": CHECK_NAME, "app_id": int(app_id),
+                "reused_verified_check": True}
+
     body = {
         "name": CHECK_NAME,
         "head_sha": head,
         "status": "completed",
         "conclusion": verdict,
-        "external_id": f"pr{pr_number}:{head}",
+        "external_id": external_id,
         "output": {"title": "UFMS independent governance policy",
                    "summary": explanation},
     }
@@ -157,9 +177,32 @@ def verify_one(pr_number, installation, app_id, public_key):
             "check_name": CHECK_NAME, "app_id": int(app_id)}
 
 
+def list_open_pr_numbers(installation, max_pages=10):
+    """Check ALL open PRs; fail closed if GitHub truncates the list."""
+    results = []
+    for page in range(1, max_pages+1):
+        batch = api_json(
+            "GET",
+            f"repos/{REPOSITORY}/pulls?state=open&per_page=100&page={page}",
+            installation)
+        if not isinstance(batch, list):
+            raise ValueError("Malformed open PR listing")
+        for record in batch:
+            if not isinstance(record, dict) or type(record.get("number")) is not int:
+                raise ValueError("Malformed PR in listing")
+            results.append(record["number"])
+        if len(batch) < 100:
+            if len(results) != len(set(results)):
+                raise ValueError("Duplicate PRs in listing")
+            return results
+    raise ValueError("Open PR listing exceeds audited page limit")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--pr", type=int, required=True)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--pr", type=int)
+    group.add_argument("--all", action="store_true")
     parser.add_argument("--once", action="store_true", required=True)
     args = parser.parse_args()
     appid = os.environ.get("UFMS_GITHUB_APP_ID", "")
@@ -180,11 +223,22 @@ def main():
         try:
             jwt = app_jwt(appid, keyfile)
             installation = installation_token(jwt, appid)
-            result = verify_one(args.pr, installation, appid, pubkey)
+            numbers = list_open_pr_numbers(installation) if args.all else [args.pr]
+            reports = []
+            errors = 0
+            for number in numbers:
+                try:
+                    result = verify_one(number, installation, appid, pubkey)
+                    reports.append(result)
+                    errors += result["conclusion"] != "success"
+                except (ValueError, KeyError, TypeError):
+                    # No successful result is emitted if API or check creation fails.
+                    errors += 1
+                    reports.append({"pr": number, "conclusion": "error_no_check"})
         except (ValueError, KeyError, TypeError) as exc:
             raise SystemExit("BLOCKED: " + str(exc))
-    print(json.dumps(result, sort_keys=True))
-    if result["conclusion"] != "success":
+    print(json.dumps({"checks": reports, "denied_or_failed": errors}, sort_keys=True))
+    if errors:
         raise SystemExit(1)
 
 
