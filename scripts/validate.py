@@ -49,7 +49,12 @@ def validate(root=ROOT):
     except ModuleNotFoundError:
         from scripts.index_edital import validate as check_topic_index
     indexed = check_topic_index(root)
-    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados; {indexed} tópicos indexados"
+    try:
+        from index_vagas import validate as check_vagas
+    except ModuleNotFoundError:
+        from scripts.index_vagas import validate as check_vagas
+    indexed_vagas = check_vagas(root)
+    return f"OK: {len(topics)} blocos; {len(events)} eventos; {current['results_count']} cadernos concluídos; {chunks} chunks verificados; {indexed} tópicos indexados; {indexed_vagas} linhas de vagas validadas"
 
 
 if __name__ == "__main__":
