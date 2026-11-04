@@ -292,7 +292,7 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
         if role_intents=={"III","IV"}:
             raise ValueError("Consulta mistura atribuições e requisitos; consulte separadamente")
         raise ValueError("Consulta mistura anexos distintos; consulte cada anexo separadamente")
-    if target and role_intents and area is None or target and role_intents=={"V"} and area is not None:
+    if target and role_intents:
         chosen=next(iter(role_intents))
         if chosen in ("III","IV") and area is not None:
             raise ValueError("Filtro de área não é válido para este anexo")
@@ -316,11 +316,6 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
         raise ValueError("Consulta mistura atribuições e requisitos; consulte separadamente")
     if target and area is None and attr_intent:
         return [search_atribuicao(target,root,full)]
-    # Consulta do quadro de vagas exige cargo inequívoco e intenção de vaga/requisito.
-    if target and area is None and re.search(
-            r'\b(vagas?|requisitos?|escolaridade|lotacao|formacao|localidade)\b',
-            normalized(query)):
-        return [search_vaga(target,root,full)]
     normalized_query=normalized(query)
     if not normalized_query:return []
     # Roteamento direto exige título completo, ID exato ou alias com limites de palavra.
