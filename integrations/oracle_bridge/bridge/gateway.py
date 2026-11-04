@@ -13,6 +13,7 @@ import time
 from .proactive import ProactiveOutbox, dispatch_proactive
 from .agents import configured_agent
 from .checkins import generate_generic_checkins
+from .runtime_lock import acquire_runtime_lock
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib import error, request
@@ -442,7 +443,11 @@ def main():
     allowed = os.getenv("UFMS_ALLOWED_TELEGRAM_USER_ID", "")
     if not all(tokens.values()) or not allowed.isdecimal() or int(allowed) <= 0:
         raise SystemExit("Configuração incompleta: dois tokens e ID numérico autorizado obrigatórios")
-    store = Store(os.getenv("UFMS_SQLITE_PATH", "/data/ufms-bridge.sqlite3"))
+    db_path = os.getenv("UFMS_SQLITE_PATH", "/data/ufms-bridge.sqlite3")
+    os.umask(0o077)  # Dados SQLite e runtime.lock são privados do usuário do contêiner.
+    runtime_lock_fd = acquire_runtime_lock(db_path)
+    # Manter o descritor aberto até o processo terminar; restauração deve falhar se ativo.
+    store = Store(db_path)
     clients = {name: Telegram(token) for name, token in tokens.items()}
     from .google_calendar import configured_calendar
     calendar = configured_calendar()

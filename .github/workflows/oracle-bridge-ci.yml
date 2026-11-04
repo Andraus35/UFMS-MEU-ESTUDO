@@ -53,3 +53,22 @@ jobs:
           assert o.enabled() is False
           print('docker smoke ok')
           "
+
+      - name: Exercitar age real, backup, verificação e restauração sem segredos persistidos
+        run: |
+          docker run --rm --entrypoint sh ufms-oracle-bridge:ci -ec '
+            umask 077
+            age-keygen -o /tmp/ci-identity 2>/dev/null >/dev/null
+            RECIPIENT="$(age-keygen -y /tmp/ci-identity)"
+            python -m bridge.ops_backup backup \
+              --db /data/ci-smoke.sqlite3 --output /data/ci-snapshot.age \
+              --recipient "$RECIPIENT"
+            python -m bridge.ops_backup verify \
+              --input /data/ci-snapshot.age --identity /tmp/ci-identity
+            python -m bridge.ops_backup restore --confirm-restore \
+              --db /data/restored.sqlite3 --input /data/ci-snapshot.age \
+              --identity /tmp/ci-identity
+            python -c "from bridge.ops_backup import _check_database; from pathlib import Path; _check_database(Path(\"/data/restored.sqlite3\")); print(\"age backup/restore smoke ok\")"
+            test -s /data/ci-snapshot.age
+            ! grep -a -q "CREATE TABLE reminders" /data/ci-snapshot.age
+          '

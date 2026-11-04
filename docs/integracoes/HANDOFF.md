@@ -198,3 +198,25 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   `last_24h < created_utc <= agora`, evitando contar registros futuros
   em testes com relógio controlado; mantém `BEGIN IMMEDIATE`.
 - Próximo gate: reler SHA e exigir CI SUCCESS no commit corretivo.
+
+
+## OPS-01 — Backup criptografado e restauração protegida
+
+- START confirmado no PR #3 \`1fa2371526aa37e421c06696b1c28df3fb8fc117\`,
+  draft sem merge. PR #1 e PR #2 não editados.
+- Entrega: \`bridge/ops_backup.py\` (\`age\`, SQLite online backup,
+  verificação de integridade, restore explícito) e \`bridge/runtime_lock.py\`
+  (lock único de processo na ponte).
+- Dockerfile passa a instalar \`age\` e proteger \`/data\` com modo 0700;
+  gateway adota \`umask 077\` e mantém lock pela duração do processo.
+- CI passa a exercitar criptografia real com identidade age efêmera,
+  verificação e restauração no contêiner, além dos testes unitários isolados.
+- A chave privada não está no repo nem na imagem; não houve acesso à Oracle,
+  Telegram, Google ou OpenAI reais. Nenhum backup pessoal foi produzido,
+  restaurado ou excluído.
+- Contraprovas novas: erro age, archive existente, symlink, destino sem
+  permissão restrita, restauração enquanto gateway ativo, WAL/SHM, identidade
+  com permissão insegura, banco inválido e restore sem confirmação.
+- **Gate pendente:** confirmar CI e readback no novo SHA; auditoria
+  independente; procedimentos de OCI Vault/IAM, envio e restore reais,
+  rotação de backup e teste de recuperação autorizados.

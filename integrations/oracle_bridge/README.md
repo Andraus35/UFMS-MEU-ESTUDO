@@ -210,3 +210,27 @@ Os horários são normalizados para UTC. A manutenção de histórico é
 nunca itens pendentes ou de confirmação incerta. Não há limpeza automática
 nem apagamento de backups. Ver
 [contrato RATE-01](../../docs/integracoes/RATE_RETENCAO_v0.4.md).
+
+
+## OPS-01 — Backup criptografado, restauração offline e credenciais
+
+O módulo \`bridge.ops_backup\` implementa:
+- \`backup\`: snapshot consistente SQLite (online), validação de integridade,
+  criptografia \`age\` para uma chave **pública** e publicação atômica
+  sem sobrescrever arquivos; cópia temporária em \`/tmp\` (tmpfs).
+- \`verify\`: descriptografa para memória temporária em disco volátil, confere
+  integridade e estrutura SQLite, sem sobrescrever o banco.
+- \`restore\`: exige \`--confirm-restore\`; para substituir banco existente
+  também exige \`--replace-existing\`. Recusa se o gateway estiver ativo
+  (lock exclusivo) ou se existirem arquivos WAL/SHM. Não há restauração
+  automática após falhas.
+- A chave privada \`age\` NUNCA é incluída na imagem, no repositório ou no
+  serviço de produção; é entregue somente ao operador de restauração.
+- Arquivo \`.env\`, chaves Telegram, OAuth e OpenAI não entram em commits,
+  issues, logs ou backups documentais. Segredos do ambiente Oracle exigem
+  configuração externa.
+- Script não faz upload, rotação ou eliminação de backups automaticamente;
+  ciclo de vida e armazenamento fora da instância permanecem pendentes.
+
+**Operação e contraprovas:** consulte
+[OPS-01 — Procedimento operacional](../../docs/integracoes/OPS01_BACKUP_ORACLE_v0.5.md).
