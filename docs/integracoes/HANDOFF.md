@@ -86,3 +86,16 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   com PYTHONHASHSEED 0, 11 e 97 para detectar mais instabilidade.
 - Todas as execuções da matriz devem passar no SHA exato; a existência de
   um PASS isolado não cancela o FAIL anterior.
+
+## Ciclo 5 desta retomada — conversa bidirecional por API de IA
+
+- START verificado: \`59f930811839a2f556f872c6e8da587949c255f9\`;
+  dois workflow runs da matriz 3/3 aprovados nesse SHA.
+- Novo módulo \`bridge/agents.py\` com papéis explícitos Tutor/Coach,
+  Responses API, quota global de chamadas, replay por update ID e
+  \`store=false\`; nenhum dado de chat é persistido localmente.
+- Respostas só texto; sem tools da IA, sem acesso automático a Google Agenda,
+  GitHub, TEC ou histórico do estudante. Habilitação opt-in pelo operador Oracle.
+- Não há API key no repositório; testes usam stub HTTP e mensagens fictícias.
+- Próximo gate: CI exata; depois auditoria de privacidade/custo e integração
+  ao motor pedagógico apenas com contexto real autorizado.

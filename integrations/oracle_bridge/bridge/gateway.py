@@ -11,6 +11,7 @@ import sqlite3
 import threading
 import time
 from .proactive import ProactiveOutbox, dispatch_proactive
+from .agents import configured_agent
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib import request
@@ -194,7 +195,7 @@ HELP = (
 
 
 def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
-                  allowed_user_id: int, calendar=None, now: datetime | None = None, outbox=None):
+                  allowed_user_id: int, calendar=None, now: datetime | None = None, outbox=None, agent=None):
     update_id = update.get("update_id")
     if not isinstance(update_id, int) or update_id < store.offset(bot):
         return
@@ -264,7 +265,10 @@ def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
                 event_id = calendar.create_event(start, end, pieces[2], f"{bot}:{update_id}")
                 answer = f"Evento confirmado no calendário UFMS (ID {event_id})."
         else:
-            answer = ("Ainda não há motor de IA conectado. " + HELP)
+            if raw and not raw.startswith("/") and agent is not None:
+                answer = agent.answer(bot, raw, f"{bot}:{update_id}")
+            else:
+                answer = ("Motor de IA indisponível ou comando desconhecido. " + HELP)
     except ValueError as exc:
         answer = str(exc)
     except Exception:
@@ -294,11 +298,11 @@ def dispatch_due(store: Store, clients: dict[str, Telegram],
     return completed
 
 
-def poll_loop(bot: str, client: Telegram, store: Store, allowed_id: int, calendar, outbox):
+def poll_loop(bot: str, client: Telegram, store: Store, allowed_id: int, calendar, outbox, agent):
     while True:
         try:
             for update in client.updates(store.offset(bot)):
-                handle_update(bot, update, store, client, allowed_id, calendar, outbox=outbox)
+                handle_update(bot, update, store, client, allowed_id, calendar, outbox=outbox, agent=agent)
         except Exception:
             # Não logar URLs do Telegram: incluem o token.
             time.sleep(5)
@@ -317,8 +321,9 @@ def main():
     from .google_calendar import configured_calendar
     calendar = configured_calendar()
     outbox = ProactiveOutbox(store, int(allowed))
+    agent = configured_agent(store)
     for name, client in clients.items():
-        threading.Thread(target=poll_loop, args=(name, client, store, int(allowed), calendar, outbox),
+        threading.Thread(target=poll_loop, args=(name, client, store, int(allowed), calendar, outbox, agent),
                          daemon=True, name=f"poll-{name}").start()
     while True:
         dispatch_due(store, clients)

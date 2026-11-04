@@ -115,3 +115,25 @@ tentativa duplicada, payload sigiloso e troca de estado.
   divergentes ou não verificáveis falham sem afirmar criação.
 - Datas sem fuso, duração inválida e título/chave vazios são rejeitados
   antes da rede. Não houve chamadas reais à conta Google neste ciclo.
+
+## Conversas Tutor/Coach com IA (ciclo 5 — desativadas por padrão)
+
+- Definir no ambiente seguro \`UFMS_LLM_ENABLED=1\`,
+  \`UFMS_OPENAI_API_KEY\`, \`UFMS_OPENAI_MODEL\` (padrão configurável:
+  \`gpt-6-luna\`) e \`UFMS_LLM_DAILY_LIMIT\` (padrão 30 interações/dia
+  somando os dois bots).
+- **OpenAI Responses API** somente para texto. A mensagem do Telegram é
+  enviada à API após validação de identidade. É necessário consentimento do
+  proprietário para esse processamento e verificar custo por token.
+- Não existem ferramentas de criação de agenda, acesso a repositório, scraping
+  ou execução na chamada de IA; respostas são apenas texto. Comandos seguros
+  do Telegram continuam sendo roteados separadamente.
+- \`store=false\` é solicitado à API. SQLite registra apenas papel, chave do
+  update e horário de consumo para evitar nova cobrança em replays; não guarda
+  conteúdo do chat. Sem memória conversacional nesta primeira integração.
+- O Tutor evita afirmar leitura do edital sem evidência; o Coach evita impor
+  cronograma e criar compromisso por simples sugestão. Papéis distintos.
+- **Ainda não é um agente adaptativo completo**: não recupera automaticamente
+  chunks do edital, resultados pessoais ou handoff dos PRs #1 e #2. Essa
+  integração demanda versionamento, consentimento, provedor de contexto
+  autorizado, persistência e testes antes de afirmar continuidade real.
