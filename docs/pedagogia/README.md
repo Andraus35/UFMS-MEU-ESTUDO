@@ -1,6 +1,6 @@
 # Especificação pedagógica — UFMS MEU ESTUDO
 
-**Versão de referência:** v1.4 — 04/11/2026  
+**Versão de referência:** v1.5 — 04/11/2026  
 **Estado:** PROPOSTA DOCUMENTAL; não equivale a implementação, aprovação do método ou operação autônoma do tutor.  
 **Escopo:** preparação adaptativa por questões para os cargos UFMS 523 e 324.
 
@@ -12,9 +12,10 @@
 4. [Estratégia competitiva v1.3](ESTRATEGIA_COMPETITIVA_v1.3.md): dois cargos, riscos eliminatórios, matriz de prioridades, prova em dois turnos e cenários.
 5. [Protocolo de simulados v1.4](PROTOCOLO_SIMULADOS_v1.4.md): composição, dois turnos, pontuação válida e comparabilidade.
 6. [Avaliação da eficácia v1.4](AVALIACAO_EFICACIA_v1.4.md): sinais de aprendizagem, acompanhamento das recomendações e adaptação verificável.
-7. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): testes de cenário para implementação posterior.
-8. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
-9. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
+7. [Fila dinâmica de aprendizagem v1.5](FILA_DINAMICA_v1.5.md): geração de candidatos, elegibilidade, reordenação, equilíbrio 523/324 e decisões justificadas.
+8. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
+9. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
+10. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
 
 ## Hierarquia e limites
 

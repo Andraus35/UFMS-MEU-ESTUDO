@@ -79,3 +79,28 @@ Todos os exemplos são **fictícios**. CI documental aprovada não equivale a va
 | EFA-08 | Tutor tem CI aprovada, mas sem avaliação real | Não declarar método validado empiricamente |
 
 **Observação:** valores em SIM-01 são exemplo fictício para teste aritmético; SIM-02 exige discriminação por área para qualquer pontuação ponderada. Todos os novos cenários precisam de implementação e execução real antes de serem marcados PASS.
+
+## Cenários da fila dinâmica — v1.5 (pendentes de execução)
+
+| ID | Contexto de teste | Comportamento exigido |
+|---|---|---|
+| FIQ-01 | Nenhum resultado ou evento de estudo | Tópicos E0; diagnóstico possível; nenhum 0% de domínio/acertos atribuído |
+| FIQ-02 | Mesmo snapshot, política e as_of, sem sorteio novo | Mesmos candidatos, ordem e justificativas equivalentes (determinismo) |
+| FIQ-03 | Resultado válido modifica lacuna em um assunto | Recalcular fila; documentar a alteração de prioridade |
+| FIQ-04 | Correção vinculada substitui resultado anterior | Reconstrução sem somar tentativas corrigidas duas vezes |
+| FIQ-05 | Nome de assunto semelhante em 523/324 sem equivalência confirmada | Sem fusão de evidência nem recomendação conjunta pressuposta |
+| FIQ-06 | Equivalência documental comprovada e um caderno comum | Um único evento; vários vínculos pertinentes; nenhuma duplicação |
+| FIQ-07 | Inglês sem diagnóstico e área com potencial requisito eliminatório | Considerar diagnóstico e risco após conferir regra; não inferir nota zero |
+| FIQ-08 | Específicos 324 E0, resultados abundantes em específicos 523 | Não transportar domínio; 324 mantém necessidade independente de avaliação |
+| FIQ-09 | Resultado com repetição excessiva e acertos imediatos altos | Não supor retenção; explorar itens novos ou recuperação independente |
+| FIQ-10 | Caderno recomendado continua pendente | Evitar nova prescrição duplicada sem cancelamento/substituição explícitos |
+| FIQ-11 | Disponibilidade de questões não confirmada | Candidato pendente; não declarar caderno existente nem estoque |
+| FIQ-12 | Conteúdo removido/alterado por retificação conferida | Bloquear/revalidar candidatos afetados sem mutar histórico silenciosamente |
+| FIQ-13 | Resultado agregado sem discriminação por assunto | Não repartir pontos pelos 23 tópicos; manter incerteza |
+| FIQ-14 | Alternativas similares e sorteio ponderado autorizado | Apenas elegíveis, pesos/seed/política registrados e escolha reproduzível |
+| FIQ-15 | Informação de tempo disponível diferente do anterior | Alterar viabilidade pontual sem instituir cronograma padrão |
+| FIQ-16 | Sem mudança de eventos, mas as_of explícito posterior | Permitir reavaliação temporal documentada; nunca alterar furtivamente |
+| FIQ-17 | Tentativa de atualizar fila com HEAD remoto divergente | Bloquear escrita obsoleta; reler/reconstruir, não fazer force push |
+| FIQ-18 | Uma área domina recomendações sucessivas sem ganho novo | Sinalizar concentração, considerar alternativas sem quota rígida |
+
+**Total após esta especificação: 68 cenários documentados** (PED 20 + COMP 12 + SIM 10 + EFA 8 + FIQ 18), **não executados como testes do motor pedagógico**. Exemplos são fictícios.
