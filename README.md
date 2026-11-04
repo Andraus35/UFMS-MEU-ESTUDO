@@ -36,7 +36,11 @@ Para escritas pela API, a política de pré-validação, a auditoria da CI e os 
 
 ## Fonte e limites
 
-O documento primário de escopo é o edital UFMS nº 152 de 29/10/2026. Fonte integral em `EDITAL_UFMS_152_2026.md`; índice e chunks em `edital/`. Veja também `docs/EDITAL.md` e `docs/FONTES.md`. Em caso de retificação, interrompa a propagação de dados antigos até conferir a versão oficial.
+**Fonte oficial de partida:** PDF local do Edital PROGEP/UFMS nº 152/2026, integrante do projeto ESTUDO UFMS, com 47 páginas e SHA-256 fixado em `edital/manifest.json`. O responsável pelo projeto confirmou sua autoridade; **não esperar download ou hash de outra cópia na internet para estudar**. A transcrição integral e imutável está em `EDITAL_UFMS_152_2026.md`, com índice e chunks em `edital/`.
+
+**Atualização normativa:** monitorar possíveis retificações da FAPEC/UFMS. Confirmar cada nova publicação e versioná-la separadamente; somente os itens efetivamente retificados prevalecem sobre a edição inicial, com fonte e data identificadas. O cronograma original contém um alerta de divergência na p. 13, que deve permanecer assinalado até esclarecimento oficial, sem impedir o estudo de tópicos não afetados.
+
+Contrato completo em [`docs/FONTES.md`](docs/FONTES.md) e protocolo de retificações em [`docs/RETIFICACOES_E_PROVENIENCIA.md`](docs/RETIFICACOES_E_PROVENIENCIA.md).
 
 ## Busca de baixo custo
 
