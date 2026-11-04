@@ -65,5 +65,23 @@
     "status": "partial_website_check",
     "exhaustive": false,
     "results": "Portal FAPEC ver/22 consultado; download remoto não obtido para hash; demais publicações não exaustivamente verificadas."
-  }
+  },
+  "institutional_pdf_observations": [
+    {
+      "observed_date": "2026-11-04",
+      "publisher": "Fundação Universidade Federal de Mato Grosso do Sul (UFMS)",
+      "announcement_url": "https://www.ufms.br/ufms-lanca-154-vagas-em-concurso-de-tecnicos-em-educacao-para-fortalecer-a-educacao-superior-em-ms/",
+      "pdf_url": "https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf",
+      "document_identifier_visible": "EDITAL PROGEP/UFMS Nº 152, DE 29 DE OUTUBRO DE 2026",
+      "sei_process_visible": "23104.030868/2026-19",
+      "pdf_page_count_observed": 47,
+      "annex_ii_page": 13,
+      "result_date_visible": "10/02/2027",
+      "appeal_date_visible": "11 e 12/01/2027",
+      "pdf_bytes_sha256": null,
+      "remote_pdf_equivalence": "unverified",
+      "scope": "Inspeção pública do título e da página 13 do PDF institucional; não houve acesso aos bytes para SHA-256 nem comparação integral de páginas.",
+      "status": "institutional_pdf_selected_content_observed_hash_unverified"
+    }
+  ]
 }
