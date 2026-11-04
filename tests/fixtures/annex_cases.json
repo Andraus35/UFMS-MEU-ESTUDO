@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "description": "Contraprovas do isolamento semântico e documental dos Anexos III, IV e V. Resultados esperados são rotas e âncoras, não respostas pedagógicas.",
+  "cases": [
+    {
+      "query": "Anexo III do cargo 523",
+      "cargo": "523",
+      "annex": "III",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Anexo IV do cargo 523",
+      "cargo": "523",
+      "annex": "IV",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Anexo V do cargo 523",
+      "cargo": "523",
+      "annex": "V",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Anexo III do cargo 324",
+      "cargo": "324",
+      "annex": "III",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Anexo IV do cargo 324",
+      "cargo": "324",
+      "annex": "IV",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Anexo V do cargo 324",
+      "cargo": "324",
+      "annex": "V",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Quais os requisitos de escolaridade para o cargo 523?",
+      "cargo": "523",
+      "annex": "III",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Quais as funções do cargo 324?",
+      "cargo": "324",
+      "annex": "IV",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "O que cai no conteúdo programático do cargo 324?",
+      "cargo": "324",
+      "annex": "V",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Ementa do cargo 523",
+      "cargo": "523",
+      "annex": "V",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Quais matérias da prova do cargo 324?",
+      "cargo": "324",
+      "annex": "V",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Quais as responsabilidades do cargo 523?",
+      "cargo": "523",
+      "annex": "IV",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Conhecimentos específicos do cargo 523",
+      "cargo": "523",
+      "annex": "V",
+      "area": "especificos",
+      "kind": "positive"
+    },
+    {
+      "query": "Conhecimentos gerais do cargo 324",
+      "cargo": "324",
+      "annex": "V",
+      "area": "gerais",
+      "kind": "positive"
+    },
+    {
+      "query": "Vagas e lotação do cargo 324",
+      "cargo": "324",
+      "annex": "III",
+      "area": "todos",
+      "kind": "positive"
+    },
+    {
+      "query": "Requisitos e atribuições do cargo 523",
+      "cargo": "523",
+      "kind": "conflict"
+    },
+    {
+      "query": "Funções e matérias da prova do cargo 324",
+      "cargo": "324",
+      "kind": "conflict"
+    },
+    {
+      "query": "Vagas e conteúdo programático do cargo 324",
+      "cargo": "324",
+      "kind": "conflict"
+    },
+    {
+      "query": "Requisitos, atribuições e conteúdo programático do cargo 523",
+      "cargo": "523",
+      "kind": "conflict"
+    },
+    {
+      "query": "Anexo III com atribuições do cargo 523",
+      "cargo": "523",
+      "kind": "conflict"
+    },
+    {
+      "query": "Anexo V e requisitos do cargo 324",
+      "cargo": "324",
+      "kind": "conflict"
+    }
+  ]
+}
