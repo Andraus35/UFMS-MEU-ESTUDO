@@ -1,6 +1,6 @@
 {
-    "id": "POC-UFMS-003",
-    "dados_ficticios": true,
+  "id": "POC-UFMS-003",
+  "dados_ficticios": true,
   "agente_produtor": "Tutor",
   "disciplina": "Direito Administrativo",
   "assunto": "Atos administrativos",
@@ -9,7 +9,7 @@
   "necessidade": "revisão do assunto",
   "status": "revisão pendente",
   "coach": {
-    "leitura_confirmada": false,
-    "processamento": "pendente"
+    "leitura_confirmada": true,
+    "processamento": "revisão identificada"
   }
 }
