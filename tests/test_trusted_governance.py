@@ -86,7 +86,9 @@ class TrustedGovernanceTests(unittest.TestCase):
     def test_ancora_imutavel_mesmo_com_assinatura(self):
         for path in ("scripts/trusted_governance.py",
                      ".github/workflows/trusted-governance.yml",
-                     "tests/test_trusted_governance.py"):
+                     "tests/test_trusted_governance.py",
+                     "scripts/trusted_app_check.py",
+                     "tests/test_trusted_app_check.py"):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "Immutable"):
                 evaluate(PR, HEAD, BASE, [path], [self.signed()], self.pubkey)
 
@@ -115,7 +117,9 @@ class TrustedGovernanceTests(unittest.TestCase):
     def test_renomear_arquivo_protegido_nao_desativa_gate(self):
         for old in ("scripts/trusted_governance.py",
                     ".github/workflows/trusted-governance.yml",
-                    "tests/test_trusted_governance.py"):
+                    "tests/test_trusted_governance.py",
+                    "scripts/trusted_app_check.py",
+                    "tests/test_trusted_app_check.py"):
             for new in ("templates/disabled.txt", "docs/untrusted.md"):
                 with self.subTest(old=old, new=new):
                     rec = [{"filename": new, "previous_filename": old,
