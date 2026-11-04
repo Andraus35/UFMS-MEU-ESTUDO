@@ -110,7 +110,7 @@ def verify_start(root, trusted_head):
         raise GateClosed("Invalid settings") from exc
     if mandatory != list(MANDATORY):
         raise GateClosed("Mandatory file list/order mismatch")
-    if "2. \`ROADMAP.md\`" not in texts["AGENTS.md"]:
+    if "2. `ROADMAP.md`" not in texts["AGENTS.md"]:
         raise GateClosed("AGENTS missing ordered roadmap contract")
     _roadmap(texts["ROADMAP.md"])
     return {
