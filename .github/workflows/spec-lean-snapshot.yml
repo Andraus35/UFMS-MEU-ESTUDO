@@ -74,6 +74,19 @@ jobs:
           print('TLC_VIEW_PLAN_SHA256=' + sha256(temp / 'plan.md'))
           print('VIEW_DIFF_ONLY=APPROVAL_METADATA')
           PY
+      - name: Validar somente o PLAN r2 proposto (SEM aprovação humana)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/tlc-reports"
+          PROPOSAL='.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/plan.md'
+          python "$RUNNER_TEMP/tlc-official/validate_plan.py" "$PROPOSAL" --root . > "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log" 2>&1 || {
+            cat "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log"
+            echo 'PLAN_R2_PROPOSAL_OFFICIAL_VALIDATION_FAILED'
+            exit 1
+          }
+          tail -n 20 "$RUNNER_TEMP/tlc-reports/plan-r2-proposal.log"
+          echo 'PLAN_R2_PROPOSAL_FORMAL_PASS_NOT_APPROVAL'
       - name: Executar validadores oficiais em ambos os objetos
         shell: bash
         run: |

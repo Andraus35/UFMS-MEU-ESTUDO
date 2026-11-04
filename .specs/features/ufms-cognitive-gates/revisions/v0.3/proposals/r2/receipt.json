@@ -1,0 +1,29 @@
+{
+  "status": "PROPOSED_NOT_APPROVED",
+  "source": {
+    "pr": 5,
+    "head": "677d91e7c06f50ca9f3a96f0348454ad8de00896",
+    "plan_sha256": "fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c",
+    "checks_sha256": "50dff7d0f8ff6f9d6ce7a66ea624cd06d6a6f90bb8055be18dd74461b5481bc0"
+  },
+  "criteria_changed": false,
+  "criteria_count": 27,
+  "coverage_surface_members": 16,
+  "proposed_changes": [
+    "remove erroneous adjacent Markdown code span in Shape hop 2",
+    "clarify fixture runner is local-only and not remotely deployed",
+    "bind 16 Surface statuses individually to checks"
+  ],
+  "source_official_ci": {
+    "push_run": 41867793245,
+    "pr_run": 41867808884,
+    "canonical_plan_errors": 2,
+    "canonical_checks_errors": 2,
+    "approval_view_plan_errors": 2,
+    "approval_view_checks_errors": 1
+  },
+  "official_r2_execution": "PENDING",
+  "GQD": "REPROVADA",
+  "GQC": "NOT_RUN",
+  "GQO": "BLOCKED"
+}
