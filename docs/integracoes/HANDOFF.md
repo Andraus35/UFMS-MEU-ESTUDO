@@ -133,3 +133,13 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - Contraprovas com mock: não enviar sem consentimento, idempotência,
   revogação, horários, ausência de progresso inventado.
 - Sem implantação nem mensagem real; conferir CI e readback remoto.
+
+## Correção do ciclo 8 — contraprova de idempotência
+
+- START anterior: \`8e640214fdd058e508e6e68a455799d03b39bb00\`.
+- Run \`41796805674\` identificou FAIL em \`test_idempotent_within_slot\`:
+  o teste esperava erroneamente contagem 1 para segunda invocação com a
+  mesma chave diária e data diferente. A implementação falha fechada
+  e não cria evento duplicado, comportamento correto.
+- Corrigida a expectativa para 0. Comprovação necessária no novo SHA;
+  não herdar PASS de runs anteriores.

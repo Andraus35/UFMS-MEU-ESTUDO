@@ -57,8 +57,9 @@ class GenericCheckinTests(unittest.TestCase):
         self.queue.set_enabled(True)
         self.assertEqual(generate_generic_checkins(
             self.queue,enabled=True,now=self.when(18)),1)
+        # Segunda tentativa com mesma chave diária NÃO cria novo evento.
         self.assertEqual(generate_generic_checkins(
-            self.queue,enabled=True,now=self.when(18,1)),1)
+            self.queue,enabled=True,now=self.when(18,1)),0)
         with self.store.connect() as db:
             count=db.execute("SELECT count(*) AS total FROM proactive_notifications").fetchone()["total"]
         self.assertEqual(count,1)
