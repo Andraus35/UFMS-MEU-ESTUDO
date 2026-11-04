@@ -42,6 +42,12 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 - Nenhuma retificação específica foi **comprovada** nesta inspeção pontual; isso **não comprova inexistência**. A fonte canônica não foi atualizada com atos externos.
 - Evitar confusão com outros órgãos da UFMS: há um Edital **152/2026-PROPP** (iniciação científica) que é **outro certame**, não retificação do Edital 152/2026-PROGEP.
 
+### Evidência adicional de robustez (CI)
+
+- [Execução 41789110667](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41789110667), commit `e6d35913d1485200285ba129e03bb0ebb0b05ef2`: **34 testes aprovados**, 47 páginas e 81 chunks fiéis; benchmark curado Hit@1 **27/27**; conjunto adversarial **9/9** no Top 1 com **rota BM25 e frase literal ancorada**, 3/3 isolamentos, 2/2 negativos, 1/1 conflito, 2/2 códigos de leis não confundidos com itens.
+- A [execução 41789035123](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41789035123) registrou falha legítima no *fixture*: a expressão esperada `não discriminação` não estava literal na transcrição; a consulta adversarial foi preservada, e a âncora de prova foi corrigida para `administração de conflitos`. Revalidação posterior aprovada. **Não apagar a falha histórica.**
+- A validação adversarial foi criada e refinada pela mesma frente produtora; é evidência de testes separados, **não** homologação independente.
+
 ## 6. Próxima retomada técnica
 
 1. Reconfirmar HEAD exato e CI do PR #1, sem merge.
