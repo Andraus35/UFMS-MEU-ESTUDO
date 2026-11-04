@@ -74,3 +74,24 @@ G0: testar cenários adversariais; G1: verificar OAuth/escopos e segredo no
 ambiente; G2: ponta a ponta Telegram com dois bots, recuperação após reinício;
 G3: calendário secundário e evento real autorizados; G4: integração com
 motor pedagógico pós-PR #1/#2; G5: piloto e aceite humano.
+
+## Envio proativo (ciclo 2 — ainda sem motor LLM)
+
+- Os comandos privados \`/ativar_alertas\`, \`/desativar_alertas\`, \`/alertas\`
+  gerenciam consentimento independente da pausa global \`/pausar\`.
+- A fila \`ProactiveOutbox\` permite que um **produtor de confiança futuro**
+  enfileire eventos Tutor/Coach com categoria (\`review\`, \`checkin\`,
+  \`deadline\`, \`strategy\`), referência e chave idempotente.
+- Nenhuma saída textual de modelo de IA chama \`enqueue\` diretamente.
+  Integrar depois de autenticação, validação, autorização e testes dos papéis.
+- Padrão: opt-in desligado, 4 mensagens proativas por dia **somando os dois bots**,
+  uma a cada 60 minutos, somente das 07:00 às 22:00
+  (\`America/Campo_Grande\`); cada sessão é sem agendamento compulsório.
+- Lembretes criados explicitamente pelo aluno no comando \`/lembrete\`
+  não entram nessa cota; seguem a política de pausa global.
+- \`sending\` e \`uncertain\` não são reenviados após falhas/crash.
+  **Trade-off:** reduz duplicação automática mas pode perder um aviso; operador
+  precisa reconciliar com o Telegram antes de qualquer reenvio manual.
+- A implementação atual é um núcleo de agendamento, não coach conversacional.
+  Falta canal confiável do motor pedagógico para a outbox, política de retenção
+  e controles ajustáveis pelo usuário.

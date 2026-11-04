@@ -35,3 +35,17 @@ Nenhuma alteração em AGENTS, edital, pedagógico, regras, guardrails ou estado
 Não commitar credenciais, dados reais, chat_id ou resultados pessoais.
 Não executar merge sem autorização humana. Não afirmar conectividade real com
 Telegram, Oracle ou Google a partir da simples existência de código.
+
+## Ciclo autônomo desta sessão — notificação proativa (04/11/2026)
+
+- START readback: HEAD anterior do PR #3 \`c0dfc4979c50a73fb9191cc57fbd15c90891f1d9\`.
+- Adicionados \`bridge/proactive.py\`, testes adversariais sem rede e comandos
+  \`/ativar_alertas\`, \`/desativar_alertas\` e \`/alertas\`.
+- Política: desabilitado até consentimento explícito; limite global Tutor+Coach;
+  silêncio 22–07, intervalo mínimo e bloqueio de destinatários não autorizados.
+- Se houver incerteza no ACK, manter \`uncertain\` sem retry automático;
+  queda após claim deixa \`sending\` sem retry. Requer conciliação manual,
+  não equivale a entrega garantida. Um job de reconciliação ainda está pendente.
+- Não foi criado servidor Oracle, não há bots reais nem OAuth Oracle; nenhum
+  evento da sua agenda real foi criado ou modificado.
+- Validar CI no novo SHA, depois testar isolamento e recuperação de estado.

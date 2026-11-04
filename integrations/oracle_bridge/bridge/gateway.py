@@ -10,6 +10,7 @@ import os
 import sqlite3
 import threading
 import time
+from .proactive import ProactiveOutbox, dispatch_proactive
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib import request
@@ -142,7 +143,7 @@ class Telegram:
 
 
 HELP = (
-    "Comandos: /status, /pausar, /retomar, "
+    "Comandos: /status, /pausar, /retomar, /alertas, /ativar_alertas, /desativar_alertas, "
     "/lembrete AAAA-MM-DDTHH:MM-04:00 | mensagem, "
     "/cancelar ID, /evento início | fim | título. "
     "Por ora este bot é uma ponte de agendamento, não uma IA autônoma."
@@ -150,7 +151,7 @@ HELP = (
 
 
 def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
-                  allowed_user_id: int, calendar=None, now: datetime | None = None):
+                  allowed_user_id: int, calendar=None, now: datetime | None = None, outbox=None):
     update_id = update.get("update_id")
     if not isinstance(update_id, int) or update_id < store.offset(bot):
         return
@@ -172,6 +173,22 @@ def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
             answer = (f"{bot.capitalize()}: " +
                       ("pausado" if store.paused() else "ativo") +
                       f"; lembretes pendentes: {store.pending(bot, chat_id)}.")
+        elif command == "/alertas":
+            answer = ("Alertas proativos: " +
+                      ("ativados" if outbox is not None and outbox.enabled() else "desativados") +
+                      ". Limite inicial: 4/dia, 07–22h, intervalo mínimo 60min.")
+        elif command == "/ativar_alertas":
+            if outbox is None:
+                answer = "Serviço de alertas não disponível."
+            else:
+                outbox.set_enabled(True)
+                answer = "Alertas proativos ativados. Use /desativar_alertas para revogar."
+        elif command == "/desativar_alertas":
+            if outbox is None:
+                answer = "Serviço de alertas não disponível."
+            else:
+                outbox.set_enabled(False)
+                answer = "Alertas proativos desativados."
         elif command == "/pausar":
             store.set_paused(True)
             answer = "Notificações pausadas. Use /retomar para continuar."
@@ -229,11 +246,11 @@ def dispatch_due(store: Store, clients: dict[str, Telegram], now: datetime | Non
     return completed
 
 
-def poll_loop(bot: str, client: Telegram, store: Store, allowed_id: int, calendar):
+def poll_loop(bot: str, client: Telegram, store: Store, allowed_id: int, calendar, outbox):
     while True:
         try:
             for update in client.updates(store.offset(bot)):
-                handle_update(bot, update, store, client, allowed_id, calendar)
+                handle_update(bot, update, store, client, allowed_id, calendar, outbox=outbox)
         except Exception:
             # Não logar URLs do Telegram: incluem o token.
             time.sleep(5)
@@ -251,11 +268,13 @@ def main():
     clients = {name: Telegram(token) for name, token in tokens.items()}
     from .google_calendar import configured_calendar
     calendar = configured_calendar()
+    outbox = ProactiveOutbox(store, int(allowed))
     for name, client in clients.items():
-        threading.Thread(target=poll_loop, args=(name, client, store, int(allowed), calendar),
+        threading.Thread(target=poll_loop, args=(name, client, store, int(allowed), calendar, outbox),
                          daemon=True, name=f"poll-{name}").start()
     while True:
         dispatch_due(store, clients)
+        dispatch_proactive(outbox, clients)
         time.sleep(10)
 
 
