@@ -15,6 +15,8 @@ from chunk_edital import SOURCE, blob_sha, read_pages
 ROOT=Path(__file__).resolve().parents[1]
 REGISTRY="edital/fontes_oficiais.json"
 FAPEC_URL="https://portal.concurso.fundacaofapec.org.br/edital/ver/22"
+UFMS_PDF_URL="https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf"
+UFMS_NEWS_URL="https://www.ufms.br/ufms-lanca-154-vagas-em-concurso-de-tecnicos-em-educacao-para-fortalecer-a-educacao-superior-em-ms/"
 
 def _date(value):
     return datetime.strptime(value,"%d/%m/%Y").date()
@@ -98,6 +100,30 @@ def validate(root=ROOT):
             raise ValueError("Alerta encerrado sem retificação verificada")
     elif a["status"]!="unresolved_source_inconsistency" or a["resolution_document_id"] is not None:
         raise ValueError("Alerta indevidamente alterado")
+    # Segunda localização institucional: conteúdo da p. 13 cotejado,
+    # mas a cópia PDF remota não teve seus bytes obtidos para hashing.
+    institutional=data.get("institutional_pdf_observations")
+    if not isinstance(institutional,list) or len(institutional)!=1:
+        raise ValueError("Referência institucional UFMS ausente ou não única")
+    doc=institutional[0]
+    if (doc.get("pdf_url")!=UFMS_PDF_URL or
+        doc.get("announcement_url")!=UFMS_NEWS_URL or
+        not _official_url(doc["pdf_url"]) or
+        not _official_url(doc["announcement_url"])):
+        raise ValueError("URL institucional UFMS divergente")
+    if (doc.get("document_identifier_visible")!=
+            "EDITAL PROGEP/UFMS Nº 152, DE 29 DE OUTUBRO DE 2026" or
+        doc.get("sei_process_visible")!="23104.030868/2026-19" or
+        doc.get("pdf_page_count_observed")!=orig["pdf_pages"]):
+        raise ValueError("Identidade visual UFMS divergente")
+    if (doc.get("annex_ii_page")!=a["page"] or
+        doc.get("result_date_visible")!=a["result_date_text"] or
+        doc.get("appeal_date_visible")!=a["appeal_date_text"]):
+        raise ValueError("Datas institucionais UFMS não correspondem ao alerta")
+    if (doc.get("remote_pdf_equivalence")!="unverified" or
+        doc.get("pdf_bytes_sha256") is not None or
+        doc.get("status")!="institutional_pdf_selected_content_observed_hash_unverified"):
+        raise ValueError("Equivalência institucional indevida sem bytes oficiais")
     for item in data["verified_amendments"]:
         required=("document_id","official_issuer","official_publication_url",
                   "published_on","title","sha256_verified_bytes",
