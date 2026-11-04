@@ -4,9 +4,21 @@
 2. A IA recomenda **um caderno principal** com ID, cargo, assuntos, bloco, plataforma, filtros e critério de expansão.
 3. O estudante monta o caderno no TEC/Qconcursos e resolve sem manipulação automatizada da plataforma.
 4. O estudante devolve resultados agregados e, quando disponíveis, dados por tópico; informa questões repetidas e dúvidas relevantes.
-5. O agente valida consistência e origem; quando autorizado e em repositório privado, registra evento append-only.
+5. O agente valida consistência e origem; somente depois de habilitação homologada, autorização específica e verificação de privacidade, registra evento append-only.
 6. O agente atualiza projeções e handoff; recomenda avanço/revisão/correção sem intervalos fixos.
 
-**Nota de controle:** se houver resultado discriminado por assunto, os subtotais de tentativas, acertos e erros não podem superar as respectivas contagens agregadas; quando existir recomendação do mesmo caderno, os tópicos informados devem estar contidos no escopo dela. Resultados agregados sem discriminação não geram acertos por tópico. Uma alteração de `settings.json` não substitui a verificação de privacidade e a autorização para escrita real.\n\n**Nota de integridade:** um resultado apenas consolidado de várias matérias NÃO pode ser imputado integralmente a qualquer tópico. As estatísticas por tópico só são calculadas quando fornecidas de modo explícito.
+**Nota de controle:** se houver resultado discriminado por assunto, os subtotais de tentativas, acertos e erros não podem superar as respectivas contagens agregadas; quando existir recomendação do mesmo caderno, os tópicos informados devem estar contidos no escopo dela. Resultados agregados sem discriminação não geram acertos por tópico. Uma alteração de `settings.json` não substitui a verificação de privacidade e a autorização para escrita real.
+
+**Nota de integridade:** um resultado apenas consolidado de várias matérias NÃO pode ser imputado integralmente a qualquer tópico. As estatísticas por tópico só são calculadas quando fornecidas de modo explícito.
 
 **Ponto de corte:** sem confirmação de commit, a próxima sessão trata a escrita como pendente, não como finalizada.
+
+
+## START/DELIVERY — contrato local verificável
+
+1. **START:** conferir o HEAD/branch e os nove arquivos obrigatórios; `python scripts/bootstrap.py` lê os bytes e informa SHA-256 por arquivo. Conferir a CI vinculada ao HEAD exato.
+2. **Pré-escrita autorizada:** executar `python hooks/before_write.py` e `python scripts/write_policy.py --check`. Falha interrompe operação; não usar direct-write como atalho. **Não registrar resultados pessoais**: `personal_results_writes_enabled` permanece `false`, e alterar só a flag reprova a CI.
+3. **DELIVERY:** executar `python hooks/after_write.py`, `python hooks/checkpoint.py` e testes; conferir persistência remota por SHA exato após commit. Atualizar handoff com evidências e limitações, nunca com êxito presumido.
+4. **Limite de implementação:** os scripts de hook são *invocáveis e testados*, mas **não são automaticamente registrados** por GitHub, ChatGPT ou outro agente. Um agente que escreva diretamente pela API pode ignorar o preflight. A CI fornece um gate de validação após o push; proteções de branch e autorização humana seguem necessárias para impedir bypass/merge.
+5. **Privacidade:** nenhum dado de resultado individual pode ser persistido nesta fase. A liberação futura requer verificação autenticada da visibilidade do repositório no momento da escrita, consentimento e revisão do gate; a CI não realiza essa liberação.
+
