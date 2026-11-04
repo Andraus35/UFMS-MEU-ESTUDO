@@ -51,6 +51,18 @@
 
 Registro de cotejo com o PDF original e anomalia do Anexo II: [`docs/AUDIT_RECUPERACAO_EDITAL_2026-11-04.md`](../docs/AUDIT_RECUPERACAO_EDITAL_2026-11-04.md). O conjunto adversarial adicional fica em `tests/fixtures/adversarial_cases.json` e é aferido na CI por `scripts/benchmark_adversarial.py`.
 
+## Linhas do quadro de vagas — verificação por campo (Anexo III)
+
+O arquivo `edital/vagas_index.json` é um **índice derivado não normativo**, ligado aos identificadores e SHA-256 do PDF original. Ele armazena os campos conferidos visualmente para o cargo 523 (página 15) e 324 (página 18), além das âncoras literais para localizar a linha certa na transcrição. Não substitui a tabela do PDF.
+
+- `python scripts/search_edital.py --vagas-cargo 523 --full`: extrai apenas a linha do quadro associada ao código **523**, com código, 29 vagas, Campo Grande e ambas as alternativas de formação presentes no quadro.
+- `python scripts/search_edital.py --vagas-cargo 324 --full`: extrai apenas a linha do **324**, com 18 vagas, Campo Grande e ensino médio completo.
+- `python scripts/search_edital.py "requisitos do cargo 523" --full`: usa a rota estruturada, não a proximidade lexical entre linhas de outros cargos.
+- `python scripts/index_vagas.py --check`: verifica a identidade da fonte, os códigos, os quantitativos, a lotação e as âncoras literais. Os offsets de campos são calculados sobre os chunks no momento da leitura.
+- `python scripts/index_vagas.py --write`: regenera o índice a partir das âncoras declaradas, sem modificar o edital ou seus chunks.
+
+**Regra de segurança:** não assumir que requisitos impressos nas linhas dos cargos 522, 524, 323 ou 325 se aplicam aos códigos 523 ou 324. A formatação vertical da tabela original deve ser verificada no PDF em casos de dúvida; os rótulos normalizados, coordenadas e classificações do índice são derivados, não normativos. Uma pergunta que identifique simultaneamente os dois cargos deve ser dividida em duas recuperações em vez de receber uma resposta parcial.
+
 ## Localização e comandos
 
 - `edital/manifest.json`: índice máquina-legível com IDs, páginas, offsets e categorias; **81 chunks**.
