@@ -3,8 +3,16 @@
   "project_url": "https://github.com/users/Andraus35/projects/2",
   "owner": "Andraus35",
   "project_number": 2,
-  "access": "unverified_by_available_connector",
+  "access": "verified_private_via_owner_cli_2026-11-04",
   "role": "optional_visual_dashboard",
   "source_of_truth": "repository_event_log",
-  "sync": "disabled_until_supported"
+  "sync": "disabled_until_supported",
+  "verification": {
+    "source": "owner_authenticated_gh_cli_output",
+    "date": "2026-11-04",
+    "project_id": "PVT_kwHOEExB2s4BqG0g",
+    "public": false,
+    "fields_count": 15,
+    "views_count": 3
+  }
 }
