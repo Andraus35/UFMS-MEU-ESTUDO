@@ -1,0 +1,11 @@
+{
+  "source_receipt_sha256": "dd60d0060d850b334d310662a5017109310ef309b2fcfd6d9019bcd57fee23b9",
+  "source_git_blob_sha1": "a1482c25e064a1ccc06c4a649a704fbd5bf97cf5",
+  "source_sha256": "e528bd36ff4e106622e04b009a8cce381ea5fa079558cc14adc3f5227f90362c",
+  "source_commit_sha": "426286a913ea17adddb2cdb951120b45282ad938",
+  "scope": "PLAN v0.3-r2 only; produce checks without changing normative AC",
+  "PR1": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+  "PR2": "6e1fa661a33565d580f99962c3510d5361decbe6",
+  "main": "2b09c08036035bfff334e84ee0b976efaed577a8",
+  "composition_digest": "sha256:d8e5991ba2be213642447e0c6b52d6da280db4b98f3b3e31dcd689c492a096d0"
+}

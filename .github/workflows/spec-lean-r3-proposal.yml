@@ -1,0 +1,82 @@
+name: UFMS GQD r3 - proposta documental (sem aprovacao)
+
+on:
+  pull_request:
+    paths:
+      - '.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r3/**'
+      - '.github/workflows/spec-lean-r3-proposal.yml'
+  push:
+    branches:
+      - 'spec/ufms-cognitive-gates-gqd-correction-v0-3'
+    paths:
+      - '.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r3/**'
+      - '.github/workflows/spec-lean-r3-proposal.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  r3-documentary-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout immutable HEAD without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download pinned official TLC validators (hash readback)
+        shell: bash
+        run: |
+          set -euo pipefail
+          TLC_SHA=1da2195067c14ae5d44dc615b31cb26f50ebeb91
+          ROOT="https://raw.githubusercontent.com/tech-leads-club/agent-skills/${TLC_SHA}/packages/skills-catalog/skills/%28development%29/tlc-spec-lean/scripts"
+          mkdir -p "$RUNNER_TEMP/tlc-official" "$RUNNER_TEMP/r3-proposal-receipts"
+          for f in lean_config.py validate_plan.py validate_checks.py; do
+            curl --fail --location --retry 3 --silent --show-error "$ROOT/$f" --output "$RUNNER_TEMP/tlc-official/$f"
+          done
+          cd "$RUNNER_TEMP/tlc-official"
+          test "$(git hash-object lean_config.py)" = 'b751517ba653478cd69330e590c8f0de7a739c24'
+          test "$(git hash-object validate_plan.py)" = '82f7c754fb9542e659e13a9732cf89d9a25def1f'
+          test "$(git hash-object validate_checks.py)" = 'be14d1956cc5afaba6009608c71d7ec1a216c29f'
+      - name: Independent receipt anchors and 16 negative/documentary tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='.specs/features/ufms-cognitive-gates/revisions/v0.3'
+          echo "SOURCE_HEAD=$(git rev-parse HEAD)" | tee "$RUNNER_TEMP/r3-proposal-receipts/source.txt"
+          python "$ROOT/proposals/r3/tools/verify_receipt_and_composition.py" \
+            --r2-root "$ROOT/approved-r2" \
+            --lock "$ROOT/proposals/r3/composition-lock.json" | tee "$RUNNER_TEMP/r3-proposal-receipts/receipt-audit.json"
+          python -m unittest discover -s "$ROOT/proposals/r3/tests" -v \
+            > "$RUNNER_TEMP/r3-proposal-receipts/tests.log" 2>&1 || { cat "$RUNNER_TEMP/r3-proposal-receipts/tests.log"; exit 1; }
+          tail -n 7 "$RUNNER_TEMP/r3-proposal-receipts/tests.log"
+      - name: Official TLC plan r3; checks preview must reject missing human approval only
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='.specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r3'
+          VALID="$RUNNER_TEMP/tlc-official"
+          python "$VALID/validate_plan.py" "$ROOT/plan.md" --root . > "$RUNNER_TEMP/r3-proposal-receipts/validate-plan.log" 2>&1 || { cat "$RUNNER_TEMP/r3-proposal-receipts/validate-plan.log"; exit 1; }
+          set +e
+          python "$VALID/validate_checks.py" "$ROOT/checks-preview.md" --root . > "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log" 2>&1
+          CODE=$?
+          set -e
+          if [ "$CODE" -ne 1 ]; then cat "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log"; echo 'CHECKS_R3_UNEXPECTED_EXIT'; exit 1; fi
+          grep -Fq 'plan.md has no' "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log" || { cat "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log"; exit 1; }
+          grep -Fq 'validate_checks: 1 error(s)' "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log" || { cat "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log"; exit 1; }
+          tail -n 2 "$RUNNER_TEMP/r3-proposal-receipts/validate-plan.log"
+          tail -n 2 "$RUNNER_TEMP/r3-proposal-receipts/validate-checks.log"
+          echo 'PLAN_R3_FORMAL_PASS; CHECKS_R3_NOT_APPROVED; NO_GQD_HOMOLOGATION'
+      - name: Archive diagnostic logs even on fail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ufms-r3-proposal-doc-tests
+          path: ${{ runner.temp }}/r3-proposal-receipts/
+          retention-days: 14

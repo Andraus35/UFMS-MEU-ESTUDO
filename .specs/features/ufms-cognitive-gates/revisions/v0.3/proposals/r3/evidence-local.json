@@ -1,0 +1,31 @@
+{
+  "kind": "UFMS_GQD_R3_PROPOSAL",
+  "date": "2026-11-04",
+  "approval": "NOT_APPROVED",
+  "frozen_audited_pr5_head": "652634b70a411ed4641cb7a202b0ae2f9a19ed1b",
+  "main_pinned": "2b09c08036035bfff334e84ee0b976efaed577a8",
+  "GQD": "REPROVADA",
+  "GQC": "NOT_RUN",
+  "GQO": "BLOCKED",
+  "r2_plan_approved_sha256": "b1dbe81a4723163bb209af39d3ae4a9637e22a9075de2ebce6d1197275a2ad55",
+  "r2_checks_approved_sha256": "57f1b2c49226a1ed9a0f836c99084f42e4b655fcd2300251feb169791e6f5568",
+  "local_tests_total": 16,
+  "local_tests_pass": 16,
+  "official_validators": "NOT_RUN_FOR_R3",
+  "compiled_functional_27": "NOT_RUN",
+  "files": {
+    "plan.md": "ee6c4bba75b95fa5f4492741959b839955f8edc1b6ef04de158e1f902926b5b1",
+    "checks-preview.md": "2a553cca99d964639a73bbf2cc7db38eb951fb96d2d392b86faf7be6b42c0a26",
+    "APPROVAL_PRECEDENCE.md": "aa26fbeb9930e3590bdfc6f2399d8942904a36b41afc6682e13fb9fe44e465eb",
+    "composition-lock.json": "29ec729b3410753047b6059f13bf7f8c441efdce7d51ea062e20ab45afb6c9e9",
+    "anchors.json": "2e6f4b11ed573197c1783960c77f4a9924a0b5f96c596a7993b2e9c40a1f8f3f",
+    "tools/verify_receipt_and_composition.py": "6d00edd833a408abb216a7db5d0ea7f2a1cfda7c69f81708c783ceb24c9a4ed8",
+    "tests/test_receipt_and_proposal.py": "ca1a72612d57f62640642fbea6098a7b7524dca1b90b2e93079f51076cda4a32",
+    "NC_MATRIX.md": "331e29a1f8f5429bb8f3b68c008ef7b07aa4f41f6282520e655dcb10511853f4",
+    "README.md": "1b8576a3df3adc60b2651c2730791806bdb426e6bda68bd218e13018eca5be31",
+    "auditoria-independente-recebida.txt": "bb98279e7d1ce80b6b3977bf1e305a8e3e283e04e8b058635ace5ea46603124b",
+    "local-test-log.txt": "28dd427c5739a4df5adf48c96214d2f3b78c42bb280f5c3e7c5622675fec1682",
+    "CURRENT_UPDATED.md": "5fdcd64f8924d8416b7bfbd9e8c8111ef96ac718ff62039c3a730c345ed25649",
+    "spec-lean-r3-proposal.yml": "3aa03d4b01238aca4f8ea59e15a559413c28ee438d7e384153c51efb99cacb45"
+  }
+}

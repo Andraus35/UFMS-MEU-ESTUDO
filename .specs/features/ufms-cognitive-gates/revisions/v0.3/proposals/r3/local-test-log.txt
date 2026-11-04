@@ -1,0 +1,29 @@
+{
+  "result": "PASS_DOCUMENTARY_ONLY",
+  "errors": [],
+  "approved_version": "v0.3-r2",
+  "new_proposal": "v0.3-r3_NOT_APPROVED",
+  "functional_27": "NOT_RUN",
+  "composition_executed": false
+}
+test_00_baseline_receipt_passes_documentary_only (test_receipt_and_proposal.ReceiptAndProposal.test_00_baseline_receipt_passes_documentary_only) ... ok
+test_01_mutant_new_01_git_blob_zero_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_01_mutant_new_01_git_blob_zero_rejected) ... ok
+test_02_mutant_new_02_pr1_sha_zero_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_02_mutant_new_02_pr1_sha_zero_rejected) ... ok
+test_03_mutant_new_03_scope_escalation_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_03_mutant_new_03_scope_escalation_rejected) ... ok
+test_04_noncanonical_receipt_extra_key_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_04_noncanonical_receipt_extra_key_rejected) ... ok
+test_05_deploy_flag_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_05_deploy_flag_rejected) ... ok
+test_06_gate_pass_fabrication_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_06_gate_pass_fabrication_rejected) ... ok
+test_07_main_integrated_sha_tampered_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_07_main_integrated_sha_tampered_rejected) ... ok
+test_08_composition_digest_forgery_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_08_composition_digest_forgery_rejected) ... ok
+test_09_false_claim_execution_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_09_false_claim_execution_rejected) ... ok
+test_10_original_source_bitflip_rejected (test_receipt_and_proposal.ReceiptAndProposal.test_10_original_source_bitflip_rejected) ... ok
+test_11_r3_plan_not_approved_and_27_ac (test_receipt_and_proposal.ReceiptAndProposal.test_11_r3_plan_not_approved_and_27_ac) ... ok
+test_12_r3_202_403_authorization_mapping (test_receipt_and_proposal.ReceiptAndProposal.test_12_r3_202_403_authorization_mapping) ... ok
+test_13_renderer_revocation_and_atomicity_in_plan (test_receipt_and_proposal.ReceiptAndProposal.test_13_renderer_revocation_and_atomicity_in_plan) ... ok
+test_14_r3_checks_preview_27_and_only_preview (test_receipt_and_proposal.ReceiptAndProposal.test_14_r3_checks_preview_27_and_only_preview) ... ok
+test_15_no_approval_elevation_from_r2 (test_receipt_and_proposal.ReceiptAndProposal.test_15_no_approval_elevation_from_r2) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.045s
+
+OK

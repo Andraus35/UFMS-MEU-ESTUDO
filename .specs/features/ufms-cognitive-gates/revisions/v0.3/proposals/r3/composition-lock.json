@@ -1,0 +1,54 @@
+{
+  "schema_version": "ufms-composition-lock-r3-1",
+  "status": "DOCUMENTARY_LOCK_ONLY_NO_INTEGRATED_TEST",
+  "repository": "Andraus35/UFMS-MEU-ESTUDO",
+  "as_of": "2026-11-04",
+  "components": [
+    {
+      "role": "main_integrated",
+      "commit_sha": "2b09c08036035bfff334e84ee0b976efaed577a8",
+      "tree_sha": "9cf12e9550ae2e04840823e8b080be3f91e6fc2b",
+      "note": "Current main observed; PR1/PR2 merged by another workflow; no integration test executed here"
+    },
+    {
+      "role": "pr5_audited_approved_r2",
+      "commit_sha": "652634b70a411ed4641cb7a202b0ae2f9a19ed1b",
+      "tree_sha": "724b77597fc8e53c190caa244a99fe8f40a5a69c",
+      "note": "Exact frozen audited object; r3 proposal branch will be a descendant and must be independently read back"
+    },
+    {
+      "role": "pr1_historical_source",
+      "commit_sha": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+      "tree_sha": "77d8bcea815899cf5ddef478f7cf4afdedc9f3cf",
+      "merge_commit": "1ff563e4de6228504b140f96474072fffccedd92"
+    },
+    {
+      "role": "pr2_historical_source",
+      "commit_sha": "6e1fa661a33565d580f99962c3510d5361decbe6",
+      "tree_sha": "f03880d22ab8df2d1c2ac2c5f811445961301974",
+      "merge_commit": "fe63d583fabfa7d23f5707b0c747f7a1e24aa700"
+    }
+  ],
+  "assembly": {
+    "mode": "READ_ONLY_MULTIPLE_DETACHED_WORKTREES",
+    "working_tree": "main_integrated",
+    "spec_tree": "pr5_audited_approved_r2",
+    "historic_sources": [
+      "pr1_historical_source",
+      "pr2_historical_source"
+    ],
+    "collision_policy": "FAIL_CLOSED",
+    "no_merge": true,
+    "no_push": true,
+    "do_not_use_head_fallback": true,
+    "proof_replay_status": "NOT_RUN"
+  },
+  "attribution": {
+    "governed_r2_approved_plan_sha256": "b1dbe81a4723163bb209af39d3ae4a9637e22a9075de2ebce6d1197275a2ad55",
+    "governed_r2_checks_sha256": "57f1b2c49226a1ed9a0f836c99084f42e4b655fcd2300251feb169791e6f5568",
+    "proposed_r3_plan_sha256": "ee6c4bba75b95fa5f4492741959b839955f8edc1b6ef04de158e1f902926b5b1",
+    "proposed_r3_checks_preview_sha256": "2a553cca99d964639a73bbf2cc7db38eb951fb96d2d392b86faf7be6b42c0a26"
+  },
+  "limitations": "No self-referential commit SHA inside the same commit. The GitHub branch HEAD for r3 must be read back separately and its exact SHA/tree recorded in the PR review or external auditor receipt, not inferred from this manifest. This lock records source composition, NOT execution.",
+  "composition_digest": "sha256:d8e5991ba2be213642447e0c6b52d6da280db4b98f3b3e31dcd689c492a096d0"
+}

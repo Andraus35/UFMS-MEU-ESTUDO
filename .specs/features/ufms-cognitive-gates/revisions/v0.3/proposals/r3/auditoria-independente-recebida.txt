@@ -1,0 +1,318 @@
+# Parecer de reauditoria independente — UFMS MEU ESTUDO
+
+Modalidade: GQ-D adversarial, somente leitura\
+Objeto: [PR #5 — Harness Cognitivo Tutor/Coach](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/5?utm_source=chatgpt.com)\
+Data: 04/11/2026
+
+## I — Identidade e integridade do objeto
+
+A consulta autenticada ao GitHub confirmou:
+
+| Elemento                   | Resultado                                       |
+| -------------------------- | ----------------------------------------------- |
+| Repositório                | `Andraus35/UFMS-MEU-ESTUDO`                     |
+| PR                         | #5, aberto                                      |
+| Modalidade                 | Draft                                           |
+| Branch                     | `spec/ufms-cognitive-gates-gqd-correction-v0-3` |
+| HEAD atual                 | `652634b70a411ed4641cb7a202b0ae2f9a19ed1b`      |
+| HEAD solicitado            | Idêntico ao atual                               |
+| Base declarada pelo GitHub | `c020f78ba07ebb4e2949021b45a7f9b8f2c26d42`      |
+| Merge                      | Não realizado                                   |
+
+A identidade do HEAD está confirmada. Não há divergência que obrigue a substituir o objeto da auditoria.
+
+O PR anterior, #4, também permanece aberto como draft, no commit `0db458a50447c2a9f8e7131f402dc3be9c0db313`.
+
+A confirmação do commit, entretanto, não significa que todas as evidências, dependências e provas de conformidade estejam homologadas.
+
+## II — Metodologia independente
+
+Foram realizadas consultas autenticadas aos objetos GitHub, aos arquivos no commit congelado, ao parecer do PR #4, ao código do verificador de aprovação e aos registros do GitHub Actions.
+
+A auditoria distingue três classes de evidência: conteúdo efetivamente recuperado, testes cuja execução foi comprovada e obrigações cuja implementação ainda não foi demonstrada.
+
+Limitação: o ambiente de execução local não conseguiu acessar o GitHub por rede. Por isso, não apresentarei testes Python locais não executados como se fossem resultados independentes. As contraprovas documentais e as inspeções de código serão identificadas separadamente.
+
+## III — Verificação da CI e dos validadores oficiais
+
+Consultei os jobs e logs das duas execuções registradas:
+
+- [Execução push 41871794340](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41871794340?utm_source=chatgpt.com)
+- [Execução pull_request 41871815313](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41871815313?utm_source=chatgpt.com)
+
+| Verificação                           | Resultado confirmado nos logs |
+| ------------------------------------- | ----------------------------- |
+| HEAD utilizado nos dois jobs          | `652634b...`                  |
+| Conferência dos blobs dos scripts TLC | PASS                          |
+| `validate_plan.py`                    | 0 erros, 13 avisos            |
+| `validate_checks.py`                  | 0 erros, 31 avisos            |
+| Suíte de integridade do snapshot      | 13 testes, OK                 |
+| Job push                              | SUCCESS                       |
+| Job pull_request                      | SUCCESS                       |
+| `validate_checks.py --execute`        | NOT_RUN                       |
+| Provas funcionais C1–C27              | 0/27 executadas               |
+
+A workflow recupera os scripts do repositório `tech-leads-club/agent-skills` no commit `1da2195067c14ae5d44dc615b31cb26f50ebeb91` e verifica os hashes Git dos quatro arquivos antes de executar os validadores.
+
+Conclusão sobre a CI: os resultados documentais declarados são corroborados pelos logs. Os 44 avisos, porém, precisam ser avaliados pelo conteúdo, e os testes de integridade não substituem contraprovas da segurança do Tutor e Coach.
+
+A inspeção independente também confirmou a árvore Git `724b77597fc8e53c190caa244a99fe8f40a5a69c`, sem truncamento, e recalculou os seguintes SHA-256 a partir dos conteúdos recuperados:
+
+| Arquivo                    | SHA-256                                                            |
+| -------------------------- | ------------------------------------------------------------------ |
+| PLAN original r2           | `e528bd36ff4e106622e04b009a8cce381ea5fa079558cc14adc3f5227f90362c` |
+| PLAN aprovado com marcador | `b1dbe81a4723163bb209af39d3ae4a9637e22a9075de2ebce6d1197275a2ad55` |
+| CHECKS aprovados           | `57f1b2c49226a1ed9a0f836c99084f42e4b655fcd2300251feb169791e6f5568` |
+
+A equivalência de bytes entre o PLAN original e o PLAN aprovado acrescido do marcador administrativo foi confirmada. A seção normativa `## Checks` também é idêntica à prévia r2.
+
+## IV — Matriz das nove não conformidades
+
+As classificações abaixo se referem à correção documental, nunca à aprovação operacional.
+
+| NC     | Severidade | Evidência e contraprova                                                                                                                            | Classificação              |
+| ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| GQD-01 | P0         | TC-02 e AC13/14 vinculam ferramenta, operação, destinatário, parâmetros, assinatura e nonce. AUTH-IND-01 tem rejeição obrigatória.                 | ENCERRADA documentalmente  |
+| GQD-02 | P1         | O congelamento por hash rejeita alterações posteriores, mas não demonstra que o verificador avalia equivalência semântica. M-IND-01–04.            | PARCIALMENTE CORRIGIDA     |
+| GQD-03 | P1         | SHAs das dependências fixados, mas o manifesto vigente continua descrevendo a composição antiga. Não há reconstrução funcional comprovada.         | ABERTA                     |
+| GQD-04 | P1         | TC-01 e AC4/11/25 agora especificam origem autenticada, registro de fatos e `SOURCE_CONFLICT`. NEW-01 está coberto.                                | ENCERRADA documentalmente  |
+| GQD-05 | P1         | TC-03 e C15 exigem limiar, janela, concorrência e zero chamadas externas após rejeição.                                                            | ENCERRADA documentalmente  |
+| GQD-06 | P1         | TC-04 diferencia `DEPENDENCY_FAILED` e `UNCONFIRMED`, com saídas 0–3; persiste inconsistência na matriz das interfaces.                            | PARCIALMENTE CORRIGIDA     |
+| GQD-07 | P1         | Aprovação vinculada aos bytes e SHA da fonte, mas campos relevantes do recibo podem ser adulterados sem detecção pelo verificador.                 | PARCIALMENTE CORRIGIDA     |
+| GQD-08 | P1         | TC-05/AC26 vinculam estado, fonte, canal e destinatário; faltam regras explícitas para concorrência no consumo e revogação do token de publicação. | PARCIALMENTE CORRIGIDA     |
+| GQD-09 | P2         | Scripts oficiais e hashes confirmados; PLAN e CHECKS passaram na validação formal.                                                                 | ENCERRADA no escopo formal |
+
+# 4
+
+Encerradas documentalmente
+
+# 4
+
+Parcialmente corrigidas
+
+# 1
+
+Aberta
+
+### Ressalva sobre a NC-09
+
+Foi possível examinar também o artefato de logs publicado pelo GitHub Actions, inclusive os avisos completos.
+
+Dos 31 avisos dos CHECKS, 28 decorrem de seletores `unittest` com notação pontuada que o detector heurístico da TLC não reconhece como seletores individuais; três correspondem a verificações humanas não executáveis diretamente. Os 13 avisos do PLAN tratam principalmente da descrição dos componentes no fluxo e de questões em aberto.
+
+Esses avisos não anulam o PASS formal, mas tampouco comprovam que os testes propostos existem.
+
+## V — Matriz AC1–AC27
+
+Legenda: A = contrato documental suficientemente definido; P = pendência documental material; NR = prova funcional não executada.
+
+A conferência textual independente verificou correspondência integral da primeira linha normativa em 27/27 pares AC↔CHECK. Todos possuem caso positivo, negativo, oráculo e seletor de prova proposto.
+
+| Critério   | Obrigação                          | Documento | Funcional |
+| ---------- | ---------------------------------- | --------- | --------- |
+| AC1 / C1   | Bootstrap de nove arquivos         | A         | NR        |
+| AC2 / C2   | Fonte normativa inexistente        | A         | NR        |
+| AC3 / C3   | SHA, página e trecho               | A         | NR        |
+| AC4 / C4   | Retificação e conflito oficial     | A         | NR        |
+| AC5 / C5   | Abstenção sem evidência            | A         | NR        |
+| AC6 / C6   | Recomendação de caderno            | A         | NR        |
+| AC7 / C7   | Resultados agregados               | A         | NR        |
+| AC8 / C8   | Classes de proveniência            | A         | NR        |
+| AC9 / C9   | Evitar dupla contagem              | A         | NR        |
+| AC10 / C10 | Revisão justificada                | A         | NR        |
+| AC11 / C11 | Resistência a instruções externas  | A         | NR        |
+| AC12 / C12 | Bloqueio da escrita pessoal        | A         | NR        |
+| AC13 / C13 | Autenticação da autorização        | A         | NR        |
+| AC14 / C14 | Rejeição de autorização divergente | P         | NR        |
+| AC15 / C15 | Allowlist e rate limit             | A         | NR        |
+| AC16 / C16 | Idempotência                       | A         | NR        |
+| AC17 / C17 | Concorrência e estado              | A         | NR        |
+| AC18 / C18 | Falha, timeout e readback          | A         | NR        |
+| AC19 / C19 | Recibo sem dados privados brutos   | A         | NR        |
+| AC20 / C20 | Prova da composição exata          | P         | NR        |
+| AC21 / C21 | Rejeição de prova fraca            | P         | NR        |
+| AC22 / C22 | Isolamento do gateway              | A         | NR        |
+| AC23 / C23 | Nonce, expiração e replay          | A         | NR        |
+| AC24 / C24 | Limites de entrada UTF-8           | A         | NR        |
+| AC25 / C25 | Verificação semântica de fatos     | A         | NR        |
+| AC26 / C26 | Publicação via renderer            | P         | NR        |
+| AC27 / C27 | Metadados de avaliações            | A         | NR        |
+
+Resultado: 23 contratos documentais adequados, 4 com pendências e 0 provas funcionais aprovadas. A adequação documental não demonstra implementação e os seletores propostos não são evidências de testes realizados.
+
+## VI — Contraprovas adversariais
+
+### 1. Mutantes históricos M-IND-01–04
+
+Foram aplicadas alterações em cópias de texto isoladas, comparando-as com o snapshot protegido.
+
+| Mutante  | Alteração                                               | Resultado da verificação de integridade |
+| -------- | ------------------------------------------------------- | --------------------------------------- |
+| M-IND-01 | Enfraquecer o bloqueio de escrita pessoal               | REJEITADO                               |
+| M-IND-02 | Substituir teste de autorização por `print('PASS')`     | REJEITADO                               |
+| M-IND-03 | Retirar a proibição de validar fatos apenas por citação | REJEITADO                               |
+| M-IND-04 | Retirar a atomicidade do consumo de nonce               | REJEITADO                               |
+
+Resultado observado: 4/4 alterações detectadas pelo mecanismo de equivalência de bytes.
+
+Isso representa uma melhoria real de integridade documental. Não demonstra, entretanto, que o software futuro rejeitará esses quatro comportamentos incorretos.
+
+### 2. Cenários adversariais anteriores
+
+| Cenário     | Evidência independente                                                          | Resultado                      |
+| ----------- | ------------------------------------------------------------------------------- | ------------------------------ |
+| AUTH-IND-01 | TC-02/AC14 proíbem reutilizar `calendar.create` em `telegram.send`              | Contrato adequado; execução NR |
+| CITE-IND-01 | Itens 10.1/10.2: nota zero em qualquer área elimina, mesmo com 60 pontos totais | Alegação falsa refutada        |
+| NEW-01      | Anexo II apresenta recurso em janeiro após resultado previsto para fevereiro    | Conflito oficial confirmado    |
+| NEW-02      | Mudança de canal ou destinatário invalida autorização anterior                  | Contrato adequado; execução NR |
+
+A contraprova CITE-IND-01 foi conferida na página 10 do edital, itens 10.1 e 10.2.&#x20;
+
+EDITAL UFMS 2026.pdf
+
+
+
+O conflito NEW-01 também foi confirmado: o Anexo II prevê resultado preliminar em 10/02/2027, mas recurso em 11 e 12/01/2027. O agente deve preservar a divergência, sem corrigir a data por suposição.&#x20;
+
+EDITAL UFMS 2026.pdf
+
+
+
+### 3. Três novos mutantes independentes
+
+A análise de `verify_approval_snapshot.py` revelou que determinados campos do recibo não são conferidos pela função `audit()`.
+
+Construí três mutações isoladas no objeto JSON e reproduzi as verificações dos campos efetivamente examinados pelo código Python.
+
+| Novo mutante | Alteração simulada                                                                | Resultado da lógica verificada |
+| ------------ | --------------------------------------------------------------------------------- | ------------------------------ |
+| M-NEW-01     | Substituir `source_git_blob_sha1` por 40 zeros                                    | ACEITO                         |
+| M-NEW-02     | Substituir `dependencies.PR1` por SHA inexistente                                 | ACEITO                         |
+| M-NEW-03     | Alterar `approval.scope` para alegar autorização de implantação e escrita pessoal | ACEITO                         |
+
+Contraprovas novas
+
+3/3 sobreviventes
+
+Resultado de reprodução independente da lógica dos predicados e inspeção do código, não de execução do script Python original.
+
+O verificador confirma corretamente os bytes do PLAN e dos CHECKS, mas não valida integralmente a autenticidade e a consistência das informações do recibo.
+
+Isso não comprova que uma operação externa indevida possa ser executada. Demonstra que o resultado documental `PASS` pode coexistir com metadados de proveniência adulterados.
+
+### 4. Dois cenários adversariais inéditos
+
+S-NEW-03 — Publicação concorrente com o mesmo token.
+
+Duas instâncias do `safe_renderer` tentam publicar simultaneamente a mesma resposta com um único token válido. A especificação exige uso único, mas não explicita o consumo atômico no renderer, como faz para o gateway.
+
+Oráculo exigido: uma publicação no máximo, independentemente da concorrência. Estado: NOT_RUN; lacuna documental identificada.
+
+S-NEW-04 — Autorização revogada antes da publicação.
+
+Um token de publicação é emitido corretamente. Antes de seu uso, a autorização é revogada, sem alteração necessariamente refletida em `state_revision`. O contrato do renderer não define suficientemente a consulta à revogação nem a autenticação da autoridade que libera a saída.
+
+Oráculo exigido: `DENY:OUTPUT_NOT_APPROVED`, com zero publicações. Estado: NOT_RUN; lacuna documental identificada.
+
+## VII — Novas não conformidades e remanescentes
+
+NC-UFMS-GQD-R2-10 — Estado normativo contraditório
+
+P1
+
+Localização: `approved-r2/plan.md`, linhas 3, 7, 130 e 282; `CURRENT.md`, linha 3.
+
+Evidência: o PLAN ainda declara a versão r2 como não aprovada, enquanto o índice e o recibo afirmam o contrário.
+
+Impacto: agentes podem interpretar estados normativos incompatíveis.
+
+Correção mínima: estabelecer precedência explícita para o registro de aprovação, sem modificar silenciosamente os bytes aprovados.
+
+Teste de encerramento: leitor independente determina inequivocamente o estado da versão, inclusive quando recebe o PLAN junto de seus metadados.
+
+NC-UFMS-GQD-R2-11 — Recibo insuficientemente validado
+
+P1
+
+Localização: `approved-r2/verify_approval_snapshot.py`, linhas 22–48; `approval-receipt.json`, linhas 7, 12 e 36–39.
+
+Evidência: sobrevivência dos mutantes M-NEW-01, 02 e 03.
+
+Impacto: falsos PASS de proveniência ou escopo de autorização.
+
+Correção mínima: validar todos os campos de identidade e escopo relevantes contra fontes congeladas independentes, sem aceitar o próprio recibo como autoridade suficiente.
+
+Teste de encerramento: os três novos mutantes devem retornar FAIL.
+
+NC-UFMS-GQD-R2-12 — Inconsistência de estados da interface
+
+P1
+
+Localização: `approved-r2/plan.md`, linhas 162 e 205.
+
+Evidência: AC14 determina `DENY:AUTH_MISMATCH` para autorização incompatível, enquanto a matriz `Observable` associa AC14 também a `202 NEEDS_APPROVAL` por autorização inválida.
+
+Impacto: uma implementação pode tratar um token incompatível como mera autorização ausente, obscurecendo a rejeição de segurança.
+
+Correção mínima: distinguir autorização ausente de autorização inválida em todas as interfaces.
+
+Teste de encerramento: tabela completa de transições demonstrando a resposta correta para cada estado de autorização.
+
+NC-UFMS-GQD-R2-13 — Publicação sem contrato completo de concorrência e revogação
+
+P1
+
+Localização: `approved-r2/plan.md`, TC-05, linha 117, e AC26, linha 192.
+
+Evidência: cenários S-NEW-03 e S-NEW-04.
+
+Impacto: risco de publicação duplicada ou com autorização revogada em uma implementação que cumpra apenas as verificações explicitamente descritas.
+
+Correção mínima: definir autenticação, revogação e consumo atômico do token de publicação.
+
+Teste de encerramento: concorrência e revogação rejeitadas com contagem efetiva de publicações.
+
+Permanece ainda NC-UFMS-GQD-03, P1, porque `revisions/v0.3/composition-manifest.json` referencia a candidata antiga e não constitui um manifesto reproduzível do HEAD r2 com as dependências congeladas e seu digest correspondente.
+
+Os novos achados não duplicam integralmente os antigos: detalham contraprovas concretas que deverão integrar a reauditoria de GQD-02, GQD-06, GQD-07 e GQD-08.
+
+## VIII — Parecer conclusivo
+
+## GQ-D REPROVADA
+
+Fundamento: há insuficiências documentais materiais demonstradas independentemente, incluindo três mutantes de proveniência sobreviventes, conflitos internos do contrato e manifesto de composição desatualizado.
+
+| GQ-D — Documentação                | REPROVADA       |
+| ---------------------------------- | --------------- |
+| GQ-C — Cognição do LLM             | NOT_RUN         |
+| GQ-O — Segurança operacional       | BLOCKED         |
+| PLAN/CHECKS — Integridade de bytes | PASS            |
+| TLC — Validação formal             | PASS com avisos |
+| Homologação do harness             | NÃO CONCEDIDA   |
+
+A reprovação não decorre da ausência de BUILD ou de execução do LLM. Decorre de lacunas documentais identificáveis antes da implementação, exatamente o tipo de problema que GQ-D deve detectar.
+
+A metodologia oficial da [Tech Leads Club — Spec Lean](https://agent-skills.techleads.club/skills/tlc-spec-lean/?utm_source=chatgpt.com) distingue validação formal, provas de implementação e verificação independente. O PASS dos validadores não substitui essa última etapa.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://agent-skills.techleads.club\&sz=32)
+
+Agent Skills
+
+
+
+Nenhum resultado autoriza merge, implantação, acesso a credenciais, publicação externa ou escrita de dados pessoais.
+
+## IX — Próxima ação mínima
+
+O trabalho corretivo necessário é limitado a quatro frentes:
+
+1. Resolver a contradição de aprovação e de estados, preservando o snapshot aprovado ou submetendo uma revisão formal caso haja mudança normativa.
+2. Fortalecer o verificador do recibo, incluindo obrigatoriamente os três mutantes sobreviventes como testes negativos.
+3. Atualizar o manifesto de composição para o SHA e a árvore exatos da candidata e das dependências #1/#2.
+4. Completar o contrato do renderer, com atomicidade e revogação, e ajustar os CHECKS afetados.
+
+Depois dessas correções, executar os validadores, congelar o novo SHA e solicitar nova reauditoria adversarial.
+
+Decisão operacional: manter o PR #5 em draft, sem merge. A auditoria foi exclusivamente de leitura e nenhuma alteração foi efetuada no repositório.
+
+Evidência complementar: [Execução da CI auditada](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41871815313?utm_source=chatgpt.com).
