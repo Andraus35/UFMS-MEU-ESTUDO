@@ -18,15 +18,24 @@
   "processamento": {
     "data_horario": "2026-11-04T12:34:00-04:00",
     "fuso": "America/Campo_Grande",
-    "agente_responsavel": "Carter (Coach)"
+    "agente_responsavel": "Carter (Coach)",
+    "data_horario_resposta_recebida": "2026-11-04T12:34:00-04:00",
+    "observacao_horario": "O horário acima registra a resposta simulada recebida. A persistência inicial ocorreu depois, no commit 5cafa8596a1cdc2381dc4e9c4eb89cf7d5c2c8c7; consultar a data do commit como evidência temporal."
   },
   "idempotencia": {
     "operation_id": "coach-response:UFMS-ACT-P005-ATOS-ADM-001:completed:v1",
     "activity_id": "UFMS-ACT-P005-ATOS-ADM-001",
     "simulacao_reprocessamento": {
       "mesma_resposta_repetida": true,
-      "acao_esperada": "no-op; não criar segundo registro nem novo commit",
-      "status": "pendente de teste verificável em outro contexto"
+      "resultado": "no-op",
+      "acao_observada": "Nenhuma chamada de escrita foi feita no reprocessamento; a operação estável já constava no registro.",
+      "evidencia": {
+        "blob_sha_antes": "b2a83e0523041f6f71f050c33626af6315808319",
+        "blob_sha_depois": "b2a83e0523041f6f71f050c33626af6315808319",
+        "branch_head_antes": "5cafa8596a1cdc2381dc4e9c4eb89cf7d5c2c8c7",
+        "branch_head_depois": "5cafa8596a1cdc2381dc4e9c4eb89cf7d5c2c8c7"
+      },
+      "limite": "Teste sequencial do procedimento nesta POC; não prova deduplicação automática ou proteção contra execuções concorrentes."
     }
   }
 }
