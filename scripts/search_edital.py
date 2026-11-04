@@ -238,6 +238,8 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
         raise ValueError('Anexo inválido')
     if anexo is not None and cargo is None:
         raise ValueError('Informe --cargo para selecionar o anexo')
+    if anexo is not None and query.strip():
+        raise ValueError('Use --anexo sem consulta textual para evitar conflito de fonte')
     if anexo in ('III','IV') and topic is not None:
         raise ValueError('Tópico do Anexo V incompatível com outro anexo')
     if anexo in ('III','IV') and area is not None:
@@ -410,6 +412,12 @@ def main():
     p.add_argument('--full',action='store_true',help='Incluir texto literal do trecho selecionado')
     p.add_argument('--neighbors',action='store_true',help='Indicar chunks adjacentes para expansão')
     a=p.parse_args()
+    if sum(bool(x) for x in (a.anexo,a.conteudo_cargo,a.atribuicoes_cargo,a.vagas_cargo))>1:
+        p.error('Selecione somente uma rota estruturada por vez')
+    if a.anexo and (not a.cargo or a.query or a.topic):
+        p.error('--anexo exige --cargo e não aceita consulta textual nem --topic')
+    if a.anexo in ('III','IV') and a.area is not None:
+        p.error('--area somente é válida com --anexo V')
     if a.anexo:print(json.dumps(search_anexo(a.cargo,a.anexo,ROOT,a.full,a.area),ensure_ascii=False,indent=2))
     elif a.conteudo_cargo:print(json.dumps(search_programa(a.conteudo_cargo,ROOT,a.full,a.area),ensure_ascii=False,indent=2))
     elif a.atribuicoes_cargo:print(json.dumps(search_atribuicao(a.atribuicoes_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
