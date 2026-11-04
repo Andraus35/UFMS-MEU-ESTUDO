@@ -1,5 +1,8 @@
 # P0 — Escritas por API, proteção de `main` e limites do gate
 
+> **ATUALIZAÇÃO DE ESTADO — 04/11/2026 (vigente):** PR #1 foi mesclado à `main`; a descrição abaixo do PR #1 como draft é **histórica**. O PR #9 está aberto como draft, sujeito a auditoria. A API confirma `main.protected=true` e o check `validate` obrigatório. O adaptador `scripts/api_write_guard.py` continua limitado explicitamente ao **PR #1** e rejeita caminhos de governança; **não serve como autorização genérica para o PR #9**. Este último utiliza revisão humana/PR/CI e readback do HEAD, mas **não recebe atestado de preflight pelo adaptador legado**. Não alterar os bloqueios silenciosamente: uma revisão específica desse contrato deve tratar a generalização futura.
+
+
 **Status:** mitigação em PR #1 draft; **não homologado como controle preventivo universal**. O repositório está **público** na verificação autenticada de 04/11/2026; o Project #2 é painel opcional e não substitui eventos versionados. Escritas pessoais permanecem bloqueadas.
 
 ## Modelo de ameaças e garantias reais

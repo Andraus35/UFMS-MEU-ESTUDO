@@ -8,8 +8,8 @@
 1. **Antes de qualquer trabalho operacional**, todo agente participante (Tutor, Coach, engenheiro documental, pedagógico, auditor ou integrador) deve recuperar e interpretar `AGENTS.md` e **`ROADMAP.md`** do HEAD atual, nessa ordem, e consultar os demais arquivos obrigatórios em `settings.json`.
 2. Em checkout local, executar `python scripts/bootstrap.py` e `python scripts/roadmap_gate.py --check` no START; verificar hash SHA-256 e identificar o item RM e eventuais bloqueadores. Sem checkout, ler os arquivos via GitHub autenticado e registrar HEAD e SHA de cada fonte. Se faltar leitura, integridade ou contexto, **não executar decisões nem mutações**.
 3. Na entrega, atualizar este roadmap se houver alteração relevante de estado, dependência ou prioridade; registrar evidência do commit no `memory/HANDOFF.md`. Nenhum status será promovido apenas porque um documento ou teste de infraestrutura existe.
-4. **Preparação administrativa:** `scripts/protect_main.py` e `docs/PROTECAO_MAIN.md` oferecem aplicação autenticada da proteção de `main`, com leitura posterior e testes adversariais. A execução do comando pelo proprietário ainda é necessária; a existência do script não equivale à configuração remota. `.github/copilot-instructions.md` amplia as instruções para o Copilot consultivo, sem criar uma barreira universal.
-5. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem e integridade local; isso não prova compreensão semântica por LLM. Scripts locais e CI não são uma barreira obrigatória para agentes externos ou pushes diretos. A `main` estava desprotegida na auditoria de 04/11/2026; proteção administrativa com PR, revisão e check `validate` exigido continua pendente.
+4. **Proteção administrativa aplicada:** o proprietário informou execução com `--check` retornando OK via Termux. Consulta GitHub autenticada verificou `main.protected=true` e status obrigatório `validate` aplicável a todos em 04/11/2026. O endpoint detalhado de proteção retornou 403 à integração, portanto estes detalhes adicionais dependem do check administrativo do proprietário. `scripts/protect_main.py` deve ser usado para **verificar**; não reaplicar PUT sem motivo e revisão. `.github/copilot-instructions.md` amplia instruções ao Copilot consultivo, sem constituir gate nativo universal. `.github/copilot-instructions.md` amplia as instruções para o Copilot consultivo, sem criar uma barreira universal.
+5. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem, fila RM e integridade local; isso não prova compreensão semântica por LLM. A proteção da `main` impõe check de CI na integração, **mas não impede agentes externos de ignorarem bootstrap ou alterarem código e workflow no mesmo PR**. Um verificador de fonte confiável e gates nos orquestradores de Tutor/Coach permanecem pendentes.
 6. Não publicar resultados pessoais enquanto o repositório for público nem habilitar flag por simples alteração. Nenhum merge/deploy sem autorização humana. O PR #3 de ponte Oracle/Telegram está encerrado fora de escopo, sem autorização para retomada.
 
 ## Estado observado
@@ -21,7 +21,7 @@ Fotografia em `main`, commit **`676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`** (rev
 | Fonte do edital | PDF original local de 47 páginas, transcrição e 81 chunks | Integrada/testada; retificações e alerta cronológico p. 13 precisam de acompanhamento |
 | Busca por cargo/anexo | Índices de tópicos, vagas, atribuições, BM25 e contraprovas | Integrada/testada; requer avaliação independente adicional |
 | Memória, bootstrap e persistência | AGENTS, rules, hooks, eventos, projeções e CI | Infraestrutura testada; invocação universal dos gates não comprovada |
-| Segurança | Bloqueio de resultados pessoais ativo, `main` sem proteção | Gate administrativo pendente; hooks cooperativos |
+| Segurança | Bloqueio de resultados pessoais ativo; `main` protegida com `validate` obrigatório | Verificado em nível de branch; hooks dos agentes continuam cooperativos |
 | Ingestão GP-1 | Contratos, fixtures e protótipo isolado com 15 testes | Implementação real de IGP-12/13/14 ainda não integrada |
 | Pedagogia adaptativa | Especificações v1.0–v1.8 e 102 critérios | Documentada; não há execução integral do motor |
 | Cognitive Gates | PR #5 com PLAN r2 e CHECKS C1–C27 | 0/27 provas funcionais; GQ-D exige reauditoria independente |
@@ -34,7 +34,7 @@ Fotografia em `main`, commit **`676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`** (rev
 
 | ID | P | Frente / gate | Estado de partida | Definition of Done |
 |---|---|---|---|---|
-| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Bootstrap e CI testados; aplicação administrativa de branch protection ainda pendente e não substituída por scripts locais |
+| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Bootstrap e branch protection verificados; faltam gate independente de workflow alterável, implementação nos orquestradores e parecer externo |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |

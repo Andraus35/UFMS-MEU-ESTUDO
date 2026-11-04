@@ -1,21 +1,19 @@
 # Aplicação administrativa da proteção da main
 
-**Estado de referência:** a API do GitHub informou `main.protected=false` e zero rulesets em 04/11/2026. Reconsultar ao executar. A CI do PR #9 teve duas execuções `validate` com sucesso para o commit `3106819840d4ebfe1dcc27736009b4af48f44341`, mas ainda não é requisito obrigatório de merge.
+**Estado observado em 04/11/2026:** após aplicação pelo proprietário no Termux, a API autenticada confirmou `main.protected=true` e `validate` obrigatório para todos. O usuário informou `python scripts/protect_main.py --check` com resultado OK. A conexão do agente recebe 403 no endpoint detalhado, portanto não se afirma reauditoria independente da configuração completa. O PR #9 permanece draft sem merge.
 
-## Uma operação administrativa necessária
+## Conferência periódica e reaplicação excepcional
 
-O conector GitHub utilizado pelos agentes permite leitura de proteções, mas **não oferece escrita nas configurações administrativas**. A proteção tem de ser aplicada pelo proprietário com `gh` autenticado no computador ou pela interface do GitHub. O comando abaixo executa **PUT** na API, depois **GET** e falha se o readback não corresponder. Não envolve segredos no repositório:
+O conector GitHub utilizado pelos agentes permite leitura de proteções, mas **não oferece escrita nas configurações administrativas**. A proteção **já foi aplicada pelo proprietário**. Para verificar via `gh` autenticado no Termux, executar apenas `--check` (GET, sem escrita). Não envolve segredos no repositório:
 
 ```powershell
 gh auth status
-python scripts/protect_main.py --plan
-python scripts/protect_main.py --apply --confirm Andraus35/UFMS-MEU-ESTUDO
 python scripts/protect_main.py --check
 ```
 
-Executar em checkout do **PR #9 depois de revisar os arquivos**, ou após merge devidamente autorizado. A aplicação sobre `main` não exige merge prévio, mas o script deve ser executado a partir de código revisado.
+Reaplicar somente quando uma alteração administrativa for deliberadamente autorizada; `--apply --confirm Andraus35/UFMS-MEU-ESTUDO` envia PUT e **substitui** regras já existentes. Antes de uma reaplicação, verificar a política atual e revisar o código no checkout do PR. A verificação não realiza merge.
 
-## Política aplicada por padrão
+## Política que o script verifica
 
 - Branch alvo: `main`; PR obrigatório, sem push direto para `main`.
 - `validate` obrigatório e estrito (branch atualizada em relação à base).

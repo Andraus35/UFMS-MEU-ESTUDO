@@ -1,3 +1,5 @@
+> **ESTADO VIGENTE EM 04/11/2026 — leitura prioritária:** PR #1 já mesclado; PR #9 aberto em draft na branch `docs/roadmap-required-bootstrap-20261104`. A `main` está protegida (`protected=true`, check `validate` obrigatório para todos, confirmado pela API). O proprietário relatou `scripts/protect_main.py --check` OK no Termux. **O endpoint administrativo detalhado retornou 403 ao agente**, portanto não afirmar auditoria independente integral da configuração. A implementação de START do roadmap está no PR #9, **não na main**, e precisa de nova CI no HEAD após cada correção, revisão humana e auditoria externa antes de merge. Os registros antigos abaixo são históricos e podem citar PRs/branch protection em estados ultrapassados.
+
 # Handoff — harness e checkpoints verificáveis
 
 - **Estado verificado em 2026-11-04:** harness v0.2 publicado em branch de proposta `setup/harness-memory-v0-2`, por meio do PR draft [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1). **Não está mesclado à main.**

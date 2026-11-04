@@ -37,19 +37,17 @@ Para escritas pela API, a política de pré-validação, a auditoria da CI e os 
 
 ## Proteção da branch principal
 
-O workflow `validate` já aprovou o PR #9, mas tornar esse check **obrigatório no servidor** exige administração do repositório. O procedimento verificável está em [`docs/PROTECAO_MAIN.md`](docs/PROTECAO_MAIN.md). Para um administrador autenticado em checkout revisado:
+O GitHub agora informa **`main.protected=true` e check `validate` obrigatório** (verificação em 04/11/2026). O proprietário confirmou que o comando administrativo `--check` também retornou OK pelo Termux. O PR #9 continua draft; cada novo commit exige outra CI. O procedimento verificável está em [`docs/PROTECAO_MAIN.md`](docs/PROTECAO_MAIN.md). Para um administrador autenticado em checkout revisado:
 
 ```powershell
-python scripts/protect_main.py --plan
-python scripts/protect_main.py --apply --confirm Andraus35/UFMS-MEU-ESTUDO
 python scripts/protect_main.py --check
 ```
 
-**Importante:** só `--apply` modifica configurações no GitHub; executar o comando requer a ação explícita do proprietário. O contrato do Copilot consultivo está em `.github/copilot-instructions.md`; ele não é enforcement de servidor nem garante interpretação por LLM.
+**Importante:** não repetir `--apply` sem necessidade: ele substitui a configuração de proteção na API. A verificação ordinária usa apenas `--check`. O contrato do Copilot consultivo está em `.github/copilot-instructions.md`; ele não é enforcement de servidor nem garante interpretação por LLM.
 
 ## Roadmap estratégico
 
-A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam sua ausência, placeholder, ordem incorreta e referências removidas. Isso **não obriga agentes externos** a executar o bootstrap: a proteção administrativa de `main` permanece pendente.
+A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam sua ausência, placeholder, ordem incorreta e referências removidas. Isso **não obriga agentes externos** a executar o bootstrap: a execução compulsória do bootstrap por agentes externos e uma validação independente do workflow proposto continuam pendentes.
 
 ## Fonte e limites
 
