@@ -74,6 +74,23 @@ O arquivo `edital/vagas_index.json` é um **índice derivado não normativo**, l
 - Mesmo na busca BM25 com `--cargo 523` ou `--cargo 324`, as páginas **20–28** são limitadas ao trecho de atribuições do cargo selecionado. O texto completo permanece acessível via `--page` quando for preciso revisar o PDF original.
 - Reproduzir e verificar com `python scripts/index_atribuicoes.py --write` e `python scripts/index_atribuicoes.py --check`. A CI valida o manifesto, os recortes e testes adversariais; retificações continuam sendo fontes separadas.
 
+## Separação determinística entre Anexos III, IV e V
+
+O buscador distingue **requisitos de ingresso e vagas** (Anexo III), **atribuições funcionais** (Anexo IV) e **programa de conhecimentos cobrado** (Anexo V). Os três são fontes com funções diferentes; um tema presente nas atribuições **não é automaticamente** requisito de ingresso ou tópico da prova.
+
+| Consulta | Comando | Resultado |
+|---|---|---|
+| Anexo III — requisito 523 | `python scripts/search_edital.py --anexo III --cargo 523 --full` | Linha literal da p. 15 |
+| Anexo IV — atribuição 324 | `python scripts/search_edital.py --anexo IV --cargo 324 --full` | Recorte literal da p. 28 |
+| Anexo V — programa completo 523 | `python scripts/search_edital.py --anexo V --cargo 523` | 14 tópicos: 4 gerais e 10 específicos |
+| Anexo V — específicos 324 | `python scripts/search_edital.py --anexo V --cargo 324 --area especificos` | 9 tópicos, p. 45 |
+
+Alternativamente, `--conteudo-cargo 523` ou `--conteudo-cargo 324` retorna o inventário completo do Anexo V, com áreas, páginas, chunks e offsets. Por padrão retorna **localizadores e pequenos excertos**, não os 47 páginas do documento; `--full` acrescenta cada trecho literal. O 523 tem 14 tópicos no total e o 324 tem 13 (quatro gerais e nove específicos). Em ambos os casos os conhecimentos gerais estão na p. 29.
+
+Perguntas diretas como `"Anexo III do cargo 523"`, `"Quais as atribuições do cargo 324?"` e `"Conhecimentos específicos do cargo 523"` também podem ser roteadas. Consultas que misturam anexos ou pedem simultaneamente requisitos, atribuições e conteúdos são **rejeitadas para desambiguação**, em vez de retornar uma resposta parcial. O seletor `--anexo` exige `--cargo` e não aceita consulta textual na mesma chamada.
+
+`tests/fixtures/annex_cases.json` mantém 21 contraprovas de roteamento e ambiguidade; `scripts/benchmark_anexos.py` mede seu resultado na CI. São consultas de diagnóstico versionadas pelo produtor, não evidência de acurácia universal ou homologação independente. Os índices continuam derivados e qualquer retificação exige fonte versionada independente.
+
 ## Localização e comandos
 
 - `edital/manifest.json`: índice máquina-legível com IDs, páginas, offsets e categorias; **81 chunks**.
