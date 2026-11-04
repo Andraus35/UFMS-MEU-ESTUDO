@@ -275,7 +275,7 @@ class AdversarialGitHubAppTests(unittest.TestCase):
             {"filename": "ROADMAP.md", "status": "modified"}],
             comments=["valid"], allow_signature=True)
         self.assertEqual(result["conclusion"], "success")
-        self.assertEqual(self.fake.published[-1]["app"]["id"], int(APP_ID))
+        self.assertEqual(self.fake.checks[MERGE_A][-1]["app"]["id"], int(APP_ID))
 
     def test_full_stack_lockfile_rename_denied_even_if_signed(self):
         result = self.full_stack([
