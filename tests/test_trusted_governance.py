@@ -85,7 +85,8 @@ class TrustedGovernanceTests(unittest.TestCase):
                      "tests/test_ci_gate_contract.py", "state/CURRENT.json",
                      "edital/manifest.json", "config/topics.csv",
                      "docs/pedagogia/PLANO_GATES.md", "memory/HANDOFF.md",
-                     "docs/auditorias/PARECER.md", ".github/copilot-instructions.md"):
+                     "docs/auditorias/PARECER.md", ".github/copilot-instructions.md",
+                     "docs/OPERACAO.md", "docs/API_WRITE_GOVERNANCE.md"):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "Ed25519"):
                 evaluate(PR, HEAD, BASE, [path], [], self.pubkey)
 
