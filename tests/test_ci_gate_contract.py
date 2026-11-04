@@ -39,7 +39,8 @@ class CIGateContractTests(unittest.TestCase):
             verify_workflow(bad)
 
     def test_forcar_continue_on_error(self):
-        bad = WORKFLOW.replace("    steps:\n", "    steps:\n      - continue-on-error: true\n")
+        bad = WORKFLOW.replace("        run: python scripts/validate.py\n",
+                               "        run: python scripts/validate.py\n        continue-on-error: true\n")
         with self.assertRaisesRegex(ValueError, "Bypass"):
             verify_workflow(bad)
 
