@@ -64,7 +64,7 @@
     "date": "2026-11-04",
     "status": "partial_website_check",
     "exhaustive": false,
-    "results": "Portal FAPEC ver/22 consultado; download remoto não obtido para hash; demais publicações não exaustivamente verificadas."
+    "results": "FAPEC ver/22: somente publicação inicial observada. UFMS publicou PDF SEI_6775306_Edital.pdf (47 páginas); título e p. 13 cotejados, mas bytes/hash remoto não verificados. Boletim/DOU não pesquisados de forma exaustiva."
   },
   "institutional_pdf_observations": [
     {
