@@ -21,9 +21,10 @@
 13. [Prompt de transferência técnica v1.8](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md): retomada READ ONLY e primeira tarefa da outra sessão.
 14. [Verificação parcial GP-0/GP-1](VERIFICACAO_GP0_GP1_2026-11-04.md): fontes UFMS/FAPEC, cronograma original, anomalias documentais e contratos técnicos no SHA observado.
 15. [Cotejo dos específicos 523/324](COTEJO_ESPECIFICOS_523_324_2026-11-04.md): interseções textuais confirmadas no edital original e recortes não compartilháveis.
-16. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
-17. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
-18. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
+16. [Contraprovas de compartilhamento](CONTRAPROVAS_CADERNOS_523_324_2026-11-04.md): 13 verificações positivas/negativas e quatro cadernos-modelo, sem criar objetos reais.
+17. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
+18. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
+19. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
 
 ## Hierarquia e limites
 

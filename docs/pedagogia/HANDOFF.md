@@ -1,34 +1,33 @@
 # Handoff da sessão de estratégia pedagógica — UFMS
 
-**Checkpoint:** 04/11/2026, America/Campo_Grande — **loop autônomo, ciclo 1**.  
-**Status:** cotejo textual dos conteúdos específicos 523/324 no edital original. Sem homologação GP-0.
+**Checkpoint:** 04/11/2026, fuso America/Campo_Grande — **loop autônomo, ciclo 2**.  
+**Estado:** duas entregas documentais sequenciais confirmáveis, não implementação nem homologação.
 
-## START confirmado
+## Identidade no START do ciclo 2
 
-- Repositório: `Andraus35/UFMS-MEU-ESTUDO`; PR pedagógico [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2`, aberto em draft sem merge.
-- HEAD **anterior** a este commit: `443fc04158fdebb2c30777393603afefe43e4027`. Obter HEAD novo por readback, pois não é possível inscrever o SHA do próprio commit dentro dele.
-- PR técnico [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1), HEAD observado no início do ciclo `ed263a7999dd816c32af086a41ea8cefa8ab13c9`; não escrever nessa branch.
-- `main` não modificada por esta entrega.
+- Repositório `Andraus35/UFMS-MEU-ESTUDO`, PR pedagógico [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2`, draft e sem merge.
+- HEAD confirmado **antes deste segundo commit**: `176d4156852122faf9da2eb456a6c2ba825ce48b`. O HEAD novo deve ser conferido remotamente; não cabe no próprio handoff antes do commit.
+- O PR técnico #1 continua independente e não foi editado por esta sessão.
+- `main` não modificada nesta entrega.
 
-## Entrega — ciclo 1
+## Escopo entregue e estado
 
-- [COTEJO_ESPECIFICOS_523_324_2026-11-04.md](COTEJO_ESPECIFICOS_523_324_2026-11-04.md): sete interseções textuais localizadas no Anexo V do original UFMS, com limites, linhas/páginas, conteúdos exclusivos, incerteza normativa e cuidados de dupla contagem.
-- [README.md](README.md): índice atualizado.
-- [HANDOFF.md](HANDOFF.md): este checkpoint no mesmo commit.
-- [CRITERIOS_DE_ACEITACAO.md](CRITERIOS_DE_ACEITACAO.md): **102 cenários documentados**, sem adição nem execução nesta entrega.
-- Especificações v1.0–v1.8 permanecem propostas; nada foi implementado no motor.
+- Ciclo 1: [COTEJO_ESPECIFICOS_523_324_2026-11-04.md](COTEJO_ESPECIFICOS_523_324_2026-11-04.md), sete interseções parciais e suas limitações, cotejadas com o Anexo V original.
+- Ciclo 2: [CONTRAPROVAS_CADERNOS_523_324_2026-11-04.md](CONTRAPROVAS_CADERNOS_523_324_2026-11-04.md), treze contraprovas CP-01–13 e quatro cadernos-modelo sem estoque, ID ou link inventados.
+- Índice [README.md](README.md) atualizado no mesmo commit e este handoff sincronizado.
+- V1.0–v1.8, [protocolo de entregas](PROTOCOLO_ENTREGA_CONTINUIDADE.md) e [catálogo de 102 cenários](CRITERIOS_DE_ACEITACAO.md) preservados. CP-01–13 são **fixtures especializadas** dos casos já existentes, não 13 testes novos nem teste executado.
 
-## Evidência e incerteza
+## Validação e pendências
 
-- Documento original: https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf, páginas impressas 35–36 (523) e 45 (324).
-- As interseções são parciais; nenhum bloco completo deve ser fundido por nome.
-- FAPEC lista `001/2026` enquanto UFMS apresenta `152/2026`. Não foi possível ler o PDF FAPEC nem demonstrar ausência de retificações. **GP-0 continua pendente**.
-- Não realizar alterações em `config/topics.csv`, índices/chunks, código, `settings.json` ou persistência pessoal.
+Fonte: https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf (Anexo V, páginas impressas 35–36 e 45). Interseções confirmadas apenas na **redação original**, retificações pendentes.
+Documento FAPEC listado `001/2026` segue sem PDF acessível para cotejo. Não afirmar identidade com o PDF `152/2026` nem ausência de retificação.
+GP-0 pendente; GP-1 parcialmente observado/presente mas não aprovado; GP-2–GP-5 não homologados.
+Nenhum script, chunks, CONFIG, arquivo privado ou PR técnico foi editado.
 
-## Próxima tarefa do loop
+## Próximo limite do loop
 
-Verificar a consistência de classificação de temas exclusivos e sobrepostos em **contraprovas documentais** dos blocos 523/324 e converter o mapeamento em um conjunto curto de exemplos de caderno com filtros apropriados, **sem afirmar estoque de questões real**. Outra alternativa somente se houver evidência nova é confrontar arquivo FAPEC/retificações. Cada entrega requer commit e readback.
+Sem documento FAPEC, retificação positiva ou nova amostra legítima de resultados, **não reiterar buscas idênticas indefinidamente** nem inventar correções. O próximo passo com maior benefício será o auditável **ENG-00/ENG-01 na sessão técnica**, após leitura de seu HEAD atual; dados de estudante permanecem bloqueados para escrita no estado técnico observado anteriormente.
 
-## Guardrails
+## Retomada
 
-Não merge; não tocar PR #1; não supor resultados pessoais; não declarar CI aprovada sem execução observada; revalidar HEAD e handoff antes de prosseguir.
+Na próxima interação, reconfirmar HEAD de PR #2, ler README/HANDOFF e os dois documentos do loop no mesmo SHA. Commit por entrega com readback. Sem merge, sem simular cadernos existentes e sem edição de PR #1.
