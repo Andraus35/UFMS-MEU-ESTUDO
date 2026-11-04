@@ -1,30 +1,28 @@
 # Handoff da sessão de estratégia pedagógica — UFMS
 
-**Checkpoint:** 04/11/2026, America/Campo_Grande — **ciclo 5: execução local real das fixtures GP-1**.  
-**Estado:** 11 casos executados PASS, 0 FAIL, 3 NOT_IMPLEMENTED; GP-1 ainda pendente e nenhuma escrita pessoal autorizada.
+**Checkpoint:** 04/11/2026, America/Campo_Grande, **ciclo 6**.  
+**Estado:** contraprovas estáticas concretas IGP-12/13/14, sem testes novos executados nem implementação. Os 102 cenários pedagógicos e 14 fixtures do ciclo anterior continuam inalterados.
 
-## START / Identidades e fontes
+## START confirmado
 
-- Repositório `Andraus35/UFMS-MEU-ESTUDO`, PR pedagógico #2 draft, branch `docs/especificacao-pedagogica-v1-2`, HEAD **anterior** `02610d347a46bb8435b845fe07afc6b90f059e72`. Reconsultar commit posterior por readback, nunca confiar no futuro SHA do próprio arquivo.
-- PR técnico #1, HEAD lido e utilizado na reprodução local: `42530c1680fb328fb9064235d475d2951c3a7c51`. Revalidar quando mudar.
-- [Fixtures do ciclo 4](FIXTURES_INGESTAO_GP1_2026-11-04.json) hash Git `bd060fd2263c686e7dc4f56bf0c97f5fc5112dfc`.
-- Código e tópicos do HEAD técnico foram reproduzidos localmente e verificados por hash Git blob exato: `28649e5b649c239cb03d748ab5822c352ddfe1db` e `d733ec5af292934fa4efa0e892470c27603065f6`.
+- Repositório: `Andraus35/UFMS-MEU-ESTUDO`.
+- PR pedagógico #2, branch `docs/especificacao-pedagogica-v1-2`, aberto em draft sem merge; HEAD **antes** da entrega `85fc0ef98eb866058ee75297a5818c7525248f7c`.
+- PR técnico #1, branch `setup/harness-memory-v0-2`, aberto em draft sem merge; HEAD inspecionado `b312a1f9f2110d3d75810e45b414b85c8e775445`.
+- `scripts/core.py` e `tests/test_harness.py` ainda possuem os blobs `28649e5b649c239cb03d748ab5822c352ddfe1db` e `00288b757073e87b47c4ce7223704a168843b389`.
+- CI técnica no HEAD exato: [run 41828336395](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41828336395), `completed/success`; não é homologação do motor.
 
-## Entrega
+## Entrega e status
 
-- [EXECUCAO_FIXTURES_GP1_2026-11-04.md](EXECUCAO_FIXTURES_GP1_2026-11-04.md): método de execução, tabela por caso, limitações e veredito.
-- [RESULTADOS_EXECUCAO_GP1_2026-11-04.json](RESULTADOS_EXECUCAO_GP1_2026-11-04.json): 14 IDs e status individual.
-- [README.md](README.md) atualizado e este handoff no mesmo commit.
-- 102 critérios pedagógicos documentados permanecem inalterados; 11 fixtures aprovadas **não** são equivalentes à aprovação do catálogo inteiro.
-- Não houve edição do PR #1, scripts técnicos remotos, dados reais, `settings.json` nem merge.
+- Novo [CONTRAPROVAS_INGESTAO_GP1_CICLO6_2026-11-04.md](CONTRAPROVAS_INGESTAO_GP1_CICLO6_2026-11-04.md): demonstra por leitura do código as lacunas IGP-12 (convenção de relatório), IGP-13 (duas tentativas por caderno externo) e IGP-14 (tempo de registro ≠ tempo da tentativa), com aceites e regressões desduplicadas.
+- [README.md](README.md) e este handoff atualizados no mesmo commit; próximo SHA exige readback remoto.
+- O relatório de execução prévio [ciclo 5](EXECUCAO_FIXTURES_GP1_2026-11-04.md) permanece **11 PASS, 0 FAIL e 3 NOT_IMPLEMENTED**, sem reexecutar esses casos nesta entrega.
+- IGP-12/13/14 **não foram executados neste ciclo**; são análises estáticas com testes futuros definidos.
+- Não houve escrita no PR #1, resultados pessoais, `settings.json`, `main` ou merge.
 
-## Estado de gates
+## Bloqueios e sequência
 
-- GP-0: pendente de cotejo FAPEC e retificações; original UFMS já tem verificação parcial.
-- GP-1: 11 comportamentos sintéticos demonstrados, 3 lacunas de contrato (normalização, ID de tentativa, datas distintas); **PENDENTE**.
-- GP-2/GP-3/GP-4/GP-5: não demonstrados/homologados.
-- Apenas execução local isolada; nenhum workflow desta candidata pedagógica foi executado por esta prova.
+GP-0: fontes/retificações ainda não concluídas. GP-1: três lacunas técnicas remanescentes. GP-2/GP-3: motor e suíte de 102 casos não demonstrados. GP-4/GP-5: operação/piloto não iniciados.
 
-## Próxima ação concreta
+**Próximo passo principal é técnico:** ENG-01 (identidades, correções e datas), ENG-02 (normalização) e ENG-06 (testes); a sessão técnica deve reconsultar o HEAD, testar fixtures e registrar SHA+CI+readback. A sessão pedagógica só deverá atualizar métodos mediante contraprova nova; evitar repetir documentação.
 
-Encaminhar à engenharia os casos IGP-12 a IGP-14 para implementação testável em branch independente. Antes de repetir testes, consultar HEADs atuais e avaliar se a engenharia já os solucionou. Não criar novo conjunto pedagógico de requisitos sem nova evidência. Registro de resultado pessoal continua bloqueado.
+**Protocolo:** verificar HEAD do PR #2 e ler este handoff/README na mesma revisão, fazer um commit por entrega e readback; nenhum merge sem autorização.
