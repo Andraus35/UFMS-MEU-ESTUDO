@@ -48,9 +48,17 @@ Páginas críticas **renderizadas** para inspeção de estrutura, limites de pro
 - A [execução 41789035123](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41789035123) registrou falha legítima no *fixture*: a expressão esperada `não discriminação` não estava literal na transcrição; a consulta adversarial foi preservada, e a âncora de prova foi corrigida para `administração de conflitos`. Revalidação posterior aprovada. **Não apagar a falha histórica.**
 - A validação adversarial foi criada e refinada pela mesma frente produtora; é evidência de testes separados, **não** homologação independente.
 
-## 6. Próxima retomada técnica
+### 6. Recorte adicional de atribuições (Anexo IV)
+
+- Em 04/11/2026 foram conferidas visualmente as páginas **23** e **28** do PDF original de SHA-256 `c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675`.
+- A descrição do **523** ocupa `p23-c01`, sem invadir a atribuição da Produção Cultural anterior nem a de Gestão Pública (Campus) na sequência. O texto literal tem **2.349 caracteres**, com SHA-256 do recorte `965513446559f2f54bdc23b971b3057303af4d6506b7c9b6419c79aeb31ca933`.
+- A descrição do **324** ocupa `p28-c02`, sem incluir a atribuição anterior de Veterinária e Zootecnia ou o rodapé. Tem **2.370 caracteres**, SHA-256 do recorte `52b8ef5302b52bc247037591623eafbabc66b0c29caa2df660f560bef36c4cbe`.
+- `edital/atribuicoes_index.json` é derivado e não normativo; `scripts/index_atribuicoes.py` verifica limites literais, fonte e hashes. `scripts/search_edital.py` fornece roteamento por cargo e restringe BM25 do Anexo IV, quando há filtro de cargo, aos trechos verificados.
+- `tests/test_atribuicoes.py` adiciona **8 testes** de integridade, contaminação, busca, mutação e custo de contexto; a CI integra `scripts/index_atribuicoes.py --check`. Testes são evidência técnica, **não** parecer de auditoria independente.
+
+## 7. Próxima retomada técnica
 
 1. Reconfirmar HEAD exato e CI do PR #1, sem merge.
 2. Conferir novamente fonte oficial FAPEC/Boletim quanto à anomalia do Anexo II, registrando eventual ato separado.
-3. **Concluído:** indexação de linhas 523 e 324 com âncoras de código, vagas, localidade e alternativas de formação em `edital/vagas_index.json`. Para novas frentes, examinar a descrição sumária de atribuições dos cargos no Anexo IV (pp. 20–28) antes de estender o índice.
+3. **Concluído:** indexação de linhas de vagas e requisitos 523/324 e das atribuições literais do Anexo IV. Próxima frente: contraprovas de falsas equivalências entre atribuições, programa de conhecimentos específicos e requisito de ingresso.
 4. Ampliar holdout com perguntas não usadas na construção dos aliases; manter testes adversariais e documento canônico intacto.
