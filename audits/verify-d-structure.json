@@ -1,0 +1,19 @@
+{
+  "structural_pass": true,
+  "issues": [],
+  "metrics": {
+    "ac_count": 27,
+    "check_count": 27,
+    "coverage_pairs": 27,
+    "proof_lines": 31,
+    "swept_dimensions": 9,
+    "one_way_doors": 4
+  },
+  "plan_sha256": "6e6977d6d9ffd964a2bf8e52720f8754773e6656b99c5808f7e7c3b6d950d0d8",
+  "checks_sha256": "86dba11335307845437d77a34657776b56d0f247d8813ee8f803cd1db5d0c965",
+  "independent_verifier_ran": false,
+  "official_tlc_validators_ran": false,
+  "cognitive_llm_trials": 0,
+  "operational_checks_executed": 0,
+  "outcome": "STRUCTURE_PASS_ONLY"
+}

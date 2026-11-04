@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-04",
+  "phase": "CHECKS derived from approved PLAN",
+  "approval_exact": "APROVO",
+  "approved_plan_original_sha256": "652cd14711d7f1997b8d2703dba81dca316a7245fcf4429bc903e8f86a94c297",
+  "approved_plan_sha256": "6e6977d6d9ffd964a2bf8e52720f8754773e6656b99c5808f7e7c3b6d950d0d8",
+  "checks_sha256": "86dba11335307845437d77a34657776b56d0f247d8813ee8f803cd1db5d0c965",
+  "ears_count": 27,
+  "checks_count": 27,
+  "mapped_ears": 27,
+  "one_way_doors": 4,
+  "coverage_rows": 22,
+  "swept_dimensions": 9,
+  "proof_selectors_declared": 27,
+  "proofs_executed": 0,
+  "official_validate_plan_executed": false,
+  "official_validate_checks_executed": false,
+  "npm_install_status": "unavailable - DNS EAI_AGAIN in this environment",
+  "local_structure_check": "PASS",
+  "remote_github_modified": false,
+  "build_started": false,
+  "release_approved": false
+}
