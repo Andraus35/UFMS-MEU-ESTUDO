@@ -1,28 +1,20 @@
-# Handoff da sessão de estratégia pedagógica — UFMS
+# Handoff pedagógico — ciclo 7
 
-**Checkpoint:** 04/11/2026, America/Campo_Grande, **ciclo 6**.  
-**Estado:** contraprovas estáticas concretas IGP-12/13/14, sem testes novos executados nem implementação. Os 102 cenários pedagógicos e 14 fixtures do ciclo anterior continuam inalterados.
+**Checkpoint:** 04/11/2026, America/Campo_Grande. PR #2 `docs/especificacao-pedagogica-v1-2`, HEAD anterior `e1e9248ea4f6c8b5a32de3dc46f47c4027aa4104`, aberto/draft e sem merge. A nova identidade de commit requer readback remoto.
 
-## START confirmado
+## Evidência obtida e publicada
 
-- Repositório: `Andraus35/UFMS-MEU-ESTUDO`.
-- PR pedagógico #2, branch `docs/especificacao-pedagogica-v1-2`, aberto em draft sem merge; HEAD **antes** da entrega `85fc0ef98eb866058ee75297a5818c7525248f7c`.
-- PR técnico #1, branch `setup/harness-memory-v0-2`, aberto em draft sem merge; HEAD inspecionado `b312a1f9f2110d3d75810e45b414b85c8e775445`.
-- `scripts/core.py` e `tests/test_harness.py` ainda possuem os blobs `28649e5b649c239cb03d748ab5822c352ddfe1db` e `00288b757073e87b47c4ce7223704a168843b389`.
-- CI técnica no HEAD exato: [run 41828336395](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41828336395), `completed/success`; não é homologação do motor.
+- [Execução negativa IGP-12–14](EXECUCAO_NEGATIVA_GP1_CICLO7_2026-11-04.md): **3 GAP_REPRODUCED, 0 UNEXPECTED**, com eventos fictícios em memória, SHA Git dos insumos e observações efetivas.
+- [Recibo estruturado](RESULTADOS_NEGATIVOS_GP1_CICLO7_2026-11-04.json), `README.md` e este `HANDOFF.md` sincronizados no commit.
+- Executor Python local possui Git blob `28db1cdd26515697fa8c87feedba00a15e4338a2`; **não foi commitado**. O JSON remoto é resumo, não recibo local byte-idêntico.
+- Os 102 critérios de aceitação e 14 fixtures anteriores continuam preservados; 11 PASS do ciclo 5 e 3 lacunas reproduzidas no ciclo 7 **não equivalem** a aceitação do GP-1.
 
-## Entrega e status
+## Mudança concorrente
 
-- Novo [CONTRAPROVAS_INGESTAO_GP1_CICLO6_2026-11-04.md](CONTRAPROVAS_INGESTAO_GP1_CICLO6_2026-11-04.md): demonstra por leitura do código as lacunas IGP-12 (convenção de relatório), IGP-13 (duas tentativas por caderno externo) e IGP-14 (tempo de registro ≠ tempo da tentativa), com aceites e regressões desduplicadas.
-- [README.md](README.md) e este handoff atualizados no mesmo commit; próximo SHA exige readback remoto.
-- O relatório de execução prévio [ciclo 5](EXECUCAO_FIXTURES_GP1_2026-11-04.md) permanece **11 PASS, 0 FAIL e 3 NOT_IMPLEMENTED**, sem reexecutar esses casos nesta entrega.
-- IGP-12/13/14 **não foram executados neste ciclo**; são análises estáticas com testes futuros definidos.
-- Não houve escrita no PR #1, resultados pessoais, `settings.json`, `main` ou merge.
+O PR #1 avançou de `b312a1f9f2110d3d75810e45b414b85c8e775445` para `1079d7aa2cadb97d099d1e478f9e83b36180a624`; `core.py`, `topics.csv` e `test_harness.py` permanecem em seus blobs exatos conferidos. Nenhum arquivo do PR #1 foi editado por esta sessão.
 
-## Bloqueios e sequência
+O handoff técnico do novo HEAD confirma que o edital local 152/2026 (47 páginas, SHA-256 `c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675`) é utilizável para **iniciar estudos imediatamente**. A falta de outra cópia remota não impede o uso da versão original; monitorar retificações separadamente.
 
-GP-0: fontes/retificações ainda não concluídas. GP-1: três lacunas técnicas remanescentes. GP-2/GP-3: motor e suíte de 102 casos não demonstrados. GP-4/GP-5: operação/piloto não iniciados.
+## Próxima ação e bloqueios
 
-**Próximo passo principal é técnico:** ENG-01 (identidades, correções e datas), ENG-02 (normalização) e ENG-06 (testes); a sessão técnica deve reconsultar o HEAD, testar fixtures e registrar SHA+CI+readback. A sessão pedagógica só deverá atualizar métodos mediante contraprova nova; evitar repetir documentação.
-
-**Protocolo:** verificar HEAD do PR #2 e ler este handoff/README na mesma revisão, fazer um commit por entrega e readback; nenhum merge sem autorização.
+A **engenharia** deve implementar ENG-01/ENG-02/ENG-06 com testes de tentativa independente, datas distintas e adaptador de relatórios, por SHA, sem habilitar gravação pessoal. GP-1 permanece pendente; GP-2–GP-5 não homologados. Não repetir análises de lacunas sem novas implementações. Não realizar merge ou escrever dados do estudante. Confirmar HEAD do PR #2, README, handoff e CI antes de qualquer próximo ciclo.
