@@ -12,6 +12,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Validar contrato de segurança da CI
+        run: python scripts/ci_gate_contract.py --check
       - name: Verificar bloqueio de resultados pessoais
         run: python scripts/write_policy.py --check
       - name: Validar estrutura e dados
