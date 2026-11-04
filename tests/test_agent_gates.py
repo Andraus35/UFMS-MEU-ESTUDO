@@ -97,6 +97,25 @@ class AgentGateTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     validate_roadmap_text(mutation)
 
+    def test_alteracao_estrategica_sem_baseline_rejeitada(self):
+        original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        line = next(line for line in original.splitlines() if line.startswith("| RM-02 |"))
+        fields = line.split("|")
+        self.assertEqual(fields[4].strip(), "bloqueado")
+        variants = []
+        for index, value in (
+            (2, "P2"),
+            (4, "homologado"),
+            (5, "Critério aprovado sem resultados, provas ou testes suficientes"),
+        ):
+            changed = fields.copy()
+            changed[index] = " " + value + " "
+            variants.append(original.replace(line, "|".join(changed), 1))
+        for variant in variants:
+            with self.subTest(changed=variant != original):
+                with self.assertRaisesRegex(ValueError, "baseline auditada"):
+                    validate_roadmap_text(variant)
+
     def test_hook_sem_interface_run_falha(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
