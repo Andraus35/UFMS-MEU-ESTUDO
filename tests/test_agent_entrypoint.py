@@ -3,6 +3,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,13 +40,19 @@ class EntryGateTests(unittest.TestCase):
         (self.root / "settings.json").write_text(
             json.dumps({"bootstrap": {"mandatory": list(MANDATORY)}}), encoding="utf-8"
         )
+        # Test doubles are ONLY test-level patches; no production bypass flags.
+        self.head_patch = mock.patch("agent_entrypoint._git_head", return_value=HEAD)
+        self.clean_patch = mock.patch("agent_entrypoint._git_clean")
+        self.head_mock = self.head_patch.start()
+        self.clean_mock = self.clean_patch.start()
+        self.addCleanup(self.head_patch.stop)
+        self.addCleanup(self.clean_patch.stop)
 
-    def verify(self, **kwargs):
-        return verify_start(self.root, HEAD, observed_head=kwargs.pop("head", HEAD),
-                            clean_check=kwargs.pop("clean", True), **kwargs)
+    def verify(self):
+        return verify_start(self.root, HEAD)
 
     def broker(self):
-        return AgentBroker(self.root, HEAD, observed_head=HEAD, clean_check=True)
+        return AgentBroker(self.root, HEAD)
 
     def test_pass_valid_snapshot(self):
         result = self.verify()
@@ -75,12 +82,16 @@ class EntryGateTests(unittest.TestCase):
             self.verify()
 
     def test_fail_other_head_and_dirty_checkout(self):
+        self.head_mock.return_value = "f" * 40
         with self.assertRaisesRegex(GateClosed, "HEAD"):
-            self.verify(head="f" * 40)
+            self.verify()
+        self.head_mock.return_value = HEAD
+        self.clean_mock.side_effect = GateClosed("Dirty checkout")
         with self.assertRaisesRegex(GateClosed, "Dirty"):
-            self.verify(clean=False)
+            self.verify()
+        self.clean_mock.side_effect = None
         with self.assertRaisesRegex(GateClosed, "Trusted SHA"):
-            verify_start(self.root, "", observed_head=HEAD, clean_check=True)
+            verify_start(self.root, "")
 
     def test_fail_symlinked_mandatory(self):
         linked = self.root / "rules/CORE.md"
@@ -97,6 +108,21 @@ class EntryGateTests(unittest.TestCase):
                        "execute", "merge", "delete", "post_result"):
             with self.subTest(action=action), self.assertRaisesRegex(GateClosed, "No protected writes"):
                 broker.request("tutor", action)
+
+    def test_stale_bootstrap_receipt_cannot_be_replayed(self):
+        broker = self.broker()
+        self.assertEqual(broker.request("tutor", "start")["status"], "bootstrap_verified")
+        (self.root / "ROADMAP.md").write_text("placeholder", encoding="utf-8")
+        with self.assertRaisesRegex(GateClosed, "truncated"):
+            broker.request("tutor", "inspect")
+        with self.assertRaisesRegex(GateClosed, "truncated"):
+            broker.prompt_context()
+
+    def test_branch_switch_after_start_cannot_reuse_receipt(self):
+        broker = self.broker()
+        self.head_mock.return_value = "f"*40
+        with self.assertRaisesRegex(GateClosed, "HEAD"):
+            broker.request("coach", "start")
 
     def test_refuse_unregistered_role_and_context(self):
         broker = self.broker()
