@@ -1,0 +1,32 @@
+{
+  "id": "POC-UFMS-007",
+  "dados_ficticios": true,
+  "atividade_id": "UFMS-ACT-P005-ATOS-ADM-001",
+  "registro_origem": {
+    "repositorio": "Andraus35/UFMS-MEU-ESTUDO",
+    "branch": "poc-ufms-005-zapia",
+    "caminho": "poc/POC-UFMS-005.json",
+    "commit": "9a2c46b3eb9fa7d0eac6040be6f08c1490b65874",
+    "disciplina": "Direito Administrativo",
+    "assunto": "Atos administrativos",
+    "objetivo": "Recuperar conceitos já estudados, identificar lacunas e praticar questões, sem incluir conteúdo jurídico não verificado."
+  },
+  "estado_anterior": "revisão pendente",
+  "resposta_recebida": "Revisão concluída",
+  "interpretacao": "O estudante declara que concluiu a revisão; não é mera confirmação de leitura do lembrete.",
+  "estado_atualizado": "concluída",
+  "processamento": {
+    "data_horario": "2026-11-04T12:34:00-04:00",
+    "fuso": "America/Campo_Grande",
+    "agente_responsavel": "Carter (Coach)"
+  },
+  "idempotencia": {
+    "operation_id": "coach-response:UFMS-ACT-P005-ATOS-ADM-001:completed:v1",
+    "activity_id": "UFMS-ACT-P005-ATOS-ADM-001",
+    "simulacao_reprocessamento": {
+      "mesma_resposta_repetida": true,
+      "acao_esperada": "no-op; não criar segundo registro nem novo commit",
+      "status": "pendente de teste verificável em outro contexto"
+    }
+  }
+}
