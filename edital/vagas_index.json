@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "classification": "derived_non_normative",
+  "source": "EDITAL_UFMS_152_2026.md",
+  "source_git_blob_sha": "a4129cceabd20fc119625d71b1c1599b3ce644e1",
+  "source_pdf_sha256": "c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675",
+  "description": "Campos dos cargos 523 e 324 no Anexo III; coordenadas PDF auditadas visualmente; offsets derivados dos chunks.",
+  "entries": [
+    {
+      "cargo": "523",
+      "page": 15,
+      "chunk_id": "p15-c01",
+      "normalized_name": "Analista em Educação / Administração e Informação / Gestão Pública",
+      "vacancies": 29,
+      "location": "Campo Grande",
+      "pdf_row_rect": [
+        70,
+        110,
+        560,
+        250
+      ],
+      "before_code": "Curso Superior em Administração, Administração",
+      "after_code": "Curso Superior em Administração, Administração",
+      "evidence_anchors": [
+        {
+          "field": "role",
+          "literal": "Analista em Educação/ Administração e"
+        },
+        {
+          "field": "specialty",
+          "literal": "Gestão Pública**"
+        },
+        {
+          "field": "qualification_option_a",
+          "literal": "Curso Superior em Administração, Administração"
+        },
+        {
+          "field": "qualification_connector",
+          "literal": "OU"
+        },
+        {
+          "field": "qualification_option_b",
+          "literal": "Curso Superior em qualquer área do conhecimento,"
+        },
+        {
+          "field": "qualification_specialization",
+          "literal": "Especialização em Gestão Pública, em nível de"
+        },
+        {
+          "field": "qualification_hours",
+          "literal": "mínima de 360 horas, reconhecida pelo MEC"
+        }
+      ],
+      "path": "edital/chunks/p15-c01.md"
+    },
+    {
+      "cargo": "324",
+      "page": 18,
+      "chunk_id": "p18-c02",
+      "normalized_name": "Técnico em Educação / Processos Educacionais / Assuntos Estudantis",
+      "vacancies": 18,
+      "location": "Campo Grande",
+      "pdf_row_rect": [
+        70,
+        640,
+        560,
+        660
+      ],
+      "before_code": "Técnico em Educação/Processos Educacionais/",
+      "after_code": "Técnico em Educação/Processos",
+      "evidence_anchors": [
+        {
+          "field": "role",
+          "literal": "Técnico em Educação/Processos Educacionais/"
+        },
+        {
+          "field": "specialty",
+          "literal": "Assuntos Estudantis**"
+        },
+        {
+          "field": "qualification",
+          "literal": "Ensino Médio completo"
+        }
+      ],
+      "path": "edital/chunks/p18-c02.md"
+    }
+  ]
+}
