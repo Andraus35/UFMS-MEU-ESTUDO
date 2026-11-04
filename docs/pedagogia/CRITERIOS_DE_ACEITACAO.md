@@ -129,3 +129,26 @@ Todos os exemplos são **fictícios**. CI documental aprovada não equivale a va
 | CDO-18 | Apenas “10 certas, 5 erradas; novas, sem consulta”, com caderno pendente inequívoco | Aceitar devolução curta e solicitar apenas o campo realmente indispensável |
 
 **Total pedagógico documentado após v1.6:** 86 cenários (PED 20 + COMP 12 + SIM 10 + EFA 8 + FIQ 18 + CDO 18), ainda não convertidos em testes executáveis nem validados com dados reais.
+
+## Cenários de prontidão e reconciliação — v1.7 (não executados)
+
+| ID | Entrada / condição adversarial | Comportamento exigido |
+|---|---|---|
+| PRD-01 | Documento técnico fala em sete arquivos mas settings.json lista nove | Falha ou alerta de sincronização documental; lista efetiva conferida no HEAD |
+| PRD-02 | bootstrap.py apenas testa existência | Não alegar leitura semântica de todos os arquivos pelo agente |
+| PRD-03 | recommendation_id e caderno_id têm significados diferentes | Mapeamento explícito, sem colisão de identidades nem perda de legado |
+| PRD-04 | Timestamp do evento conhecido, data da tentativa ausente | Registrar tempo real de recepção sem inventar horário de resolução |
+| PRD-05 | CSV usa “respondidas” que exclui questões em branco | Normalizar convenção ou manter pendência, sem relaxar soma obrigatória indevidamente |
+| PRD-06 | Dados agregados sem tópico identificável | Não inventar métricas por subtópico nem grau de domínio E4 |
+| PRD-07 | Mesmo snapshot, as_of e política | Mesma fila/seleção determinística; documentar mudança se houver novo evento |
+| PRD-08 | Caderno apenas recomendado, não criado | Não marcar estado de criação confirmado nem atribuir resultado inexistente |
+| PRD-09 | Repositório é privado mas gravação de resultados está desabilitada | Bloquear escrita até autorização, consentimento e gates adequados |
+| PRD-10 | Retificações não verificadas | Não declarar corte de aprovação nem equivalência normativa atual como confirmados |
+| PRD-11 | Nomes específicos de 523 e 324 são semelhantes | Não compartilhar resultados sem confronto de subitens do edital |
+| PRD-12 | Plataforma não confirmou exportação/estoque de itens | Não inventar CSV, IDs, filtros, URLs ou número de questões disponíveis |
+| PRD-13 | CI de integridade aprovada sem motor de decisão | GP-2 e GP-3 permanecem pendentes; não declarar tutor operacional |
+| PRD-14 | Sinal esperado foi redigido somente após resultado | Não reportar intervenção como previamente validada; preservar incerteza |
+| PRD-15 | PR #2 a integrar sobre branch técnica modificada | Revalidar base, conflitos e testes antes de merge; não executar merge automático |
+| PRD-16 | Aleatoriedade não registrada ou sem semente | Não afirmar sorteio reproduzível ou probabilidade calibrada |
+
+**Total documentado após v1.7:** 102 casos (PED 20 + COMP 12 + SIM 10 + EFA 8 + FIQ 18 + CDO 18 + PRD 16). Nenhum desses 102 casos foi executado como suíte completa do tutor nesta entrega; este é apenas um catálogo documental.
