@@ -81,6 +81,33 @@ class FontesOficiaisTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Alerta cronológico"):
             self._mutate(lambda d:d.__setitem__("open_alerts",[]))
 
+    def test_pdf_institucional_localizado_sem_equivalencia_de_bytes(self):
+        refs=self.registry["institutional_pdf_observations"]
+        self.assertEqual(len(refs),1)
+        self.assertEqual(refs[0]["pdf_page_count_observed"],47)
+        self.assertEqual(refs[0]["sei_process_visible"],"23104.030868/2026-19")
+        self.assertEqual(refs[0]["remote_pdf_equivalence"],"unverified")
+        self.assertIsNone(refs[0]["pdf_bytes_sha256"])
+
+    def test_equivalencia_institucional_falsa_e_bloqueada(self):
+        with self.assertRaisesRegex(ValueError,"Equivalência institucional indevida"):
+            self._mutate(lambda d:d["institutional_pdf_observations"][0].__setitem__(
+                "remote_pdf_equivalence","verified"))
+
+    def test_data_alterada_no_documento_institucional_rejeitada(self):
+        with self.assertRaisesRegex(ValueError,"Datas institucionais"):
+            self._mutate(lambda d:d["institutional_pdf_observations"][0].__setitem__(
+                "appeal_date_visible","11 e 12/02/2027"))
+
+    def test_url_institucional_forjado_rejeitado(self):
+        with self.assertRaisesRegex(ValueError,"URL institucional"):
+            self._mutate(lambda d:d["institutional_pdf_observations"][0].__setitem__(
+                "pdf_url","https://www.ufms.br.evil.example/fake.pdf"))
+
+    def test_referencia_institucional_nao_pode_ser_removida(self):
+        with self.assertRaisesRegex(ValueError,"Referência institucional"):
+            self._mutate(lambda d:d.pop("institutional_pdf_observations"))
+
     def test_retirar_restricao_de_cobertura_falha(self):
         with self.assertRaisesRegex(ValueError,"exaustiva"):
             self._mutate(lambda d:d["last_check"].__setitem__("exhaustive",True))
