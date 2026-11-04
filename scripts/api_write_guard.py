@@ -3,7 +3,7 @@
 É uma ferramenta para clientes cooperativos: não intercepta a API, não autentica
 o GitHub nem impede push de atores que a ignorem. O chamador deve obter
 contexto fresco por leitura autenticada, empregar SHA/lease e validar readback.
-Nenhum dado pessoal pode ser gravado por este caminho nesta fase.
+Bloqueia os caminhos pessoais conhecidos nesta fase, mas NAO inspeciona\no conteudo de documentos permitidos: revisao humana e privacidade seguem obrigatorias.
 """
 import re
 from pathlib import PurePosixPath
