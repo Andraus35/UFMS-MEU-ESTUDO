@@ -49,13 +49,28 @@ def _topic_locations(index, cargo=None, area=None):
         for loc in t['locations']:
             yield t, loc
 
-def _views(chunks, index, cargo, area):
+def _views(chunks, index, cargo, area, root=ROOT):
     """Exclui conteúdo de outros cargos de chunks compartilhados, ao recortar as áreas."""
     ranges=collections.defaultdict(list)
     for topic, loc in _topic_locations(index,cargo,area):
         ranges[loc['chunk_id']].append((loc['chunk_char_start'],loc['chunk_char_end']))
+    # Anexo IV: excluir integralmente as descrições de cargos vizinhos.
+    attrib_spans={}
+    if cargo is not None and area is None:
+        from index_atribuicoes import build as build_atribuicoes
+        attrib_index=build_atribuicoes(root)
+        attrib_spans={
+            entry["chunk_id"]:(entry["chunk_char_start"],entry["chunk_char_end"])
+            for entry in attrib_index["entries"] if entry["cargo"] == cargo
+        }
     views=[]
     for c in chunks:
+        if cargo is not None and area is None and 20 <= c["page"] <= 28:
+            if c["id"] not in attrib_spans:
+                continue
+            a,b=attrib_spans[c["id"]]
+            views.append({**c,"search_body":c["body"][a:b]})
+            continue
         relevant=ranges.get(c['id'])
         # Com cargo informado, descartar programas de OUTROS cargos, inclusive
         # quando --area não foi informado. Regras comuns fora do Anexo V ficam acessíveis.
@@ -125,6 +140,36 @@ def search_vaga(code,root=ROOT,full=False):
     if full:result["text"]=located["text"]
     return result
 
+def search_atribuicao(cargo, root=ROOT, full=False):
+    """Retorna o parágrafo literal do Anexo IV, excluindo cargos vizinhos."""
+    from index_atribuicoes import build, locate, validate
+    validate(root)
+    index = build(root)
+    matches = [x for x in index["entries"] if x["cargo"] == str(cargo)]
+    if len(matches) != 1:
+        raise ValueError("Cargo não indexado no Anexo IV")
+    entry = matches[0]
+    chunk = next(c for c in load(root) if c["id"] == entry["chunk_id"])
+    span = locate(entry, chunk)
+    result = {
+        "cargo": entry["cargo"], "page": entry["page"],
+        "chunk_id": entry["chunk_id"], "path": entry["path"],
+        "source": index["source"],
+        "source_sha": index["source_git_blob_sha"],
+        "source_pdf_sha256": index["source_pdf_sha256"],
+        "route": "anexo_iv_atribuicoes_literal",
+        "classification": "literal_source_with_derived_locator",
+        "page_char_start": entry["page_char_start"],
+        "page_char_end": entry["page_char_end"],
+        "chunk_char_start": entry["chunk_char_start"],
+        "chunk_char_end": entry["chunk_char_end"],
+        "literal_sha256": entry["literal_sha256"],
+        "excerpt": " ".join(span["text"].split())[:220],
+    }
+    if full:
+        result["text"] = span["text"]
+    return result
+
 def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False,neighbors=False):
     if cargo not in (None,'523','324'): raise ValueError('Cargo inválido')
     if area not in (None,'gerais','especificos'): raise ValueError('Área inválida')
@@ -156,8 +201,20 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
             located=section_results(item_match.group(1),chunks,source_sha,
                                     limit,full,neighbors)
             if located:return located
-    # Consulta do quadro de vagas exige cargo inequívoco e intenção de vaga/requisito.
+    # Atribuições do Anexo IV não são os requisitos do Anexo III.
     target=(declared.group(1) if declared else cargo)
+    query_clean=normalized(query)
+    attr_intent=bool(re.search(
+        r'\b(atribuicoes?|funcoes?|responsabilidades?|o que faz|descricao do cargo)\b',
+        query_clean))
+    vagas_intent=bool(re.search(
+        r'\b(vagas?|requisitos?|escolaridade|lotacao|formacao|localidade)\b',
+        query_clean))
+    if target and area is None and attr_intent and vagas_intent:
+        raise ValueError("Consulta mistura atribuições e requisitos; consulte separadamente")
+    if target and area is None and attr_intent:
+        return [search_atribuicao(target,root,full)]
+    # Consulta do quadro de vagas exige cargo inequívoco e intenção de vaga/requisito.
     if target and area is None and re.search(
             r'\b(vagas?|requisitos?|escolaridade|lotacao|formacao|localidade)\b',
             normalized(query)):
@@ -178,7 +235,7 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
                               chunks,'derived_alias_or_title',limit,source_sha,full,neighbors)
     wanted=set(terms(query))
     if not wanted:return []
-    views=_views(chunks,index,cargo,area)
+    views=_views(chunks,index,cargo,area,root)
     cnts=[collections.Counter(terms(c['search_body'])) for c in views]
     lengths=[sum(c.values()) for c in cnts]
     n=len(views)
@@ -245,10 +302,12 @@ def main():
     p.add_argument('--topic',help='ID de config/topics.csv, por exemplo 523-06')
     p.add_argument('--page',type=int,choices=range(1,48))
     p.add_argument('--vagas-cargo',choices=['523','324'],help='Linha exata do Anexo III')
+    p.add_argument('--atribuicoes-cargo',choices=['523','324'],help='Descrição literal do Anexo IV')
     p.add_argument('--full',action='store_true',help='Incluir texto literal do trecho selecionado')
     p.add_argument('--neighbors',action='store_true',help='Indicar chunks adjacentes para expansão')
     a=p.parse_args()
-    if a.vagas_cargo:print(json.dumps(search_vaga(a.vagas_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
+    if a.atribuicoes_cargo:print(json.dumps(search_atribuicao(a.atribuicoes_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
+    elif a.vagas_cargo:print(json.dumps(search_vaga(a.vagas_cargo,ROOT,a.full),ensure_ascii=False,indent=2))
     elif a.page:print(page_text(a.page))
     elif a.query or a.topic:print(json.dumps(search(a.query,a.limit,a.cargo,ROOT,a.topic,a.area,a.full,a.neighbors),ensure_ascii=False,indent=2))
     else:p.error('Informe uma consulta, --topic ou --page')
