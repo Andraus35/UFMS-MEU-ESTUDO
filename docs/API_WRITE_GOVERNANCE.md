@@ -1,6 +1,6 @@
 # P0 — Escritas por API, proteção de `main` e limites do gate
 
-**Status:** mitigação em PR #1 draft; **não homologado como controle preventivo universal**. O repositório é privado; o Project #2 é painel opcional e não substitui eventos versionados.
+**Status:** mitigação em PR #1 draft; **não homologado como controle preventivo universal**. O repositório está **público** na verificação autenticada de 04/11/2026; o Project #2 é painel opcional e não substitui eventos versionados. Escritas pessoais permanecem bloqueadas.
 
 ## Modelo de ameaças e garantias reais
 
@@ -20,7 +20,7 @@
 
 ## Proteção administrativa de `main`
 
-Em GitHub Free, rulesets de repositórios privados não estão disponíveis. O proprietário já observou essa limitação administrativa; **não tornar o repositório público**. Não alegar proteção de `main` enquanto as regras não puderem ser ativadas.
+**Situação atual:** o repositório está **público** e `main` foi observada com `protected=false` em 04/11/2026. A integração GitHub recebeu 403 ao consultar o endpoint administrativo de proteção; isso não prova impossibilidade de configurar proteção como proprietário. A restrição de rulesets em repositórios privados no plano Free não deve ser aplicada indevidamente ao repositório público atual. O proprietário deve avaliar e habilitar as proteções disponíveis e confirmar por readback antes de declarar a `main` protegida. Em qualquer visibilidade, resultados pessoais seguem bloqueados até revisão de privacidade e autorização própria.
 
 Quando o plano permitir, configurar administrativamente e comprovar por readback: exigência de PR, revisão humana, status check `validate` do GitHub Actions, bloqueio de force-push e exclusão, restrição de push direto e bypass mínimo. O proprietário deverá autorizar qualquer mudança administrativa; **não presumir que `mergeStateStatus=CLEAN` equivale a aprovação humana ou proteção efetiva.**
 
