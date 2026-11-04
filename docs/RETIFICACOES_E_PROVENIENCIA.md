@@ -2,11 +2,13 @@
 
 **Escopo:** recuperação e proveniência documental dos cargos 523 e 324. O conteúdo deste documento e os registros JSON são **derivados e não normativos**. Uma publicação observada não altera automaticamente o texto do edital.
 
+**Política confirmada pelo responsável pelo projeto em 04/11/2026:** o PDF local do projeto ESTUDO UFMS, Edital PROGEP/UFMS nº 152/2026, é a **fonte oficial primária** para consultas e estudo. Não há pendência de autenticação remota que impeça seu uso. Monitorar somente a possibilidade de **retificações posteriores**, a serem comprovadas, preservadas e aplicadas separadamente. O cotejo de hash de outra cópia da edição inicial é um controle auxiliar opcional, não requisito de início dos estudos.
+
 ## Fontes e graus de verificação
 
 | Camada | Documento / endereço | Grau de verificação |
 |---|---|---|
-| PDF original do estudante | `e5f1c2b364f19beadf2685d8fb836065.pdf`, 47 páginas | **Bytes verificados**: SHA-256 `c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675` |
+| PDF oficial local do projeto (fornecido pelo responsável) | `e5f1c2b364f19beadf2685d8fb836065.pdf`, 47 páginas | **Bytes verificados**: SHA-256 `c758bb421ad848bf76757f6ece7a7b786e80e45123b80c3e01a13d0985f09675` |
 | Transcrição canônica | `EDITAL_UFMS_152_2026.md` | Git blob `a4129cceabd20fc119625d71b1c1599b3ce644e1`; 81 chunks reversíveis |
 | Página do concurso | <https://portal.concurso.fundacaofapec.org.br/edital/ver/22> | **Listagem observada** em 04/11/2026; não verificada a integridade do PDF remoto |
 | PDF institucional UFMS | <https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf> | **47 páginas e título conferidos via publicação institucional**; Anexo II p. 13 preserva a mesma inconsistência; **SHA dos bytes oficiais não calculado** |
@@ -15,7 +17,9 @@
 
 No portal da FAPEC, a publicação de 30/10/2026 aparece como `EDITAL PROGEP/UFMS N. º 001/2026 - Edital de Abertura`. O documento original fornecido pelo estudante ostenta `EDITAL PROGEP/UFMS nº 152, de 29/10/2026`. **A relação entre as numerações não foi comprovada por ato específico**. O link DOWNLOAD do portal redireciona para arquivo com mesmo nome, mas a comparação do hash da cópia hospedada ainda não foi possível. Não considerar nomes de arquivos prova de igualdade de bytes.
 
-**Gate de evidência (04/11/2026):** o validador offline bloqueia agora qualquer promoção da observação FAPEC para `remote_pdf_equivalence=verified` por simples edição do JSON, mesmo que o hash declarado coincida com o SHA-256 do PDF enviado pelo estudante. O mesmo vale para o status `observed_listing_remote_pdf_hash_verified` isolado. Até que exista arquivo oficial preservado, origem verificável e recomputação dos bytes, o estado deve permanecer `unverified`, hash remoto nulo e `observed_listing_not_remote_pdf_hash_verified`. Esta checagem evita falso positivo, mas **não calcula nem valida os bytes de uma URL externa**. Duas contraprovas específicas testam os casos de falsificação declarativa.
+**Gate de evidência (04/11/2026):** o validador offline bloqueia agora qualquer promoção da observação FAPEC para `remote_pdf_equivalence=verified` por simples edição do JSON, mesmo que o hash declarado coincida com o SHA-256 do PDF enviado pelo estudante. O mesmo vale para o status `observed_listing_remote_pdf_hash_verified` isolado. Até que exista arquivo remoto da FAPEC preservado, origem verificável e recomputação de seus bytes, **somente a equivalência dessa cópia remota** deve permanecer `unverified`, hash remoto nulo e `observed_listing_not_remote_pdf_hash_verified`. Esta checagem evita falso positivo, mas **não calcula nem valida os bytes de uma URL externa**. Duas contraprovas específicas testam os casos de falsificação declarativa.
+
+**Hierarquia temporal:** texto do edital oficial local como base; retificações oficiais futuras comprovadas prevalecem apenas nos dispositivos expressamente afetados. Divulgação ou link sem documento íntegro verificado é observação, não retificação. **Nenhum dos mecanismos de sonda/arquivamento remoto bloqueia o estudo do edital local**, nem atesta sozinho a vigência de uma retificação.
 
 ## ALERTA-DOC-01 — divergência temporal preservada
 
