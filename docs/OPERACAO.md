@@ -16,9 +16,10 @@
 
 ## START/DELIVERY — contrato local verificável
 
-1. **START:** conferir o HEAD/branch e os nove arquivos obrigatórios; `python scripts/bootstrap.py` lê os bytes e informa SHA-256 por arquivo. Conferir a CI vinculada ao HEAD exato.
+1. **START em checkout local:** conferir HEAD/branch e os nove arquivos obrigatórios; `python scripts/bootstrap.py` lê os bytes e informa SHA-256 por arquivo. Conferir a CI vinculada ao HEAD exato.
 2. **Pré-escrita autorizada:** executar `python hooks/before_write.py` e `python scripts/write_policy.py --check`. Falha interrompe operação; não usar direct-write como atalho. **Não registrar resultados pessoais**: `personal_results_writes_enabled` permanece `false`, e alterar só a flag reprova a CI.
 3. **DELIVERY:** executar `python hooks/after_write.py`, `python hooks/checkpoint.py` e testes; conferir persistência remota por SHA exato após commit. Atualizar handoff com evidências e limitações, nunca com êxito presumido.
 4. **Limite de implementação:** os scripts de hook são *invocáveis e testados*, mas **não são automaticamente registrados** por GitHub, ChatGPT ou outro agente. Um agente que escreva diretamente pela API pode ignorar o preflight. A CI fornece um gate de validação após o push; proteções de branch e autorização humana seguem necessárias para impedir bypass/merge.
 5. **Privacidade:** nenhum dado de resultado individual pode ser persistido nesta fase. A liberação futura requer verificação autenticada da visibilidade do repositório no momento da escrita, consentimento e revisão do gate; a CI não realiza essa liberação.
+6. **Escrita via API do GitHub:** sem checkout, não é possível executar o preflight local na máquina do agente. Operar apenas em branch/PR draft, sem dados pessoais, fazer readback dos arquivos estratégicos e SHA de cada commit e aguardar CI do HEAD; registrar explicitamente a limitação do gate, não declarar hook nativo executado. Para impor proteção universal, avaliar branch protection e permissões independentes do próprio PR.
 
