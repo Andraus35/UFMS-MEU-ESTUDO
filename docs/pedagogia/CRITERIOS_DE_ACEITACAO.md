@@ -54,3 +54,28 @@
 | COMP-12 | Questões novas insuficientes em banca alvo | Expansão transparente de filtros; jamais inventar estoque da plataforma |
 
 Todos os exemplos são **fictícios**. CI documental aprovada não equivale a validação dessas decisões em produção.
+
+## Casos de aceitação de simulados e autoavaliação do tutor — v1.4 (não executados)
+
+| ID | Cenário | Comportamento esperado |
+|---|---|---|
+| SIM-01 | 60 itens no 523, acertos por área 10/15, 3/5, 6/10, 7/10, 12/20 | Pontos 10+3+12+14+24 = **63/100**, somente se pesos e contagens confirmados |
+| SIM-02 | 80% de acertos totais, sem resultados por área | Pontuação ponderada desconhecida; não aplicar limiar global com base nos 80% |
+| SIM-03 | Simulado parcial com 30 questões | Não rotular como oficial-equivalente de 100 pontos |
+| SIM-04 | Área zerada e total ponderado 55 | Sinalizar possível restrição eliminatória após verificar regra vigente, apesar do total |
+| SIM-05 | Simulado 523 manhã e 324 tarde no mesmo ensaio | Duas tentativas distintas e uma sessão combinada, sem nota conjunta oficial |
+| SIM-06 | Pior desempenho no 324 após 523 | Não inferir automaticamente fadiga; analisar diferenças de conteúdo e condições |
+| SIM-07 | Questões repetidas ou comentadas durante a tentativa | Não classificar como simulado independente |
+| SIM-08 | Provas com amostras não equivalentes | Não declarar melhora ou piora sustentada apenas pela nota |
+| SIM-09 | Questões para simulado completo não disponíveis | Oferecer versão parcial rotulada; não inventar disponibilidade |
+| SIM-10 | Horários ou regras retificados | Invalidar simulação baseada no cadastro antigo até conferir edital vigente |
+| EFA-01 | Recomendação feita sem sinal esperado documentado | Avaliação futura não inventa objetivo retroativo |
+| EFA-02 | 90% em itens repetidos versus 80% inéditos | Não declarar superioridade da primeira tentativa |
+| EFA-03 | Resultado posterior sem comparabilidade | Classificar como incomparável, não como perda de desempenho |
+| EFA-04 | Intervenção não produz nova evidência e há tópicos sem cobertura | Considerar mudança de estratégia por custo de oportunidade |
+| EFA-05 | Duas observações comparáveis favoráveis após intervenção | Relatar tendência provisória, sem atribuir causalidade |
+| EFA-06 | Histórico com correção posterior | Respeitar event sourcing, vínculos e versão corrigida; não somar duas vezes |
+| EFA-07 | Recomendação probabilística sem pesos ou semente | Não alegar reprodutibilidade do sorteio |
+| EFA-08 | Tutor tem CI aprovada, mas sem avaliação real | Não declarar método validado empiricamente |
+
+**Observação:** valores em SIM-01 são exemplo fictício para teste aritmético; SIM-02 exige discriminação por área para qualquer pontuação ponderada. Todos os novos cenários precisam de implementação e execução real antes de serem marcados PASS.
