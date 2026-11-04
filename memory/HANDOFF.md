@@ -164,3 +164,11 @@ Não atualizar este documento com estados não confirmados nem copiar conversas 
 - **Visibilidade:** GitHub retornou `visibility=public`; `main` observada sem proteção. A descrição anterior de repositório privado em `docs/API_WRITE_GOVERNANCE.md` foi corrigida neste pacote. `personal_results_writes_enabled=false`; não gravar resultados reais.
 - **Execução:** ferramentas de API GitHub autenticadas, com readback e checks CI vinculados a SHA; nenhum hook local ou suíte local executados nesta sessão, e a proteção administrativa permanece pendente. Sem deploy, evento, notificação ou credencial externa.
 - **Próximo START:** conferir HEAD atual da `main`, CI do último merge documental, branch/PR de auditoria e eventual automação horária apontando para PR #1 encerrado. Só depois continuar GP-1/G0/GQ-D em branches próprias, sem contornar gates.
+
+## Decisão de escopo — PR #3 encerrado (04/11/2026)
+
+- O responsável determinou expressamente: **"Excluir a PR3 não faz mais parte do escopo"**.
+- PR [#3](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/3) verificado como `closed`, `merged=false`, sem merge. Branch histórica: `feature/oracle-telegram-calendar-bridge`; HEAD original `757e61c7e880fb8b38c4b215eb063c6c9f1e7cbe`.
+- **Efeito:** a ponte própria Oracle/Telegram é retirada do backlog, dos gates operacionais ativos e do planejamento de integração. Os testes e documentos deste PR não foram incorporados à `main`. Seu histórico pode permanecer arquivado na branch até eventual exclusão explícita da referência; encerrar PR não elimina a branch nem apaga commits.
+- **Escopo vigente:** harness, Tutor/Coach, Gemini Notebook, Zapia e integrações gratuitas autorizadas; sem retomada automática de Oracle/Telegram pelo PR #3.
+- PRs #4 e #5 permanecem independentes, não mesclados e sujeitos aos seus gates documentais. Nenhuma mudança nas regras de privacidade ou na flag `personal_results_writes_enabled=false`.

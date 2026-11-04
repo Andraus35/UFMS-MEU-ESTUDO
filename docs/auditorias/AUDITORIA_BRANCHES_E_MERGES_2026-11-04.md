@@ -10,7 +10,7 @@
 | `main` | 0 | somente README inicial | base `c020f78ba07ebb4e2949021b45a7f9b8f2c26d42` |
 | `setup/harness-memory-v0-2` | 161 | 159 | **PR #1 MERGED** |
 | `docs/especificacao-pedagogica-v1-2` | 18 | 30 | **PR #2 MERGED** |
-| `feature/oracle-telegram-calendar-bridge` | 21 | 36 | **PR #3 BLOQUEADO** |
+| `feature/oracle-telegram-calendar-bridge` | 21 | 36 | **PR #3 ENCERRADO SEM MERGE — FORA DE ESCOPO** |
 | `spec/ufms-cognitive-gates-verify-d-20261104` | 1 | 15 | **PR #4 BLOQUEADO / supersedido** |
 | `spec/ufms-cognitive-gates-gqd-correction-v0-3` | 10 | 61 | **PR #5 BLOQUEADO** |
 | `poc-ufms-003-zapia` | 2 | 1 | incorporada pela descendente POC-007 |
@@ -29,7 +29,7 @@ Os três merges empregaram método `merge`, sem reescrever o histórico ou fazer
 
 ## Branches preservadas como draft — não mesclar
 
-- **PR #3:** CI de unidade/contêiner aprovada no HEAD `757e61c7e880fb8b38c4b215eb063c6c9f1e7cbe`, mas o handoff e a auditoria interna declaram G0 independente, OPS-01 (credenciais, implantação, OAuth, backups) e PED-01 (integração com harness/pedagogia) sem homologação. **Código não implantado.** Manter draft.
+- **PR #3:** **ENCERRADO SEM MERGE em 04/11/2026, por decisão expressa do usuário; fora do escopo.** A CI de unidade/contêiner havia aprovado o HEAD `757e61c7e880fb8b38c4b215eb063c6c9f1e7cbe`, mas a implantação e a auditoria operacional nunca foram homologadas. Não retomar essa frente nem integrar seus arquivos sem nova autorização. A branch experimental pode permanecer no GitHub apenas como registro histórico até exclusão separada.
 - **PR #4:** snapshot documental anterior, sem homologação GQ-D. Há uma versão corretiva no PR #5; não promover ambos como fontes concorrentes.
 - **PR #5:** plano aprovado e validação formal TLC verde no SHA `652634b70a411ed4641cb7a202b0ae2f9a19ed1b`, mas o próprio PR registra **GQ-D independente reprovada**, nove NCs pendentes, C1–C27 funcionais `NOT_RUN`, GQ-C `NOT_RUN` e GQ-O bloqueado. A aprovação documental não é autorização de merge.
 
@@ -41,6 +41,6 @@ Os três merges empregaram método `merge`, sem reescrever o histórico ou fazer
 4. **CI não é gate administrativo:** `validate` verde comprova testes implementados e executados, não proteção de branch, hooks nativos em todas as interfaces, auditoria independente ou segurança operacional.
 5. **Edital:** `ALERTA-DOC-01` (cronograma literalmente conflitante na p. 13) e verificação de retificações permanecem abertos; não alterar a fonte por inferência.
 6. **Automações:** qualquer rotina ainda vinculada ao PR #1 draft deve ser reavaliada após seu merge; não continuar gravando em candidato encerrado.
-7. **Próximos gates:** controlar `main` administrativamente, reconciliar GP-1, resolver GQ-D para PR #5 e G0 operacional para PR #3, executar testes integrados Tutor/Coach e manter dados reais em armazenamento privado autorizado.
+7. **Próximos gates:** controlar `main` administrativamente, reconciliar GP-1, resolver GQ-D para PR #5, executar testes integrados Tutor/Coach no escopo atual (Zapia/Notebook/Calendar/Tasks) e manter dados reais em armazenamento privado autorizado. O PR #3 está encerrado e não integra a fila.
 
-**Veredito:** integração parcial e seletiva das três candidatas verificáveis. Não declarar merge de todas as branches; as três frentes bloqueadas seguem abertas e preservadas para correção/auditoria independente.
+**Veredito histórico de integração:** integração parcial e seletiva das três candidatas verificáveis. **Atualização de escopo (04/11/2026):** PR #3 encerrado sem merge; apenas PRs #4 e #5 permanecem abertos e bloqueados para reavaliação.
