@@ -47,8 +47,8 @@
     "observacoes": "Não há consulta comprovada a um notebook jurídico, nem acesso testado às plataformas de questões."
   },
   "coach": {
-    "status": "pendente",
-    "mensagem_proposta": null,
+    "status": "processado",
+    "mensagem_proposta": "Você estudou Direito Administrativo, com foco em atos administrativos. Para revisar, tente primeiro recuperar de memória os pontos que já estudou e confira suas lacunas nas próprias notas. Depois, pratique questões sobre o assunto no TEC Concursos ou no Qconcursos.",
     "mensagem_enviada": false
   },
   "teste": {
