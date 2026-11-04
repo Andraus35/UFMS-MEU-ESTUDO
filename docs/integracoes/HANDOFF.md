@@ -49,3 +49,16 @@ Telegram, Oracle ou Google a partir da simples existência de código.
 - Não foi criado servidor Oracle, não há bots reais nem OAuth Oracle; nenhum
   evento da sua agenda real foi criado ou modificado.
 - Validar CI no novo SHA, depois testar isolamento e recuperação de estado.
+
+## Ciclo 2 desta retomada — reconciliação conservadora
+
+- HEAD esperado no início: `d0929c01a8376431846df4c96e554f813ec27ca8`.
+- Gaps remediados: lembrete manual já não sofre retry cego após ACK ambíguo;
+  migração aditiva da coluna `claimed_utc` é não destrutiva.
+- Relatórios de conciliação exibem somente IDs, papéis e estados;
+  `sending`/`uncertain` exigem decisão do operador.
+- Contraprovas novas: queda após claim, confirmação ambígua, corrida entre
+  duas conexões, idempotência, migração e ausência de texto pessoal no relatório.
+- Limites permanecem: não há deploy Oracle, OAuth Google Oracle nem motor IA.
+- Próximo ciclo: verificar CI, auditoria de integridade de dados e fronteira
+  entre agenda, Telegram e memória pedagógica.

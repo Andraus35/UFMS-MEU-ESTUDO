@@ -77,7 +77,7 @@ class ProactiveTests(unittest.TestCase):
     def test_quiet_hours_and_release(self):
         self.queue.set_enabled(True)
         rid = self.add()
-        late = self.now.replace(hour=2)  # 22:00 local on previous day
+        late = self.now.replace(hour=2) + timedelta(days=1)  # 22:00 local, APÓS vencimento
         self.assertEqual(dispatch_proactive(self.queue, self.clients, late), 0)
         self.assertEqual(self.queue.status(rid), "pending")
         self.assertEqual(dispatch_proactive(self.queue, self.clients, self.now), 1)

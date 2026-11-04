@@ -44,8 +44,13 @@ class Store:
               chat_id INTEGER NOT NULL, due_utc TEXT NOT NULL,
               body TEXT NOT NULL, request_key TEXT NOT NULL UNIQUE,
               status TEXT NOT NULL DEFAULT 'pending',
-              created_utc TEXT NOT NULL, sent_utc TEXT
+              created_utc TEXT NOT NULL, sent_utc TEXT,
+              claimed_utc TEXT
             )""")
+            # Migração não destrutiva do SQLite criado no MVP anterior.
+            cols = {row["name"] for row in db.execute("PRAGMA table_info(reminders)")}
+            if "claimed_utc" not in cols:
+                db.execute("ALTER TABLE reminders ADD COLUMN claimed_utc TEXT")
             db.execute("""CREATE TABLE IF NOT EXISTS bot_offsets(
               bot TEXT PRIMARY KEY, next_offset INTEGER NOT NULL DEFAULT 0
             )""")
@@ -85,10 +90,48 @@ class Store:
                 """SELECT * FROM reminders WHERE status='pending' AND due_utc<=?
                    ORDER BY due_utc,id LIMIT ?""", (now.isoformat(), limit))]
 
+    def claim_due(self, now: datetime) -> dict | None:
+        """Reivindica um único lembrete de forma transacional; status evita replay."""
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("""SELECT * FROM reminders
+              WHERE status='pending' AND due_utc<=?
+              ORDER BY due_utc,id LIMIT 1""", (now.astimezone(UTC).isoformat(),)).fetchone()
+            if row is None:
+                return None
+            changed = db.execute("""UPDATE reminders
+              SET status='sending',claimed_utc=? WHERE id=? AND status='pending'""",
+              (now.astimezone(UTC).isoformat(), row["id"]))
+            if changed.rowcount != 1:
+                return None
+            return dict(row)
+
     def mark_sent(self, reminder_id: int):
         with self.connect() as db:
-            db.execute("UPDATE reminders SET status='sent',sent_utc=? WHERE id=? AND status='pending'",
+            db.execute("UPDATE reminders SET status='sent',sent_utc=? WHERE id=? AND status='sending'",
                        (datetime.now(UTC).isoformat(), reminder_id))
+
+    def mark_uncertain(self, reminder_id: int):
+        with self.connect() as db:
+            db.execute("UPDATE reminders SET status='uncertain' WHERE id=? AND status='sending'",
+                       (reminder_id,))
+
+    def unresolved(self) -> list[dict]:
+        """Relatório SEM conteúdo, chat_id ou segredo."""
+        with self.connect() as db:
+            return [dict(row) for row in db.execute("""SELECT id,bot,status
+                FROM reminders WHERE status IN ('sending','uncertain') ORDER BY id""")]
+
+    def resolve_uncertain(self, reminder_id: int, decision: str) -> bool:
+        """Somente operador após conferir entrega no Telegram."""
+        if decision not in ("delivered", "cancelled"):
+            raise ValueError("Decisão inválida")
+        status = "sent" if decision == "delivered" else "cancelled"
+        with self.connect() as db:
+            updated = db.execute("""UPDATE reminders SET status=?
+                WHERE id=? AND status IN ('sending','uncertain')""",
+                (status, reminder_id))
+            return updated.rowcount == 1
 
     def cancel(self, reminder_id: int, bot: str, chat_id: int) -> bool:
         with self.connect() as db:
@@ -230,19 +273,24 @@ def handle_update(bot: str, update: dict, store: Store, telegram: Telegram,
     store.advance(bot, update_id)
 
 
-def dispatch_due(store: Store, clients: dict[str, Telegram], now: datetime | None = None):
+def dispatch_due(store: Store, clients: dict[str, Telegram],
+                 now: datetime | None = None):
     if store.paused():
         return 0
     completed = 0
-    for reminder in store.due(now or datetime.now(UTC)):
+    at = now or datetime.now(UTC)
+    for _ in range(15):
+        reminder = store.claim_due(at)
+        if reminder is None:
+            break
         try:
             clients[reminder["bot"]].send(reminder["chat_id"], reminder["body"])
-            store.mark_sent(reminder["id"])
-            completed += 1
         except Exception:
-            # Falha de rede preserva pendência; enviar e falhar antes do ACK
-            # pode gerar duplicação no próximo ciclo. Sem garantia exactly-once.
-            pass
+            # Timeout pode ocorrer depois da entrega. Não tentar de novo às cegas.
+            store.mark_uncertain(reminder["id"])
+            continue
+        store.mark_sent(reminder["id"])
+        completed += 1
     return completed
 
 

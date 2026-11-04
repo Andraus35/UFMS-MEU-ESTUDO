@@ -95,3 +95,13 @@ motor pedagógico pós-PR #1/#2; G5: piloto e aceite humano.
 - A implementação atual é um núcleo de agendamento, não coach conversacional.
   Falta canal confiável do motor pedagógico para a outbox, política de retenção
   e controles ajustáveis pelo usuário.
+
+## Tratamento de confirmação incerta (ciclo 3)
+
+Consulte [Política de entrega e reconciliação](../../docs/integracoes/POLITICA_ENTREGA_v0.2.md).
+Agora **ambos** os tipos de mensagem (lembretes manuais e proativas) evitam
+reenvio automático após ACK incerto ou queda do processo no meio do envio.
+Isso é entrega conservadora **at-most-once automático**, não garantia de
+recebimento. `bridge.reconcile` permite marcar estado após verificação
+humana, sem expor os conteúdos. A CI testa reinício, migração SQLite antiga,
+tentativa duplicada, payload sigiloso e troca de estado.

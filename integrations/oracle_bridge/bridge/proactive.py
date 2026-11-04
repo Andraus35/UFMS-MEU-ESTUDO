@@ -90,11 +90,11 @@ class ProactiveOutbox:
                 body.strip(), reason.strip(), source_ref, request_key
             ))
             row = db.execute(
-                "SELECT id,bot,chat_id,category,body,source_ref FROM proactive_notifications WHERE request_key=?",
+                "SELECT id,bot,chat_id,category,body,source_ref,due_utc,reason FROM proactive_notifications WHERE request_key=?",
                 (request_key,)
             ).fetchone()
-            if (row["bot"], row["chat_id"], row["category"], row["body"], row["source_ref"]) != (
-                bot, user_id, category, body.strip(), source_ref
+            if (row["bot"], row["chat_id"], row["category"], row["body"], row["source_ref"], row["due_utc"], row["reason"]) != (
+                bot, user_id, category, body.strip(), source_ref, due.astimezone(UTC).isoformat(), reason.strip()
             ):
                 raise ValueError("Chave já usada para conteúdo incompatível")
             return int(row["id"])
@@ -155,6 +155,24 @@ class ProactiveOutbox:
                 "SELECT status FROM proactive_notifications WHERE id=?", (item_id,)
             ).fetchone()
             return row["status"] if row else None
+
+    def unresolved(self) -> list[dict]:
+        """IDs e estados apenas; nunca mostra texto, destino ou token."""
+        with self.store.connect() as db:
+            return [dict(row) for row in db.execute("""SELECT id,bot,status
+                FROM proactive_notifications
+                WHERE status IN ('sending','uncertain') ORDER BY id""")]
+
+    def resolve_uncertain(self, item_id: int, decision: str) -> bool:
+        """Reconciliação local após conferir externamente, nunca retry implícito."""
+        if decision not in ("delivered", "cancelled"):
+            raise ValueError("Decisão inválida")
+        status = "sent" if decision == "delivered" else "cancelled"
+        with self.store.connect() as db:
+            updated = db.execute("""UPDATE proactive_notifications
+                SET status=? WHERE id=? AND status IN ('sending','uncertain')""",
+                (status, item_id))
+            return updated.rowcount == 1
 
     def unresolved_counts(self) -> dict:
         with self.store.connect() as db:
