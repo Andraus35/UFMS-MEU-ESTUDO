@@ -83,7 +83,10 @@ def verify_archive(receipt_path):
         not first.startswith(b"%PDF-") or b"%%EOF" not in tail):
         raise ValueError("Arquivo de evidência adulterado ou truncado")
     expected_status = "digest_match" if sha == d["sha256_expected"] else "digest_mismatch"
-    if d.get("comparison_status") != expected_status or d.get("archived_official_pdf") is not True:
+    if (d.get("comparison_status") != expected_status or
+        d.get("acquisition") not in ("offline_fixture", "direct_https") or
+        d.get("archived_pdf_bytes") is not True or
+        d.get("archived_official_pdf") is not (d["acquisition"] == "direct_https")):
         raise ValueError("Recibo de comparação inconsistente")
     return d
 
@@ -122,7 +125,8 @@ def archive_response(response, expected_sha, out_dir, acquisition="offline_fixtu
             "comparison_status": "digest_match" if info["status"] == "digest_match_unarchived"
                                  else "digest_mismatch",
             "archived_pdf_filename": filename,
-            "archived_official_pdf": True,
+            "archived_pdf_bytes": True,
+            "archived_official_pdf": acquisition == "direct_https",
             "normative_revision_verified": False,
             "provenance_limit": "Recibo local e hash reproduzível; não é atestação independente de TLS/origem.",
         }
