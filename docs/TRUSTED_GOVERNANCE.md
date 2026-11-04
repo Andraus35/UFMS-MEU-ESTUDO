@@ -20,7 +20,10 @@ Oracle Cloud (conta gratuita, se já disponível).
   Ed25519 e uma segunda leitura da identidade no mesmo HEAD/base.
 - `scripts/trusted_app_check.py` autentica-se como a **GitHub App específica**,
   obtém token efêmero limitado ao repositório e publica o check
-  `ufms-governance/app-verified` no HEAD, com `app.id` conferido.
+  `ufms-governance/app-verified` no **commit sintético de merge do PR**,
+  após conferir `merge_commit_sha`, `refs/pull/<n>/merge` e os dois pais
+  exatos (base, HEAD). Checks não são emitidos apenas no HEAD compartilhável.
+  O `app.id` é conferido na resposta da API.
 - `--all --once` varre PRs abertos periodicamente, sem webhook, porta de
   entrada pública ou segredo injetado em workflow de PR. Erros levam a falha
   ou ausência de check, **nunca à produção intencional de sucesso**.
@@ -49,7 +52,7 @@ comprovada em ambiente real. **Até lá NC-PR9-01 permanece aberta.**
 2. **Registrar uma GitHub App** em https://github.com/settings/apps
    com nome único, acesso a **somente** `Andraus35/UFMS-MEU-ESTUDO` e
    permissões repositório: Checks **read/write**, Pull requests **read**,
-   Issues **read**, Metadata **read**. Sem Contents write, Administration
+   Issues **read**, Contents **read**, Metadata **read**. Sem Contents write, Administration
    write, Secrets ou Workflows. Sem webhook (verificador por polling).
    Instalar a App na conta proprietária e gerar uma **chave RSA privada
    da App**, armazenada apenas no Oracle com permissão 0600.
@@ -65,13 +68,15 @@ comprovada em ambiente real. **Até lá NC-PR9-01 permanece aberta.**
    `python scripts/trusted_app_check.py --all --once`.
    Um PR de governança sem assinatura deve receber `failure`, o esperado.
    No GitHub, consultar o check emitido e comprovar `name`,
-   `head_sha`, `conclusion`, `app.id` e origem da App.
+   `head_sha` **igual ao merge sintético**, `conclusion`, `app.id` e origem da App.
    A saída pode terminar em código 1 enquanto PRs aguardam assinatura.
 5. **Automatizar**: executar `--all --once` a cada 2–5 minutos via
    cron ou systemd timer em host Oracle com usuário dedicado, diretório
    de código somente leitura, chaves sem leitura para os LLMs.
    Cada ciclo lê o estado atual e só reutiliza o check se tiver
-   exatamente o mesmo PR/HEAD/base, resultado e App ID.
+   exatamente o mesmo PR/HEAD/base/**merge SHA**, resultado e App ID,
+   e o resultado anterior tiver no máximo **10 minutos**. Este prazo é
+   de renovação local, **não é exigido pelo GitHub** ao permitir merge.
    Testar adição/remoção de assinatura e novo push.
 6. **Somente depois do check real e de nova auditoria**, configurar
    branch protection com **dois checks obrigatórios**:
@@ -115,6 +120,66 @@ gh api "repos/$REPO/branches/main/protection/required_status_checks"
 Um PATCH futuro deve preservar `validate` e acrescentar o check da App com
 `app_id` específico; fazer readback da configuração integral e testes de
 bloqueio antes de declarar ativo.
+
+## Três riscos arquiteturais pendentes da conferência independente
+
+### 1. Mesmo HEAD em dois PRs
+
+O GitHub armazena check runs por **commit**; `external_id` não é um gate
+por PR. O código agora confere o commit de teste de merge gerado pelo GitHub,
+verifica os pais e **rejeita sucesso se dois PRs abertos compartilham o
+HEAD**. A tentativa resulta em `failure` sobre o merge sintético, sem
+permitir que uma assinatura emitida ao PR A seja atribuída ao PR B.
+
+**Aceite obrigatório em ambiente real:** abrir dois PRs de teste com HEAD
+compartilhado, assinar somente um, e comprovar que o outro NÃO pode ser
+mesclado. A proteção nativa do GitHub precisa efetivamente considerar os
+checks do merge sintético, não os resultados anteriores do HEAD. Até esse
+teste, a mitigação é **verificada localmente**, não homologada no servidor.
+
+### 2. Serviço externo indisponível após sucesso
+
+**RISCO AINDA ABERTO.** A renovação de `success` a cada 10 minutos
+evita reutilizar o check antigo enquanto a App opera. No entanto, se a
+App parar após publicar `success`, um check anterior pode permanecer
+válido para branch protection pelas regras do GitHub (checagens exigidas
+precisam ser recentes, em geral dentro de sete dias). **Não existe um
+TTL que o GitHub aplique a `external_id` ou ao prazo local do verificador.**
+
+**Consequência:** não ativar esse gate como único controle de autorização
+de merge. Para garantia de aprovação por PR vigente, é necessária uma
+política nativa complementar (por exemplo, revisão obrigatória de outro
+responsável, com descarte de aprovações obsoletas), ou um controle
+servidor-side com avaliação síncrona no momento do merge, além de
+monitoramento de disponibilidade. **Não prometer bloqueio de merge por
+indisponibilidade somente com polling.**
+
+**Aceite real:** emitir `success`, derrubar o serviço de forma controlada,
+revogar ou remover a autorização **sem novo commit** e verificar se o merge
+ainda é possível. Se for, registrar **FAIL** para garantia de fail-closed na
+indisponibilidade e não homologar. Não executar teste real que altere branch
+protection ou faça merge em PR de produção.
+
+### 3. HEAD versus commit sintético de merge
+
+O GitHub pode exigir verificações no merge sintético quando existem
+checks naquele commit. Por isso o check da App é produzido no merge
+sintético; a CI `validate` continua sendo executada no push e no
+evento de PR (que pode usar o merge sintético).
+
+**Aceite real:** verificar no servidor que ambos os checks obrigatórios,
+`validate` e `ufms-governance/app-verified`, são satisfeitos no commit
+correto para PR válido; PR inválido deve continuar bloqueado. Registrar
+a SHA sintética, a aplicação emissora, o SHA HEAD e o estado de merge
+sem forçar integração real.
+
+### Condições de encerramento
+
+Estas contraprovas são testes de infraestrutura, **não** substituíveis
+por mocks de API ou resultados da CI do candidato. A instalação da App,
+o check real, a proteção por App ID e o isolamento do executor devem
+ser auditados por agente distinto. Sem isso, manter G0/GQ-H e NC-PR9-01
+**PENDENTES DE EVIDÊNCIAS**.
 
 ## Ensaios aceitos e evidências insuficientes
 
