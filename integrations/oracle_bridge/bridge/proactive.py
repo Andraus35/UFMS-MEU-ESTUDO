@@ -54,10 +54,15 @@ class ProactiveOutbox:
 
     def set_enabled(self, enabled: bool) -> None:
         with self.store.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
             db.execute("""INSERT INTO settings(key,value)
                 VALUES('proactive_enabled',?)
                 ON CONFLICT(key) DO UPDATE SET value=excluded.value""",
                 ("1" if enabled else "0",))
+            if not enabled:
+                # Revogar também cancela a fila antiga: reativar não libera alertas obsoletos.
+                db.execute("""UPDATE proactive_notifications SET status='cancelled'
+                    WHERE status='pending'""")
 
     def enqueue(self, *, bot: str, user_id: int, category: str,
                 due: datetime, body: str, reason: str,
@@ -83,6 +88,12 @@ class ProactiveOutbox:
         if not isinstance(request_key, str) or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_./:@-]{3,160}", request_key):
             raise ValueError("Chave idempotente obrigatória")
         with self.store.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            consent = db.execute(
+                "SELECT value FROM settings WHERE key='proactive_enabled'"
+            ).fetchone()
+            if not consent or consent["value"] != "1":
+                raise PermissionError("Consentimento de alertas não ativo")
             db.execute("""INSERT OR IGNORE INTO proactive_notifications(
                 bot,chat_id,category,due_utc,body,reason,source_ref,request_key
             ) VALUES(?,?,?,?,?,?,?,?)""", (

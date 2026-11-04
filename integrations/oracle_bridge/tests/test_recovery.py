@@ -90,6 +90,7 @@ class ReminderRecoveryTests(unittest.TestCase):
 
     def test_proactive_reconciliation_excludes_payload(self):
         outbox=ProactiveOutbox(self.store,123)
+        outbox.set_enabled(True)
         rid=outbox.enqueue(bot="coach",user_id=123,category="checkin",
             due=self.now,body="Conteúdo sensível",reason="Relato confirmado",
             source_ref="event:valid-001",request_key="coach-checkin-1",now=self.now)

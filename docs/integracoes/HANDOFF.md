@@ -108,3 +108,16 @@ Telegram, Oracle ou Google a partir da simples existência de código.
   execução não-root, timezone Campo Grande e SQLite em /data.
 - Sem privilégios Oracle, sem credenciais pessoais e sem produção.
 - Verificar o resultado no commit exato; se falhar, corrigir com novo commit.
+
+## Ciclo 7 desta retomada — revogação e antifila obsoleta
+
+- HEAD anterior: \`807cf108ba6fb640af768c351855da0e3ac7f618\`.
+- CI prévia no SHA: \`41796129859\` e \`41796136364\` SUCCESS,
+  cada uma com três matrizes de 50 testes e smoke Docker.
+- Correção: \`enqueue()\` agora exige opt-in ativo dentro da mesma transação
+  e \`set_enabled(False)\` cancela todos os proativos ainda pendentes.
+  Reativar não ressuscita notificações antigas.
+- Testes ajustados para consentimento antes de enfileirar; contraprovas
+  específicas de revogação/reentrada.
+- \`sending\` não é cancelável retroativamente e pode estar em trânsito.
+- Sem chamadas reais a Telegram, Google ou OpenAI; sem deploy Oracle.

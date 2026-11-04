@@ -146,3 +146,15 @@ SQLite em \`/data\`, política de opt-in desativada e base de fusos
 \`America/Campo_Grande\`. O smoke não envolve credenciais, rede Telegram,
 conta Google ou chamadas reais à OpenAI API. Não é validação de produção
 Oracle nem substitui os testes ponta a ponta consentidos.
+
+## Revogação de consentimento (ciclo 7)
+
+- Antes de inserir notificação proativa, o servidor exige consentimento ativo
+  **na mesma transação**. Não há fila proativa pré-consentimento.
+- \`/desativar_alertas\` revoga consentimento e cancela avisos ainda pendentes.
+  Se o usuário reativar depois, nada da antiga fila volta automaticamente;
+  eventos novos precisam de nova chave idempotente e nova decisão rastreável.
+- Uma mensagem em trânsito (\`sending\`) pode já ter alcançado o Telegram
+  quando a revogação ocorre; não há cancelamento retroativo de rede.
+  O estado é mantido para reconciliação. O serviço não deve prometer
+  ausência absoluta de mensagens que já estavam em envio.

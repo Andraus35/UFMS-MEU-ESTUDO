@@ -43,9 +43,10 @@ class ProactiveTests(unittest.TestCase):
         )
 
     def test_no_opt_in_no_send(self):
-        rid = self.add()
+        with self.assertRaises(PermissionError):
+            self.add()
         self.assertEqual(dispatch_proactive(self.queue, self.clients, self.now), 0)
-        self.assertEqual(self.queue.status(rid), "pending")
+        self.assertEqual(self.client.sent, [])
 
     def test_opt_in_and_delivery(self):
         self.queue.set_enabled(True)
@@ -66,6 +67,7 @@ class ProactiveTests(unittest.TestCase):
         self.assertRaises(ValueError, self.add, 1, "tutor", None, "spam")
 
     def test_idempotency_and_conflicting_key(self):
+        self.queue.set_enabled(True)
         first = self.add()
         self.assertEqual(first, self.add())
         with self.assertRaises(ValueError):
@@ -158,9 +160,15 @@ class ProactiveTests(unittest.TestCase):
 
     def test_disabled_after_queue_does_not_dispatch(self):
         self.queue.set_enabled(True)
-        self.add()
+        rid=self.add()
         self.queue.set_enabled(False)
+        self.assertEqual(self.queue.status(rid),"cancelled")
         self.assertEqual(dispatch_proactive(self.queue,self.clients,self.now),0)
+        self.queue.set_enabled(True)
+        self.assertEqual(dispatch_proactive(self.queue,self.clients,self.now),0)
+        new_id=self.add(2)
+        self.assertNotEqual(new_id,rid)
+        self.assertEqual(dispatch_proactive(self.queue,self.clients,self.now),1)
 
     def test_due_must_have_timezone(self):
         with self.assertRaises(ValueError):
