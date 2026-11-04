@@ -69,7 +69,7 @@ class AgentGateTests(unittest.TestCase):
             for name in HOOK_FILES.values():
                 p = root / name
                 p.parent.mkdir(parents=True, exist_ok=True)
-                p.write_text("def run(): pass\\n", encoding="utf-8")
+                p.write_text("def run(): pass\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "divergente"):
                 check_hook_contract(root)
 
