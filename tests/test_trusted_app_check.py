@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from trusted_app_check import (
-    CHECK_NAME, app_jwt, installation_token, verify_one,
+    CHECK_NAME, app_jwt, installation_token, verify_one, list_open_pr_numbers,
 )
 from trusted_governance import REPOSITORY
 
@@ -105,12 +105,34 @@ class ExternalAppTests(unittest.TestCase):
         self.assertEqual(result["conclusion"], "failure")
         self.assertEqual(posts[0]["conclusion"], "failure")
 
+    def test_reuse_only_check_from_app_id_and_matching_base(self):
+        report, posts = self._simulate(own_check=True)
+        self.assertTrue(report["reused_verified_check"])
+        self.assertEqual(posts, [])
+        report2, posts2 = self._simulate(own_check=True, own_id=999)
+        self.assertFalse(report2.get("reused_verified_check", False))
+        self.assertEqual(len(posts2), 1)
+
+    def test_open_pr_pagination_and_anomalies(self):
+        def first(method, path, token, payload=None):
+            return [{"number": 9}, {"number": 10}]
+        with mock.patch("trusted_app_check.api_json", side_effect=first):
+            self.assertEqual(list_open_pr_numbers("token"), [9, 10])
+        with mock.patch("trusted_app_check.api_json", return_value=[{"number": 9}]*100):
+            with self.assertRaisesRegex(ValueError, "exceeds"):
+                list_open_pr_numbers("token", max_pages=2)
+        with mock.patch("trusted_app_check.api_json", return_value=[{"number": 9},
+                                                                     {"number": 9}]):
+            with self.assertRaisesRegex(ValueError, "Duplicate"):
+                list_open_pr_numbers("token")
+
     def test_check_api_unavailable_must_not_claim_success(self):
         with self.assertRaisesRegex(ValueError, "cannot create check"):
             self._simulate(post_error=True)
 
     def _simulate(self, policy_error=False, after_head=None, after_base=None,
-                  response_app_id=None, after_read_error=False, post_error=False):
+                  response_app_id=None, after_read_error=False, post_error=False,
+                  own_check=False, own_id=None):
         first = {"number": PR, "state": "open", "head": {"sha": HEAD},
                  "base": {"ref": "main", "sha": BASE}}
         after = {"number": PR, "state": "open",
@@ -123,6 +145,13 @@ class ExternalAppTests(unittest.TestCase):
             self.assertEqual(token, "installation")
             self.assertTrue(path.startswith("repos/"+REPOSITORY+"/"))
             if method == "GET":
+                if "/check-runs" in path:
+                    return {"check_runs": [{
+                        "id": 999, "app": {"id": own_id or int(APP_ID)},
+                        "status": "completed", "name": CHECK_NAME,
+                        "conclusion": "failure" if policy_error else "success",
+                        "external_id": f"pr{PR}:{HEAD}:{BASE}",
+                    }]} if own_check else {"check_runs": []}
                 hits += 1
                 if hits == 2 and after_read_error:
                     raise ValueError("network unavailable")
