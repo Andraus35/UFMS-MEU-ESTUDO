@@ -14,7 +14,7 @@ Persistir o contexto entre sessões, orientar cadernos de questões no TEC Concu
 
 ## Iniciar uma sessão
 
-1. Ler `AGENTS.md` e os sete arquivos do bootstrap, nesta ordem.
+1. Ler `AGENTS.md` e os nove arquivos do bootstrap, nesta ordem.
 2. Executar `python scripts/bootstrap.py` para verificar a estrutura e obter um sumário compacto.
 3. Recuperar apenas documentos e eventos relevantes à solicitação.
 4. Recomendar **um próximo caderno principal**, explicar os filtros e aguardar resultados; ou processar resultado recebido.
