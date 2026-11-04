@@ -23,9 +23,11 @@
 15. [Cotejo dos específicos 523/324](COTEJO_ESPECIFICOS_523_324_2026-11-04.md): interseções textuais confirmadas no edital original e recortes não compartilháveis.
 16. [Contraprovas de compartilhamento](CONTRAPROVAS_CADERNOS_523_324_2026-11-04.md): 13 verificações positivas/negativas e quatro cadernos-modelo, sem criar objetos reais.
 17. [Reauditoria GP-0/GP-1, ciclo 3](REAUDITORIA_GP0_GP1_CICLO3_2026-11-04.md): mudanças verificadas no HEAD técnico, CI e pendências de fonte.
-18. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
-19. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
-20. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
+18. [Contrato de ingestão GP-1](CONTRATO_INGESTAO_GP1_2026-11-04.md): correspondência entre resultados, cadernos, eventos, tentativas e tempos.
+19. [Fixtures sintéticas GP-1](FIXTURES_INGESTAO_GP1_2026-11-04.json): 14 casos de compatibilidade, sem testes executados nem dados pessoais.
+20. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
+21. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
+22. [Handoff pedagógico](HANDOFF.md): ponto de retomada verificado, estado atual e próxima pendência.
 
 ## Hierarquia e limites
 

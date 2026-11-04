@@ -1,0 +1,555 @@
+{
+  "schema_version": "0.1-documental",
+  "title": "Fixtures sintéticas GP-1 para validação e normalização, não executadas",
+  "technical_snapshot_sha": "42530c1680fb328fb9064235d475d2951c3a7c51",
+  "policy_note": "Todos os IDs e resultados são fictícios. allow_private=true é somente argumento de teste em memória e NÃO autoriza gravação remota. Os casos IGP-12..14 são contratos pendentes, não testes de scripts/core.py.",
+  "expected_case_count": 14,
+  "fixtures": [
+    {
+      "fixture_id": "IGP-01",
+      "maps_to": [
+        "PED-20",
+        "CDO-01"
+      ],
+      "kind": "validator",
+      "allow_private": false,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "pass",
+        "projection": {
+          "results_count": 0,
+          "pending_cadernos": [
+            "UFMS-FICT-001"
+          ]
+        }
+      }
+    },
+    {
+      "fixture_id": "IGP-02",
+      "maps_to": [
+        "PED-02",
+        "CDO-08"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "pass",
+        "projection": {
+          "results_count": 1,
+          "topic": "GER-LEG",
+          "attempted": 12,
+          "correct": 8
+        }
+      }
+    },
+    {
+      "fixture_id": "IGP-03",
+      "maps_to": [
+        "PED-02",
+        "CDO-12"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": []
+        }
+      ],
+      "expect": {
+        "validation": "pass",
+        "projection": {
+          "results_count": 1,
+          "topic": "GER-LEG",
+          "attempted": 0,
+          "correct": 0
+        }
+      }
+    },
+    {
+      "fixture_id": "IGP-04",
+      "maps_to": [
+        "PED-14",
+        "EFA-06"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        },
+        {
+          "event_id": "corr-1",
+          "type": "resultado_corrigido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 9,
+          "erros": 3,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 9
+            }
+          ],
+          "corrects_event_id": "res-1"
+        }
+      ],
+      "expect": {
+        "validation": "pass",
+        "projection": {
+          "results_count": 1,
+          "topic": "GER-LEG",
+          "attempted": 12,
+          "correct": 9
+        }
+      }
+    },
+    {
+      "fixture_id": "IGP-05",
+      "maps_to": [
+        "PED-12",
+        "CDO-16"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 5,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "Totais inconsistentes"
+      }
+    },
+    {
+      "fixture_id": "IGP-06",
+      "maps_to": [
+        "CDO-12",
+        "PRD-05"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 9
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "Acertos por tópico superam"
+      }
+    },
+    {
+      "fixture_id": "IGP-07",
+      "maps_to": [
+        "PED-18",
+        "FIQ-05"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-PORT",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "fora da recomendação"
+      }
+    },
+    {
+      "fixture_id": "IGP-08",
+      "maps_to": [
+        "PED-14",
+        "CDO-14"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        },
+        {
+          "event_id": "res-2",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "Resultado duplicado"
+      }
+    },
+    {
+      "fixture_id": "IGP-09",
+      "maps_to": [
+        "PRD-04"
+      ],
+      "kind": "validator",
+      "allow_private": false,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "fuso horário"
+      }
+    },
+    {
+      "fixture_id": "IGP-10",
+      "maps_to": [
+        "PED-20",
+        "CDO-17",
+        "PRD-09"
+      ],
+      "kind": "validator",
+      "allow_private": false,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "bloqueados"
+      }
+    },
+    {
+      "fixture_id": "IGP-11",
+      "maps_to": [
+        "PED-14",
+        "EFA-06"
+      ],
+      "kind": "validator_in_memory_only",
+      "allow_private": true,
+      "events": [
+        {
+          "event_id": "rec-1",
+          "type": "caderno_recomendado",
+          "timestamp": "2026-11-04T10:00:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "topic_ids": [
+            "GER-LEG"
+          ]
+        },
+        {
+          "event_id": "res-1",
+          "type": "resultado_recebido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 8,
+          "erros": 4,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 8
+            }
+          ]
+        },
+        {
+          "event_id": "corr-2",
+          "type": "resultado_corrigido",
+          "timestamp": "2026-11-04T10:05:00-04:00",
+          "caderno_id": "UFMS-FICT-001",
+          "total": 12,
+          "acertos": 9,
+          "erros": 3,
+          "nao_respondidas": 0,
+          "topic_results": [
+            {
+              "topic_id": "GER-LEG",
+              "attempted": 12,
+              "correct": 9
+            }
+          ],
+          "corrects_event_id": "not-previous"
+        }
+      ],
+      "expect": {
+        "validation": "fail",
+        "error_contains": "Correção sem vínculo"
+      }
+    },
+    {
+      "fixture_id": "IGP-12",
+      "maps_to": [
+        "CDO-10",
+        "PRD-05"
+      ],
+      "kind": "preprocessor_not_implemented",
+      "input": {
+        "platform": "unknown",
+        "reported_answered": 12,
+        "reported_unanswered": 3,
+        "reported_total": null,
+        "meaning_of_total": "unknown"
+      },
+      "expect": {
+        "decision": "pending_clarification",
+        "canonical_event_created": false
+      },
+      "note": "Sem convenção da plataforma não converter automaticamente respondidas=12 para total=15"
+    },
+    {
+      "fixture_id": "IGP-13",
+      "maps_to": [
+        "PRD-03",
+        "CDO-02"
+      ],
+      "kind": "schema_gap_not_implemented",
+      "input": {
+        "internal_recommendation_id": "REC-FICT-01",
+        "platform_notebook_id": "EXT-FICT-44",
+        "attempt_ids": [
+          "TRY-FICT-A",
+          "TRY-FICT-B"
+        ],
+        "study_topic_id": "GER-LEG"
+      },
+      "expect": {
+        "decision": "require_schema_and_id_mapping",
+        "canonical_event_created": false
+      },
+      "note": "Mesmo caderno externo pode ter duas tentativas independentes: contrato atual por caderno_id rejeita segundo resultado_recebido"
+    },
+    {
+      "fixture_id": "IGP-14",
+      "maps_to": [
+        "PRD-04",
+        "CDO-09"
+      ],
+      "kind": "schema_gap_not_implemented",
+      "input": {
+        "recorded_at": "2026-11-04T10:05:00-04:00",
+        "attempt_at": null,
+        "origin": "manual_user_report",
+        "independent": "unknown"
+      },
+      "expect": {
+        "decision": "record_reception_only_if_authorized",
+        "attempt_at": "unknown",
+        "personal_write_allowed": false
+      },
+      "note": "Timestamp do evento técnico não pode ser vendido como data de execução do estudante"
+    }
+  ]
+}
