@@ -16,7 +16,7 @@ class AnnexSeparationTests(unittest.TestCase):
         cls.cases=json.loads((ROOT/"tests/fixtures/annex_cases.json").read_text(encoding="utf-8"))["cases"]
         cls.chunks={x["id"]:x for x in load(ROOT)}
 
-    def test_21_contraprovacoes_de_roteamento(self):
+    def test_contraprovacoes_de_roteamento(self):
         for c in self.cases:
             with self.subTest(query=c["query"]):
                 if c["kind"]=="conflict":
