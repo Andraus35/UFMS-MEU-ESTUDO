@@ -90,6 +90,43 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual((p["attempted"], p["correct"]), (12, 9))
         self.assertEqual(state["results_count"], 1)
 
+    def test_acertos_por_topico_nao_superam_total(self):
+        event = outcome()
+        event["topic_results"][0]["correct"] = 9
+        with self.assertRaisesRegex(ValueError, "Acertos por tópico superam"):
+            validate_events([recommendation(), event], TOPICS, allow_private=True)
+
+    def test_erros_por_topico_nao_superam_total(self):
+        event = outcome()
+        event["topic_results"][0]["correct"] = 3
+        with self.assertRaisesRegex(ValueError, "Erros por tópico superam"):
+            validate_events([recommendation(), event], TOPICS, allow_private=True)
+
+    def test_tentativas_por_topico_nao_incluem_nao_respondidas(self):
+        event = outcome()
+        event["topic_results"][0]["attempted"] = 13
+        with self.assertRaisesRegex(ValueError, "supera questões respondidas"):
+            validate_events([recommendation(), event], TOPICS, allow_private=True)
+
+    def test_resultado_nao_aceita_topico_fora_da_recomendacao(self):
+        other = next(t["topic_id"] for t in TOPICS if t["topic_id"] != "GER-LEG")
+        event = outcome()
+        event["topic_results"][0]["topic_id"] = other
+        with self.assertRaisesRegex(ValueError, "fora da recomendação"):
+            validate_events([recommendation(), event], TOPICS, allow_private=True)
+
+    def test_resultado_nao_aceita_escopo_declarado_divergente(self):
+        other = next(t["topic_id"] for t in TOPICS if t["topic_id"] != "GER-LEG")
+        event = outcome()
+        event["topic_ids"] = [other]
+        with self.assertRaisesRegex(ValueError, "fora da recomendação"):
+            validate_events([recommendation(), event], TOPICS, allow_private=True)
+
+    def test_resultado_parcial_consistente_continua_valido(self):
+        event = outcome()
+        event["topic_results"][0] = {"topic_id": "GER-LEG", "attempted": 6, "correct": 4}
+        validate_events([recommendation(), event], TOPICS, allow_private=True)
+
     def test_revision_lifecycle(self):
         events = [
             {"event_id":"due1","type":"revisao_agendada","timestamp":T,"topic_id":"GER-LEG","due_at":"2026-11-11T18:00:00-04:00"},
