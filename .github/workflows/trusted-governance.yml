@@ -1,0 +1,31 @@
+name: Trusted governance gate
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review, converted_to_draft]
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+jobs:
+  trusted-governance:
+    name: trusted-governance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout protected base only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Gate from protected base (never execute PR head)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UFMS_APPROVAL_PUBKEY_B64: ${{ vars.UFMS_APPROVAL_PUBKEY_B64 }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python scripts/trusted_governance.py --check
