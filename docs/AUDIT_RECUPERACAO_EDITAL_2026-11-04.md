@@ -77,9 +77,17 @@ O portal de editais da [FAPEC](https://portal.concurso.fundacaofapec.org.br/edit
 - **Execução comprovada:** [run 41794387965](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41794387965), SHA `a595cfa4b41aad0c6b949870439e270e6c0f9855`, `success`: **62 testes**, diagnóstico dos Anexos III/IV/V **23/23** (15 roteamentos, 8 ambiguidades rejeitadas), benchmark original 27/27 Hit@1, adversarial 9/9 Hit@1, 81 chunks íntegros e índices de 23 tópicos, 2 linhas de vagas e 2 descrições de atribuições.
 - Na consulta ao portal da FAPEC, o botão de download redirecionou para armazenamento externo com endereço temporário, mas não foi possível obter e comparar os bytes oficiais. **O hash da cópia hospedada pela FAPEC não foi verificado**, embora o hash do PDF originalmente fornecido pelo estudante esteja comprovado. Manter o documento primário e suas futuras retificações versionados separadamente.
 
+### Verificação cruzada de PDF oficial UFMS — 04/11/2026
+
+- A notícia institucional [UFMS — concurso técnicos-administrativos](https://www.ufms.br/ufms-lanca-154-vagas-em-concurso-de-tecnicos-em-educacao-para-fortalecer-a-educacao-superior-em-ms/) aponta diretamente ao PDF oficial [SEI_6775306_Edital.pdf](https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf).
+- A leitura e a inspeção da página 13 do PDF hospedado pela UFMS confirmaram título `Edital PROGEP/UFMS nº 152, de 29/10/2026`, 47 páginas e processo SEI `23104.030868/2026-19`, além das datas conflitantes `10/02/2027` e `11 e 12/01/2027` no Anexo II.
+- **Limite da evidência:** foi possível examinar o texto e a imagem disponibilizados pela fonte institucional, mas **não** obter os bytes brutos do download para calcular SHA-256 ou provar identidade criptográfica com o PDF enviado pelo estudante. A inconsistência do cronograma está corroborada, porém não resolvida por retificação.
+- A fonte foi incluída em `edital/fontes_oficiais.json.institutional_pdf_observations` sem comprovação indevida de hash. `scripts/validate_fontes_oficiais.py` bloqueia URL, identidade, datas ou declaração de equivalência divergentes; `tests/test_fontes_oficiais.py` acrescenta cinco contraprovas de adulteração.
+- **Evidência intermediária:** [GitHub Actions run 41815179887](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41815179887), SHA `da2548b305ca1debdb023d1763032f7e0eca7b3d`, `success`, **100 testes aprovados**. A validação final da documentação e do handoff deve ser lida no novo SHA antes de homologar este checkpoint. Testes da frente produtora não equivalem a auditoria independente.
+
 ## 8. Próxima retomada técnica
 
 1. Reconfirmar HEAD exato e CI do PR #1, sem merge.
 2. Conferir novamente fonte oficial FAPEC/Boletim quanto à anomalia do Anexo II, registrando eventual ato separado.
-3. **Concluído:** indexação das linhas III, atribuições IV e dos tópicos V, com 21 contraprovas de não equivalência. Próximo passo: verificar fontes primárias da FAPEC/UFMS para eventual esclarecimento ou retificação do ALERTA-DOC-01 e conferir a identidade dos bytes oficiais, sem aplicar alterações automáticas.
+3. **Concluído:** indexação das linhas III, atribuições IV e dos tópicos V, com 23 contraprovas de não equivalência. Próximo passo: verificar fontes primárias da FAPEC/UFMS para eventual esclarecimento ou retificação do ALERTA-DOC-01 e conferir a identidade dos bytes oficiais, sem aplicar alterações automáticas.
 4. Ampliar holdout com perguntas não usadas na construção dos aliases; manter testes adversariais e documento canônico intacto.
