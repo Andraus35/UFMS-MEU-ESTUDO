@@ -30,7 +30,11 @@ SENSITIVE_EXACT = frozenset({
     "scripts/validate.py", "scripts/write_policy.py",
     "scripts/api_write_guard.py", "scripts/protect_main.py",
 })
-SENSITIVE_PREFIXES = (".github/workflows/", "rules/", "guardrails/", "hooks/")
+SENSITIVE_PREFIXES = (
+    ".github/", "scripts/", "tests/", "rules/", "guardrails/",
+    "hooks/", "config/", "edital/", "state/", "memory/",
+    "docs/auditorias/", "docs/pedagogia/",
+)
 SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
