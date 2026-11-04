@@ -199,3 +199,28 @@ ser auditados por agente distinto. Sem isso, manter G0/GQ-H e NC-PR9-01
 nenhum Tutor/Coach real está obrigado a usá-lo até restringir todas as
 credenciais e implantar o supervisor. A App de governança não substitui essa
 restrição de execução.
+
+
+## Deliberação necessária após última bateria técnica
+
+Existe um documento específico:
+`docs/ADR_P0_APP_OUTAGE.md`. Ele registra que o GitHub aceita checks
+aprovados por até sete dias, independentemente do TTL interno de dez minutos
+e da disponibilidade da App. Uma arquitetura com merge queue por commit de
+grupo pode mitigar esse problema, mas exigiria transferir o repositório pessoal
+para uma organização GitHub pública, alterar o protocolo App/CI e realizar
+testes reais. **Não foi decidido nem executado**.
+
+O PR #10 inclui também:
+- `tests/test_trusted_app_real_crypto.py`: fluxo integrado com assinatura
+  Ed25519 real, sem simular a verificação OpenSSL; API GitHub simulada.
+- `scripts/check_live_governance.py`: ferramenta de leitura administrativa
+  para Termux, que falha na ausência da App/check/regras e registra
+  explicitamente `merge_authorized: false`. Seu PASS é uma fotografia,
+  não uma garantia futura.
+- `tests/test_check_live_governance.py`: negativas determinísticas,
+  inclusive app_id falsificado, proteção permissiva, check antigo e
+  merge SHA incompatível.
+
+**Sem implantação da App e sem prova do cenário offline, GQ-H permanece
+PENDENTE DE EVIDÊNCIAS e o merge continua proibido.**

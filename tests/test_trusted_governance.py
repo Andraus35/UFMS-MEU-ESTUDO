@@ -88,7 +88,10 @@ class TrustedGovernanceTests(unittest.TestCase):
                      ".github/workflows/trusted-governance.yml",
                      "tests/test_trusted_governance.py",
                      "scripts/trusted_app_check.py",
-                     "tests/test_trusted_app_check.py"):
+                     "tests/test_trusted_app_check.py",
+                     "tests/test_trusted_app_real_crypto.py",
+                     "scripts/check_live_governance.py",
+                     "tests/test_check_live_governance.py"):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "Immutable"):
                 evaluate(PR, HEAD, BASE, [path], [self.signed()], self.pubkey)
 
@@ -119,7 +122,10 @@ class TrustedGovernanceTests(unittest.TestCase):
                     ".github/workflows/trusted-governance.yml",
                     "tests/test_trusted_governance.py",
                     "scripts/trusted_app_check.py",
-                    "tests/test_trusted_app_check.py"):
+                    "tests/test_trusted_app_check.py",
+                    "tests/test_trusted_app_real_crypto.py",
+                    "scripts/check_live_governance.py",
+                    "tests/test_check_live_governance.py"):
             for new in ("templates/disabled.txt", "docs/untrusted.md"):
                 with self.subTest(old=old, new=new):
                     rec = [{"filename": new, "previous_filename": old,
