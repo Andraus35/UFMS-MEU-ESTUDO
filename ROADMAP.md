@@ -46,7 +46,7 @@ Fotografia em `main`, commit **`676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`** (rev
 
 | ID | P | Frente / gate | Estado de partida | Definition of Done |
 |---|---|---|---|---|
-| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Bootstrap e branch protection verificados; faltam gate independente de workflow alterável, implementação nos orquestradores e parecer externo |
+| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Bootstrap, CI e proteção main verificados; gates automáticos de entrega e teste funcional do Tutor/Coach pendentes |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
@@ -76,6 +76,13 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 - **NC-PR9-05 (P1):** adaptador `scripts/api_write_guard.py` permanece intencionalmente restrito ao PR #1 histórico, **não cobre o PR #9**; não remover guardrails para simular fechamento.
 - **NC-PR9-06 (P1):** proteção `main.protected=true` e `validate` obrigatório são confirmados; auditor obteve 403 para a política administrativa detalhada. Confirmação completa ainda requer leitura independente com permissão adequada.
 - **Gate de saída:** reauditoria G0/GQ-H do novo HEAD, testes de adversário contra fonte de check externa confiável, broker real com credenciais confinadas e aceite humano para qualquer merge.
+
+## Repriorização proporcional dos bloqueadores (decisão do proprietário, 04/11/2026)
+
+- O antigo gate P0 de duas Apps/atestado criptográfico do PR #10 é **opcional** para a governança de código de um harness pessoal; não é condição para orientar o estudante. Permanece documentado como alternativa de defesa aprofundada, sem homologação operacional e sem implantação.
+- **RM-00** passa a requerer START/DELIVERY reproduzíveis, CI e proteção da `main` comprovadas, e gates automáticos de entrega. A eficácia funcional do Tutor/Coach depende de GP-0–GP-5 e não de Apps de administração do GitHub.
+- O bloqueio de gravação pessoal em repositório público, a proibição de fingir integração com Zapia e a exigência de autorização humana para merge/alterações estruturais sensíveis permanecem. **Não** há aprovação humana exigida por mensagem de orientação ordinária.
+- A reclassificação estratégica altera o contrato e sua baseline conjuntamente, com testes de regressão no mesmo commit; não promove RM-00 a `homologado` nem encerra NCs por mera declaração.
 
 ## Referências
 

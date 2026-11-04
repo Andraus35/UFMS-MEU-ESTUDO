@@ -199,4 +199,10 @@ Não atualizar este documento com estados não confirmados nem copiar conversas 
 - **Dependências abertas:** PR #11 contém apenas broker START read-only; PR #10 contém arquitetura opcional de duas Apps ainda não implantada; PR #5 especifica Cognitive Gates com r3 não aprovada; PR #4 é snapshot histórico. Não transferir aprovações entre SHAs.
 - **Evidências de entrega:** criação de commit, execução dos hooks locais, CI no novo HEAD e readback continuam a confirmar após a publicação. Escrita via API GitHub não executa hooks locais. Até a CI, estado `PENDING`, nunca `PASS`.
 - **Próxima etapa:** confirmar SHA/CI do PR #9; revisar compatibilidade com #11 e #5; só depois decidir saneamento/fechamento das demais candidatas, sem merge automático.
+## Checkpoint — reclassificação do RM-00 (04/11/2026)
+
+- CI independente da primeira revisão de autonomia: HEAD `56d4cd852b831018fdcbea2d205e8f0964ab5330`; push run [41937428498](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41937428498) e PR run [41937436081](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41937436081), ambos `success`.
+- Revisão atual: RM-00 deixa de exigir a infraestrutura opcional de duas GitHub Apps para qualquer orientação cognitiva; exige gates reproduzíveis, integridade e execução funcional do Tutor/Coach. Alteração coordenada na baseline determinística de `scripts/agent_gates.py` e teste de contraprova; não é uma homologação.
+- PR #4: 15/15 blobs coincidem com #5, encerrado como duplicado, sem merge. PR #11: base retargeted ao branch do PR #9, testa dependência documental sem tocar `main`.
+- Esta nova alteração ainda depende de commit/SHA, testes remotos/CI e auditoria própria; nenhuma autorização de merge/deploy foi dada. Escrita API não comprova hooks locais.
 

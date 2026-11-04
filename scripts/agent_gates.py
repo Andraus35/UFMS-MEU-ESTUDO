@@ -33,7 +33,7 @@ ROADMAP_STATES = frozenset({
 
 
 ROADMAP_APPROVED_BASELINE = {
-    "RM-00": ("P0", "em_andamento", "Bootstrap e branch protection verificados; faltam gate independente de workflow alterável, implementação nos orquestradores e parecer externo"),
+    "RM-00": ("P0", "em_andamento", "Bootstrap, CI e proteção main verificados; gates automáticos de entrega e teste funcional do Tutor/Coach pendentes"),
     "RM-01": ("P0", "implementado_nao_homologado", "Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo"),
     "RM-02": ("P0", "bloqueado", "IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI"),
     "RM-03": ("P1", "planejado", "Projeção reprodutível, origem e incerteza claras, sem inferir domínio"),

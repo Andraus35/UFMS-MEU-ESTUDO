@@ -28,6 +28,13 @@ class AutonomiaContratoTests(unittest.TestCase):
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         self.assertIn("não constitui integração real com Zapia", roadmap)
 
+    def test_rm00_prioriza_gates_de_entrega_sem_estrutura_corporativa(self):
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        row = next(line for line in roadmap.splitlines() if line.startswith("| RM-00 |"))
+        self.assertIn("gates automáticos de entrega", row)
+        self.assertNotIn("gate independente de workflow alterável", row)
+        self.assertIn("O antigo gate P0 de duas Apps", roadmap)
+
     def test_privacidade_permanece_bloqueada(self):
         import json
         config = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
