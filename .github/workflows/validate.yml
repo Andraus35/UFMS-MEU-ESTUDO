@@ -16,6 +16,8 @@ jobs:
         run: python scripts/ci_gate_contract.py --check
       - name: Verificar bloqueio de resultados pessoais
         run: python scripts/write_policy.py --check
+      - name: Validar roadmap e bootstrap
+        run: python scripts/roadmap_gate.py --check
       - name: Validar estrutura e dados
         run: python scripts/validate.py
       - name: Validar integridade do edital

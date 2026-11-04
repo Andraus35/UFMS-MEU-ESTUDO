@@ -16,6 +16,7 @@ except ModuleNotFoundError:
 REQUIRED_STEPS = (
     ("Validar contrato de segurança da CI", "python scripts/ci_gate_contract.py --check"),
     ("Verificar bloqueio de resultados pessoais", "python scripts/write_policy.py --check"),
+    ("Validar roadmap e bootstrap", "python scripts/roadmap_gate.py --check"),
     ("Validar estrutura e dados", "python scripts/validate.py"),
     ("Testar regras de integridade", "python -m unittest discover -s tests -v"),
     ("Confirmar projeções reproduzíveis", "python scripts/rebuild.py --check"),
@@ -52,6 +53,7 @@ def verify_security_contract(root=ROOT):
     sources = {
         "scripts/validate.py": ("verify_write_policy(root)", "check_hook_contract(root)"),
         "scripts/rebuild.py": ("verify_write_policy(root)",),
+        "scripts/roadmap_gate.py": ("def verify(", "check_bootstrap(root)"),
         "scripts/write_policy.py": ("def verify_write_policy(",),
         "scripts/api_write_guard.py": ("def check_proposal(", "def check_readback("),
     }

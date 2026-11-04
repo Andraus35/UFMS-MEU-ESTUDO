@@ -14,6 +14,13 @@ class CIGateContractTests(unittest.TestCase):
     def test_workflow_atual_cumpre_gates(self):
         self.assertTrue(verify_security_contract(ROOT))
 
+    def test_remocao_do_gate_roadmap(self):
+        bad = WORKFLOW.replace(
+            "      - name: Validar roadmap e bootstrap\n"
+            "        run: python scripts/roadmap_gate.py --check\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
     def test_remocao_do_gate_privacidade(self):
         bad = WORKFLOW.replace(
             "      - name: Verificar bloqueio de resultados pessoais\n"
