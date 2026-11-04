@@ -34,6 +34,24 @@ Na página **13**, Anexo II, do PDF original:
 4. Versionar evidências em arquivo separado, sem sobrescrever o PDF original, Markdown canônico, chunks ou índices anteriores. Uma retificação comprovada deve passar por revisão humana antes da incorporação normativa.
 5. Executar `python scripts/validate_fontes_oficiais.py --check` e a suíte de testes. Manter commits/CI no HEAD exato e atualizar `memory/HANDOFF.md`.
 
+## Sonda de hash do PDF institucional — comparação reproduzível
+
+A primeira tentativa de obter o arquivo institucional diretamente neste ambiente em 04/11/2026 não chegou aos bytes: o download falhou e o acesso HTTP por linha de comando apresentou erro de resolução DNS. Isso **não significa que o PDF seja inexistente ou diferente**. A página oficial segue acessível para leitura textual e visual por outro mecanismo, mas esse acesso não fornece o arquivo bruto para hash.
+
+Foi criado `scripts/probe_pdf_ufms.py`, um comparador **somente leitura**, estritamente fixado à URL institucional `https://www.ufms.br/wp-content/uploads/2026/10/SEI_6775306_Edital.pdf`. Em ambiente que permita rede, executar:
+
+```bash
+python scripts/probe_pdf_ufms.py --live
+```
+
+O programa obtém o SHA-256 esperado de `edital/manifest.json`, recusa redirecionamentos, limita o download a 12 MiB, exige HTTP 200, tipo PDF e marcadores `%PDF-` e `%%EOF`, e calcula o SHA-256 **dos bytes recebidos em streaming**. O resultado é JSON, sem alterações no repositório:
+
+- `digest_match_unarchived` — códigos de saída **0**: SHA-256 remoto recebido coincide com o original **naquela consulta**, mas **os bytes não foram arquivados** e não há aprovação de retificação.
+- `digest_mismatch` — código **2**: houve bytes com aparência de PDF e SHA-256 diferente; **não** reescrever automaticamente a fonte, investigar versão e proveniência.
+- `unverifiable` — código **3**: rede, redirecionamento, HTML, arquivo inválido ou erro de leitura; **não** inferir equivalência ou diferença.
+
+A sonda não é um gate online da CI: testes determinísticos offline exercitam 12 cenários sem dependência de serviços externos. A CI não deve tornar-se frágil por indisponibilidade de rede; a execução real exige ambiente com acesso externo e registro de evidência. Mesmo um digest remoto igual registrado em logs não preenche automaticamente os campos `verified` do JSON: o gate atual requer a preservação dos bytes oficiais e auditoria separada antes de liberar equivalência normativa.
+
 ## Ferramentas e estados de saída
 
 - `python scripts/validate_fontes_oficiais.py --check` é **offline**: verifica identidade original, hashes, datas literais do alerta e consistência do registro; participa do gate de CI.
