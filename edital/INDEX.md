@@ -95,6 +95,7 @@ Perguntas diretas como `"Anexo III do cargo 523"`, `"Quais as atribuições do c
 
 - O registro não normativo `edital/fontes_oficiais.json` distingue fonte original comprovada, publicação FAPEC observada, **PDF institucional UFMS de 47 páginas, com título e p. 13 cotejados e hash remoto pendente**, e retificações verificadas. Ver `docs/RETIFICACOES_E_PROVENIENCIA.md` para o procedimento de cotejo dos bytes e atualização versionada.
 - A inconsistência do **Anexo II, página 13** permanece aberta (`ALERTA-DOC-01`): resultado preliminar em `10/02/2027` e recurso impresso `11 e 12/01/2027`. Não inferir datas corretas.
+- `python scripts/probe_pdf_ufms.py --live`: sonda apenas de leitura que compara SHA-256 **dos bytes recebidos** da URL institucional com o manifesto; não arquiva PDF, não muda o edital e não integra o gate online da CI.
 - `python scripts/validate_fontes_oficiais.py --check`: gate offline obrigatório. `python scripts/monitor_fapec.py --live`: busca **somente leitura** em uma página oficial; saída inconclusiva não comprova inexistência de retificação.
 
 ## Localização e comandos
