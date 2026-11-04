@@ -89,7 +89,7 @@ Alternativamente, `--conteudo-cargo 523` ou `--conteudo-cargo 324` retorna o inv
 
 Perguntas diretas como `"Anexo III do cargo 523"`, `"Quais as atribuições do cargo 324?"` e `"Conhecimentos específicos do cargo 523"` também podem ser roteadas. Consultas que misturam anexos ou pedem simultaneamente requisitos, atribuições e conteúdos são **rejeitadas para desambiguação**, em vez de retornar uma resposta parcial. O seletor `--anexo` exige `--cargo` e não aceita consulta textual na mesma chamada.
 
-`tests/fixtures/annex_cases.json` mantém 21 contraprovas de roteamento e ambiguidade; `scripts/benchmark_anexos.py` mede seu resultado na CI. São consultas de diagnóstico versionadas pelo produtor, não evidência de acurácia universal ou homologação independente. Os índices continuam derivados e qualquer retificação exige fonte versionada independente.
+`tests/fixtures/annex_cases.json` mantém 23 contraprovas de roteamento e ambiguidade; `scripts/benchmark_anexos.py` mede seu resultado na CI. São consultas de diagnóstico versionadas pelo produtor, não evidência de acurácia universal ou homologação independente. Os índices continuam derivados e qualquer retificação exige fonte versionada independente.
 
 ## Localização e comandos
 
