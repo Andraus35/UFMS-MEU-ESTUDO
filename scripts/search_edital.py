@@ -279,8 +279,13 @@ def search(query='',limit=4,cargo=None,root=ROOT,topic=None,area=None,full=False
     annex_name={"iii":"III","iv":"IV","v":"V"}
     explicit_annexes={annex_name[x] for x in ann_mentions}
     role_intents=set(explicit_annexes)
-    if re.search(r'\b(atribuicoes?|funcoes?|responsabilidades?|o que faz|descricao do cargo|tarefas do cargo)\b',
-                 query_clean):
+    # Em escopo programático explícito, "responsabilidades" também pode
+    # designar tópico da prova. Só inferir Anexo IV fora desse escopo ou
+    # mediante pedido inequívoco pelas atribuições do cargo.
+    if (area is None or re.search(r'\b(atribuicoes? do cargo|descricao do cargo)\b',
+                                   query_clean)) and re.search(
+            r'\b(atribuicoes?|funcoes?|responsabilidades?|o que faz|descricao do cargo|tarefas do cargo)\b',
+            query_clean):
         role_intents.add("IV")
     if re.search(r'\b(vagas?|requisitos?|escolaridade|lotacao|formacao|localidade|habilitacao para o cargo)\b',
                  query_clean):
