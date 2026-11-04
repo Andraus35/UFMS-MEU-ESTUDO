@@ -1,0 +1,26 @@
+{
+  "status": "PROPOSTA_PRE_APROVACAO; NOT APPROVED",
+  "github_pr5_parent_sha": "565c1f8ea61eb099d7875d83ed27ffb569fadf67",
+  "remote_written": false,
+  "files": {
+    "local_validate.py": "4279cdc9f63440266149a45300dfe4ed0eae5131c9d0e8c64f1556b4a9d1edbe",
+    "test_local_validate.py": "16279b2ce670bf1bd8445d72d2a453f9f44e34e277ce72bc78eafe3cc2db9094",
+    "plan.md": "fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c",
+    "nc-matrix.md": "a07016852aa0614f0d3ca2eae8cea70e1b289930b9e7e54f11ee8a81416898ce",
+    "checks-preview.md": "d40ec44b76f48262ce44ccec9012fc2f850991c787216b9227f643b9fa282348",
+    "composition-manifest.json": "e7ee1299e5d95e467a85261946f54a23f59e243c04258764d93c6dd00c500908",
+    "test-output.txt": "3706648aed8df425e9aab23975b37b3880d1864e269a6dc5552bf0dc42a1fa88"
+  },
+  "criteria_preserved": 27,
+  "observable_decisions": 16,
+  "surface_interfaces": 4,
+  "official_TLC_validation": "NOT_RUN_NETWORK_UNAVAILABLE",
+  "independent_GQD": "PENDING",
+  "verify_C": "NOT_RUN",
+  "verify_O": "BLOCKED",
+  "tests": {
+    "passed": 10,
+    "failed": 0
+  },
+  "inherited_NCs": "1 P0 + 7 P1 + 1 P2 remain open pending independent review"
+}

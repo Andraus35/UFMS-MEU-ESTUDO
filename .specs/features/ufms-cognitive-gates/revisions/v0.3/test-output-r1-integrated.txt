@@ -1,0 +1,22 @@
+test_10_target_deltas (test_candidate.CorrectivePlanTests.test_10_target_deltas) ... ok
+test_baseline_scoped_documentary_pass (test_candidate.CorrectivePlanTests.test_baseline_scoped_documentary_pass) ... ok
+test_exact_27_distinct_criteria (test_candidate.CorrectivePlanTests.test_exact_27_distinct_criteria) ... ok
+test_false_pass_claim_in_preview (test_candidate.CorrectivePlanTests.test_false_pass_claim_in_preview) ... ok
+test_forged_v03_approval_is_denied (test_candidate.CorrectivePlanTests.test_forged_v03_approval_is_denied) ... ok
+test_m_ind_01_no_personal_write_denial (test_candidate.CorrectivePlanTests.test_m_ind_01_no_personal_write_denial) ... ok
+test_m_ind_02_tautological_proof (test_candidate.CorrectivePlanTests.test_m_ind_02_tautological_proof) ... ok
+test_m_ind_03_false_critical_claim_allowed (test_candidate.CorrectivePlanTests.test_m_ind_03_false_critical_claim_allowed) ... ok
+test_m_ind_04_emitter_unbound (test_candidate.CorrectivePlanTests.test_m_ind_04_emitter_unbound) ... ok
+test_missing_approval_pending_is_denied (test_candidate.CorrectivePlanTests.test_missing_approval_pending_is_denied) ... ok
+test_missing_manifest_dependency (test_candidate.CorrectivePlanTests.test_missing_manifest_dependency) ... ok
+test_no_new_approval (test_candidate.CorrectivePlanTests.test_no_new_approval) ... ok
+test_rate_limit_after_transport_mutant (test_candidate.CorrectivePlanTests.test_rate_limit_after_transport_mutant) ... ok
+test_renderer_stale_state_mutant (test_candidate.CorrectivePlanTests.test_renderer_stale_state_mutant) ... ok
+test_revision_suffix_without_approval_is_allowed (test_candidate.CorrectivePlanTests.test_revision_suffix_without_approval_is_allowed) ... ok
+test_source_conflict_absent (test_candidate.CorrectivePlanTests.test_source_conflict_absent) ... ok
+test_wrong_composition_digest (test_candidate.CorrectivePlanTests.test_wrong_composition_digest) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.029s
+
+OK

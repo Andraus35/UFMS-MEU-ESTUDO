@@ -1,6 +1,6 @@
 # UFMS Cognitive Gates — Harness de governança para Tutor e Coach
 
-**Status:** PLAN v0.3 **PROPOSTA CORRETIVA — AGUARDA APROVAÇÃO HUMANA**; não substitui o PLAN v0.2 aprovado, não autoriza BUILD, deploy, merge, credenciais ou dados pessoais.
+**Status:** PLAN v0.3-r1 **PROPOSTA CORRETIVA — AGUARDA APROVAÇÃO HUMANA**; não substitui o PLAN v0.2 aprovado, não autoriza BUILD, deploy, merge, credenciais ou dados pessoais.
 
 **Nota de status:** qualquer coluna `Confirmed? y` preservada em Assumptions se refere a decisões históricas v0.2, não a aprovação das mudanças nesta v0.3.
 
@@ -95,14 +95,14 @@ stateDiagram-v2
 
 ## Surface
 
+**Conformidade metodológica:** os códigos de três dígitos abaixo são **classificações documentais de observabilidade para a Spec Lean**, NÃO um protocolo HTTP implementado, e NÃO substituem os nomes de estados nem os exit codes 0–3 do runner. Não criam endpoints nem autorizam BUILD. Cada linha deve ser verificada posteriormente no seu ambiente próprio.
+
 | Route/Interface | In | Out | Status | Who |
 | --- | --- | --- | --- | --- |
-| `evaluate(proposal,context)` `(new local)` | JSON versionado com `effect_kind=NONE|TOOL`, contexto e fonte | `{decision,reason_codes,evidence_refs,effect_kind,policy_sha}` | `ALLOW`, `NEEDS_EVIDENCE`, `NEEDS_APPROVAL`, `DENY` | Apenas orquestrador; chamada sem identidade válida -> `DENY:CALLER_NOT_AUTHORIZED` |
-| `render(allowed_output)` `(new local)` | Proposta `NONE` + autorização de render vinculada ao run | Resposta filtrada ou erro estruturado `{error:{code,retryable}}` | `COMPLETE`, `DENIED`, `NEEDS_EVIDENCE` | Exclusivamente componente de saída; LLM não publica diretamente |
-| `execute(approved_action)` `(new local)` | Ação `TOOL`, política, revisão, hash e autorização de uso único | Recibo + readback ou `{error:{code,retryable}}` | `COMMITTED`, `DENIED`, `STALE_STATE`, `UNCONFIRMED`, `DEPENDENCY_FAILED` | Exclusivamente gateway com credenciais; demais -> `DENY:CALLER_NOT_AUTHORIZED` |
-| `evaluate-fixture <case-id>` `(new CLI)` | Fixture sintética e SHA | JSON com resultado e `case_id` | `0` esperado; `1` divergência; `2` fixture inválida; `3` dependência indisponível | Runner local/CI, sem efeitos externos |
-
-**Limite de sistema:** testes locais podem provar que **as interfaces implementadas** são mediadas. O go-live exige comprovação adicional de que contas/segredos de produção não permitem um caminho externo direto contornando o gateway.
+| `evaluate(proposal,context)` `(new local)` | JSON versionado com `effect_kind=NONE/TOOL`, contexto e fonte | `{decision,reason_codes,evidence_refs,effect_kind,policy_sha}` | `200 ALLOW`, `422 NEEDS_EVIDENCE`, `202 NEEDS_APPROVAL`, `403 DENY` | Apenas orquestrador; identidade inválida => `DENY:CALLER_NOT_AUTHORIZED` |
+| `render(allowed_output)` `(new local)` | Proposta `NONE` + autorização de render vinculada ao run | Resposta filtrada ou `{error:{code,retryable}}` | `200 COMPLETE`, `403 DENIED`, `422 NEEDS_EVIDENCE` | Somente renderer; LLM sem canal de publicação direta |
+| `execute(approved_action)` `(new local)` | Ação TOOL, política, revisão, hash e token de uso único | Recibo + readback ou `{error:{code,retryable}}` | `200 COMMITTED`, `403 DENIED`, `409 STALE_STATE`, `202 UNCONFIRMED`, `503 DEPENDENCY_FAILED` | Somente gateway com credenciais; demais => `DENY:CALLER_NOT_AUTHORIZED` |
+| `evaluate-fixture <case-id>` `(new CLI)` | Fixture sintética e SHA | JSON com resultado e `case_id` | `200 / exit 0 PASS`, `409 / exit 1 divergência`, `422 / exit 2 fixture inválida`, `503 / exit 3 dependência indisponível` | Runner local/CI, sem efeitos externos |
 
 ## Contratos de confiança e avaliação — proposta v0.3 (não aprovada)
 
@@ -193,6 +193,29 @@ stateDiagram-v2
 
 27. IF uma avaliação de release do LLM não informar `model_version`, `policy_sha`, `dataset_sha`, `grader_version` e número de trials por cenário THEN o gate de release SHALL retornar `BLOCKED:EVAL_METADATA_MISSING`.
     - 40 cenários com 5 trials por cenário são **desenho inicial**, não um atestado de baixa taxa de falhas; separar holdout e calibração humana.
+
+## Observable
+
+**Natureza:** matriz documental de resultados observáveis nas quatro interfaces propostas; cada vínculo AC indica obrigação a demonstrar no futuro, não prova executada. Os códigos de 3 dígitos são aliases documentais da seção Surface; no runner preservam-se os exit codes 0–3. Não há interface de produção instalada.
+
+| Surface | Estado observável | Landing (critério EARS a provar) |
+| --- | --- | --- |
+| `evaluate` | `200 ALLOW` | AC06, AC11, AC26 — saída permitida somente quando elegível |
+| `evaluate` | `422 NEEDS_EVIDENCE` | AC02, AC03, AC25 — fonte desconhecida, conflito ou citação sem suporte |
+| `evaluate` | `202 NEEDS_APPROVAL` | AC13, AC14 — autorização ausente ou inválida, zero efeitos |
+| `evaluate` | `403 DENY` | AC01, AC11, AC12, AC24 — entrada ou política impeditiva |
+| `render` | `200 COMPLETE` | AC25, AC26 — somente conteúdo aprovado, vinculado ao estado |
+| `render` | `403 DENIED` | AC26 — token inválido, expirado, reusado ou publicação fora da rota |
+| `render` | `422 NEEDS_EVIDENCE` | AC02, AC25, AC26 — falta de apoio normativo ou conflito |
+| `execute` | `200 COMMITTED` | AC16, AC17, AC18 — efeito confirmado por readback |
+| `execute` | `403 DENIED` | AC12, AC14, AC15, AC22, AC23 — bloqueio com zero efeitos |
+| `execute` | `409 STALE_STATE` | AC17 — concorrência sobre revisão antiga |
+| `execute` | `202 UNCONFIRMED` | AC18 — possível efeito sem confirmação; bloquear replay |
+| `execute` | `503 DEPENDENCY_FAILED` | AC18 — indisponibilidade antes do efeito |
+| `evaluate-fixture` | `200 / exit 0` | AC20, AC21 — testes realmente executados e adequados |
+| `evaluate-fixture` | `409 / exit 1` | AC20, AC21 — divergência real na asserção |
+| `evaluate-fixture` | `422 / exit 2` | AC20 — schema/fixture inválidos |
+| `evaluate-fixture` | `503 / exit 3` | AC18, AC20 — dependência indisponível não tratada como PASS |
 
 ## Flow
 

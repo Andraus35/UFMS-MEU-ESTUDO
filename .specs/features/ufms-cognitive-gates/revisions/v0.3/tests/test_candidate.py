@@ -45,6 +45,18 @@ class CorrectivePlanTests(unittest.TestCase):
     def test_no_new_approval(self):
         self.assertIn('v0.3 NÃO APROVADO',PLAN)
         self.assertIn('NÃO ENCERRADA',MATRIX)
+    def test_revision_suffix_without_approval_is_allowed(self):
+        result=validate_texts(PLAN,CHECKS,MATRIX,MANIFEST)
+        self.assertTrue(result["ok"],result["errors"])
+        self.assertIn("v0.3-r1", PLAN.splitlines()[2])
+    def test_forged_v03_approval_is_denied(self):
+        forged=PLAN.replace("v0.3 NÃO APROVADO", "v0.3 APROVADO", 1)
+        result=validate_texts(forged,CHECKS,MATRIX,MANIFEST)
+        self.assertIn("APPROVAL_MISREPRESENTED", result["errors"])
+    def test_missing_approval_pending_is_denied(self):
+        forged=PLAN.replace("AGUARDA APROVAÇÃO HUMANA", "APROVADO", 1)
+        result=validate_texts(forged,CHECKS,MATRIX,MANIFEST)
+        self.assertIn("APPROVAL_MISREPRESENTED", result["errors"])
     def test_exact_27_distinct_criteria(self):
         self.assertEqual(list(ac_blocks(PLAN)),list(range(1,28)))
     def test_10_target_deltas(self):

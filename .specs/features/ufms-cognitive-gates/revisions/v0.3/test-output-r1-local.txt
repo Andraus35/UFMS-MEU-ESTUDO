@@ -1,0 +1,15 @@
+test_lost_ears_requirement (test_local_validate.Preapproval.test_lost_ears_requirement) ... ok
+test_missing_numeric_status (test_local_validate.Preapproval.test_missing_numeric_status) ... ok
+test_missing_observable (test_local_validate.Preapproval.test_missing_observable) ... ok
+test_missing_status_join (test_local_validate.Preapproval.test_missing_status_join) ... ok
+test_missing_surface (test_local_validate.Preapproval.test_missing_surface) ... ok
+test_nonexistent_landing (test_local_validate.Preapproval.test_nonexistent_landing) ... ok
+test_premature_approval (test_local_validate.Preapproval.test_premature_approval) ... ok
+test_unrun_unlabeled (test_local_validate.Preapproval.test_unrun_unlabeled) ... ok
+test_valid_proposal (test_local_validate.Preapproval.test_valid_proposal) ... ok
+test_wrong_checks_version (test_local_validate.Preapproval.test_wrong_checks_version) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.009s
+
+OK

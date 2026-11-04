@@ -6,7 +6,7 @@
 
 Mutations: 3
 Build: `python scripts/ci_gate_contract.py --check`; `python scripts/write_policy.py --check`; `python scripts/validate.py`; `python -m unittest discover -s tests -v`
-Plan: `.specs/features/ufms-cognitive-gates/plan.md`
+Plan: `.specs/features/ufms-cognitive-gates/revisions/v0.3/plan.md` (referência candidata; r1 local ainda não publicada)
 
 **Phase:** CHECKS v0.3 PREVIEW — NOVO PLAN AGUARDA APROVAÇÃO. CHECKS v0.2 permaneceram aprovados apenas como derivação histórica. **Proofs abaixo são seletores a implementar, NÃO resultados de testes.** O conjunto ainda aguarda `validate_checks.py` oficial e execução em checkout do HEAD. Não autoriza push, deploy, merge ou dados pessoais.
 
@@ -113,6 +113,18 @@ Proof: teste de integração da rota de publicação real **antes de go-live**, 
 **C27** - Ausência de versão de modelo/política/dataset/grader ou trials impede release com `BLOCKED:EVAL_METADATA_MISSING`. (AC 27)
 Proof: `python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_eval_manifest_required_fields`
 
+
+
+### Surface aliases — esclarecimento pré-aprovação (não executado)
+
+Os números a seguir são identificadores documentais requeridos pela Spec Lean; não há implementação de códigos HTTP. Os estados e códigos de saída permanecem semanticamente os mesmos. Toda alteração na tabela deverá ser rederivada após aceite humano.
+
+| Surface | 3-digit aliases (proposta) | Oráculos vinculados | Prova funcional |
+| --- | --- | --- | --- |
+| `evaluate` | `200 ALLOW`; `422 NEEDS_EVIDENCE`; `202 NEEDS_APPROVAL`; `403 DENY` | C6/C11/C26; C2/C3/C25; C13/C14; C1/C11/C12/C24 | NOT_RUN |
+| `render` | `200 COMPLETE`; `403 DENIED`; `422 NEEDS_EVIDENCE` | C25/C26; C26; C2/C25/C26 | NOT_RUN |
+| `execute` | `200 COMMITTED`; `403 DENIED`; `409 STALE_STATE`; `202 UNCONFIRMED`; `503 DEPENDENCY_FAILED` | C16/C17/C18; C12/C14/C15/C22/C23; C17; C18; C18 | NOT_RUN |
+| `evaluate-fixture` | `200/exit 0`; `409/exit 1`; `422/exit 2`; `503/exit 3` | C20/C21; C20/C21; C20; C18/C20 | NOT_RUN |
 
 ## Coverage
 

@@ -74,7 +74,8 @@ def validate_texts(plan,preview,matrix,manifest):
     tc5=plan.split("**TC-05",1)[1].split("**TC-06",1)[0] if "**TC-05" in plan else ""
     for token in ["state_revision","source_set_sha","recipient","channel","uso único"]:
         if token not in tc5:errors.append("RENDER_BINDING_MISSING_"+token)
-    if "PLAN v0.3 **PROPOSTA CORRETIVA" not in plan or "v0.3 NÃO APROVADO" not in plan:
+    status_ok = bool(re.search(r"(?m)^\*\*Status:\*\* PLAN v0\.3(?:-r[0-9]+)? \*\*PROPOSTA CORRETIVA[^\n]*AGUARDA APROVAÇÃO HUMANA", plan))
+    if not status_ok or "v0.3 NÃO APROVADO" not in plan or "**Approved**:" in plan:
         errors.append("APPROVAL_MISREPRESENTED")
     for heading in ["## Flow","## Impact","## Relations"]:
         if heading not in plan:errors.append("SECTION_MISSING_"+heading)
