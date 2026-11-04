@@ -1,0 +1,30 @@
+{
+  "schema_version": "ufms-spec-approval-v1",
+  "approval_text": "APROVO",
+  "approval_date": "2026-11-04",
+  "scope": "PLAN v0.3-r1 only, plus deriving/fixing C1-C27 checks",
+  "approved_object": {
+    "repository": "Andraus35/UFMS-MEU-ESTUDO",
+    "pr": 5,
+    "head_commit_sha_at_approval": "aa66ac2945cc35c72bbd06401db977903dcbb3c4",
+    "plan_path": ".specs/features/ufms-cognitive-gates/revisions/v0.3/plan.md",
+    "git_blob_sha1": "4257e971f1417cc82461cf3e9117c5598afb7967",
+    "sha256": "fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c"
+  },
+  "preview": {
+    "blob_sha1": "c2d36f482f4b0f67adc417ef7bd22ec0bb06a6b0",
+    "sha256": "d40ec44b76f48262ce44ccec9012fc2f850991c787216b9227f643b9fa282348"
+  },
+  "constraints": {
+    "plan_bytes_immutable": true,
+    "no_merge": true,
+    "no_deploy": true,
+    "no_personal_result_writes": true,
+    "checks_frozen_normatively": true,
+    "official_tlc_validation": "NOT_RUN",
+    "independent_GQD": "PENDING",
+    "VERIFY_C": "NOT_RUN",
+    "VERIFY_O": "BLOCKED"
+  },
+  "new_checks_sha256": "50dff7d0f8ff6f9d6ce7a66ea624cd06d6a6f90bb8055be18dd74461b5481bc0"
+}

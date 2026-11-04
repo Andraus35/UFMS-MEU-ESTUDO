@@ -1,0 +1,30 @@
+{
+  "status": "STRUCTURAL_PASS_ONLY",
+  "criteria": 27,
+  "checks": 27,
+  "revised": [
+    4,
+    11,
+    13,
+    14,
+    15,
+    18,
+    20,
+    22,
+    25,
+    26
+  ],
+  "delta_embedded": 10,
+  "proof_selectors": 31,
+  "plan_sha256": "fa37d9c5cc2fb4288c477c4b175c8ec923ebb419be2aa9e785b32471b850c70c",
+  "checks_sha256": "50dff7d0f8ff6f9d6ce7a66ea624cd06d6a6f90bb8055be18dd74461b5481bc0",
+  "functional_checks_passed": 0,
+  "functional_checks_not_run": 27,
+  "official_skill_validation": "NOT_RUN_DNS_ERROR",
+  "independent_GQD": "PENDING",
+  "VERIFY_C": "NOT_RUN",
+  "VERIFY_O": "BLOCKED",
+  "local_tests_passed": 16,
+  "local_tests_failed": 0,
+  "semantic_assertion_coverage": "partial and mutation-based; not a full auditor"
+}

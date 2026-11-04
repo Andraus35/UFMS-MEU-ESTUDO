@@ -1,0 +1,21 @@
+test_27_members (test_approval_checks.ApprovalChecksTests.test_27_members) ... ok
+test_27_proofs (test_approval_checks.ApprovalChecksTests.test_27_proofs) ... ok
+test_approval_scope (test_approval_checks.ApprovalChecksTests.test_approval_scope) ... ok
+test_identity (test_approval_checks.ApprovalChecksTests.test_identity) ... ok
+test_mutation_delete_negative (test_approval_checks.ApprovalChecksTests.test_mutation_delete_negative) ... ok
+test_mutation_delete_positive (test_approval_checks.ApprovalChecksTests.test_mutation_delete_positive) ... ok
+test_mutation_disable_source_conflict (test_approval_checks.ApprovalChecksTests.test_mutation_disable_source_conflict) ... ok
+test_mutation_drop_nonce_claim (test_approval_checks.ApprovalChecksTests.test_mutation_drop_nonce_claim) ... ok
+test_mutation_hide_CITE (test_approval_checks.ApprovalChecksTests.test_mutation_hide_CITE) ... ok
+test_mutation_remove_C14 (test_approval_checks.ApprovalChecksTests.test_mutation_remove_C14) ... ok
+test_mutation_remove_composition (test_approval_checks.ApprovalChecksTests.test_mutation_remove_composition) ... ok
+test_mutation_remove_dependency_failure (test_approval_checks.ApprovalChecksTests.test_mutation_remove_dependency_failure) ... ok
+test_mutation_remove_oracle (test_approval_checks.ApprovalChecksTests.test_mutation_remove_oracle) ... ok
+test_mutation_replace_proof_noop (test_approval_checks.ApprovalChecksTests.test_mutation_replace_proof_noop) ... ok
+test_mutation_tool_swap (test_approval_checks.ApprovalChecksTests.test_mutation_tool_swap) ... ok
+test_no_fake_pass (test_approval_checks.ApprovalChecksTests.test_no_fake_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.039s
+
+OK
