@@ -12,6 +12,12 @@ except ModuleNotFoundError:
 
 def validate(root=ROOT):
     settings = load_json(root / "settings.json")
+    try:
+        from agent_gates import check_bootstrap, check_hook_contract
+    except ModuleNotFoundError:
+        from scripts.agent_gates import check_bootstrap, check_hook_contract
+    check_bootstrap(root)
+    check_hook_contract(root)
     for filename in settings["bootstrap"]["mandatory"]:
         path = root / filename
         if not path.is_file() or not path.read_text(encoding="utf-8").strip():
