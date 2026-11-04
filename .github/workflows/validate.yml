@@ -20,5 +20,7 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Medir recuperação do edital
         run: python scripts/benchmark_edital.py
+      - name: Medir recuperação adversarial independente dos aliases
+        run: python scripts/benchmark_adversarial.py
       - name: Confirmar projeções reproduzíveis
         run: python scripts/rebuild.py --check
