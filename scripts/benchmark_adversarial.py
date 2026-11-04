@@ -12,7 +12,7 @@ def run(root=ROOT):
         label=case['kind']
         try:
             result=search(case['query'],cargo=case['cargo'],area=case['area'],
-                          root=root,limit=3)
+                          root=root,limit=3,full=True)
         except ValueError as err:
             if label=='conflict' and 'contradiz' in str(err):
                 summary['conflicts_ok']+=1
@@ -22,9 +22,13 @@ def run(root=ROOT):
         ok=True
         if label=='positive':
             summary['positive']+=1
-            if result and result[0]['page']==case['page']:
+            match=lambda x:(x['page']==case['page'] and
+                            x['route']==case['expected_route'] and
+                            case['expected_text'].casefold() in ' '.join(
+                                x.get('text','').casefold().split()))
+            if result and match(result[0]):
                 summary['hit_at_1']+=1
-            if any(x['page']==case['page'] for x in result):
+            if any(match(x) for x in result):
                 summary['hit_at_3']+=1
             else:
                 ok=False
