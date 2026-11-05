@@ -2,9 +2,9 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-07",
-    "branch": "feat/rm07-spec-composition-validators-20261105",
-    "pr_number": 47,
+    "task_id": "RM-07-CLOSEOUT",
+    "branch": "docs/rm07-closeout-rm08-readiness-20261105",
+    "pr_number": 48,
     "base": "main",
     "phase": "review"
   },
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #45 gateway offline integrado em d559f5a7789bf7a85d577bf606cc38baa48049f8 (CI 42088288929 success); PR #46 source/fact gates e renderer local integrados em f64fb3f538ac34c83202565b2fc7b6c6e25f5757 (CI 42089150563 success). PR #47 confere 15 arquivos essenciais por Git blob SHA e executa o verificador documental r2 existente na CI; dois testes cobrem composição íntegra e mutação. Abordagem proporcional, sem framework novo. 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL_CANDIDATE_NOT_MAIN; 0/27 E2E PASS; GQ-D não homologada.",
+  "notes": "PR #45, #46 e #47 / RM-07 integrados em main; CI pós-merge #47 run 42092410857 validate=success. RM-07 implementado_nao_homologado: 1 NC OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL_CANDIDATE_NOT_MAIN; 0/27 E2E PASS; GQ-D reprovada/pendente de reauditoria, GQ-C NOT_RUN, GQ-O BLOCKED. Próxima frente RM-08 / GP-4 permanece BLOCKED até GP-3/GQ-D ter evidência funcional e reauditoria. PR #48 apenas sincroniza ROADMAP/HANDOFF/WORKFLOW; abordagem pessoal e proporcional, sem integrações ou dados pessoais.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-11",
-    "pr_number": 35,
-    "merge_commit_sha": "d6390de09419dbf642e8487aeae167a607840f47"
+    "task_id": "RM-07",
+    "pr_number": 47,
+    "merge_commit_sha": "8107e3dff1b96354aedbd629ffb0cc8519859816"
   }
 }
