@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 / PR #46 (draft).** PR #45 / RM-07 gateway offline integrado à `main` em `d559f5a7789bf7a85d577bf606cc38baa48049f8`; CI pós-merge `42088288929` (`validate=success`). Frente única: `feat/rm07-source-renderer-gates-20261105`. Continuação técnica: source/fact gates e renderer local com estados explícitos, sem publicação externa.
+> **ESTADO VIGENTE — RM-07 / PR #47 (draft).** PR #46 / RM-07 source/fact gates e renderer local integrado à `main` em `f64fb3f538ac34c83202565b2fc7b6c6e25f5757`; CI pós-merge `42089150563` (`validate=success`). Frente única: `feat/rm07-spec-composition-validators-20261105`. Continuação técnica: composição por SHA de blobs e validadores formais de PLAN/CHECKS.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
