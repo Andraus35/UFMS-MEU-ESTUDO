@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-08",
-    "branch": "audit/sim08-oracle-telegram-bridge-decision-20261105",
-    "pr_number": 27,
+    "task_id": "SIM-09",
+    "branch": "audit/sim09-final-branch-inventory-20261105",
+    "pr_number": 28,
     "base": "main",
-    "phase": "review"
+    "phase": "work"
   },
-  "next_task_after_merge": "SIM-09",
+  "next_task_after_merge": "SIM-10",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -21,74 +21,95 @@
   },
   "deferred_pull_requests": [
     {
+      "number": 3,
+      "branch": "feature/oracle-telegram-calendar-bridge",
+      "sha": "757e61c7e880fb8b38c4b215eb063c6c9f1e7cbe",
+      "reason": "ponte Telegram/Calendar sem implantacao nem E2E; preservada para futura decisao",
+      "archived_without_merge": true
+    },
+    {
+      "number": 4,
+      "branch": "spec/ufms-cognitive-gates-verify-d-20261104",
+      "sha": "0db458a50447c2a9f8e7131f402dc3be9c0db313",
+      "reason": "base historica da especificacao; recuperacao seletiva via PR5 e PR23",
+      "archived_without_merge": true
+    },
+    {
       "number": 5,
       "branch": "spec/ufms-cognitive-gates-gqd-correction-v0-3",
       "sha": "9f1b347e755c82f15089470749d9d33524167c1f",
-      "reason": "gates cognitivos: 27 provas funcionais pendentes",
+      "reason": "PLAN r2 e checks recuperados como docs; motor funcional 0/27 E2E",
+      "archived_without_merge": true
+    },
+    {
+      "number": 10,
+      "branch": "audit/trusted-governance-p0-20261104",
+      "sha": "9e928a31d626c174a813e54461d408271d531c65",
+      "reason": "GitHub App/Oracle nao instalada; limitacao de check verde obsoleto",
       "archived_without_merge": true
     },
     {
       "number": 11,
       "branch": "security/agent-entrypoint-failclosed-20261104",
       "sha": "c7213f1ac512ede8760f8025a0f5d3db4aa7c288",
-      "reason": "broker START; reconciliar com #15",
+      "reason": "broker antigo de dez arquivos substituido pelo ReadOnlyAgentBroker atual",
       "archived_without_merge": true
     },
     {
       "number": 12,
       "branch": "audit/governance-document-reconciliation-20261104",
       "sha": "36e81390d8b41cf5c62a071e067779d2aed1d805",
-      "reason": "saneador; reconciliar com #14",
+      "reason": "snapshots e handoffs desatualizados; nao copiar sobre main",
       "archived_without_merge": true
     },
     {
       "number": 13,
       "branch": "fix/api-write-draft-pr-preflight-20261105",
       "sha": "27024250463cbc5fa28c50ed5d10323b987f0abd",
-      "reason": "base da cadeia de escrita API",
+      "reason": "branch intermediaria; controles recuperados pela candidata terminal PR18 e merge PR20",
       "archived_without_merge": true
     },
     {
       "number": 14,
       "branch": "audit/compose-roadmap-document-reconciliation-20261105",
       "sha": "ae8edf3a91d62dff431ea6db2ea88d55b2edc65e",
-      "reason": "composição do #12 sobre #9 antigo",
+      "reason": "composicao documental antiga; sem conteudo atual a reintegrar",
       "archived_without_merge": true
     },
     {
       "number": 15,
       "branch": "security/compose-agent-broker-roadmap-20261105",
       "sha": "e3a32b92c4c16a98456008718f145d5175f564b3",
-      "reason": "composição do broker sobre #14",
+      "reason": "composicao do broker antigo; API incompativel e duplicada",
       "archived_without_merge": true
     },
     {
       "number": 16,
       "branch": "automation/fapec-readonly-schedule-20261105",
       "sha": "fd0a81823405e72a0b5fb91abf2a73cb5af685dc",
-      "reason": "monitor FAPEC ainda não integrado",
+      "reason": "monitor read-only recuperado via PR21; branch original preservada",
       "archived_without_merge": true
     },
     {
       "number": 17,
       "branch": "audit/postcommit-exact-diff-20261105",
       "sha": "538909435a945b3801fa6fdd39b9e98b659a34d3",
-      "reason": "intermediário da cadeia API, base para #18",
+      "reason": "intermediaria API; recuperada seletivamente pela candidata PR18 e merge PR20",
       "archived_without_merge": true
     },
     {
       "number": 18,
       "branch": "fix/api-postcommit-content-bound-20261105",
       "sha": "daec1f626c0bf43a22a565eaac3a290bc71f83c5",
-      "reason": "candidato API mais avançado, não homologado",
+      "reason": "candidata API terminal recuperada seletivamente e integrada no PR20",
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM08 audita ponte #3: MVP Telegram/Calendar isolado; sem bots, OAuth, Oracle ou LLM conectado; rate limit/retencao/backup/E2E pendentes; nao alinha interface final sem decisao. Nao importar codigo/workflows; preservar branch e documentar plano faseado. Proxima SIM09 apos PR27.",
+  "notes": "SIM08 PR27 mesclado; CI posmerge 314 testes e awaiting_next_task SIM09. SIM09 consolida inventario autenticado de 20 branches preservadas: 8 branches de PRs integrados e 12 refs historicos fechados sem merge, com disposicao registrada. Nenhuma branch apagada. Proxima SIM10 apos merge PR28.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-07",
-    "pr_number": 24,
-    "merge_commit_sha": "cbca1b314b824cc9fd5bed57a637ded3455d6ff2"
+    "task_id": "SIM-08",
+    "pr_number": 27,
+    "merge_commit_sha": "3f9411ca00c35713f8b140df6091d92b73ed31d9"
   }
 }
