@@ -5,6 +5,7 @@ o GitHub nem impede push de atores que a ignorem. O chamador deve obter
 contexto fresco por leitura autenticada, empregar SHA/lease e validar readback.
 Bloqueia os caminhos pessoais conhecidos nesta fase, mas NAO inspeciona\no conteudo de documentos permitidos: revisao humana e privacidade seguem obrigatorias.
 """
+import hashlib
 import json
 import re
 import subprocess
@@ -33,6 +34,20 @@ def _sha(value, label):
     if not isinstance(value, str) or not SHA40.fullmatch(value):
         raise ValueError(label + " precisa ser SHA-1 Git completo")
     return value
+
+
+def git_blob_sha(content):
+    """Hash the exact UTF-8/byte payload as a Git SHA-1 blob.
+
+    The trusted writer must compute this from the bytes it actually submits;
+    a digest merely asserted by an LLM is not a trusted content authorization.
+    """
+    if isinstance(content, str):
+        content = content.encode("utf-8")
+    if not isinstance(content, bytes):
+        raise ValueError("Final content must be UTF-8 text or bytes")
+    header = b"blob " + str(len(content)).encode("ascii") + b"\x00"
+    return hashlib.sha1(header + content).hexdigest()
 
 
 def _path(value):
@@ -84,8 +99,11 @@ def check_proposal(proposal):
             raise ValueError("Arquivo duplicado na proposta")
         seen.add(path)
         mode = file.get("operation")
+        final_blob = _sha(file.get("expected_new_blob_sha"), "expected_new_blob_sha")
         if mode == "update":
-            _sha(file.get("expected_blob_sha"), "expected_blob_sha")
+            original_blob = _sha(file.get("expected_blob_sha"), "expected_blob_sha")
+            if original_blob == final_blob:
+                raise ValueError("Final blob must differ from the original for update")
         elif mode == "create":
             if file.get("expected_blob_sha") is not None:
                 raise ValueError("Criação não pode ter blob anterior")
@@ -271,16 +289,20 @@ def check_authenticated_commit_readback(proposal, committed_sha,
     changed = comparison.get("files")
     if not isinstance(changed, list) or len(changed) != len(proposal["files"]):
         raise ValueError("Postcommit changed-file set differs from proposal")
-    expected = {item["path"]: ("modified" if item["operation"] == "update"
-                               else "added") for item in proposal["files"]}
+    expected = {item["path"]: (
+        "modified" if item["operation"] == "update" else "added",
+        item["expected_new_blob_sha"]) for item in proposal["files"]}
     observed = {}
     for item in changed:
         if not isinstance(item, dict):
             raise ValueError("Postcommit changed-file metadata invalid")
         name, status = item.get("filename"), item.get("status")
-        if name not in expected or name in observed or status != expected[name]:
+        if name not in expected or name in observed or status != expected[name][0]:
             raise ValueError("Unexpected file or operation in committed diff")
-        observed[name] = _sha(item.get("sha"), "postcommit_blob_sha")
+        actual_blob = _sha(item.get("sha"), "postcommit_blob_sha")
+        if actual_blob != expected[name][1]:
+            raise ValueError("Postcommit blob differs from proposed final content")
+        observed[name] = actual_blob
     if set(observed) != set(expected):
         raise ValueError("Committed diff missing proposed files")
     for path, blob_sha in observed.items():
@@ -292,5 +314,6 @@ def check_authenticated_commit_readback(proposal, committed_sha,
     return {**original, "committed_sha": new_sha, "base_sha": main_sha,
             "readback": "authenticated_postcommit_exact_file_delta",
             "changed_files_verified": len(observed),
+            "content_bound_to_proposal": True,
             "authenticated_remote_read": True, "ci_verified": False,
             "merge_authorized": False}
