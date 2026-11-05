@@ -62,7 +62,7 @@ def count_integer(value, label):
 
 
 def validate_events(events, topics, allow_private=False):
-    if any(event.get("type") in ATTEMPT_TYPES for event in events):
+    if any(isinstance(event, dict) and event.get("type") in ATTEMPT_TYPES for event in events):
         legacy = [event for event in events if event.get("type") not in ATTEMPT_TYPES]
         if legacy:
             validate_events(legacy, topics, allow_private=allow_private)
