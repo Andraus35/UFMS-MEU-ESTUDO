@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 / PR #44 (draft).** PR #43 / RM-06 integrado à `main` em `8fda9754846b4fba65cd88244260653cbb606720`; CI pós-merge `42085633053` (`validate=success`). Frente única: `audit/rm07-functional-gates-20261105`. GP-3 continua bloqueado; RM-07 audita independentemente as 9 NCs do PR #5 e os 27 checks funcionais.
+> **ESTADO VIGENTE — RM-07 / PR #45 (draft).** PR #44 / RM-07 reauditoria integrado à `main` em `c0683804038b197333bcf91af13bada40cf80464`; CI pós-merge `42087122993` (`validate=success`). Frente única: `feat/rm07-trusted-tool-gateway-20261105`. Continuação técnica: gateway de autorização/execução fail-closed, sem efeitos externos habilitados.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
