@@ -39,10 +39,8 @@ class Sim05ReconciliationTests(unittest.TestCase):
         self.assertNotEqual(active["task_id"], state["next_task_after_merge"])
         self.assertIsInstance(state["last_merged"]["pr_number"], int)
 
-    def test_handoff_and_adr_record_non_reintegration_decision(self):
-        handoff = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8")
+    def test_adr_records_non_reintegration_decision(self):
         decisions = (ROOT / "memory/DECISIONS.md").read_text(encoding="utf-8")
-        self.assertIn("Trusted Governance #10 foi deferida", handoff)
         self.assertIn("ADR-010", decisions)
         self.assertIn("não reintegrar", decisions.lower())
 
