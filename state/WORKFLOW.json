@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-07",
-    "branch": "fix/sim07-cognitive-effects-policy-20261105",
-    "pr_number": 31,
+    "task_id": "SIM-08",
+    "branch": "fix/sim08-ci-duplicate-gates-20261105",
+    "pr_number": 32,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-08",
+  "next_task_after_merge": "SIM-09",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #30 / SIM-06 merged em 9b5afe7b34163acb4bd8c01ce68aae1e700db00d; CI pós-merge 42070294698: validate success, 320 testes. SIM-07 implementa política local de efeitos NONE/TOOL, consentimento por escopo, aprovação sensível e readback; não implementa Zapia nem runtime Tutor/Coach. Próxima tarefa após merge: SIM-08.",
+  "notes": "PR #31 / SIM-07 merged em 1ccde9571e59dcf9e241df9ac0a32fbc8e50c73d; CI pós-merge 42071106275: validate success, 326 testes. SIM-08 consolida validações de edital/índices em scripts/validate.py, remove apenas quatro execuções CI duplicadas e adiciona contraprovas contra remoção/reintrodução. Próxima tarefa após merge: SIM-09.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-06",
-    "pr_number": 30,
-    "merge_commit_sha": "9b5afe7b34163acb4bd8c01ce68aae1e700db00d"
+    "task_id": "SIM-07",
+    "pr_number": 31,
+    "merge_commit_sha": "1ccde9571e59dcf9e241df9ac0a32fbc8e50c73d"
   }
 }

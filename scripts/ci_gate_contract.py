@@ -25,6 +25,28 @@ REQUIRED_STEPS = (
     ("Confirmar projeções reproduzíveis", "python scripts/rebuild.py --check"),
 )
 
+REDUNDANT_STEPS = (
+    ("Validar integridade do edital", "python scripts/chunk_edital.py --check"),
+    ("Validar linhas do quadro de vagas", "python scripts/index_vagas.py --check"),
+    ("Validar atribuições literais do Anexo IV", "python scripts/index_atribuicoes.py --check"),
+    ("Validar proveniência de fontes e alerta de cronograma", "python scripts/validate_fontes_oficiais.py --check"),
+)
+COMPOSITE_VALIDATIONS = (
+    "chunks = check_edital(root)",
+    "indexed_vagas = check_vagas(root)",
+    "indexed_atribuicoes = check_atribuicoes(root)",
+    "official_observations,verified_amendments,open_alerts = check_sources(root)",
+)
+
+
+def verify_composite_validation(root=ROOT, source=None):
+    """Garante que validate.py continue executando as quatro validações consolidadas."""
+    content = source if source is not None else (Path(root) / "scripts/validate.py").read_text(encoding="utf-8")
+    for token in COMPOSITE_VALIDATIONS:
+        if content.count(token) != 1:
+            raise ValueError("Validação consolidada ausente/duplicada: " + token)
+    return True
+
 
 def verify_workflow(workflow):
     if not isinstance(workflow, str):
@@ -41,12 +63,16 @@ def verify_workflow(workflow):
         pattern = "      - name: " + name + "\n        run: " + command
         if workflow.count(pattern) != 1:
             raise ValueError("Etapa de CI obrigatória ausente/duplicada: " + name)
+    for name, command in REDUNDANT_STEPS:
+        if command in workflow:
+            raise ValueError("Validação já executada por scripts/validate.py: " + name)
     return True
 
 
 def verify_security_contract(root=ROOT):
     root = Path(root)
     verify_workflow((root / ".github/workflows/validate.yml").read_text(encoding="utf-8"))
+    verify_composite_validation(root)
     settings = json.loads((root / "settings.json").read_text(encoding="utf-8"))
     storage = settings.get("storage", {})
     if storage.get("personal_results_writes_enabled") is not False:
