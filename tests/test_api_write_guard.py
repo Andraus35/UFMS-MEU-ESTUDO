@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from api_write_guard import check_proposal, check_readback
+from api_write_guard import check_proposal, check_readback, git_blob_sha
 
 
 OLD = "1" * 40
@@ -25,7 +25,8 @@ def proposed(path="docs/OPERACAO.md", operation="update"):
         "expected_head_sha": OLD,
         "observed_head_sha": OLD,
         "files": [{"path": path, "operation": operation,
-                   "expected_blob_sha": BLOB if operation == "update" else None}],
+                   "expected_blob_sha": BLOB if operation == "update" else None,
+                   "expected_new_blob_sha": "4" * 40}],
     }
 
 
@@ -34,6 +35,28 @@ class ApiWriteGuardTests(unittest.TestCase):
         result = check_proposal(proposed())
         self.assertEqual(result["expected_head_sha"], OLD)
         self.assertFalse(result["server_side_enforcement"])
+
+    def test_git_blob_digest_uses_exact_bytes(self):
+        import hashlib
+        for payload in ("abc", "á", b"raw\\x00bytes"):
+            binary = payload.encode("utf-8") if isinstance(payload, str) else payload
+            expected = hashlib.sha1(
+                b"blob " + str(len(binary)).encode("ascii") + b"\\x00" + binary
+            ).hexdigest()
+            self.assertEqual(git_blob_sha(payload), expected)
+
+    def test_rejeita_digest_final_ausente_ou_invalido(self):
+        for value in (None, "", "short", "g" * 40):
+            p = proposed()
+            p["files"][0]["expected_new_blob_sha"] = value
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "expected_new_blob_sha"):
+                check_proposal(p)
+
+    def test_rejeita_update_sem_mudanca_de_blob(self):
+        p = proposed()
+        p["files"][0]["expected_new_blob_sha"] = BLOB
+        with self.assertRaisesRegex(ValueError, "Final blob must differ"):
+            check_proposal(p)
 
     def test_rejeita_escrita_na_main(self):
         p = proposed()
