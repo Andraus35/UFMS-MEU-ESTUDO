@@ -25,6 +25,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Validar START controlado de engenharia
         run: python scripts/bootstrap.py --mode engineering
+      - name: Validar broker read-only com SHA de checkout
+        run: python scripts/agent_entrypoint.py --role engineer --check
+        env:
+          UFMS_TRUSTED_HEAD_SHA: ${{ github.sha }}
       - name: Validar estrutura e dados
         run: python scripts/validate.py
       - name: Validar integridade do edital
