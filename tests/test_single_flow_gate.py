@@ -34,7 +34,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_estado_unico_valido(self):
         self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
-        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-01")
+        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-02")
 
     def test_rejeita_varias_frentes_habilitadas(self):
         for key, mutation in (
@@ -203,7 +203,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_aceita_estado_terminal_da_fila(self):
         tmp, root = self.temp_root()
         with tmp:
-            self.assertEqual(validate_local(root)["next_task_after_merge"], "RM-02")
+            self.assertEqual(validate_local(root)["next_task_after_merge"], "RM-03")
 
     def test_fila_sim_terminal_pode_avancar_para_rm(self):
         tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "DONE"))

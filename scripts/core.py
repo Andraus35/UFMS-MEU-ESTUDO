@@ -6,12 +6,15 @@ quando o relatório só fornece métricas agregadas.
 import csv
 import json
 from datetime import datetime
+
+from gp1_ingestion import ATTEMPT_TYPES, validate_attempt_events, rebuild_attempts
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VALID_TYPES = {
     "caderno_recomendado", "resultado_recebido", "resultado_corrigido",
     "revisao_agendada", "revisao_concluida", "decisao",
+    "attempt_recorded", "attempt_corrected",
 }
 
 
@@ -59,6 +62,11 @@ def count_integer(value, label):
 
 
 def validate_events(events, topics, allow_private=False):
+    if any(isinstance(event, dict) and event.get("type") in ATTEMPT_TYPES for event in events):
+        legacy = [event for event in events if event.get("type") not in ATTEMPT_TYPES]
+        if legacy:
+            validate_events(legacy, topics, allow_private=allow_private)
+        return validate_attempt_events(events, topics, allow_private=allow_private)
     ids = {row["topic_id"] for row in topics}
     seen = {}
     results = {}
@@ -147,6 +155,31 @@ def validate_events(events, topics, allow_private=False):
 
 
 def rebuild(events, topics, schema_version="0.2.0"):
+    if any(event.get("type") in ATTEMPT_TYPES for event in events):
+        legacy = [event for event in events if event.get("type") not in ATTEMPT_TYPES]
+        state, rows = rebuild(legacy, topics, schema_version=schema_version)
+        attempts = rebuild_attempts(events, topics)
+        for row in rows:
+            extra = attempts["progress"][row["topic_id"]]
+            row["attempted"] += extra["attempted"]
+            row["correct"] += extra["correct"]
+            row["accuracy"] = (f'{row["correct"]/row["attempted"]:.4f}' if row["attempted"] else "")
+        state["event_count"] = len(events)
+        state["event_cursor"] = events[-1]["event_id"] if events else None
+        last = events[-1] if events else {}
+        state["last_event_at"] = last.get("timestamp", last.get("recorded_at"))
+        state["results_count"] += attempts["attempts_count"]
+        state["last_attempt_id"] = attempts["last_attempt_id"]
+        completed = set(attempts["recommendation_ids"])
+        completed_cadernos = {
+            event.get("caderno_id") for event in legacy
+            if event.get("type") == "caderno_recomendado"
+            and event.get("recommendation_id") in completed
+        }
+        state["pending_cadernos"] = [
+            cid for cid in state["pending_cadernos"] if cid not in completed_cadernos
+        ]
+        return state, rows
     progress = {row["topic_id"]: {"attempted": 0, "correct": 0, "revision_due_at": ""} for row in topics}
     recommended = {}
     results = {}

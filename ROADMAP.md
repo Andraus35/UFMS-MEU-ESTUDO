@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-01 / PR #38 (draft).** PR #37 / RM-00 integrado à `main` em `1ab0c25a8b0084034fb1987097bfcb6b38ccea44`; CI pós-merge `42079838224` (`validate=success`). Frente única: `audit/rm01-source-monitoring-20261105`. Proteção administrativa confirmada: required check `validate`, `strict=true`, `reviews=0`, `enforce_admins=true`. RM-01 audita monitoramento FAPEC/UFMS e preservação do alerta do edital; não incorpora retificações automaticamente.
+> **ESTADO VIGENTE — RM-02 / PR #39 (draft).** PR #38 / RM-01 integrado à `main` em `725858292ecc1e3e0ad7a85a0ae9a91966d112ee`; CI pós-merge `42080519973` (`validate=success`). Frente única: `fix/rm02-igp-contracts-migration-20261105`. RM-02 implementa IGP-12/13/14 como extensão aditiva compatível; resultados pessoais continuam bloqueados.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-02** após merge de RM-01.
+**Próxima tarefa: RM-03** após merge de RM-02.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -73,7 +73,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 |---|---|---|---|---|
 | RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | implementado_nao_homologado | gates automáticos de entrega: proteção main confirmada; gate serial vincula PR à base main e ao SHA exato; CI verde no HEAD e pós-merge; hooks locais não foram executados via API |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
-| RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
+| RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | implementado_nao_homologado | IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | planejado | Ranking determinístico por snapshot e política, justificativas auditáveis, sem dupla contagem |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | planejado | Filtros realistas, fallback e estado do caderno sem inventar ID externo |

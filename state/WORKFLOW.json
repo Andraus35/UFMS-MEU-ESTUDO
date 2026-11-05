@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-01",
-    "branch": "audit/rm01-source-monitoring-20261105",
-    "pr_number": 38,
+    "task_id": "RM-02",
+    "branch": "fix/rm02-igp-contracts-migration-20261105",
+    "pr_number": 39,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-02",
+  "next_task_after_merge": "RM-03",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #37 / RM-00 merged em 1ab0c25a8b0084034fb1987097bfcb6b38ccea44; CI pré-merge e pós-merge validate=success; readback confirmou zero PRs abertos. Proteção main confirmada: required check validate, strict=true, reviews=0, enforce_admins=true. RM-01 audita monitoramento de fontes/retificações, sem alterar PDF canônico nem aplicar retificações automaticamente. Próxima tarefa após RM-01: RM-02, atualmente bloqueada por IGP-12/13/14.",
+  "notes": "PR #38 / RM-01 integrado em 725858292ecc1e3e0ad7a85a0ae9a91966d112ee; CI pós-merge 42080519973 validate=success; zero PRs abertos após merge. RM-01 permanece implementado_nao_homologado: nenhuma execução event=schedule, hashes de bytes remotos ausentes, ALERTA-DOC-01 aberto. RM-02 implementa IGP-12/13/14 no harness real com esquema aditivo compatível, normalização explícita, identidade de tentativa e separação recorded_at/attempt_at. Dados somente sintéticos; escrita pessoal segue bloqueada.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",

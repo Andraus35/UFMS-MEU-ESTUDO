@@ -108,7 +108,7 @@ class AgentGateTests(unittest.TestCase):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in original.splitlines() if line.startswith("| RM-02 |"))
         fields = line.split("|")
-        self.assertEqual(fields[4].strip(), "bloqueado")
+        self.assertEqual(fields[4].strip(), "implementado_nao_homologado")
         variants = []
         for index, value in (
             (2, "P2"),
