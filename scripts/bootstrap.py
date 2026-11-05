@@ -49,8 +49,8 @@ def run(root=ROOT, mode="study"):
         "prova": concursos["prova_data"],
         "event_count": state["event_count"],
         "last_event": state["event_cursor"],
-        "next": ("Retomar SOMENTE tarefa ativa do state/WORKFLOW.json" if flow
-                 else "Orientar estudos com arquivos relevantes recuperados sob demanda"),
+        "next": ("Consultar estado remoto do PR registrado: se aberto, continuar a tarefa; se mesclado, aguardar a próxima tarefa."
+                 if flow else "Orientar estudos com arquivos relevantes recuperados sob demanda"),
         "warning": "Leitura local nao comprova HEAD remoto ou passagem obrigatoria de agentes externos",
     }
     if flow:
@@ -59,6 +59,7 @@ def run(root=ROOT, mode="study"):
             "pr_ativo": flow["active"]["pr_number"],
             "branch_ativa": flow["active"]["branch"],
             "proxima_apos_merge": flow["next_task_after_merge"],
+            "situacao_remota": "nao_verificada_pelo_bootstrap_local",
         })
     return result
 
