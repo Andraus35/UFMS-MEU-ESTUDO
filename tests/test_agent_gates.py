@@ -116,6 +116,12 @@ class AgentGateTests(unittest.TestCase):
         self.assertIn("| implementado_nao_homologado |", line)
         self.assertIn("sem calibração em dados reais", line)
 
+    def test_rm07_reauditoria_nao_homologada(self):
+        original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        line = next(line for line in original.splitlines() if line.startswith("| RM-07 |"))
+        self.assertIn("| implementado_nao_homologado |", line)
+        self.assertIn("0/27 end-to-end PASS", line)
+
     def test_rm06_nao_homologado_com_sessenta_casos_sem_teste(self):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in original.splitlines() if line.startswith("| RM-06 |"))
