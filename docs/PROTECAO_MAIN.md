@@ -1,6 +1,6 @@
 # Aplicação administrativa da proteção da main
 
-**Estado observado em 04/11/2026:** após aplicação pelo proprietário no Termux, a API autenticada confirmou `main.protected=true` e `validate` obrigatório para todos. O usuário informou `python scripts/protect_main.py --check` com resultado OK. A conexão do agente recebe 403 no endpoint detalhado, portanto não se afirma reauditoria independente da configuração completa. O PR #9 permanece draft sem merge.
+**Estado observado em 04/11/2026:** após aplicação pelo proprietário no Termux, a API autenticada confirmou `main.protected=true` e `validate` obrigatório para todos. O usuário informou `python scripts/protect_main.py --check` com resultado OK. A conexão do agente recebe 403 no endpoint detalhado, portanto não se afirma reauditoria independente da configuração completa. O PR #9 foi mesclado em 05/11/2026 (merge SHA `7942771aea289afd4eab483c0a89d8144425966b`); a CI pós-merge passou.
 
 ## Conferência periódica e reaplicação excepcional
 
@@ -33,6 +33,6 @@ Abrir [Settings → Branches](https://github.com/Andraus35/UFMS-MEU-ESTUDO/setti
 1. `python scripts/protect_main.py --check` retorna OK com autenticação administrativa.
 2. GET autenticado para `repos/Andraus35/UFMS-MEU-ESTUDO/branches/main` indica `protected=true`.
 3. PR de contraprova com CI vermelha **não pode ser mesclado**; evitar tentativas de push direto apenas para testes quando houver risco de escrita inadvertida.
-4. Merge do PR #9 somente com autorização humana explícita. A existência da regra não comprova que todo LLM leu ou interpretou o roadmap.
+4. Para PRs futuros, exigir CI do HEAD exato e decisão de integração; o PR #9 já foi mesclado e verificado. A existência da regra não comprova que todo LLM leu ou interpretou o roadmap.
 
 **Limite de enforcement:** GitHub protege integração à `main`, não a etapa de raciocínio privado dos modelos, consultas ou operações fora do GitHub. Agentes externos devem utilizar o bootstrap do repositório e ser restringidos a PRs; revogar credenciais de escrita direta que escapem desse fluxo quando houver controle administrativo.
