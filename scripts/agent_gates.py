@@ -14,9 +14,7 @@ except ModuleNotFoundError:
     from scripts.core import ROOT, load_json
 
 BOOTSTRAP_FILES = (
-    "AGENTS.md", "ROADMAP.md", "settings.json", "rules/CORE.md",
-    "guardrails/CORE.md", "memory/INDEX.md", "memory/HANDOFF.md",
-    "state/CURRENT.json", "EDITAL_UFMS_152_2026.md", "edital/INDEX.md",
+    "AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md", "state/CURRENT.json",
 )
 ROADMAP_SECTIONS = (
     "# ROADMAP — UFMS MEU ESTUDO",
