@@ -183,3 +183,12 @@ A candidata do PR #9 muda a carga de sessão de dez para **quatro arquivos** (`A
 - **BAIXA — não bloqueante:** Roadmap longo; recuperar seção operacional e documentos adicionais sob demanda. Não eliminar histórico enquanto for fonte única de decisões.
 
 **Decisão de fluxo:** não abrir branch nem PR novos; o PR #9 permanece tarefa SIM-04 até homologação e merge. Somente depois iniciar SIM-01. O fato de a suíte passar não significa homologação universal do START.
+
+### Checkpoint de contraprova do broker (05/11/2026) — mesma frente SIM-04
+
+O PR #9 incorpora um **broker local mínimo, somente leitura** em `scripts/agent_entrypoint.py`, adaptado seletivamente das propostas históricas #11/#15. Diferentemente do broker legado, usa o bootstrap vigente de **quatro arquivos para tutor/coach e cinco para engenharia/auditoria**, sem exigir a transcrição integral do edital. O broker não contém ações com efeito externo; seu método de contexto fornece textos e hashes a um futuro orquestrador de IA.
+
+- **Candidata testada:** `7561cba812a4d5545635931594ddae2a99262c45`. CI push [42038174394](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/42038174394) e PR [42038187668](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/42038187668) **success**; **228 testes** com 12 novos casos de broker + contrato de presença na CI.
+- **Negativos verificados:** sem SHA confiável, SHA Git divergente, checkout sujo, arquivo obrigatório ausente/corrompido, recibo reutilizado após alteração de bytes, symlink, papel desconhecido e ação de escrita/integração externa → **rejeição**. `model_context()` disponibiliza os textos do START validado e seus digests, mas não comprova que um LLM os compreendeu.
+- **Pendência material de ALTA:** este código não é o executor implantado de Tutor/Coach, nem guarda credenciais de serviços. A eficácia universal da leitura somente poderá ser demonstrada quando um orquestrador real passar obrigatoriamente pelo broker, com contraprovas de bypass e bloqueio de tokens diretos; **não promover tal status por CI local**.
+- **Transição preservada:** manter SIM-04 e PR #9 como única frente, sem abrir outro PR para retomar legado. Próxima tarefa SIM-01 somente após revisão e merge do #9. Este parágrafo produz nova revisão e requer CI própria.
