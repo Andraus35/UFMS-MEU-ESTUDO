@@ -17,7 +17,7 @@
 ## START desta sessão — somente API GitHub
 - HEAD remoto de origem: `c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb`.
 - Arquivos obrigatórios lidos no mesmo HEAD: `AGENTS.md` blob `047176c3a21befc6c1f85612e85a32f7d380ba69`; `ROADMAP.md` blob `6c63f266459db8fcda0c12f57c818ebf6145a566`; `memory/HANDOFF.md` blob `dc0024e9256208e77c7f565b60b3105fffa39a19`; `state/CURRENT.json` blob `f2df048a2bf5ffa4876298a4ebf66bed1767c45a`; `state/WORKFLOW.json` blob `7c2c6a9144d4677879e93c3ec2d96d771db18d2e`.
-- `settings.json` lido: blob `ded39535d4a640cb2f7d34f15d3ef936d293bd76`; política confirmou `personal_results_writes_enabled=false).
+- `settings.json` lido: blob `ded39535d4a640cb2f7d34f15d3ef936d293bd76`; política confirmou `personal_results_writes_enabled=false`.
 - **Limite de execução:** sem checkout local, bootstrap/roadmap/write hooks não foram executados nesta sessão. A alteração é feita somente em branch/PR; a CI remota executará os gates no SHA candidato. Não declarar equivalência aos hooks locais.
 - `state/CURRENT.json`, `state/PROGRESS.csv`, eventos e PDF canônico não são modificados.
 
