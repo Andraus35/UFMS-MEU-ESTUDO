@@ -81,7 +81,7 @@ SIMPLIFICATION_BASELINE = {
     "SIM-01": "ALTA", "SIM-02": "ALTA", "SIM-03": "ALTA",
     "SIM-04": "MEDIA", "SIM-05": "MEDIA", "SIM-06": "MEDIA",
     "SIM-07": "MEDIA", "SIM-08": "MEDIA",
-    "SIM-09": "BAIXA", "SIM-10": "BAIXA",
+    "SIM-09": "BAIXA", "SIM-10": "BAIXA", "SIM-11": "MEDIA",
 }
 SIMPLIFICATION_STATES = {"pendente", "em_andamento", "concluido", "documentado"}
 
