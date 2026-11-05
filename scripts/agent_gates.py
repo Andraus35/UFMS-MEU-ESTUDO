@@ -218,7 +218,7 @@ def check_gqd_composition(root=ROOT):
     for relative, expected in GQD_COMPOSITION_PINS.items():
         path = _contained_file(root, relative)
         raw = path.read_bytes()
-        header = b"blob " + str(len(raw)).encode("ascii") + b"\\0"
+        header = b"blob " + str(len(raw)).encode("ascii") + bytes([0])
         actual = hashlib.sha1(header + raw).hexdigest()
         if actual != expected:
             errors.append(f"COMPOSITION_SHA_MISMATCH:{relative}")
