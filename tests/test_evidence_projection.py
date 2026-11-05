@@ -102,6 +102,20 @@ class EvidenceProjectionTests(unittest.TestCase):
         self.assertIn("insufficient_independent_recoveries_on_distinct_dates_and_item_sets",
                       result["uncertainties"])
 
+    def test_rebuild_integrates_attempt_context_and_evidence_level(self):
+        events = [
+            {
+                "event_id": "rec-a", "type": "caderno_recomendado",
+                "timestamp": "2026-11-01T09:00:00-04:00",
+                "caderno_id": "REC-A", "recommendation_id": "REC-A",
+                "topic_ids": [TOPIC],
+            },
+            attempt("e1", "A1", "2026-11-01", "SET-A"),
+        ]
+        state, _ = rebuild(events, TOPICS)
+        self.assertEqual(state["evidence_level"], "E3")
+        self.assertEqual(state["knowledge_status"], "unknown_until_evidence")
+
     def test_rebuild_exposes_reproducible_evidence_projection(self):
         state, _ = rebuild([], TOPICS)
         self.assertEqual(state["evidence_schema_version"], "1.0")
