@@ -74,7 +74,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | implementado_nao_homologado | gates automáticos de entrega: proteção main confirmada; gate serial vincula PR à base main e ao SHA exato; CI verde no HEAD e pós-merge; hooks locais não foram executados via API |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | implementado_nao_homologado | IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada |
-| RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | em_andamento | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
+| RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | implementado_nao_homologado | E0-E4 integrados ao rebuild; desconhecidos explícitos; CI verde; sem evidência real para homologação pedagógica |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | planejado | Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis |
