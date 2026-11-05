@@ -92,8 +92,9 @@ def validate_simplification_queue(contents):
     if not isinstance(contents, str) or contents.count(heading) != 1:
         raise ValueError("Fila de simplificação ausente/duplicada")
     section = contents.split(heading, 1)[1].split("\n## ", 1)[0]
-    if "**Próxima tarefa: SIM-01**" not in section:
-        raise ValueError("Retomada sem próxima tarefa explícita")
+    marker = re.search(r"\*\*Próxima tarefa: (SIM-\d{2})\*\*", section)
+    if marker is None or marker.group(1) not in SIMPLIFICATION_BASELINE:
+        raise ValueError("Retomada sem próxima tarefa SIM válida")
     observed = []
     for line in section.splitlines():
         if not line.startswith("| SIM-"):
