@@ -92,10 +92,12 @@ def validate_simplification_queue(contents):
     if not isinstance(contents, str) or contents.count(heading) != 1:
         raise ValueError("Fila de simplificação ausente/duplicada")
     section = contents.split(heading, 1)[1].split("\n## ", 1)[0]
-    marker = re.search(r"\*\*Próxima tarefa: (SIM-\d{2})\*\*", section)
-    if marker is None or marker.group(1) not in SIMPLIFICATION_BASELINE:
-        raise ValueError("Retomada sem próxima tarefa SIM válida")
+    marker = re.search(r"\*\*(?:Próxima tarefa: (SIM-\d{2})|Fila de simplificação concluída)\*\*", section)
+    if marker is None or (marker.group(1) is not None and marker.group(1) not in SIMPLIFICATION_BASELINE):
+        raise ValueError("Retomada sem próxima tarefa SIM válida ou marcador terminal")
+    next_task = marker.group(1)
     observed = []
+    observed_states = {}
     for line in section.splitlines():
         if not line.startswith("| SIM-"):
             continue
@@ -118,8 +120,11 @@ def validate_simplification_queue(contents):
         elif not tests.startswith("registro:"):
             raise ValueError("Item BAIXA sem registro e risco aceito: " + code)
         observed.append(code)
+        observed_states[code] = state
     if observed != list(SIMPLIFICATION_BASELINE):
         raise ValueError("Fila SIM omitida, duplicada ou reordenada")
+    if next_task is None and not all(state in ("concluido", "documentado") for state in observed_states.values()):
+        raise ValueError("Fila marcada concluída com itens pendentes")
     return True
 
 
