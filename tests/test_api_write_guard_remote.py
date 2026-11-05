@@ -23,7 +23,8 @@ def proposal(number=12, operation="update", path="docs/OPERACAO.md"):
         "pr_number": number, "draft": True, "merged": False, "state": "open",
         "expected_head_sha": HEAD, "observed_head_sha": HEAD,
         "files": [{"path": path, "operation": operation,
-                   "expected_blob_sha": BLOB if operation == "update" else None}],
+                   "expected_blob_sha": BLOB if operation == "update" else None,
+                   "expected_new_blob_sha": "f" * 40}],
     }
 
 def fixture(p):
@@ -173,6 +174,7 @@ class ApiRemoteTests(unittest.TestCase):
         self.assertFalse(result["ci_verified"])
         self.assertFalse(result["merge_authorized"])
         self.assertEqual(result["changed_files_verified"], 1)
+        self.assertTrue(result["content_bound_to_proposal"])
         self.assertEqual(result["readback"],
                          "authenticated_postcommit_exact_file_delta")
 
@@ -234,6 +236,14 @@ class ApiRemoteTests(unittest.TestCase):
         diff["files"].append({"filename": ".github/workflows/validate.yml",
                               "status": "modified", "sha": "e" * 40})
         with self.assertRaisesRegex(ValueError, "changed-file set"):
+            check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_same_path_wrong_final_content_rejected(self):
+        d = self.postcommit()
+        diff = d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]
+        diff["files"][0]["sha"] = "e" * 40
+        d[ROOT + "/contents/docs/OPERACAO.md?ref=" + "d" * 40]["body"]["sha"] = "e" * 40
+        with self.assertRaisesRegex(ValueError, "proposed final content"):
             check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
 
     def test_postcommit_unexpected_file_rejected(self):
