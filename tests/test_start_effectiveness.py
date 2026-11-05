@@ -37,9 +37,10 @@ class StartEffectivenessTests(unittest.TestCase):
         receipt = run(ROOT, mode="engineering")
         self.assertEqual(receipt["obrigatorios"], list(ENGINEERING))
         self.assertEqual(list(receipt["sha256_dos_arquivos"]), list(ENGINEERING))
-        self.assertEqual(receipt["tarefa_ativa"], "SIM-04")
-        self.assertEqual(receipt["pr_ativo"], 9)
-        self.assertEqual(receipt["proxima_apos_merge"], "SIM-01")
+        active = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
+        self.assertEqual(receipt["tarefa_ativa"], active["active"]["task_id"])
+        self.assertEqual(receipt["pr_ativo"], active["active"]["pr_number"])
+        self.assertEqual(receipt["proxima_apos_merge"], active["next_task_after_merge"])
 
     def test_receipt_prova_bytes_de_cada_arquivo(self):
         receipt = run(ROOT, mode="engineering")
