@@ -6,7 +6,7 @@
     "branch": "fix/sim02-api-write-integrate-20261105",
     "pr_number": 20,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "SIM-03",
   "rules": {
