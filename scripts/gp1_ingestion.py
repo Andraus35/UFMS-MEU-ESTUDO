@@ -58,7 +58,7 @@ def normalize_external_report(report, answered_convention=None):
         answered = total - unanswered
     if correct + incorrect != answered:
         raise ValueError("Corretas e incorretas não correspondem às respondidas")
-    required = ("event_id", "attempt_id", "recommendation_id", "recorded_at")
+    required = ("event_id", "attempt_id", "recommendation_id", "recorded_at", "source_ref")
     if any(not isinstance(report.get(k), str) or not report[k].strip() for k in required):
         raise ValueError("Identidades e recorded_at devem ser fornecidos, não gerados")
     recorded = _date(report["recorded_at"], "recorded_at")
@@ -78,6 +78,7 @@ def normalize_external_report(report, answered_convention=None):
         "attempt_id": report["attempt_id"],
         "recommendation_id": report["recommendation_id"],
         "platform_notebook_id": platform_id,
+        "source_ref": report["source_ref"],
         "recorded_at": report["recorded_at"],
         "attempt_at": attempt_at,
         "total": total,
@@ -88,7 +89,8 @@ def normalize_external_report(report, answered_convention=None):
     }
     return {
         "decision": "normalized",
-        "canonical_event_created": True,
+        "canonical_event_created": False,
+        "canonical_event_ready": True,
         "event": event,
         "normalization": {
             "answered_convention": answered_convention,
