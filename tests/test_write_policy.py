@@ -73,5 +73,49 @@ class WritePolicyTests(unittest.TestCase):
         self.assertTrue(verify_write_policy(self.root))
 
 
+    def test_estado_derivado_com_resultado_bloqueado(self):
+        path = self.root / "state/CURRENT.json"
+        path.write_text(json.dumps({
+            "results_count": 1, "last_result_caderno_id": "fake-1"
+        }), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "resultado pessoal"):
+            verify_write_policy(self.root)
+
+    def test_estado_derivado_nao_admite_contagem_boolean(self):
+        path = self.root / "state/CURRENT.json"
+        path.write_text(json.dumps({"results_count": False,
+                                    "last_result_caderno_id": None}), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "resultado pessoal"):
+            verify_write_policy(self.root)
+
+    def test_projecao_de_progresso_nao_admite_tentativas(self):
+        path = self.root / "state/PROGRESS.csv"
+        path.write_text("topic_id,attempted,correct,accuracy,revision_due_at\n"
+                        "GER-PORT,2,1,0.5,\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Progresso individual"):
+            verify_write_policy(self.root)
+
+    def test_projecao_de_progresso_nao_admite_revisao_pessoal(self):
+        path = self.root / "state/PROGRESS.csv"
+        path.write_text("topic_id,attempted,correct,accuracy,revision_due_at\n"
+                        "GER-PORT,0,0,,2026-11-08T12:00:00Z\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Progresso individual"):
+            verify_write_policy(self.root)
+
+    def test_projecoes_vazias_sao_validas(self):
+        (self.root / "state/CURRENT.json").write_text(
+            json.dumps({"results_count": 0, "last_result_caderno_id": None}),
+            encoding="utf-8")
+        (self.root / "state/PROGRESS.csv").write_text(
+            "topic_id,attempted,correct,accuracy,revision_due_at\n"
+            "GER-PORT,0,0,,\n", encoding="utf-8")
+        self.assertTrue(verify_write_policy(self.root))
+
+    def test_projecao_invalida_nao_abre_bypass(self):
+        (self.root / "state/PROGRESS.csv").write_text(
+            "topic_id,attempted\nGER-PORT,0\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Projeção de progresso inválida"):
+            verify_write_policy(self.root)
+
 if __name__ == "__main__":
     unittest.main()
