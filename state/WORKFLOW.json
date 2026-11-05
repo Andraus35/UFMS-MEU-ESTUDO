@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-05",
-    "branch": "feat/rm05-notebook-prescriber-20261105",
-    "pr_number": 42,
+    "task_id": "RM-06",
+    "branch": "test/rm06-adversarial-102-traceability-20261105",
+    "pr_number": 43,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-06",
+  "next_task_after_merge": "RM-07",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #41 / RM-04 integrado em 3cbe6ffe74babf9f778216c52596994830e64143; CI pós-merge 42083859206 validate=success; zero PRs abertos. RM-04 implementa ranking determinístico com pesos provisórios não calibrados. RM-05 implementa prescritor de cadernos: filtros, fallback, quantidade sugerida e estados honestos, sem inventar IDs ou disponibilidade.",
+  "notes": "PR #42 / RM-05 integrado em 4425939488bb39291adf63184e33a132c6b461b3; CI pós-merge 42084811834 validate=success; zero PRs abertos. RM-05 implementa prescrição sem efeitos externos e permanece implementado_nao_homologado até validação real de plataforma. RM-06 audita rastreabilidade e cobertura dos 102 cenários pedagógicos e adiciona contraprovas executáveis sem alegar aprovação de cenários não executados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",
