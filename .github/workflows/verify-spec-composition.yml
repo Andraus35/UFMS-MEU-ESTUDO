@@ -1,0 +1,53 @@
+name: PR5 - prova de composicao sintetica read-only
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-spec-composition.yml'
+      - '.specs/features/ufms-cognitive-gates/revisions/v0.3/composition-tests/**'
+
+permissions:
+  contents: read
+
+jobs:
+  composite-check:
+    if: github.event.pull_request.number == 5
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout do merge sintetico (nunca HEAD isolado)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Conferir pais, HEAD, main atual e identidade da especificacao
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pr5-composition"
+          python .specs/features/ufms-cognitive-gates/revisions/v0.3/composition-tests/prove.py | tee "$RUNNER_TEMP/pr5-composition/receipt.json"
+      - name: Contraprovas de composicao
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/composition-tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/tests.log"
+      - name: Validar harness no commit sintetico
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/validate.py
+          python -m unittest discover -s tests -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/harness-tests.log"
+          echo 'COMPOSITION_ONLY_NO_PRODUCTION_MERGE_NO_COGNITIVE_GATE_HOMOLOGATION'
+      - name: Arquivar recibos mesmo se falhar
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr5-synthetic-composition-proof
+          path: ${{ runner.temp }}/pr5-composition/
+          retention-days: 14
