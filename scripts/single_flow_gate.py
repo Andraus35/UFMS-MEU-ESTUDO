@@ -44,7 +44,7 @@ def validate_local(root=ROOT):
         raise ValueError("Contrato de transição pós-merge ausente ou fraco")
     active = data.get("active", {})
     task = active.get("task_id")
-    if not isinstance(task, str) or not re.fullmatch(r"SIM-\d{2}", task):
+    if not isinstance(task, str) or not re.fullmatch(r"(?:SIM|RM)-\d{2}", task):
         raise ValueError("Tarefa ativa inválida")
     if not isinstance(active.get("pr_number"), int) or active["pr_number"] < 1:
         raise ValueError("PR ativo inválido")
@@ -63,7 +63,7 @@ def validate_local(root=ROOT):
         if ("| " + task + " |") not in roadmap:
             raise ValueError("Tarefa final ausente no roadmap")
     else:
-        if not isinstance(next_task, str) or not re.fullmatch(r"SIM-\d{2}", next_task):
+        if not isinstance(next_task, str) or not re.fullmatch(r"(?:SIM|RM)-\d{2}", next_task):
             raise ValueError("Próxima tarefa inválida")
         if next_task == task:
             raise ValueError("Próxima tarefa não pode repetir a ativa")
