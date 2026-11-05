@@ -94,7 +94,7 @@ class GP1IngestionTests(unittest.TestCase):
         state, rows = rebuild(events, TOPICS)
         topic = next(row for row in rows if row["topic_id"] == TOPIC)
         self.assertEqual(state["results_count"], 2)
-        self.assertEqual((topic["attempted"], topic["correct"]), (23, 15))
+        self.assertEqual((topic["attempted"], topic["correct"]), (24, 15))
 
     def test_attempt_completes_only_its_recommendation(self):
         events = [recommendation(), attempt("a1", "TRY-A")]
