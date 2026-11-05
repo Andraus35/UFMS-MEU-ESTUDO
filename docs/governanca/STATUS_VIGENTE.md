@@ -26,7 +26,7 @@
 | #10 | CLOSED_UNMERGED | 9e928a31d626c174a813e54461d408271d531c65 | main |
 | #11 | OPEN_DRAFT | c7213f1ac512ede8760f8025a0f5d3db4aa7c288 | docs/roadmap-required-bootstrap-20261104 |
 | #12 | OPEN_DRAFT | 36e81390d8b41cf5c62a071e067779d2aed1d805 | main |
-| #13 | OPEN_DRAFT | 50cb70b74c4a2318ecb8fd9bd2bb71a63e1ac14f | main |
+| #13 | OPEN_DRAFT | 27024250463cbc5fa28c50ed5d10323b987f0abd | main |
 | #14 | OPEN_DRAFT | SELF_CANDIDATE | docs/roadmap-required-bootstrap-20261104 |
 
 ## Matriz de gates e autoridade
