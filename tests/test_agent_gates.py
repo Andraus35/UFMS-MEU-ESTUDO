@@ -104,6 +104,12 @@ class AgentGateTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     validate_roadmap_text(mutation)
 
+    def test_rm04_permanece_nao_homologado_sem_calibracao(self):
+        original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        line = next(line for line in original.splitlines() if line.startswith("| RM-04 |"))
+        self.assertIn("| implementado_nao_homologado |", line)
+        self.assertIn("sem calibração em dados reais", line)
+
     def test_alteracao_estrategica_sem_baseline_rejeitada(self):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in original.splitlines() if line.startswith("| RM-02 |"))
