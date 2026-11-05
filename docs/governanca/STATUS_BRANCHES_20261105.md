@@ -1,16 +1,15 @@
 # Inventário autenticado de branches — 05/11/2026
 
 **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
-**HEAD base da auditoria:** `2ec4d355a3da52d22a340a8055e482f38942cde5`  
+**HEAD base da auditoria:** `be65fe3e1d815be900965eb6adc8e3871f0a66ef`  
 **Método:** API GitHub autenticada; comparação de cada ref com `main`; nenhuma exclusão, force-push ou merge de branch histórica.
 
 ## Resumo verificável
 
-- Antes desta entrega: **26 refs** (25 branches de trabalho + `main`); depois de criar a branch desta entrega: **27 refs** (26 branches de trabalho + `main`).
-- PRs existentes: **32**, todos fechados; **18 merged**, **14 closed without merge**. PRs #25 e #26 são tentativas sobre a mesma branch final #27 e não representam refs adicionais.
-- PRs abertos antes desta entrega: **zero**.
-- Das 25 branches preexistentes: **13 refs têm HEAD contido em `main`** (compare da branch contra `main`: zero commits exclusivos); **12 refs preservam commits exclusivos e estão fechadas sem merge**.
-- Branch desta entrega: `audit/sim09-branch-inventory-reconciliation-20261105`, PR #33, única frente ativa.
+- Após o merge #33: **27 refs** (26 branches de trabalho + `main`).
+- PRs existentes: **33**, todos fechados; **19 merged**, **14 closed without merge**. PRs #25 e #26 são tentativas sobre a mesma branch final #27 e não representam refs adicionais.
+- PRs abertos após o merge #33: **zero**.
+- Das 26 branches de trabalho: **14 refs têm HEAD contido em `main`** (compare da branch contra `main`: zero commits exclusivos); **12 refs preservam commits exclusivos e estão fechadas sem merge**.
 - **Decisão:** branches contidas em `main` são candidatas a exclusão pós-backup; branches divergentes permanecem preservadas. Esta entrega não apaga refs e não integra os 12 históricos em bloco.
 
 ## Branches cujo HEAD está contido em main
@@ -29,6 +28,7 @@
 | `fix/sim06-handoff-reconciliation-20261105` | #30 | `c6f5e9bdd9791d93a9f63de233988189ac68d818` | 0 commits exclusivos |
 | `fix/sim07-cognitive-effects-policy-20261105` | #31 | `05e54fc3bf9917d8fd3d9802b5e9d00a738ba4fc` | 0 commits exclusivos |
 | `fix/sim08-ci-duplicate-gates-20261105` | #32 | `11e6ba0ce8740f0e4c3ac7954167c3affb3e582b` | 0 commits exclusivos |
+| `audit/sim09-branch-inventory-reconciliation-20261105` | #33 | `578e557929ef3f8d71dfec13d5624a4dc1945065` | 0 commits exclusivos |
 | `spec/sim06-cognitive-gates-r2-20261105` | #23 | `8bde29b58ee891ee34617a838a458b7124782559` | 0 commits exclusivos |
 
 ## Branches históricas divergentes — preservar, não mesclar em lote
@@ -57,6 +57,6 @@
 5. Nenhuma branch foi apagada nesta entrega. Exclusão requer autorização específica após backup e readback.
 6. Revalidar o inventário via API imediatamente antes de qualquer futura exclusão; este documento é fotografia do HEAD indicado.
 
-## Branch ativa desta entrega
+## Estado final
 
-`audit/sim09-branch-inventory-reconciliation-20261105` — PR #33, atualização documental do inventário; não inclui remoção de refs.
+O PR #33 foi integrado em `be65fe3e1d815be900965eb6adc8e3871f0a66ef`; sua branch também está contida em `main`. O total de 14 refs contidas inclui os PRs #9, #19–#24 e #27–#33. Nenhuma ref foi apagada.

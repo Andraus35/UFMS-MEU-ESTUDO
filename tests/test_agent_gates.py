@@ -128,12 +128,27 @@ class AgentGateTests(unittest.TestCase):
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         self.assertTrue(validate_simplification_queue(roadmap))
 
+    def test_fila_terminal_aceita_somente_itens_concluidos(self):
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        terminal = roadmap.replace(
+            "**Próxima tarefa: SIM-10**", "**Fila de simplificação concluída**", 1)
+        self.assertTrue(validate_simplification_queue(terminal))
+
+    def test_fila_terminal_rejeita_item_ainda_em_andamento(self):
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        terminal = roadmap.replace(
+            "**Próxima tarefa: SIM-10**", "**Fila de simplificação concluída**", 1)
+        line = next(line for line in terminal.splitlines() if line.startswith("| SIM-10 |"))
+        terminal = terminal.replace(line, line.rsplit("|", 2)[0] + "| em_andamento |", 1)
+        with self.assertRaisesRegex(ValueError, "itens pendentes"):
+            validate_simplification_queue(terminal)
+
     def test_fila_pessoal_rejeita_mutantes_criticos(self):
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         mutations = (
             roadmap.replace("| SIM-02 | ALTA |", "| SIM-02 | BAIXA |", 1),
             roadmap.replace("| SIM-05 | MEDIA |", "| SIM-05 | BAIXA |", 1),
-            re.sub(r"\*\*Próxima tarefa: SIM-\d{2}\*\*", "**Próxima tarefa: indefinida**", roadmap, count=1),
+            re.sub(r"\*\*Próxima tarefa: SIM-\d{2}\*\*|\*\*Fila de simplificação concluída\*\*", "**Próxima tarefa: indefinida**", roadmap, count=1),
             roadmap.replace("`tests/test_write_policy.py`", "sem_testes", 1).replace("`tests/test_ci_gate_contract.py`; teste: habilitação", "sem_testes; teste: habilitação", 1),
             roadmap.replace("| SIM-10 | BAIXA |", "| SIM-04 | BAIXA |", 1),
             roadmap.replace("registro: `docs/pedagogia/README.md`", "sem_registro", 1),
