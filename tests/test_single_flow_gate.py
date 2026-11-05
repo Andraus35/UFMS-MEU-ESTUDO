@@ -5,10 +5,12 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from urllib.error import URLError
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from single_flow_gate import validate_local, validate_remote
+from single_flow_gate import fetch_pr, validate_local, validate_remote
 
 class SingleFlowTests(unittest.TestCase):
     @classmethod
@@ -104,15 +106,15 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_rejeita_dois_prs_simultaneos(self):
         with self.assertRaisesRegex(ValueError, "Múltiplos PRs"):
-            self.check_remote([self.pr(), self.pr(18, "fix/other")])
+            self.check_remote([self.pr(), self.pr(self.live["active"]["pr_number"] + 1, "fix/other")])
 
     def test_rejeita_pr_diferente(self):
         with self.assertRaisesRegex(ValueError, "PR remoto diferente"):
-            self.check_remote([self.pr(18, "fix/other")])
+            self.check_remote([self.pr(self.live["active"]["pr_number"] + 1, "fix/other")])
 
     def test_rejeita_branch_de_pr_diferente(self):
         with self.assertRaisesRegex(ValueError, "Branch remota diferente"):
-            self.check_remote([self.pr(9, "other/branch")])
+            self.check_remote([self.pr(branch="other/branch")])
 
     def test_rejeita_push_em_branch_legada(self):
         with self.assertRaisesRegex(ValueError, "fora da única frente"):
@@ -151,7 +153,7 @@ class SingleFlowTests(unittest.TestCase):
         for mutation in (
             lambda d: d["base"].__setitem__("ref", "other"),
             lambda d: d["head"].__setitem__("ref", "other"),
-            lambda d: d.__setitem__("number", 18),
+            lambda d: d.__setitem__("number", self.live["active"]["pr_number"] + 1),
             lambda d: d.__setitem__("state", "open"),
         ):
             prior = self.merged_pr()
@@ -193,6 +195,18 @@ class SingleFlowTests(unittest.TestCase):
             roadmap.write_text(current, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "diverge"):
                 validate_local(root)
+
+    def test_api_de_merge_indisponivel_bloqueia(self):
+        with patch("single_flow_gate.urlopen", side_effect=URLError("simulated outage")):
+            with self.assertRaisesRegex(ValueError, "indisponível"):
+                fetch_pr("Andraus35/UFMS-MEU-ESTUDO",
+                         self.live["active"]["pr_number"], token="teste")
+
+    def test_pr_remoto_invalido_nao_aceita_comprovacao(self):
+        with self.assertRaisesRegex(ValueError, "Número do PR"):
+            fetch_pr("Andraus35/UFMS-MEU-ESTUDO", True, token=None)
+        with self.assertRaisesRegex(ValueError, "GITHUB_REPOSITORY"):
+            fetch_pr("repo/invalido/extra", 9, token=None)
 
 if __name__ == "__main__":
     unittest.main()
