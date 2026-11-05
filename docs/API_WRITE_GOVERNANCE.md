@@ -38,3 +38,7 @@ gh api repos/Andraus35/UFMS-MEU-ESTUDO/actions/permissions/workflow
 ```
 
 Não executar `gh pr merge`, `gh api -X PUT` de proteção, `gh api -X PATCH` de políticas ou `git push --force` nesta etapa.
+
+## Candidata de recuperação SIM-02 / PR #20 — 05/11/2026
+
+O PR #19 foi mesclado e manteve escrita pessoal bloqueada. A candidata atual #20 recupera seletivamente o trabalho dos PRs históricos #13→#17→#18, sem retarget/rebase das branches antigas. Ver `docs/governanca/CONTRATO_API_PR_ATUAL.md`: preflight por leitura autenticada, SHA exato do blob final e transação Git com ref não forçado. A presença de código na `main` **não** habilita efeitos externos: a execução real requer opt-in, host isolado com token próprio e teste E2E. A CI mede o código com mocks e confirma `merge_authorized=false`, não prova instalação de gateway. Os parágrafos históricos acima descrevem o adaptador anterior.
