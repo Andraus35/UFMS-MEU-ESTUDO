@@ -1,56 +1,51 @@
-# Monitor FAPEC — rotina proposta, somente leitura
+# Monitor FAPEC — rotina integrada, somente leitura
 
-## Objetivo
+## Estado atual (05/11/2026)
 
-Executar uma checagem diária da página FAPEC do certame UFMS mediante
-scripts/monitor_fapec.py --live. Esta é uma **candidata SIM-03/PR #21** em draft:
-**schedule do GitHub Actions não roda automaticamente em branch de PR**.
-Após eventual merge aprovado para main, o GitHub poderá executar a sonda
-no horário agendado e guardar a saída em logs de workflow (conforme
-políticas de retenção do GitHub).
+- O PR #21 integrou o workflow `.github/workflows/monitor-fapec.yml` à `main`.
+- O workflow declara agendamento diário `17 12 * * *` UTC e acionamento manual por `workflow_dispatch`.
+- O workflow usa `contents: read`, checkout com `persist-credentials: false`, não usa secrets e não executa em push/PR.
+- A existência do cron no YAML e os testes estáticos de CI **não provam** que um evento agendado foi executado. Até ser observado um run do GitHub Actions com `event=schedule`, o estado é **NOT_VERIFIED**.
+- O último registro de observação no inventário oficial é de 04/11/2026. Não afirmar que o portal foi consultado hoje sem um run correspondente.
 
-A rotina usa GitHub Actions com permissão contents: read, checkout sem
-credenciais persistidas, sem secrets de usuário, sem criação de issues,
-PRs, mensagens, alterações de arquivos, commits ou atualizações de
-retificação. Custo estimado zero para repositório público sob disponibilidade
-do GitHub Actions; não constitui garantia de execução.
+## Escopo e códigos
 
-## Estados
+A sonda consulta somente uma página pública da FAPEC:
+https://portal.concurso.fundacaofapec.org.br/edital/ver/22
 
-- Código 0: no_change_observed_on_single_page. ÚNICA página parece
-  estável; outras fontes continuam fora do escopo.
-- Código 2: needs_manual_review. Job falha e emite warning; revisar
-  publicação, identidade do concurso e documento original antes
-  de qualquer registro normativo.
-- Código 3: unverifiable. Job falha e emite warning; possível
-  indisponibilidade de portal, bloqueio de rede ou conteúdo estranho.
-  Não confundir com ausência de retificação.
-- Outros erros: job falha sem afirmar conclusão.
+- **Código 0 — `no_change_observed_on_single_page`:** a listagem observada não apresentou mudança detectável. Não prova ausência de retificações em outras fontes.
+- **Código 2 — `needs_manual_review`:** possível publicação, mudança de listagem ou marcador de retificação; job falha e exige conferência humana.
+- **Código 3 — `unverifiable`:** falha de acesso, resposta inesperada ou identidade do concurso não confirmada; job falha. Nunca interpretar como estabilidade.
+- Qualquer outro código inesperado também falha.
 
-Se configuradas pelo proprietário, notificações nativas de falha do
-GitHub Actions podem ajudar a perceber o problema. Não há comunicação
-Zapia, Telegram ou calendário integrada.
+O monitor não baixa automaticamente PDFs, não verifica exaustivamente o boletim UFMS/DOU, não altera o registro de fontes e não incorpora retificações ao edital canônico.
 
-## Contrato de segurança
+## Prova automatizada
 
-A página monitorada é
-https://portal.concurso.fundacaofapec.org.br/edital/ver/22.
-A sonda não verifica o boletim UFMS nem baixa automaticamente novas
-retificações. Ao surgir uma candidata, realizar readback e preservar
-bytes oficiais em fase separada, com SHA-256, conferência de fonte e
-revisão humana conforme docs/RETIFICACOES_E_PROVENIENCIA.md.
+O PR #29 acrescenta teste CLI ponta a ponta usando `--fixture` e subprocesso local, sem rede:
 
-Este PR atualiza apenas o estado de trabalho, o roadmap e o handoff, mas não altera settings, dados pessoais ou edital
-e não deve ser mesclado sem a aprovação de segurança/documental aplicável.
-Os testes de CI são offline e não atestam conectividade do runner.
+- valida código 0 para página estável;
+- valida código 2 para publicação candidata;
+- valida código 3 para página não verificável;
+- confere `writes=false`, `normative_revision_verified=false` e escopo de página única;
+- compara hashes dos arquivos canônicos antes/depois da execução para detectar mutação do edital, manifesto ou registro de fontes.
 
-## Execução local opcional
+Esses testes provam o contrato da execução CLI com fixtures, não a execução real do cron nem a cobertura de outras fontes.
 
-python scripts/monitor_fapec.py --live
+## Como comprovar o cron real
 
-Não considerar retorno zero aprovação de vigência oficial. Nenhum
-dado pessoal deve ser publicado no repositório.
+1. Abrir **Actions** no repositório.
+2. Selecionar **Monitorar retificações FAPEC (sonda)**.
+3. Identificar uma execução cujo evento seja `schedule` e cuja branch seja `main`.
+4. Conferir o SHA do commit, o resultado JSON e o log do job.
+5. Registrar o run ID e o SHA observado no handoff.
 
-## Reconciliação com a main após PR #20
+Um acionamento manual `workflow_dispatch` comprova somente a execução manual; não substitui um run com `event=schedule`. Até essa evidência existir, manter SIM-03 em andamento.
 
-Origem: branch histórica `automation/fapec-readonly-schedule-20261105`, SHA `fd0a81823405e72a0b5fb91abf2a73cb5af685dc`. A recuperação é feita na única branch SIM-03/PR #21, a partir da `main` com os controles de privacidade e API já integrados. O workflow tem gatilho diário às 12:17 UTC (08:17 no horário de Campo Grande, MS, UTC−4) e acionamento manual. GitHub Actions pode atrasar ou deixar de executar jobs agendados; os logs não substituem leitura oficial. Em caso de atualização candidata/inconclusão, o job falha com warning e requer revisão manual; não há publicação normativa automática. A próxima frente é SIM-05 e não se habilitam dados pessoais.
+## Preservação e segurança
+
+- PDF original UFMS 152/2026: imutável; identidade e hash permanecem sob os validadores `validate_fontes_oficiais.py` e `chunk_edital.py`.
+- Alerta `ALERTA-DOC-01`: Anexo II, p. 13, datas conflitantes preservadas. Não corrigir por inferência.
+- Qualquer publicação candidata requer obtenção dos bytes oficiais, SHA-256, verificação da origem e revisão humana em etapa separada.
+- Nenhum resultado pessoal, token, secret, mensagem Zapia/Telegram ou escrita externa é utilizado.
+- A CI central é offline; não deve executar `--live`.
