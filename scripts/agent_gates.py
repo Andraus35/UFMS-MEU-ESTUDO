@@ -93,7 +93,7 @@ def validate_simplification_queue(contents):
     heading = "## Fila de simplificação pessoal — 05/11/2026"
     if not isinstance(contents, str) or contents.count(heading) != 1:
         raise ValueError("Fila de simplificação ausente/duplicada")
-    section = contents.split(heading, 1)[1].split("\\n## ", 1)[0]
+    section = contents.split(heading, 1)[1].split("\n## ", 1)[0]
     if "**Próxima tarefa: SIM-01**" not in section:
         raise ValueError("Retomada sem próxima tarefa explícita")
     observed = []
@@ -111,7 +111,7 @@ def validate_simplification_queue(contents):
         if len(problem) < 25 or len(how) < 55:
             raise ValueError("Ação ou aceite SIM superficial: " + code)
         if severity in ("ALTA", "MEDIA"):
-            files = re.findall(r"`(tests/[A-Za-z0-9_./-]+\\.py)`", tests)
+            files = re.findall(r"`(tests/[A-Za-z0-9_./-]+\.py)`", tests)
             if not files or "teste:" not in tests and "negativo:" not in tests and "mutantes:" not in tests and "exigir" not in tests and "ampliar" not in tests:
                 raise ValueError("Item ALTA/MEDIA sem plano explícito de contraprova: " + code)
             if not all((ROOT / f).is_file() for f in files):
