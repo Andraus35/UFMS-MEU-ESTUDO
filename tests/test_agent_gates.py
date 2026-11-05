@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract, validate_roadmap_text
+from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract, validate_roadmap_text, validate_simplification_queue
 from hooks import before_write, after_write, checkpoint
 
 
@@ -115,6 +115,27 @@ class AgentGateTests(unittest.TestCase):
             with self.subTest(changed=variant != original):
                 with self.assertRaisesRegex(ValueError, "baseline auditada"):
                     validate_roadmap_text(variant)
+
+
+    def test_fila_pessoal_presente_e_verificavel(self):
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        self.assertTrue(validate_simplification_queue(roadmap))
+
+    def test_fila_pessoal_rejeita_mutantes_criticos(self):
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        mutations = (
+            roadmap.replace("| SIM-02 | ALTA |", "| SIM-02 | BAIXA |", 1),
+            roadmap.replace("| SIM-05 | MEDIA |", "| SIM-05 | BAIXA |", 1),
+            roadmap.replace("**Próxima tarefa: SIM-01**", "**Próxima tarefa: indefinida**", 1),
+            roadmap.replace("`tests/test_write_policy.py`", "sem_testes", 1).replace("`tests/test_ci_gate_contract.py`; teste: habilitação", "sem_testes; teste: habilitação", 1),
+            roadmap.replace("| SIM-10 | BAIXA |", "| SIM-04 | BAIXA |", 1),
+            roadmap.replace("registro: `docs/pedagogia/README.md`", "sem_registro", 1),
+        )
+        for version in mutations:
+            with self.subTest(changed=version != roadmap):
+                self.assertNotEqual(version, roadmap)
+                with self.assertRaises(ValueError):
+                    validate_simplification_queue(version)
 
     def test_hook_sem_interface_run_falha(self):
         with tempfile.TemporaryDirectory() as tmp:

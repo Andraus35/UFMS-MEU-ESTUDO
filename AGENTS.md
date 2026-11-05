@@ -21,6 +21,10 @@ Leia nesta ordem, usando a versão do branch/commit atual:
 
 Se os arquivos já estiverem carregados no mesmo contexto, confirme seu SHA ou versionamento antes de reutilizá-los. **Não afirme ter lido/validado arquivos sem acesso real.** O script `scripts/bootstrap.py` facilita o carregamento, mas não substitui a observação dessas instruções por um agente.
 
+## Fila de saneamento proporcional (uso pessoal)
+
+Se a tarefa for engenharia, auditoria ou saneamento, consultar **a seção `Fila de simplificação pessoal` de `ROADMAP.md`** e atuar no próximo item SIM de maior criticidade. O teste de contrato deve rejeitar perda da fila, rebaixamento injustificado, ausência de contraprovas em ALTA/MEDIA e omissão de BAIXA. Registrar a próxima ação em toda entrega; não abrir novo PR quando uma frente ativa compatível puder ser atualizada. A migração para START de quatro arquivos pertence ao item SIM-05: até ser implementada, as dez leituras do contrato técnico permanecem exigidas.
+
 ## Ordem operacional
 
 1. Identificar se a solicitação é planejamento, recomendação, resultado, correção ou manutenção.

@@ -79,6 +79,51 @@ def validate_roadmap_text(contents):
     return True
 
 
+SIMPLIFICATION_BASELINE = {
+    "SIM-01": "ALTA", "SIM-02": "ALTA", "SIM-03": "ALTA",
+    "SIM-04": "MEDIA", "SIM-05": "MEDIA", "SIM-06": "MEDIA",
+    "SIM-07": "MEDIA", "SIM-08": "MEDIA",
+    "SIM-09": "BAIXA", "SIM-10": "BAIXA",
+}
+SIMPLIFICATION_STATES = {"pendente", "em_andamento", "concluido", "documentado"}
+
+
+def validate_simplification_queue(contents):
+    """Impede perda da fila e de testes/registro de criticidade, não homologa operação."""
+    heading = "## Fila de simplificação pessoal — 05/11/2026"
+    if not isinstance(contents, str) or contents.count(heading) != 1:
+        raise ValueError("Fila de simplificação ausente/duplicada")
+    section = contents.split(heading, 1)[1].split("\\n## ", 1)[0]
+    if "**Próxima tarefa: SIM-01**" not in section:
+        raise ValueError("Retomada sem próxima tarefa explícita")
+    observed = []
+    for line in section.splitlines():
+        if not line.startswith("| SIM-"):
+            continue
+        columns = [p.strip() for p in line.split("|")[1:-1]]
+        if len(columns) != 6:
+            raise ValueError("Linha SIM inválida")
+        code, severity, problem, how, tests, state = columns
+        if code not in SIMPLIFICATION_BASELINE or severity != SIMPLIFICATION_BASELINE[code]:
+            raise ValueError("Criticidade SIM indevidamente alterada: " + code)
+        if code in observed or state not in SIMPLIFICATION_STATES:
+            raise ValueError("ID/estado SIM inválido: " + code)
+        if len(problem) < 25 or len(how) < 55:
+            raise ValueError("Ação ou aceite SIM superficial: " + code)
+        if severity in ("ALTA", "MEDIA"):
+            files = re.findall(r"`(tests/[A-Za-z0-9_./-]+\\.py)`", tests)
+            if not files or "teste:" not in tests and "negativo:" not in tests and "mutantes:" not in tests and "exigir" not in tests and "ampliar" not in tests:
+                raise ValueError("Item ALTA/MEDIA sem plano explícito de contraprova: " + code)
+            if not all((ROOT / f).is_file() for f in files):
+                raise ValueError("Teste referenciado não existe: " + code)
+        elif not tests.startswith("registro:"):
+            raise ValueError("Item BAIXA sem registro e risco aceito: " + code)
+        observed.append(code)
+    if observed != list(SIMPLIFICATION_BASELINE):
+        raise ValueError("Fila SIM omitida, duplicada ou reordenada")
+    return True
+
+
 HOOK_FILES = {
     "before_write": "hooks/before_write.py",
     "after_write": "hooks/after_write.py",
@@ -117,6 +162,7 @@ def check_bootstrap(root=ROOT):
             raise ValueError("Bootstrap não UTF-8: " + name) from exc
         if name == "ROADMAP.md":
             validate_roadmap_text(raw.decode("utf-8"))
+            validate_simplification_queue(raw.decode("utf-8"))
         hashes[name] = hashlib.sha256(raw).hexdigest()
     return hashes
 
