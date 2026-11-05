@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-00 / PR #36 (draft).** PR #35 / SIM-11 integrado à `main` em `d6390de09419dbf642e8487aeae167a607840f47`; CI pós-merge `42076658860` (`validate=success`). Frente única: `fix/rm00-delivery-gates-20261105`, para comprovar os gates de entrega e a proteção administrativa da `main`. Inventário-base pós-#35: 29 refs (28 branches de trabalho + main), 16 HEADs contidos e 12 históricos divergentes; 35 PRs anteriores (21 merged, 14 closed without merge). `main.protected=true`; a leitura detalhada da proteção retornou 403 à integração. Nenhuma branch será apagada nem histórico divergente mesclado em lote.
+> **ESTADO VIGENTE — SIM-12 / PR #36 (draft).** PR #35 / SIM-11 integrado à `main` em `d6390de09419dbf642e8487aeae167a607840f47`; CI pós-merge `42076658860` (`validate=success`). Frente única: `fix/rm00-delivery-gates-20261105`, para corrigir o fluxo serial e permitir a transição determinística da fila SIM concluída para a fila RM. Inventário-base pós-#35: 29 refs (28 branches de trabalho + main), 16 HEADs contidos e 12 históricos divergentes; 35 PRs anteriores (21 merged, 14 closed without merge). `main.protected=true`; a leitura detalhada da proteção retornou 403 à integração. Nenhuma branch será apagada nem histórico divergente mesclado em lote.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-01** após merge de RM-00.
+**Próxima tarefa: RM-00** após merge de SIM-12.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -129,7 +129,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Fila SIM concluída:** SIM-11 / PR #35 foi integrado em `d6390de09419dbf642e8487aeae167a607840f47`; inventário e documentos operacionais foram reconciliados. **Fila de simplificação concluída**. O fluxo serial agora avança para a fila funcional RM, começando por RM-00.
+**Fila SIM concluída:** SIM-11 / PR #35 foi integrado em `d6390de09419dbf642e8487aeae167a607840f47`. SIM-12 ajusta o gate serial para aceitar IDs `RM-XX` e habilita a retomada da fila funcional após o encerramento da fila SIM. **Fila de simplificação concluída**; após merge de SIM-12, iniciar RM-00.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 
@@ -145,7 +145,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 | SIM-08 | MEDIA | Sobrecarga de gates, avaliações repetidas e docs redundantes atrasa estudo e CI | Executar suíte focada para mudança, depois CI central completa; conservar testes de privacidade, integridade do edital, estado e hooks; remover gates duplicados só com comparação antes/depois | `tests/test_ci_gate_contract.py`, `tests/test_harness.py`; teste: remoção de gate essencial deve falhar | concluido |
 | SIM-09 | BAIXA | Branches antigas de PRs mesclados/fechados poluem visão, mas histórico é recuperável | Listar candidatas pós-merge e POCs; confirmar HEAD contido em `main` ou preservação no PR antes de pedir exclusão; não deletar nesta entrega | registro: `docs/auditorias/AUDITORIA_BRANCHES_E_MERGES_2026-11-04.md`; risco aceito até limpeza confirmada | concluido |
 | SIM-10 | BAIXA | Múltiplos relatórios e especificações históricas não precisam ser lidos em toda sessão | Arquivar/rotular material consultivo antigo, preservar links e decisões; não eliminar conhecimento ou provas únicas | registro: `docs/pedagogia/README.md`; consultar sob demanda, sem bloquear Tutor/Coach | concluido |
-| SIM-11 | MEDIA | Estado pós-merge e inventários operacionais ficaram desatualizados após PR #34, criando divergência entre fonte remota e documentos de retomada | Conferir os 27 refs de trabalho contra main, atualizar contagens e SHA pós-#34, reconciliar WORKFLOW/ROADMAP/HANDOFF/AGENTS e preservar históricos | `tests/test_sim09_branch_inventory.py`, `tests/test_single_flow_gate.py`, `tests/test_agent_gates.py`; negativo: contagem, SHA, PR ativo ou marcador terminal divergente deve falhar | concluido |
+| SIM-11 | MEDIA | Estado pós-merge e inventários operacionais ficaram desatualizados após PR #34, criando divergência entre fonte remota e documentos de retomada | Conferir os 27 refs de trabalho contra main, atualizar contagens e SHA pós-#34, reconciliar WORKFLOW/ROADMAP/HANDOFF/AGENTS e preservar históricos | `tests/test_sim09_branch_inventory.py`, `tests/test_single_flow_gate.py`, `tests/test_agent_gates.py`; negativo: contagem, SHA, PR ativo ou marcador terminal divergente deve falhar | concluido |\n| SIM-12 | MEDIA | O gate serial aceitava somente IDs SIM e impedia a transição após concluir a fila de saneamento para os itens RM do backlog funcional | Aceitar IDs SIM/RM, validar tarefa ativa e próxima tarefa no ROADMAP e manter a fila SIM terminal sem bloquear a fila RM | `tests/test_single_flow_gate.py`, `tests/test_agent_gates.py`; negativo: tarefa fora da fila, próxima tarefa divergente ou terminal sem marcador deve falhar | concluido |
 
 ### Procedimento obrigatório de retomada e entrega da fila SIM
 
