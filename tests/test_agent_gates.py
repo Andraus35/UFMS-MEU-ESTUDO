@@ -130,15 +130,14 @@ class AgentGateTests(unittest.TestCase):
 
     def test_fila_terminal_aceita_somente_itens_concluidos(self):
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
-        terminal = roadmap.replace(
-            "**Próxima tarefa: SIM-10**", "**Fila de simplificação concluída**", 1)
+        terminal = roadmap  # marcador terminal já está no snapshot da fila concluída
         self.assertTrue(validate_simplification_queue(terminal))
 
     def test_fila_terminal_rejeita_item_ainda_em_andamento(self):
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         terminal = roadmap.replace(
             "**Próxima tarefa: SIM-10**", "**Fila de simplificação concluída**", 1)
-        line = next(line for line in terminal.splitlines() if line.startswith("| SIM-10 |"))
+        line = next(line for line in terminal.splitlines() if line.startswith("| SIM-11 |"))
         terminal = terminal.replace(line, line.rsplit("|", 2)[0] + "| em_andamento |", 1)
         with self.assertRaisesRegex(ValueError, "itens pendentes"):
             validate_simplification_queue(terminal)
