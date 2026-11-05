@@ -35,8 +35,13 @@ class Sim05ReconciliationTests(unittest.TestCase):
         self.assertRegex(active["task_id"], r"^SIM-\d{2}$")
         self.assertIsInstance(active["pr_number"], int)
         self.assertIn(active["phase"], ("work", "review", "merge_ready"))
-        self.assertRegex(state["next_task_after_merge"], r"^SIM-\d{2}$")
-        self.assertNotEqual(active["task_id"], state["next_task_after_merge"])
+        next_task = state["next_task_after_merge"]
+        if next_task == "DONE":
+            roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+            self.assertIn("**Fila de simplificação concluída**", roadmap)
+        else:
+            self.assertRegex(next_task, r"^SIM-\d{2}$")
+            self.assertNotEqual(active["task_id"], next_task)
         self.assertIsInstance(state["last_merged"]["pr_number"], int)
 
     def test_adr_records_non_reintegration_decision(self):
