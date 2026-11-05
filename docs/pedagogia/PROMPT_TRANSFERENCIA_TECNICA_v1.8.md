@@ -4,8 +4,8 @@
 
 **Uso:** copiar para **outra sessão técnica autorizada**. Este prompt é um pacote de trabalho, não uma autorização tácita para alterar código, configurações, governança ou executar merge.  
 **Visibilidade verificada posteriormente:** pública; `Andraus35/UFMS-MEU-ESTUDO`  
-**PR da especificação:** [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2`  
-**PR da engenharia de edital/harness:** [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1), branch `setup/harness-memory-v0-2`  
+**PR da especificação:** [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2` — integrado; referência histórica.  
+**PR da engenharia de edital/harness:** [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1), branch `setup/harness-memory-v0-2` — integrado; referência histórica.  
 **Ponto de partida da transferência:** pacote `docs/pedagogia/` até v1.8, no **HEAD atual que deverá ser reconsultado**. Não confiar nos SHAs históricos citados em conversas e handoffs como atuais.
 
 ## Missão
