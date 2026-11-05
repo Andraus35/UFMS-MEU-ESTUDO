@@ -170,10 +170,6 @@ class AgentGateTests(unittest.TestCase):
                 check_hook_contract(root)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class InteractionPolicyTests(unittest.TestCase):
     def test_orientacao_e_autonoma_sem_integracao_ou_aprovacao(self):
         result = decide_action(ORIENTATION)
@@ -247,3 +243,7 @@ class InteractionPolicyTests(unittest.TestCase):
                             action_performed=True, readback_confirmed=True),
             CONFIRMED,
         )
+
+
+if __name__ == "__main__":
+    unittest.main()
