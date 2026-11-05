@@ -141,6 +141,9 @@ def validate_attempt_events(events, topics, allow_private=False):
         platform_id = event.get("platform_notebook_id")
         if platform_id is not None and (not isinstance(platform_id, str) or not platform_id.strip()):
             raise ValueError("platform_notebook_id inválido")
+        source_ref = event.get("source_ref")
+        if not isinstance(source_ref, str) or not source_ref.strip():
+            raise ValueError("source_ref ausente")
         recorded = _date(event.get("recorded_at"), "recorded_at")
         attempt_at = event.get("attempt_at")
         if attempt_at is not None and _date(attempt_at, "attempt_at") > recorded:
