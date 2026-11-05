@@ -3,33 +3,35 @@
 **Checkpoint 05/11/2026.** Fonte operacional: GitHub autenticado + `state/WORKFLOW.json`. Repositório público; resultados pessoais permanecem bloqueados.
 
 ## Estado confirmado
-- `main` = `3cbe6ffe74babf9f778216c52596994830e64143`.
+- `main` = `4425939488bb39291adf63184e33a132c6b461b3`.
+- PR #42 / RM-05 mesclado em `4425939488bb39291adf63184e33a132c6b461b3`; CI pós-merge run `42084811834`, `validate=success`.
 - PR #41 / RM-04 mesclado em `3cbe6ffe74babf9f778216c52596994830e64143`; CI pós-merge run `42083859206`, `validate=success`.
 - PR #40 / RM-03 mesclado em `e03c086bcd6b60e5bd60273cf2d50979775a4775`; CI pós-merge run `42083036692`, `validate=success`.
 - PR #39 / RM-02 mesclado em `4052a06d530b269410f0300a8ae503e822672caa`; CI pós-merge run `42082155852`, `validate=success`.
 - PR #38 / RM-01 mesclado em `725858292ecc1e3e0ad7a85a0ae9a91966d112ee`; CI pós-merge run `42080519973`, `validate=success`.
 - PR #37 / RM-00 mesclado em `1ab0c25a8b0084034fb1987097bfcb6b38ccea44`; CI pós-merge run `42079838224`, `validate=success`.
-- Fotografia pós-#35 do inventário (29 refs, 16 HEADs contidos, 12 históricas divergentes) é histórica; contagem atual ainda requer reconciliação dedicada. Nenhuma branch foi apagada.
-- Única frente ativa: RM-05 / PR draft #42, `feat/rm05-notebook-prescriber-20261105`. Escopo: prescrição de cadernos em camadas, fallback e estado honesto; sem criação externa.
+- Única frente ativa: RM-06 / PR draft #43, `test/rm06-adversarial-102-traceability-20261105`. Escopo: matriz de 102 cenários, referências canônicas e status honestos.
 - Proteção administrativa confirmada pelo proprietário via Termux: required check `validate`; `strict=true`; `reviews=0`; `enforce_admins=true`.
-- RM-01 permanece `implementado_nao_homologado`: nenhum run `event=schedule`, hashes remotos ausentes e `ALERTA-DOC-01` aberto. Relatório: `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`.
-- RM-02 permanece `implementado_nao_homologado`: IGP-12/13/14 integrados por schema aditivo e testes sintéticos verdes; nenhuma integração real TEC/Qconcursos nem escrita pessoal.
-- RM-03 permanece `implementado_nao_homologado`: E0–E4 reconstruíveis; `CURRENT.json` segue E0, sem evidência real de aprendizagem.
-- RM-04 permanece `implementado_nao_homologado`: fila determinística por snapshot; pesos provisórios sem calibração real.
+- RM-01 permanece `implementado_nao_homologado`: nenhum run `event=schedule`, hashes remotos ausentes e `ALERTA-DOC-01` aberto.
+- RM-02 permanece `implementado_nao_homologado`: IGP-12/13/14 implementados por schema aditivo; integração real TEC/Qconcursos não testada.
+- RM-03 permanece `implementado_nao_homologado`: E0–E4 reconstruíveis; `CURRENT.json` E0, sem evidência real.
+- RM-04 permanece `implementado_nao_homologado`: ranking determinístico; pesos provisórios não calibrados.
+- RM-05 permanece `implementado_nao_homologado`: prescrição sem efeitos externos; plataforma real não validada.
+- RM-06 matriz: 102 IDs, 42 coberturas unitárias parciais, 60 sem teste canônico; zero cenários completos end-to-end PASS. GP-3 continua bloqueado.
 - RM-07 segue bloqueado (0/27 checks funcionais); RM-08 e RM-10 bloqueados.
 - `state/CURRENT.json`, eventos pessoais, resultados pessoais e PDF canônico permanecem intocados.
 
 ## START desta sessão — somente API GitHub
-- HEAD-base confirmado: `3cbe6ffe74babf9f778216c52596994830e64143`.
+- HEAD-base confirmado: `4425939488bb39291adf63184e33a132c6b461b3`.
 - AGENTS, ROADMAP, HANDOFF, CURRENT e WORKFLOW lidos via API; hooks/bootstrap locais não foram executados.
-- CI pós-merge #41: run `42083859206`, `validate=success`.
+- CI pós-merge #42: run `42084811834`, `validate=success`.
 - A leitura administrativa detalhada foi realizada pelo proprietário via Termux; a saída confirma `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`.
 
 ## Retomada
-1. Continuar somente RM-05 / PR #42 na branch declarada em `state/WORKFLOW.json`.
-2. Validar prescrição com filtros, fallback, disponibilidade, quantidade sugerida e nenhum efeito externo.
-3. Exigir CI `validate` verde no HEAD exato e readback após merge.
-4. Após merge, confirmar novo HEAD, CI pós-merge e zero PRs abertos; avançar para RM-06.
+1. Continuar somente RM-06 / PR #43 na branch declarada em `state/WORKFLOW.json`.
+2. Validar integridade da matriz de 102 IDs e referências aos testes existentes; não marcar teste unitário correlato como cenário end-to-end PASS.
+3. Manter GP-3 bloqueado até implementar/executar os cenários aplicáveis e registrar os bloqueios humanos/externos.
+4. Após merge, confirmar novo HEAD, CI pós-merge e zero PRs abertos; GP-3 continua pendente.
 5. Preservar branches históricas divergentes; não apagar refs sem backup e autorização específica.
 
 ## Objetivo
