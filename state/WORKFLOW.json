@@ -6,7 +6,7 @@
     "branch": "fix/sim01-privacy-integration-20261105",
     "pr_number": 19,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "SIM-02",
   "rules": {
