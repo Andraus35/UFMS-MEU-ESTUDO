@@ -14,9 +14,9 @@ Persistir o contexto entre sessões, orientar cadernos de questões no TEC Concu
 
 ## Iniciar uma sessão
 
-1. Ler os dez arquivos do bootstrap na ordem de `settings.json`, começando por `AGENTS.md` e [`ROADMAP.md`](ROADMAP.md), e identificar o item RM antes de trabalhar.
+1. Ler os quatro arquivos do bootstrap na ordem de `settings.json`, começando por `AGENTS.md` e [`ROADMAP.md`](ROADMAP.md), e identificar o item RM antes de trabalhar.
 2. Executar `python scripts/bootstrap.py` e `python scripts/roadmap_gate.py --check` para conferir os arquivos, referências e hashes; os comandos não provam compreensão semântica por LLM.
-3. Recuperar apenas documentos e eventos relevantes à solicitação.
+3. Recuperar as demais normas, índices, chunks do edital, eventos e documentos pedagógicos sob demanda.
 4. Recomendar **um próximo caderno principal**, explicar os filtros e aguardar resultados; ou processar resultado recebido.
 5. Quando houver mutação autorizada, validar, gravar, verificar e atualizar o handoff.
 
@@ -47,7 +47,7 @@ python scripts/protect_main.py --check
 
 ## Roadmap estratégico
 
-A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam sua ausência, placeholder, ordem incorreta e referências removidas. Isso **não obriga agentes externos** a executar o bootstrap: a execução compulsória do bootstrap por agentes externos e uma validação independente do workflow proposto continuam pendentes.
+A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam ausência, placeholder, ordem incorreta, perda da fila SIM e ausência de plano de contraprova para ALTA/MEDIA. Isso **não obriga agentes externos** a executar o bootstrap: a execução compulsória do bootstrap por agentes externos e uma validação independente do workflow proposto continuam pendentes.
 
 ## Fonte e limites
 
