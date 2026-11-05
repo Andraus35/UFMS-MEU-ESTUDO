@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 / PR #47 (draft).** PR #46 / RM-07 source/fact gates e renderer local integrado à `main` em `f64fb3f538ac34c83202565b2fc7b6c6e25f5757`; CI pós-merge `42089150563` (`validate=success`). Frente única: `feat/rm07-spec-composition-validators-20261105`. Continuação técnica: manifesto simples de SHA dos arquivos essenciais e execução do verificador r2 existente na CI; sem novo framework.
+> **ESTADO VIGENTE — RM-07 concluído como incremento técnico / PR #47 mesclado.** `main@8107e3dff1b96354aedbd629ffb0cc8519859816`; CI pós-merge `42092410857` (`validate=success`). RM-07 permanece `implementado_nao_homologado`: 1 NC OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL_CANDIDATE_NOT_MAIN; 0/27 checks end-to-end PASS. Próxima frente RM-08 permanece BLOCKED pelos gates GP-3/GQ-D ainda não homologados. Nenhuma integração externa ou escrita pessoal habilitada.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia atualizada em 05/11/2026: `main` = `f64fb3f538ac34c83202565b2fc7b6c6e25f5757`; PR #46 / RM-07 source/fact gates e renderer local mesclado; CI pós-merge run `42089150563`, `validate=success`. PR #47 ainda em validação; não altera o estado de homologação. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
+Fotografia atualizada em 05/11/2026: `main` = `8107e3dff1b96354aedbd629ffb0cc8519859816`; PR #47 / RM-07 composição por SHA e verificador r2 mesclado; CI pós-merge run `42092410857`, `validate=success`. CI confirma integridade automatizada, não homologação funcional. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
