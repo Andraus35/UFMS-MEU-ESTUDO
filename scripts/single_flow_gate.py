@@ -85,7 +85,14 @@ def validate_local(root=ROOT):
     return data
 
 
-def validate_remote(data, open_prs, event_name, ref_name, head_ref=""):
+def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=None):
+    """Resolve ACTIVE_PR or AWAITING_NEXT_TASK from authenticated GitHub evidence.
+
+    A closed PR without a recorded merge never permits advancing the queue.
+    This check is post-push CI, not administrative prevention of API writes.
+    """
+    if event_name not in ("push", "pull_request"):
+        raise ValueError("Evento GitHub desconhecido ou ausente")
     if not isinstance(open_prs, list):
         raise ValueError("Inventário remoto de PRs inválido")
     active = data["active"]
@@ -97,13 +104,50 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref=""):
             raise ValueError("PR remoto diferente do único PR ativo")
         if only.get("head", {}).get("ref") != active["branch"]:
             raise ValueError("Branch remota diferente da branch ativa")
-    elif ref_name != "main":
-        raise ValueError("Branch ativa sem PR aberto: concluir criação do PR antes de continuar")
-    if event_name == "pull_request" and (not open_prs or head_ref != active["branch"]):
-        raise ValueError("PR concorrente ou branch do evento diferente da tarefa ativa")
-    if event_name == "push" and ref_name not in ("main", active["branch"]):
-        raise ValueError("Push em branch fora da única frente ativa")
-    return True
+        if event_name == "pull_request" and head_ref != active["branch"]:
+            raise ValueError("PR concorrente ou branch do evento diferente da tarefa ativa")
+        if event_name == "push" and ref_name != active["branch"]:
+            raise ValueError("Push fora da única frente ativa enquanto existe PR aberto")
+        return {"phase": "active_pr", "task": active["task_id"],
+                "pr": active["pr_number"]}
+    if event_name != "push" or ref_name != "main":
+        raise ValueError("Sem PR aberto: apenas a main pode verificar transição pós-merge")
+    if not isinstance(prior_pr, dict):
+        raise ValueError("Sem comprovação autenticada do merge anterior")
+    if (prior_pr.get("number") != active["pr_number"]
+            or prior_pr.get("state") != "closed"
+            or not prior_pr.get("merged_at")
+            or prior_pr.get("head", {}).get("ref") != active["branch"]
+            or prior_pr.get("base", {}).get("ref") != "main"):
+        raise ValueError("PR anterior não comprovadamente mesclado em main")
+    if active["phase"] not in ("review", "merge_ready"):
+        raise ValueError("PR anterior mesclado sem checkpoint de revisão no estado")
+    return {"phase": "awaiting_next_task", "last_merged_pr": active["pr_number"],
+            "next_task": data["next_task_after_merge"]}
+
+
+def fetch_pr(repository, number, token=None):
+    """Fetch the prior PR to prove it was merged, not merely closed."""
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository or ""):
+        raise ValueError("GITHUB_REPOSITORY ausente ou inválido")
+    if type(number) is not int or number < 1:
+        raise ValueError("Número do PR anterior inválido")
+    request = Request(
+        "https://api.github.com/repos/" + repository + "/pulls/" + str(number),
+        headers={
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "UFMS-single-flow-gate",
+            **({"Authorization": "Bearer " + token} if token else {}),
+        },
+    )
+    try:
+        with urlopen(request, timeout=15) as response:
+            data = json.load(response)
+    except (HTTPError, URLError, TimeoutError) as exc:
+        raise ValueError("Prova remota do merge indisponível; bloquear transição") from exc
+    if not isinstance(data, dict):
+        raise ValueError("Resposta do PR anterior inválida")
+    return data
 
 
 def fetch_open_prs(repository, token=None):
@@ -139,10 +183,16 @@ def main():
         data = validate_local()
         if args.remote:
             prs = fetch_open_prs(os.getenv("GITHUB_REPOSITORY"), os.getenv("GITHUB_TOKEN"))
-            validate_remote(data, prs, os.getenv("GITHUB_EVENT_NAME", ""),
-                            os.getenv("GITHUB_REF_NAME", ""),
-                            os.getenv("GITHUB_HEAD_REF", ""))
-        print("OK: política de tarefa única; PR ativo #" + str(data["active"]["pr_number"]))
+            event = os.getenv("GITHUB_EVENT_NAME", "")
+            ref = os.getenv("GITHUB_REF_NAME", "")
+            prior = (fetch_pr(os.getenv("GITHUB_REPOSITORY"),
+                              data["active"]["pr_number"], os.getenv("GITHUB_TOKEN"))
+                     if not prs and event == "push" and ref == "main" else None)
+            result = validate_remote(data, prs, event, ref,
+                                     os.getenv("GITHUB_HEAD_REF", ""), prior)
+            print("OK: fluxo serial remoto: " + json.dumps(result, sort_keys=True))
+        else:
+            print("OK: política local de tarefa única; PR registrado #" + str(data["active"]["pr_number"]))
     except (ValueError, OSError, KeyError, json.JSONDecodeError) as exc:
         print("FALHA: fluxo sequencial: " + str(exc), file=sys.stderr)
         raise SystemExit(1)
