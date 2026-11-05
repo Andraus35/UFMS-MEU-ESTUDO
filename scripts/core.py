@@ -156,7 +156,7 @@ def validate_events(events, topics, allow_private=False):
 
 
 def rebuild(events, topics, schema_version="0.2.0"):
-    if any(event.get("type") in ATTEMPT_TYPES for event in events):
+    if any(isinstance(event, dict) and event.get("type") in ATTEMPT_TYPES for event in events):
         legacy = [event for event in events if event.get("type") not in ATTEMPT_TYPES]
         state, rows = rebuild(legacy, topics, schema_version=schema_version)
         attempts = rebuild_attempts(events, topics)
