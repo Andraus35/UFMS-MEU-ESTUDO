@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-09 / PR #33 (draft).** PR #32 / SIM-08 integrado à `main` em `2ec4d355a3da52d22a340a8055e482f38942cde5`; CI pós-merge `42071753869` aprovada com 329 testes. Frente única: `audit/sim09-branch-inventory-reconciliation-20261105`, com 25 branches preexistentes comparadas à `main`: 13 refs contidas e 12 refs históricas com commits exclusivos. Nenhuma ref foi apagada; merge bruto das históricas é proibido. Próxima tarefa após merge: SIM-10.
+> **ESTADO VIGENTE — SIM-10 / PR #34 (draft).** PR #33 / SIM-09 integrado à `main` em `be65fe3e1d815be900965eb6adc8e3871f0a66ef`; CI pós-merge `42072597026` aprovada com 329 testes. Frente única: `docs/sim10-pedagogia-archive-and-queue-close-20261105`, para rotular documentos históricos, organizar o índice sob demanda e encerrar a fila SIM com marcador terminal validado. Inventário pós-#33: 27 refs (26 branches de trabalho + main), 14 contidas e 12 históricas divergentes; nenhuma exclusão executada.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -127,7 +127,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Tarefa ativa: SIM-09 / PR #33 — inventário autenticado de branches.** Comparar cada ref com a `main`, registrar PR, SHA e commits exclusivos, distinguir refs já contidas de branches históricas divergentes e preservar decisões de não integração. Não mesclar em lote nem excluir refs nesta entrega; exclusão exige backup e autorização específica. **Próxima tarefa: SIM-10** após merge de SIM-09.
+**Tarefa ativa: SIM-10 / PR #34 — arquivamento documental e encerramento da fila.** Reorganizar `docs/pedagogia/README.md` em especificações de referência, evidências históricas e critérios/continuidade; marcar o handoff e prompt antigos como históricos; preservar os 29 links e todos os arquivos. Atualizar inventário pós-PR #33. Para evitar uma próxima tarefa artificial, o fluxo serial aceita `DONE` somente quando os dez itens SIM estiverem `concluido` ou `documentado`. **Fila de simplificação concluída** após merge deste PR.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 
@@ -142,7 +142,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 | SIM-07 | MEDIA | Gate de orientação cognitiva misturado a operações externas bloqueia Tutor/Coach sem necessidade | Separar orientação automática de ferramentas com efeito; gatilhar consentimento por escopo para lembretes/Zapia, não por mensagem; negar envio inexistente/credencial exposta | `tests/test_write_policy.py`, `tests/test_agent_gates.py`; negativo: ferramenta não instalada não pode alegar envio | concluido |
 | SIM-08 | MEDIA | Sobrecarga de gates, avaliações repetidas e docs redundantes atrasa estudo e CI | Executar suíte focada para mudança, depois CI central completa; conservar testes de privacidade, integridade do edital, estado e hooks; remover gates duplicados só com comparação antes/depois | `tests/test_ci_gate_contract.py`, `tests/test_harness.py`; teste: remoção de gate essencial deve falhar | concluido |
 | SIM-09 | BAIXA | Branches antigas de PRs mesclados/fechados poluem visão, mas histórico é recuperável | Listar candidatas pós-merge e POCs; confirmar HEAD contido em `main` ou preservação no PR antes de pedir exclusão; não deletar nesta entrega | registro: `docs/auditorias/AUDITORIA_BRANCHES_E_MERGES_2026-11-04.md`; risco aceito até limpeza confirmada | concluido |
-| SIM-10 | BAIXA | Múltiplos relatórios e especificações históricas não precisam ser lidos em toda sessão | Arquivar/rotular material consultivo antigo, preservar links e decisões; não eliminar conhecimento ou provas únicas | registro: `docs/pedagogia/README.md`; consultar sob demanda, sem bloquear Tutor/Coach | documentado |
+| SIM-10 | BAIXA | Múltiplos relatórios e especificações históricas não precisam ser lidos em toda sessão | Arquivar/rotular material consultivo antigo, preservar links e decisões; não eliminar conhecimento ou provas únicas | registro: `docs/pedagogia/README.md`; consultar sob demanda, sem bloquear Tutor/Coach | concluido |
 
 ### Procedimento obrigatório de retomada e entrega da fila SIM
 
