@@ -6,7 +6,7 @@
     "branch": "docs/roadmap-required-bootstrap-20261104",
     "pr_number": 9,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "SIM-01",
   "rules": {
@@ -84,5 +84,6 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "Estado operacional unico: ROADMAP define fila/criticidade; HANDOFF explica retomada; CURRENT registra apenas dados de estudo. Fechar PR legado nao apaga commit nem integra codigo. Nao deletar refs sem verificacao independente. PR #9 e transicao excepcional, consolidar e mesclar antes de nova tarefa."
+  "notes": "Fonte unica: quando PR #9 estiver aberto, SIM-04 e a unica frente. Quando o PR #9 constar merged em main e nao houver PR aberto, o estado efetivo e awaiting_next_task, com SIM-01 pendente; 'active' passa a representar o ciclo anterior, NAO a tarefa atual. Nunca tratar PR apenas closed como merge. ROADMAP fila; HANDOFF resumo; CURRENT somente estudos. Credenciais e dados pessoais permanecem bloqueados.",
+  "post_merge_resolution": "confirm_merged_pr_then_await_next_task"
 }
