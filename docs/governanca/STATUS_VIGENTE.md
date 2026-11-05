@@ -32,7 +32,7 @@
 ## Matriz de gates e autoridade
 
 | Camada | Fonte no repositório | O que comprova | O que NÃO comprova |
-|---|---|---|
+|---|---|---|---|
 | START/DELIVERY | AGENTS, settings, hooks | Regras e verificações locais de leitura/entrega | Obrigatoriedade para clientes com credenciais externas |
 | RM-00 a RM-10 | ROADMAP (proposto no PR #9) | Prioridades e dependências quando integrado | Homologação do motor ou autorização de merge |
 | GP-0 a GP-5 | docs/pedagogia | Evidência de fonte, contratos, tutor, testes e operação por gate | Que a especificação já seja um serviço instalado |
