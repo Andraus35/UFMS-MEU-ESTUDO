@@ -96,6 +96,17 @@ class GP1IngestionTests(unittest.TestCase):
         self.assertEqual(state["results_count"], 2)
         self.assertEqual((topic["attempted"], topic["correct"]), (23, 15))
 
+    def test_attempt_completes_only_its_recommendation(self):
+        events = [recommendation(), attempt("a1", "TRY-A")]
+        state, _ = rebuild(events, TOPICS)
+        self.assertEqual(state["pending_cadernos"], [])
+
+    def test_missing_attempt_schema_version_rejected(self):
+        value = attempt("a1", "TRY-A")
+        value.pop("schema_version")
+        with self.assertRaisesRegex(ValueError, "Versão do esquema"):
+            validate_events([recommendation(), value], TOPICS, allow_private=True)
+
     def test_igp13_duplicate_attempt_id_rejected(self):
         events = [recommendation(), attempt("a1", "TRY-A"), attempt("a2", "TRY-A")]
         with self.assertRaisesRegex(ValueError, "attempt_id duplicado"):
