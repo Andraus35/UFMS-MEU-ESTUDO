@@ -6,6 +6,7 @@ Uma liberação futura requer aprovação humana, verificação autenticada do
 repositório e revisão independente deste controle. Não consulta rede.
 """
 import argparse
+import csv
 from pathlib import Path
 
 try:
@@ -29,6 +30,29 @@ def verify_write_policy(root=ROOT):
             "Gravação de resultados individuais permanece bloqueada; "
             "configuração local não é prova de privacidade ou autorização"
         )
+    # Bloqueio adicional dos arquivos derivados, inclusive em commits que
+    # tentem inserir contagens sem um evento resultado_recebido.
+    current_path = root / "state/CURRENT.json"
+    if current_path.is_file():
+        current = load_json(current_path)
+        if not isinstance(current, dict):
+            raise ValueError("Estado derivado inválido; escrita pessoal bloqueada")
+        if (type(current.get("results_count")) is not int
+                or current["results_count"] != 0
+                or current.get("last_result_caderno_id") is not None):
+            raise ValueError("Estado derivado contém resultado pessoal proibido")
+    progress_path = root / "state/PROGRESS.csv"
+    if progress_path.is_file():
+        with progress_path.open(encoding="utf-8", newline="") as stream:
+            reader = csv.DictReader(stream)
+            required = {"topic_id", "attempted", "correct", "accuracy", "revision_due_at"}
+            if reader.fieldnames is None or not required.issubset(reader.fieldnames):
+                raise ValueError("Projeção de progresso inválida; escrita bloqueada")
+            for row in reader:
+                if (row.get("attempted") != "0" or row.get("correct") != "0"
+                        or row.get("accuracy") not in ("", None)
+                        or row.get("revision_due_at") not in ("", None)):
+                    raise ValueError("Progresso individual não pode ir para repositório público")
     for event in event_rows(root):
         if event.get("type") in PERSONAL_RESULT_TYPES:
             raise ValueError(

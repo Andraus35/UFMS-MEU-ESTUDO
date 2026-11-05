@@ -3,7 +3,7 @@
 > **ATUALIZAÇÃO DE ESTADO — 04/11/2026 (vigente):** PR #1 foi mesclado à `main`; a descrição abaixo do PR #1 como draft é **histórica**. O PR #9 está aberto como draft, sujeito a auditoria. A API confirma `main.protected=true` e o check `validate` obrigatório. O adaptador `scripts/api_write_guard.py` continua limitado explicitamente ao **PR #1** e rejeita caminhos de governança; **não serve como autorização genérica para o PR #9**. Este último utiliza revisão humana/PR/CI e readback do HEAD, mas **não recebe atestado de preflight pelo adaptador legado**. Não alterar os bloqueios silenciosamente: uma revisão específica desse contrato deve tratar a generalização futura.
 
 
-**Status atual:** adaptador legado de PR #1 incorporado à `main`; **não homologado como controle preventivo universal**, não cobre o PR #9. O repositório está **público** na verificação autenticada de 04/11/2026; o Project #2 é painel opcional e não substitui eventos versionados. Escritas pessoais permanecem bloqueadas.
+**Status atual:** adaptador legado de PR #1 incorporado à `main`; **não homologado como controle preventivo universal**; o PR #9 foi mesclado, mas não transformou esse adaptador em enforcement externo. O repositório está **público** na verificação autenticada de 04/11/2026; o Project #2 é painel opcional e não substitui eventos versionados. Escritas pessoais permanecem bloqueadas.
 
 ## Modelo de ameaças e garantias reais
 
@@ -27,7 +27,7 @@
 
 Quando o plano permitir, configurar administrativamente e comprovar por readback: exigência de PR, revisão humana, status check `validate` do GitHub Actions, bloqueio de force-push e exclusão, restrição de push direto e bypass mínimo. O proprietário deverá autorizar qualquer mudança administrativa; **não presumir que `mergeStateStatus=CLEAN` equivale a aprovação humana ou proteção efetiva.**
 
-**Gate pendente:** a proteção administrativa já foi aplicada, mas a origem imutável dos checks e a integração mandatória do preflight a **cada cliente de escrita** não foram comprovadas. O PR #10 propõe uma âncora externa ao HEAD candidato; o PR #11 propõe um broker local fail-closed, ainda sem rota de escrita real. O risco de bypass por agentes externos permanece aberto.
+**Gate pendente:** a proteção administrativa já foi aplicada, mas a origem imutável dos checks e a integração mandatória do preflight a **cada cliente de escrita** não foram comprovadas. Os históricos PRs #10/#11 propuseram âncora externa e broker; somente o broker read-only mínimo do PR #9 está na main. O PR #19 trata a privacidade e o PR seguinte SIM-02 revisará a cadeia API #13/#17/#18. O risco de bypass por agentes externos permanece aberto.
 
 ## Comandos de diagnóstico somente leitura no Windows CMD
 
