@@ -8,6 +8,7 @@ import json
 from datetime import datetime
 
 from gp1_ingestion import ATTEMPT_TYPES, validate_attempt_events, rebuild_attempts
+from evidence_projection import derive_evidence_level
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -179,6 +180,12 @@ def rebuild(events, topics, schema_version="0.2.0"):
         state["pending_cadernos"] = [
             cid for cid in state["pending_cadernos"] if cid not in completed_cadernos
         ]
+        evidence = derive_evidence_level(events)
+        state["evidence_schema_version"] = "1.0"
+        state["evidence_level"] = evidence["level"]
+        state["evidence_dimensions"] = evidence["dimensions"]
+        state["evidence_uncertainties"] = evidence["uncertainties"]
+        state["knowledge_status"] = evidence["knowledge_status"]
         return state, rows
     progress = {row["topic_id"]: {"attempted": 0, "correct": 0, "revision_due_at": ""} for row in topics}
     recommended = {}
@@ -217,6 +224,12 @@ def rebuild(events, topics, schema_version="0.2.0"):
         "pending_reviews": reviews,
         "knowledge_status": "unknown_until_evidence",
     }
+    evidence = derive_evidence_level(events)
+    current["evidence_schema_version"] = "1.0"
+    current["evidence_level"] = evidence["level"]
+    current["evidence_dimensions"] = evidence["dimensions"]
+    current["evidence_uncertainties"] = evidence["uncertainties"]
+    current["knowledge_status"] = evidence["knowledge_status"]
     rows = []
     for topic in topics:
         tid = topic["topic_id"]
