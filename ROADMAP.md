@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-06 / saneamento documental.** PR #29 / SIM-03 integrado à `main` em `7ad47beb76adae46a6abf44c7b14bcb5b04fd301`; CI pós-merge `42069852620` aprovada com 320 testes. Frente única: `fix/sim06-handoff-reconciliation-20261105`, para reconciliar o handoff com o estado remoto confirmado e reduzir checkpoints obsoletos sem apagar histórico. Próxima tarefa após merge: SIM-07.
+> **ESTADO VIGENTE — SIM-06 / PR #30 (draft).** PR #29 / SIM-03 integrado à `main` em `7ad47beb76adae46a6abf44c7b14bcb5b04fd301`; CI pós-merge `42069852620` aprovada com 320 testes. Frente única: `fix/sim06-handoff-reconciliation-20261105`, para reconciliar o handoff com o estado remoto confirmado e reduzir checkpoints obsoletos sem apagar histórico. Próxima tarefa após merge: SIM-07.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
