@@ -203,7 +203,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_aceita_estado_terminal_da_fila(self):
         tmp, root = self.temp_root()
         with tmp:
-            self.assertEqual(validate_local(root)["next_task_after_merge"], "RM-00")
+            self.assertEqual(validate_local(root)["next_task_after_merge"], "RM-01")
 
     def test_fila_sim_terminal_pode_avancar_para_rm(self):
         tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "DONE"))
