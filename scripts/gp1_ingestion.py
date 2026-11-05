@@ -188,12 +188,15 @@ def rebuild_attempts(events, topics):
     """Project latest value per attempt; independent attempts are never overwritten."""
     progress = {row["topic_id"]: {"attempted": 0, "correct": 0} for row in topics}
     attempts = {}
+    last_attempt_id = None
     for event in events:
         kind = event.get("type")
         if kind == "attempt_recorded":
             attempts[event["attempt_id"]] = event
+            last_attempt_id = event["attempt_id"]
         elif kind == "attempt_corrected":
             attempts[event["attempt_id"]] = event
+            last_attempt_id = event["attempt_id"]
     for event in attempts.values():
         for item in event.get("topic_results", []):
             row = progress[item["topic_id"]]
@@ -201,7 +204,7 @@ def rebuild_attempts(events, topics):
             row["correct"] += item["correct"]
     return {
         "attempts_count": len(attempts),
-        "last_attempt_id": next(reversed(attempts), None),
+        "last_attempt_id": last_attempt_id,
         "recommendation_ids": sorted({event["recommendation_id"] for event in attempts.values()}),
         "progress": progress,
     }
