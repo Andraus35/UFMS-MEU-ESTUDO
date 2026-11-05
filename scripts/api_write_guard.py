@@ -5,8 +5,11 @@ o GitHub nem impede push de atores que a ignorem. O chamador deve obter
 contexto fresco por leitura autenticada, empregar SHA/lease e validar readback.
 Bloqueia os caminhos pessoais conhecidos nesta fase, mas NAO inspeciona\no conteudo de documentos permitidos: revisao humana e privacidade seguem obrigatorias.
 """
+import json
 import re
+import subprocess
 from pathlib import PurePosixPath
+from urllib.parse import quote
 
 REPOSITORY = "Andraus35/UFMS-MEU-ESTUDO"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
@@ -58,8 +61,11 @@ def check_proposal(proposal):
     branch = proposal.get("branch")
     if not isinstance(branch, str) or not BRANCH.fullmatch(branch) or branch in {"main", "master"}:
         raise ValueError("Escrita fora de branch de trabalho")
-    if proposal.get("pr_number") != 1 or proposal.get("draft") is not True:
-        raise ValueError("PR #1 precisa estar em draft")
+    number = proposal.get("pr_number")
+    if type(number) is not int or number < 1:
+        raise ValueError("Numero de PR precisa ser inteiro positivo")
+    if proposal.get("draft") is not True:
+        raise ValueError("PR precisa estar em draft")
     if proposal.get("merged") is not False or proposal.get("state") != "open":
         raise ValueError("PR encerrado ou já mesclado")
     expected = _sha(proposal.get("expected_head_sha"), "expected_head_sha")
@@ -87,8 +93,10 @@ def check_proposal(proposal):
             raise ValueError("Operação não autorizada")
     return {
         "repository": REPOSITORY, "branch": branch, "expected_head_sha": expected,
-        "files": tuple(sorted(seen)), "preflight": "accepted_for_cooperative_client",
-        "server_side_enforcement": False,
+        "files": tuple(sorted(seen)), "pr_number": number,
+        "preflight": "structure_only_not_authenticated",
+        "authenticated_remote_read": False, "server_side_enforcement": False,
+        "merge_authorized": False,
     }
 
 
@@ -104,3 +112,100 @@ def check_readback(proposal, committed_sha, observed_head_sha, ci_sha, ci_conclu
         raise ValueError("CI não aprovada para SHA exato do commit")
     return {**summary, "committed_sha": committed, "ci": "success",
             "readback": "same_commit", "merge_authorized": False}
+
+
+def github_get_live(path):
+    """Authenticated host-side HTTP read using GitHub CLI (not the LLM)."""
+    if (not isinstance(path, str)
+            or not path.startswith("repos/" + REPOSITORY + "/")
+            or "\r" in path or "\n" in path):
+        raise ValueError("GitHub API path not permitted")
+    try:
+        result = subprocess.run(["gh", "api", "-i", path], check=False,
+                                capture_output=True, text=True, timeout=25)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ValueError("Authenticated GitHub read unavailable") from exc
+    output = result.stdout.replace("\r\n", "\n")
+    headers = list(re.finditer(r"(?m)^HTTP/[0-9.]+\s+([0-9]{3})(?:\s|$)",
+                              output))
+    if not headers:
+        raise ValueError("GitHub HTTP status not found")
+    status = int(headers[-1].group(1))
+    sep = output.find("\n\n", headers[-1].end())
+    if sep < 0 or status not in (200, 404):
+        raise ValueError("GitHub HTTP response unavailable")
+    if result.returncode != 0 and not (status == 404 and result.returncode == 1):
+        raise ValueError("GitHub CLI returned failure")
+    try:
+        body = json.loads(output[sep + 2:].strip())
+    except ValueError as exc:
+        raise ValueError("Malformed GitHub JSON") from exc
+    if not isinstance(body, dict):
+        raise ValueError("Malformed GitHub response shape")
+    return {"status": status, "body": body}
+
+
+def _read(getter, path, allowed=(200,)):
+    if not callable(getter):
+        raise ValueError("Trusted authenticated reader required")
+    try:
+        response = getter(path)
+    except Exception as exc:
+        raise ValueError("Authenticated read unavailable") from exc
+    if (not isinstance(response, dict)
+            or type(response.get("status")) is not int
+            or response["status"] not in allowed
+            or not isinstance(response.get("body"), dict)):
+        raise ValueError("Authenticated read rejected or malformed")
+    return response["status"], response["body"]
+
+
+def check_authenticated_proposal(proposal, getter=github_get_live):
+    """Verify LIVE PR, branch, base and all expected file blobs.
+
+    The getter must be supplied by a trusted executor, never by the model.
+    Even with fresh readbacks this is only a cooperative preflight, not
+    a permission to write, an atomic Git transaction, or merge approval.
+    """
+    record = check_proposal(proposal)
+    prefix = "repos/" + REPOSITORY
+    pr_id = record["pr_number"]
+    branch = record["branch"]
+    head_sha = record["expected_head_sha"]
+    _, pr = _read(getter, prefix + "/pulls/" + str(pr_id))
+    if (pr.get("number") != pr_id or pr.get("state") != "open"
+            or pr.get("draft") is not True or pr.get("merged_at") is not None
+            or pr.get("merged") is True):
+        raise ValueError("Remote PR is closed, merged or not draft")
+    remote_head, remote_base = pr.get("head"), pr.get("base")
+    if not isinstance(remote_head, dict) or not isinstance(remote_base, dict):
+        raise ValueError("Remote PR missing refs")
+    if (remote_head.get("sha") != head_sha
+            or remote_head.get("ref") != branch
+            or not isinstance(remote_head.get("repo"), dict)
+            or remote_head["repo"].get("full_name") != REPOSITORY
+            or remote_base.get("ref") != "main"
+            or not isinstance(remote_base.get("repo"), dict)
+            or remote_base["repo"].get("full_name") != REPOSITORY):
+        raise ValueError("Remote PR identity mismatch")
+    _, main = _read(getter, prefix + "/branches/main")
+    main_sha = main.get("commit", {}).get("sha")
+    _sha(main_sha, "main_sha")
+    if remote_base.get("sha") != main_sha:
+        raise ValueError("PR base stale against main")
+    _, work = _read(getter, prefix + "/branches/" + quote(branch, safe="/"))
+    if work.get("commit", {}).get("sha") != head_sha:
+        raise ValueError("PR branch HEAD changed")
+    for entry in proposal["files"]:
+        path = _path(entry["path"])
+        uri = prefix + "/contents/" + quote(path, safe="/") + "?ref=" + head_sha
+        status, body = _read(getter, uri, allowed=(200, 404))
+        if entry["operation"] == "update":
+            if (status != 200 or body.get("type") != "file"
+                    or body.get("sha") != entry["expected_blob_sha"]):
+                raise ValueError("Blob not confirmed for update")
+        elif status != 404:
+            raise ValueError("Create target already exists")
+    return {**record, "authenticated_remote_read": True,
+            "preflight": "authenticated_snapshot_only",
+            "base_sha": main_sha, "merge_authorized": False}
