@@ -37,7 +37,7 @@ Para escritas pela API, a política de pré-validação, a auditoria da CI e os 
 
 ## Proteção da branch principal
 
-O GitHub agora informa **`main.protected=true` e check `validate` obrigatório** (verificação em 04/11/2026). O proprietário confirmou que o comando administrativo `--check` também retornou OK pelo Termux. O PR #9 continua draft; cada novo commit exige outra CI. O procedimento verificável está em [`docs/PROTECAO_MAIN.md`](docs/PROTECAO_MAIN.md). Para um administrador autenticado em checkout revisado:
+O GitHub agora informa **`main.protected=true` e check `validate` obrigatório** (verificação em 04/11/2026). O proprietário confirmou que o comando administrativo `--check` também retornou OK pelo Termux. Na fotografia histórica anterior à integração, o PR #9 estava em draft; conferir estado remoto e a CI do HEAD exato antes de qualquer decisão. O procedimento verificável está em [`docs/PROTECAO_MAIN.md`](docs/PROTECAO_MAIN.md). Para um administrador autenticado em checkout revisado:
 
 ```powershell
 python scripts/protect_main.py --check
@@ -47,7 +47,7 @@ python scripts/protect_main.py --check
 
 ## Fluxo único de desenvolvimento pessoal
 
-O desenvolvimento agora deve usar **uma tarefa, uma branch, um PR draft e um merge por vez**. Não abrir PR paralelo para testes, auditoria, correção ou outro assunto. O registro operacional é `state/WORKFLOW.json` (item ativo, PR, branch, próximos e PRs históricos suspensos), enquanto o `ROADMAP.md` contém a fila e o `memory/HANDOFF.md` orienta a próxima sessão. A verificação `python scripts/single_flow_gate.py --check` é local; o workflow usa `--remote` e falha se encontrar PRs concorrentes. A regra na CI não impede fisicamente a criação por API, mas mantém o PR sem aprovação até saneamento. PRs antigos encerrados sem merge permanecem recuperáveis pelos SHAs.
+O desenvolvimento deve usar **uma tarefa, uma branch, um PR draft e um merge por vez**. **PR encerrado sem merge não conclui a tarefa**; depois da integração o `state/WORKFLOW.json` guarda o último ciclo e a CI valida o merge real no GitHub. Não abrir PR paralelo para testes, auditoria, correção ou outro assunto. O registro operacional é `state/WORKFLOW.json` (item ativo, PR, branch, próximos e PRs históricos suspensos), enquanto o `ROADMAP.md` contém a fila e o `memory/HANDOFF.md` orienta a próxima sessão. A verificação `python scripts/single_flow_gate.py --check` é local; o workflow usa `--remote` e falha se encontrar PRs concorrentes. A regra na CI não impede fisicamente a criação por API, mas mantém o PR sem aprovação até saneamento. PRs antigos encerrados sem merge permanecem recuperáveis pelos SHAs.
 
 ## Roadmap estratégico
 
