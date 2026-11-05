@@ -26,7 +26,7 @@ def recommendation():
 def attempt(event_id, attempt_id, correct=8, errors=4, recorded=RECORDED,
             attempt_at=ATTEMPTED, kind="attempt_recorded", corrects=None):
     event = {
-        "event_id": event_id, "type": kind, "attempt_id": attempt_id,
+        "event_id": event_id, "type": kind, "schema_version": "1.0", "attempt_id": attempt_id,
         "recommendation_id": "REC-FICT-1", "platform_notebook_id": "EXT-FICT-44",
         "recorded_at": recorded, "attempt_at": attempt_at,
         "total": correct + errors, "acertos": correct, "erros": errors,
