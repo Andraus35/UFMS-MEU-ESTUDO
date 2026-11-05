@@ -61,6 +61,8 @@ def validate_local(root=ROOT):
     if next_task == task:
         raise ValueError("Próxima tarefa não pode repetir a ativa")
     roadmap = (root / "ROADMAP.md").read_text(encoding="utf-8")
+    if "**Próxima tarefa: " + next_task + "**" not in roadmap:
+        raise ValueError("Próxima tarefa do roadmap diverge do estado operacional")
     if ("| " + task + " |") not in roadmap or ("| " + next_task + " |") not in roadmap:
         raise ValueError("Tarefa atual ou próxima ausente no roadmap")
     deferred = data.get("deferred_pull_requests")
@@ -113,7 +115,7 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
         return {"phase": "active_pr", "task": active["task_id"],
                 "pr": active["pr_number"]}
     if event_name != "push" or ref_name != "main":
-        raise ValueError("Sem PR aberto: apenas a main pode verificar transição pós-merge")
+        raise ValueError("Branch sem PR aberto: apenas a main pode verificar transição pós-merge")
     if not isinstance(prior_pr, dict):
         raise ValueError("Sem comprovação autenticada do merge anterior")
     if (prior_pr.get("number") != active["pr_number"]
