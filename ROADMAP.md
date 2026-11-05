@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 / PR #47 (draft).** PR #46 / RM-07 source/fact gates e renderer local integrado à `main` em `f64fb3f538ac34c83202565b2fc7b6c6e25f5757`; CI pós-merge `42089150563` (`validate=success`). Frente única: `feat/rm07-spec-composition-validators-20261105`. Continuação técnica: composição por SHA de blobs e validadores formais de PLAN/CHECKS.
+> **ESTADO VIGENTE — RM-07 / PR #47 (draft).** PR #46 / RM-07 source/fact gates e renderer local integrado à `main` em `f64fb3f538ac34c83202565b2fc7b6c6e25f5757`; CI pós-merge `42089150563` (`validate=success`). Frente única: `feat/rm07-spec-composition-validators-20261105`. Continuação técnica: manifesto simples de SHA dos arquivos essenciais e execução do verificador r2 existente na CI; sem novo framework.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
