@@ -10,13 +10,14 @@
 - **Edital:** transcrição integral, manifesto, índices e 81 chunks preservados; consultar somente os recortes pertinentes. A página 13 contém divergência cronológica a acompanhar. Não substituir edital original silenciosamente.
 - **Integrações:** Tutor/Coach podem recomendar livremente, mas não afirmar Zapia/agenda/Oracle/Gemini operacionais sem testes E2E. PR #5 tem especificação não homologada.
 
-## Como retomar — sequência fixa
+## Retomada determinística de engenharia
 
-1. Ler `AGENTS.md`, `ROADMAP.md` (especialmente fila **SIM**), este `memory/HANDOFF.md` e `state/CURRENT.json` do **mesmo HEAD**. Recuperar outros arquivos apenas conforme a tarefa.
-2. **Próximo: SIM-01 — ALTA, em andamento.** Verificar visibilidade pública atual e rejeição de dados pessoais (incluindo tentativa de liberar a flag). Reconciliar documentos com estado real; executar testes negativos e CI.
-3. Continuar **SIM-02** (cadeia de escrita por API PR #13→#17→#18 e ACK perdido) e **SIM-03** (monitorar FAPEC/UFMS e alerta do edital) antes das médias.
-4. **SIM-04 a SIM-08 — MEDIA:** consolidar PRs sem perder funcionalidades, validar START de quatro arquivos (SIM-05 candidata já neste PR), higienizar handoff, separar cognição de efeitos e eliminar gates duplicados com testes.
-5. **SIM-09/10 — BAIXA:** inventariar branches e documentos antigos; registrar riscos aceitos sem interromper o estudo.
+- **Fonte única de trabalho:** `state/WORKFLOW.json`, leitura obrigatória na engenharia. Não interpretar números antigos deste handoff como estado ativo; conferir o SHA do branch e a lista de PRs aberta no GitHub.
+- **Tarefa única atual:** SIM-04 (saneamento de PRs e persistência da regra), branch `docs/roadmap-required-bootstrap-20261104`, **PR #9** draft. A reforma é candidata, não integrada à `main`.
+- **Próxima tarefa após merge:** SIM-01 (privacidade). Não iniciar SIM-01, SIM-02 nem nenhuma outra frente enquanto #9 continuar aberto.
+- **Inventário legado:** #5, #11, #12, #13, #14, #15, #16, #17 e #18, com HEAD, branch e trabalho exclusivo preservados no `state/WORKFLOW.json`. Encerrar sem merge e manter refs históricos até recuperação sequencial; não tratar encerramento como aprovação técnica.
+- **Gate de início:** `python scripts/single_flow_gate.py --check`, e CI `--remote`. Múltiplos PRs abertos bloqueiam o fluxo de engenharia.
+- **Fechamento de ciclo:** contraprovas negativas e testes aplicáveis → CI no HEAD → readback → revisão/autorizações cabíveis → **um merge** → próxima branch/PR. Uma branch para cada correção separada é proibida.
 
 ## Regras de entrega e rastreabilidade
 
