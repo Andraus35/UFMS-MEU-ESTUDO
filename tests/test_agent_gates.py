@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract, validate_roadmap_text, validate_simplification_queue
+from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract, check_gqd_composition, validate_roadmap_text, validate_simplification_queue
 from hooks import before_write, after_write, checkpoint
 from interaction_policy import (ALLOWED, CONFIRMED, DENIED, NOT_IMPLEMENTED, NOT_SENT, PENDING_READBACK, ORIENTATION, ROUTINE_AUTHORIZED, SENSITIVE, decide_action, delivery_status)
 
@@ -287,6 +287,25 @@ class InteractionPolicyTests(unittest.TestCase):
                             action_performed=True, readback_confirmed=True),
             CONFIRMED,
         )
+
+
+
+class GqdCompositionTests(unittest.TestCase):
+    def test_composicao_r2_e_arquivos_de_execucao_tem_sha_pinado(self):
+        result = check_gqd_composition(ROOT)
+        self.assertEqual(result["result"], "PASS")
+        self.assertEqual(result["files_checked"], 15)
+
+    def test_alteracao_de_um_byte_em_arquivo_pinado_reprova(self):
+        original = Path.read_bytes
+        target = ROOT / ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/plan.md"
+        def mutated(path):
+            raw = original(path)
+            return raw + b"\\nMUTACAO" if Path(path) == target else raw
+        from unittest.mock import patch
+        with patch.object(Path, "read_bytes", mutated):
+            with self.assertRaisesRegex(ValueError, "COMPOSITION_SHA_MISMATCH"):
+                check_gqd_composition(ROOT)
 
 
 if __name__ == "__main__":
