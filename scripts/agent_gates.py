@@ -31,7 +31,7 @@ ROADMAP_STATES = frozenset({
 
 
 ROADMAP_APPROVED_BASELINE = {
-    "RM-00": ("P0", "em_andamento", "gates automáticos de entrega: proteção main confirmada; gate serial agora vincula PR à base main e ao SHA exato do evento; falta CI verde no HEAD final e auditoria/readback pós-merge"),
+    "RM-00": ("P0", "implementado_nao_homologado", "gates automáticos de entrega: proteção main confirmada; gate serial vincula PR à base main e ao SHA exato; CI verde no HEAD e pós-merge; hooks locais não foram executados via API"),
     "RM-01": ("P0", "implementado_nao_homologado", "Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo"),
     "RM-02": ("P0", "bloqueado", "IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI"),
     "RM-03": ("P1", "planejado", "Projeção reprodutível, origem e incerteza claras, sem inferir domínio"),
