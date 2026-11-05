@@ -28,7 +28,8 @@
 | `fix/sim06-handoff-reconciliation-20261105` | #30 | `c6f5e9bdd9791d93a9f63de233988189ac68d818` | 0 commits exclusivos |
 | `fix/sim07-cognitive-effects-policy-20261105` | #31 | `05e54fc3bf9917d8fd3d9802b5e9d00a738ba4fc` | 0 commits exclusivos |
 | `fix/sim08-ci-duplicate-gates-20261105` | #32 | `11e6ba0ce8740f0e4c3ac7954167c3affb3e582b` | 0 commits exclusivos |
-| `audit/sim09-branch-inventory-reconciliation-20261105` | #33 | `578e557929ef3f8d71dfec13d5624a4dc1945065` | 0 commits exclusivos |\n| `docs/sim10-pedagogia-archive-and-queue-close-20261105` | #34 | `6952ba5ba4c9cd6bbfc58cef328bc3092a241841` | 0 commits exclusivos |
+| `audit/sim09-branch-inventory-reconciliation-20261105` | #33 | `578e557929ef3f8d71dfec13d5624a4dc1945065` | 0 commits exclusivos |
+| `docs/sim10-pedagogia-archive-and-queue-close-20261105` | #34 | `6952ba5ba4c9cd6bbfc58cef328bc3092a241841` | 0 commits exclusivos |
 | `spec/sim06-cognitive-gates-r2-20261105` | #23 | `8bde29b58ee891ee34617a838a458b7124782559` | 0 commits exclusivos |
 
 ## Branches históricas divergentes — preservar, não mesclar em lote
