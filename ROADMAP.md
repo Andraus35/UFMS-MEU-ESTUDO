@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 / PR #45 (draft).** PR #44 / RM-07 reauditoria integrado à `main` em `c0683804038b197333bcf91af13bada40cf80464`; CI pós-merge `42087122993` (`validate=success`). Frente única: `feat/rm07-trusted-tool-gateway-20261105`. Continuação técnica: gateway de autorização/execução fail-closed, sem efeitos externos habilitados.
+> **ESTADO VIGENTE — RM-07 / PR #46 (draft).** PR #45 / RM-07 gateway offline integrado à `main` em `d559f5a7789bf7a85d577bf606cc38baa48049f8`; CI pós-merge `42088288929` (`validate=success`). Frente única: `feat/rm07-source-renderer-gates-20261105`. Continuação técnica: source/fact gates e renderer local com estados explícitos, sem publicação externa.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
