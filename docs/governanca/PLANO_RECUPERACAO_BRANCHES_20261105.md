@@ -35,3 +35,17 @@ Uma tarefa → branch nova desde a `main` → PR draft → diferença seletiva �
 ## Evidência, limites e proteção
 
 As relações de ancestralidade e as contagens acima foram lidas da API GitHub nesta data; números não são gates permanentes. A CI de uma branch antiga **não** valida seu código reintroduzido na `main` atual. Repositório público, sem resultados individuais, tokens ou relatórios pessoais. Nunca usar token GitHub dentro do prompt de modelo ou comprometer a regra de um PR ativo.
+
+ 
+## Atualização após SIM-01 a SIM-05 — 05/11/2026
+
+**HEAD de referência atual:** `main@9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02`; PR #19, #20 e #21 mesclados; PR #22 é a única frente ativa. O inventário acima é a fotografia inicial e suas descrições de SIM-02/SIM-03 e estado dos PRs estão históricas.
+
+- `fix/api-postcommit-content-bound-20261105` (#18): recuperada seletivamente em SIM-02/PR #20; CI pós-merge 294 testes. Escrita real continua opt-in e não implantada.
+- `automation/fapec-readonly-schedule-20261105` (#16): recuperada em SIM-03/PR #21; CI pós-merge 302 testes. Workflow somente leitura, execução agendada real ainda não comprovada.
+- `security/agent-entrypoint-failclosed-20261104` (#11) e `security/compose-agent-broker-roadmap-20261105` (#15): **não mesclar**. O broker read-only atual já está na main; a versão histórica usa 10 documentos, regras RM rígidas e API antiga. Os testes de composição dependem de métodos que não existem no broker atual. Reimplementar esses métodos sem caso de uso demonstrado aumentaria escopo e regressaria a simplificação.
+- `audit/governance-document-reconciliation-20261104` (#12) e `audit/compose-roadmap-document-reconciliation-20261105` (#14): **não copiar snapshots**. Status/handoff referem main `676dd5d...`, PRs #1–#14 e branches já mescladas/fechadas; são registros históricos, não estado atual. Conteúdo útil de autonomia proporcional já está presente em ROADMAP/OPERACAO da main.
+- Decisão SIM-05: preservar as quatro branches, documentar a não reintegração por obsolescência e verificar que os testes atuais cobrem o broker vigente. Não é merge de branches #11/#12/#14/#15; é saneamento da fila para não reinserir código/documentos piores.
+- Próxima recuperação potencial: SPEC cognitiva (#5), após definir quais dos 27 checks ainda são requisitos atuais e quais conflitam com a liberdade cognitiva; não importar gates de aprovação por mensagem. Oracle/Telegram/Calendar segue diferido.
+
+A fotografia atual prevalece sobre qualquer tabela ou snapshot acima, e deve ser revalidada pela API GitHub em cada novo ciclo.
