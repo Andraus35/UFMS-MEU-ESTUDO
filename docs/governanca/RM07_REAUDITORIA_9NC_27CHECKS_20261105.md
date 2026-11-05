@@ -9,7 +9,7 @@
 
 - **9 NCs reavaliadas; 0 encerradas na main.**
 - **3 abertas sem mitigação suficiente na main.**
-- **6 com mitigação parcial em branch candidata, não integrada.**
+- **5 com mitigação parcial em branch candidata, não integrada; 1 com recibo de aprovação r2 documental já presente na main.**
 - **27 checks funcionais end-to-end: 0 PASS / 27 NOT_RUN.**
 - GP-3 permanece bloqueado. RM-07 não homologa GQ-D, GQ-C ou GQ-O.
 
@@ -23,7 +23,7 @@
 | GQD-04 | P1 | PARTIAL — NOT IN MAIN | PR5 contém source_gate/fact_gate para spans e fatos curados; não é verificador semântico geral. Não integrado à main. |
 | GQD-05 | P1 | OPEN | Não existe gateway externo com rate limit atômico, prova concorrente e zero chamadas após DENY. |
 | GQD-06 | P1 | PARTIAL — NOT IN MAIN | safe_renderer da PR5 cobre prévia local e alguns estados; não demonstra os cinco estados de execução, quatro exits, falha de dependência pré-execução e política de retry integrada. |
-| GQD-07 | P1 | PARTIAL — NOT IN MAIN | Há recibo/testes do snapshot r2 na PR5, mas a própria matriz mantém o vínculo da aprovação original como NÃO VERIFICADO. Alterações r3 exigem novo aceite. |
+| GQD-07 | P1 | PARTIAL — IN MAIN | A main contém `approved-r2/approval-receipt.json`, `APPROVAL_v0.3-r2.md` e `verify_approval_snapshot.py`, vinculando `APROVO` ao HEAD/blob/SHA-256 e limitando o escopo à derivação documental; GQ-D segue REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED e 0/27. A verificação independente do vínculo humano fora do repositório continua pendente. |
 | GQD-08 | P1 | PARTIAL — NOT IN MAIN | Token do renderer candidato vincula estado/fonte/canal/destinatário, porém só em local_preview; não há gateway/rota externa na main nem prova de bypass/zero publicação. |
 | GQD-09 | P2 | PARTIAL — NOT IN MAIN | Validadores Spec Lean e CI documental passaram no HEAD candidato (run 41952566886), mas não estão integrados à main e a reauditoria independente final segue pendente. |
 
