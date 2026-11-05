@@ -1,21 +1,21 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-**Checkpoint 05/11/2026.** Autoridade: `state/WORKFLOW.json` e GitHub autenticado.
+**Checkpoint 05/11/2026.** Autoridade operacional: `state/WORKFLOW.json` e GitHub autenticado.
 
 ## Estado
-- Repositório público; `main` protegida com `validate`. Resultados pessoais e credenciais não são gravados.
-- Integrados: PR #9/SIM-04 (`7942771aea289afd4eab483c0a89d8144425966b`), #19/SIM-01 (`fefc821fe79333eedcd5a0dcb2fbedcf8ce0b56e`), #20/SIM-02 (`05c1900a09b4199d828fa20fbb73a17bec278119`), #21/SIM-03 (`9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02`), #22/SIM-05 (`ace048a05d3a0100ef5f05884745969ff7221d83`), #23/SIM-06 (`d3c500c23ccc3a9e24f4f6e28d7f69caec5c98c4`), #24/SIM-07 (`cbca1b314b824cc9fd5bed57a637ded3455d6ff2`). CI pós-merge #24: **311 testes, success**, gate `awaiting_next_task=SIM-08`.
-- Única frente: **SIM-08 / PR #27**, branch `audit/sim08-oracle-telegram-bridge-decision-20261105`, auditoria da ponte histórica #3.
-- A ponte #3 é MVP isolado Telegram+Google Calendar com SQLite, Docker e adaptador LLM opt-in. Não foi implantada na Oracle, não tem bots/OAuth reais, não se conecta ao Tutor/Coach e a auditoria disponível é interna, não independente. RATE-01, OPS-01 e PED-01 permanecem pendentes; retenção, backup e entrega exatamente-uma-vez têm limitações documentadas.
-- Decisão candidata: não importar aplicação/workflow/segredos neste ciclo. A ponte amplia superfície operacional 24/7 e assume Telegram; não há decisão comprovada de interface final nem necessidade operacional. Preservar branch para recuperação futura.
-- Trusted Governance #10 foi deferida; nenhuma GitHub App ou Oracle externa instalada. Cognitive Gates r2 está integrado apenas como especificação (0/27 E2E, GQ-D REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED). Writer API inativo; FAPEC somente leitura, sem execução agendada real comprovada.
-- Próxima SIM-09 após merge #25: consolidar inventário de todas as branches preservadas, identificar commits exclusivos restantes e encerrar cada uma com decisão explícita; não apagar branches.
+- Repositório público; `main` protegida por check `validate`. Dados individuais, tokens e relatórios privados não podem ser gravados.
+- PRs integrados: #9, #19, #20, #21, #22, #23, #24 e #27. Último merge #27: `3f9411ca00c35713f8b140df6091d92b73ed31d9`; CI pós-merge **314 testes, success**, gate `awaiting_next_task=SIM-09`.
+- Única frente: SIM-09 / PR #28, branch `audit/sim09-final-branch-inventory-20261105`.
+- Inventário: 20 branches de trabalho além de `main`: oito branches de PRs integrados e 12 branches históricas fechadas sem merge. Nenhuma branch foi apagada. Lista, SHAs e destinos: `docs/governanca/STATUS_BRANCHES_20261105.md`; refs diferidas: `state/WORKFLOW.json`.
+- Funcionalidades recuperadas seletivamente: bootstrap START (#9), privacidade (#19), API write guard (#20; writer real inativo), monitor FAPEC (#21; cron real não comprovado), broker atual e decisões (#22), SPEC r2 documental (#23; 0/27 E2E), decisão Trusted Governance (#24), decisão de adiar ponte Oracle/Telegram (#27).
+- Branches preservadas sem merge bruto: #3/#4/#5/#10/#11/#12/#13/#14/#15/#16/#17/#18. Algumas capacidades foram recuperadas por PRs mais novos; branch preservada não significa código pendente.
+- Próxima tarefa SIM-10 após merge #28: revisar provas funcionais pendentes da SPEC cognitiva e escolher um recorte E2E pequeno; sem instalar Oracle, Telegram, App externa ou credenciais.
 
 ## Retomada
-1. START na mesma revisão: quatro documentos obrigatórios; engenharia também lê `state/WORKFLOW.json` e executa bootstrap engineering.
-2. Conferir PR único, HEAD e CI remota; não avançar sem merge comprovado.
-3. SIM-08: validar decisão e contraprovas de ausência de código/segredos externos.
-4. Preservar a branch #3 e seus commits exclusivos para futura reavaliação, se houver decisão de interface e E2E.
+1. START na mesma revisão: AGENTS, ROADMAP, HANDOFF e CURRENT; engenharia inclui WORKFLOW e bootstrap engineering.
+2. Confirmar PR único, HEAD, check validate e CI remota.
+3. SIM-09: validar inventário contra API GitHub, conferir 20 refs, 8 merges, 12 preservadas e nenhum PR aberto paralelo.
+4. Não apagar refs sem backup e pedido específico.
 
 ## Objetivo
-Estudo UFMS cargos 523 e 324, edital 152/2026; dados pessoais não são persistidos no repositório público.
+Estudo UFMS cargos 523 e 324, edital 152/2026. O repositório é público; resultados individuais não são persistidos.

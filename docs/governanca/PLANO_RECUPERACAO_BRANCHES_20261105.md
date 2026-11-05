@@ -63,3 +63,8 @@ A fotografia atual prevalece sobre qualquer tabela ou snapshot acima, e deve ser
 - Trusted Governance #10: PR #24 integrou apenas decisão de não instalar a App/Oracle. Código e workflows externos não importados; branch preservada. CI pós-merge 311 testes.
 - Ponte Oracle/Telegram/Calendar #3: candidata SIM-08/PR #27. Não importar aplicação neste ciclo: sem bots/OAuth/Oracle implantados, sem integração real Tutor/Coach, auditoria apenas interna e pendências RATE-01/OPS-01/PED-01. Interface Telegram e necessidade 24/7 não estão confirmadas. Branch preservada.
 - Próxima SIM-09: inventário final de refs e commits exclusivos, com decisão explícita de integração/deferimento para cada branch. Não apagar branches históricas.
+
+ 
+### Fechamento SIM-09 — inventário autenticado (05/11/2026)
+
+A API GitHub confirmou 20 branches de trabalho além de `main`: 8 refs associadas a PRs mesclados (#9/#19/#20/#21/#22/#23/#24/#27) e 12 refs históricas fechadas sem merge (#3/#4/#5/#10/#11/#12/#13/#14/#15/#16/#17/#18). Nenhuma ref foi excluída. PRs #25/#26 foram tentativas fechadas da mesma branch SIM-08; PR #27 é a decisão final. Consulte `docs/governanca/STATUS_BRANCHES_20261105.md` para SHA e destino de cada branch e `state/WORKFLOW.json` para refs diferidas. A API e os HEADs devem ser reconsultados antes de futuras ações.
