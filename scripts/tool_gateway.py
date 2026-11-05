@@ -163,9 +163,6 @@ class SQLiteLedger:
                 if used:
                     self.connection.execute("ROLLBACK")
                     return "AUTH_REPLAY", None
-                count = self.connection.execute(
-                    "SELECT COUNT(*) FROM events WHERE actor_id IS NULL"
-                ).fetchone()[0]
                 # Rate events are kept in a dedicated table to avoid reading payloads.
                 self.connection.execute("""
                     CREATE TABLE IF NOT EXISTS rate_events (
@@ -244,9 +241,18 @@ class ToolGateway:
         if not isinstance(request, dict) or not isinstance(request.get("parameters"), dict):
             receipt = self._receipt(request if isinstance(request, dict) else {}, "DENIED", ["INVALID_REQUEST"])
             return {"status": "DENIED", "exit_code": EXIT_CODES["DENIED"], "receipt": receipt}
-        if len(_canonical(request["parameters"])) > self.max_input_bytes:
+        if len(_canonical(request)) > self.max_input_bytes:
             receipt = self._receipt(request, "DENIED", ["INPUT_TOO_LARGE"])
             return {"status": "DENIED", "exit_code": EXIT_CODES["DENIED"], "receipt": receipt}
+        required = ("event_id", "actor_id", "tool", "recipient", "policy_sha",
+                    "state_revision", "run_id", "proposal_hash", "source_set_sha",
+                    "output_kind", "authorization_epoch")
+        if any(request.get(field) in (None, "") for field in required):
+            missing_source = not request.get("source_set_sha") or not request.get("proposal_hash")
+            decision = "NEEDS_EVIDENCE" if missing_source else "DENIED"
+            code = "SOURCE_OR_PROPOSAL_MISSING" if missing_source else "REQUEST_BINDING_MISSING"
+            receipt = self._receipt(request, decision, [code])
+            return {"status": decision, "exit_code": EXIT_CODES[decision], "receipt": receipt}
         if caller_identity != "trusted_supervisor":
             receipt = self._receipt(request, "DENIED", ["CALLER_NOT_AUTHORIZED"])
             return {"status": "DENIED", "exit_code": EXIT_CODES["DENIED"], "receipt": receipt}
