@@ -1,0 +1,40 @@
+{
+  "schema_version": "ufms-spec-approval-v2",
+  "status": "APPROVED_FOR_DOCUMENTARY_DERIVATION_NOT_GQ_D",
+  "approval": {
+    "literal_user_message": "APROVO",
+    "date": "2026-11-04",
+    "scope": "PLAN v0.3-r2 only; produce checks without changing normative AC",
+    "source_repository": "Andraus35/UFMS-MEU-ESTUDO",
+    "source_pr": 5,
+    "source_head_commit": "426286a913ea17adddb2cdb951120b45282ad938",
+    "source_path": ".specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/plan.md",
+    "source_git_blob_sha1": "a1482c25e064a1ccc06c4a649a704fbd5bf97cf5",
+    "source_sha256": "e528bd36ff4e106622e04b009a8cce381ea5fa079558cc14adc3f5227f90362c"
+  },
+  "derivation": {
+    "canonical_plan_sha256": "b1dbe81a4723163bb209af39d3ae4a9637e22a9075de2ebce6d1197275a2ad55",
+    "marker_exact": "\\n**Approved**: 2026-11-04 - user: \"APROVO\"\\n",
+    "diff_rule": "canonical_plan_bytes == approved_source_plan_bytes + marker_bytes",
+    "checks_preview_sha256": "e7ea97d5ee8069961721fa62013b2d101feb77c55203054958d70a6f6edf5295",
+    "canonical_checks_sha256": "57f1b2c49226a1ed9a0f836c99084f42e4b655fcd2300251feb169791e6f5568",
+    "diff_rule_checks": "canonical_checks after ## Checks equals source preview after ## Checks; header only administrative",
+    "ears_count": 27,
+    "checks_count": 27,
+    "functional_checks_pass": 0,
+    "functional_checks_not_run": 27
+  },
+  "independent_GQD": "REPROVADA_PENDING_REAUDIT",
+  "VERIFY_C": "NOT_RUN",
+  "VERIFY_O": "BLOCKED",
+  "TLC_validate_plan": "RUN_IN_CI",
+  "TLC_validate_checks": "RUN_IN_CI",
+  "no_merge": true,
+  "no_deploy": true,
+  "no_personal_results_writes": true,
+  "pr4_observer_SHA": "0db458a50447c2a9f8e7131f402dc3be9c0db313",
+  "dependencies": {
+    "PR1": "1079d7aa2cadb97d099d1e478f9e83b36180a624",
+    "PR2": "6e1fa661a33565d580f99962c3510d5361decbe6"
+  }
+}

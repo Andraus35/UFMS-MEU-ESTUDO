@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-05 / PR #22 (draft).** PR #21/SIM-03 integrado na `main` em `9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02`; CI pós-merge aprovada com 302 testes e gate `awaiting_next_task=SIM-05`. Frente única: `audit/sim05-broker-reconciliation-20261105`, auditoria seletiva das branches históricas #11/#12/#14/#15. O broker atual de 4/5 arquivos já existe na `main`; versões antigas com bootstrap de 10 arquivos e contrato cognitivo rígido não serão reintegradas sem necessidade. Próxima SIM-06 após merge #22.
+> **ESTADO VIGENTE — SIM-06 / PR #23 (draft).** SIM-05/PR #22 integrado à `main` em `ace048a05d3a0100ef5f05884745969ff7221d83`; CI pós-merge aprovada com 307 testes e gate `awaiting_next_task=SIM-06`. Frente única: `spec/sim06-cognitive-gates-r2-20261105`, integração documental do PLAN v0.3-r2 aprovado e seus 27 CHECKS. Provas E2E 0/27; GQ-D REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED. Proposta r3 não aprovada. Próxima SIM-07 após merge #23.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia histórica substituída. Em 05/11/2026, `main` = `9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02`; CI pós-merge do PR #21: **302 testes técnicos aprovados**, sem homologar o motor pedagógico.
+Fotografia histórica substituída. Em 05/11/2026, `main` = `ace048a05d3a0100ef5f05884745969ff7221d83`; CI pós-merge do PR #22: **307 testes técnicos aprovados**, sem homologar o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
@@ -46,6 +46,10 @@ Fotografia histórica substituída. Em 05/11/2026, `main` = `9a10c86999c191f2bd5
 ## SIM-05 — reconciliação do broker (PR #22)
 
 O broker atual `scripts/agent_entrypoint.py` já foi integrado e testado na `main`. A versão atual oferece `ReadOnlyAgentBroker`, perfis `tutor/coach` com START de quatro documentos e `engineer/auditor` com cinco, SHA externo confiável, checkout limpo, verificação de hashes, contexto documental e bloqueio de ações externas. As branches #11/#15 contêm versão anterior com lista de dez documentos, regras RM rígidas e API `AgentBroker` incompatível; sua composição exige métodos antigos que não existem na versão atual. As branches #12/#14 incluem snapshots de estado e documentos de governança desatualizados. Não copiar esses arquivos sobre a `main`. Os testes atuais de `tests/test_agent_entrypoint.py` já cobrem os invariantes ativos. Decisão de SIM-05: documentar a comparação, corrigir estado/handoff e manter branches originais preservadas; importar somente teste/código que demonstre lacuna funcional atual.
+
+## SIM-06 — especificação Cognitive Gates v0.3-r2 (PR #23)
+
+Recuperação estritamente documental da versão v0.3-r2 aprovada para especificação: PLAN, 27 CHECKS, recibo e verificador de proveniência. O aceite registrado limita-se ao plano e à derivação dos checks. O recibo registra 0/27 provas funcionais E2E, GQ-D REPROVADA, GQ-C NOT_RUN e GQ-O BLOCKED. A validação dos bytes não prova execução do Tutor/Coach. Não importar a proposta r3, não ativar gates de aprovação por mensagem e não habilitar ferramentas, credenciais ou persistência pessoal. Ver `docs/governanca/SPEC_COGNITIVE_GATES_R2.md`.
 
 ## Fila de execução
 
@@ -111,7 +115,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Próxima tarefa: SIM-06** — somente após merge comprovado do PR #22/SIM-05. SIM-06 será definida a partir das branches restantes, priorizando especificações cognitivas úteis e mantendo integrações externas fora do escopo até prova de necessidade.
+**Próxima tarefa: SIM-07** — somente após merge comprovado do PR #23/SIM-06. SIM-07 será definida a partir das branches restantes, priorizando provas funcionais cognitivas e mantendo integrações externas fora do escopo até prova de necessidade.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 
@@ -121,8 +125,8 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 | SIM-02 | ALTA | Escrita por API pode burlar hooks ou perder confirmação; preservar histórico sem duplicar | Auditar cadeia PR #13→#17→#18 no HEAD real; contraprovar ACK perdido, CAS, readback de blob e cliente com token direto; consolidar só o essencial, sem alegar enforcement universal | `tests/test_api_write_guard.py`, `tests/test_ci_gate_contract.py`; ampliar E2E negativo antes da integração | concluido |
 | SIM-03 | ALTA | Fonte do edital e retificações podem estar desatualizadas; datas oficiais têm inconsistência original | Manter PDF original imutável, comparar novas publicações oficiais e preservar alerta cronológico p. 13; nenhuma correção silenciosa | `tests/test_fontes_oficiais.py`, `tests/test_edital.py`; teste: alteração sem proveniência deve falhar | em_andamento |
 | SIM-04 | MEDIA | Dez PRs draft/abertos e 22 branches criam frentes concorrentes e risco de merge indevido | Mapear árvore de dependências; manter #9 como fila, avaliar #9→#14→#15 e #13→#17→#18; consolidar uma entrega por capacidade, encerrar duplicados só após equivalência de blobs e testes, sem apagar branches com código exclusivo | `tests/test_ci_gate_contract.py`, `tests/test_agent_gates.py`; exigir diferença final e CI do HEAD | concluido |
-| SIM-05 | MEDIA | Bootstrap de dez arquivos, inclusive edital integral, custa contexto e contradiz recuperação seletiva | Reduzir leitura por sessão a AGENTS, ROADMAP, HANDOFF e CURRENT; demais normas e chunks sob demanda; reconciliar `settings.json`, `agent_gates.py`, docs, testes e branches empilhadas no mesmo commit testado | `tests/test_agent_gates.py`, `tests/test_roadmap_gate.py`; mutantes: ordem errada, arquivo essencial ausente, edital carregado sempre | em_andamento |
-| SIM-06 | MEDIA | Handoff extenso e antigos checkpoints confundem estado atual com histórico | Manter resumo vigente no topo e histórico imutável abaixo; cada entrega aponta SHA, CI, item SIM/RM, bloqueador e próximo comando; testar retomada usando só arquivos mínimos | `tests/test_agent_gates.py`, `tests/test_roadmap_gate.py`; teste: falta de próxima tarefa deve falhar | pendente |
+| SIM-05 | MEDIA | Bootstrap de dez arquivos, inclusive edital integral, custa contexto e contradiz recuperação seletiva | Reduzir leitura por sessão a AGENTS, ROADMAP, HANDOFF e CURRENT; demais normas e chunks sob demanda; reconciliar `settings.json`, `agent_gates.py`, docs, testes e branches empilhadas no mesmo commit testado | `tests/test_agent_gates.py`, `tests/test_roadmap_gate.py`; mutantes: ordem errada, arquivo essencial ausente, edital carregado sempre | concluido |
+| SIM-06 | MEDIA | Handoff extenso e antigos checkpoints confundem estado atual com histórico | Manter resumo vigente no topo e histórico imutável abaixo; cada entrega aponta SHA, CI, item SIM/RM, bloqueador e próximo comando; testar retomada usando só arquivos mínimos | `tests/test_agent_gates.py`, `tests/test_roadmap_gate.py`; teste: falta de próxima tarefa deve falhar | em_andamento |
 | SIM-07 | MEDIA | Gate de orientação cognitiva misturado a operações externas bloqueia Tutor/Coach sem necessidade | Separar orientação automática de ferramentas com efeito; gatilhar consentimento por escopo para lembretes/Zapia, não por mensagem; negar envio inexistente/credencial exposta | `tests/test_write_policy.py`, `tests/test_agent_gates.py`; negativo: ferramenta não instalada não pode alegar envio | pendente |
 | SIM-08 | MEDIA | Sobrecarga de gates, avaliações repetidas e docs redundantes atrasa estudo e CI | Executar suíte focada para mudança, depois CI central completa; conservar testes de privacidade, integridade do edital, estado e hooks; remover gates duplicados só com comparação antes/depois | `tests/test_ci_gate_contract.py`, `tests/test_harness.py`; teste: remoção de gate essencial deve falhar | pendente |
 | SIM-09 | BAIXA | Branches antigas de PRs mesclados/fechados poluem visão, mas histórico é recuperável | Listar candidatas pós-merge e POCs; confirmar HEAD contido em `main` ou preservação no PR antes de pedir exclusão; não deletar nesta entrega | registro: `docs/auditorias/AUDITORIA_BRANCHES_E_MERGES_2026-11-04.md`; risco aceito até limpeza confirmada | documentado |
