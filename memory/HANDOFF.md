@@ -19,6 +19,16 @@
 - **Gate de início:** `python scripts/bootstrap.py --mode engineering` deve ler quatro arquivos comuns e `state/WORKFLOW.json`, com hashes; `python scripts/single_flow_gate.py --check` confirma a frente e a CI testa `--remote`. Múltiplos PRs abertos bloqueiam o fluxo de engenharia. **Não é enforcement universal dos agentes externos**: sem executor obrigatório, uma sessão pode ignorar scripts.
 - **Fechamento de ciclo:** contraprovas negativas e testes aplicáveis → CI no HEAD → readback → revisão/autorizações cabíveis → **um merge** → próxima branch/PR. Uma branch para cada correção separada é proibida.
 
+## Último ensaio de START (05/11/2026)
+
+- **Objeto testado:** PR #9, commit `8170e3771f8b29cfab51f9b4d95b3334e8cac717`. CI push `42037230359` e PR `42037236502` concluídas com sucesso; **215/215 testes**. Este handoff e o roadmap produzem commits posteriores: conferir CI no novo HEAD antes de promover qualquer estado.
+- **START de estudo:** `python scripts/bootstrap.py --mode study` verifica quatro arquivos e emite hashes.
+- **START de engenharia:** `python scripts/bootstrap.py --mode engineering` exige adicionalmente `state/WORKFLOW.json` validado, devolvendo item ativo SIM-04, PR #9, branch e próximo SIM-01 pós-merge.
+- **Contraprovas verificadas:** arquivo ausente/vazio, ordem, tarefa inválida, `WORKFLOW.json` corrompido/ausente, modo inválido e remoção do gate na CI. `tests/test_start_effectiveness.py` mantém os 10 casos.
+- **Limite P0:** nenhuma prova de leitura semântica pelo LLM nem de que agentes externos sejam obrigados a invocar o START; `AGENTS.md` e CI sozinhos não implementam um executor que intercepte todas as ações. **Não declarar universalmente efetivo**.
+- **Limite P1:** em acesso direto por API, confirmar a identidade do mesmo HEAD remoto de cada documento; hashes locais não o garantem. Fotografias antigas de PRs no roadmap são históricas.
+- **Sequência:** fechar somente esta frente SIM-04 com revisão, gates e merge; depois SIM-01 em uma nova e única branch/PR. Não abrir frente paralela.
+
 ## Regras de entrega e rastreabilidade
 
 - Para ALTA/MEDIA: identificar causa, correção, contraprovas negativas reais, regressão, HEAD/CI e riscos remanescentes. Uma referência a teste não demonstra que ele foi executado. Não promover status antes de comprovação.
