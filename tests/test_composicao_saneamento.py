@@ -89,8 +89,16 @@ class ComposedRepositoryTests(unittest.TestCase):
         self.assertIn("Bootstrap desta revisão: 10 documentos", doc)
         self.assertIn("ROADMAP incluído: true", doc)
         differences = sut.changes(ROOT, snap, BRANCH, SELF)
-        self.assertEqual(differences, {},
-                         "Committed documents drift from deterministic output")
+        if differences:
+            import difflib
+            current = (ROOT / sut.STATUS_PATH).read_text(encoding="utf-8")
+            expected = differences.get(sut.STATUS_PATH, current)
+            excerpt = "".join(list(difflib.unified_diff(
+                current.splitlines(keepends=True),
+                expected.splitlines(keepends=True),
+                fromfile="committed", tofile="generated"))[:55])
+            self.fail("Committed documents drift from deterministic output:\n"
+                      + excerpt + "\nchanged=" + repr(sorted(differences)))
 
 
 if __name__ == "__main__":
