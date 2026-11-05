@@ -63,6 +63,8 @@ def verify_workflow(workflow):
         pattern = "      - name: " + name + "\n        run: " + command
         if workflow.count(pattern) != 1:
             raise ValueError("Etapa de CI obrigatória ausente/duplicada: " + name)
+    if workflow.count("          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}") != 1:
+        raise ValueError("SHA exato do evento ausente/duplicado no gate serial")
     for name, command in REDUNDANT_STEPS:
         if command in workflow:
             raise ValueError("Validação já executada por scripts/validate.py: " + name)
