@@ -129,8 +129,9 @@ class SingleFlowTests(unittest.TestCase):
             self.check_remote([], event="push", ref=self.live["active"]["branch"], head="")
 
     def test_permite_main_sem_pr_apos_merge_comprovado(self):
-        result = self.check_remote([], event="push", ref="main", head="",
-                                   prior=self.merged_pr())
+        state = copy.deepcopy(self.live)
+        state["active"]["phase"] = "review"
+        result = validate_remote(state, [], "push", "main", "", self.merged_pr())
         self.assertEqual(result["phase"], "awaiting_next_task")
         self.assertEqual(result["next_task"], self.live["next_task_after_merge"])
         self.assertEqual(result["last_merged_pr"], self.live["active"]["pr_number"])
