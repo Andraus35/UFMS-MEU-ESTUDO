@@ -188,3 +188,50 @@ def check_hook_contract(root=ROOT):
                    for n in tree.body):
             raise ValueError("Hook sem interface run: " + name)
     return tuple(HOOK_FILES)
+
+
+# SHA-1 Git blob pins for the small, intentionally composed GQ-D r2 set.
+# This is a maintenance tripwire, not a security boundary or a semantic proof.
+GQD_COMPOSITION_PINS = {
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/plan.md": "a1482c25e064a1ccc06c4a649a704fbd5bf97cf5",
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/proposals/r2/checks-preview.md": "66b00cc21eea65a01c559c7031e17fe75f970e00",
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/plan.md": "7b2d3a655e015684088f3ac56fdf90e81349cac1",
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/checks.md": "ec8971312fcdb86819e3534f66474336eb7cf2d7",
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/approval-receipt.json": "ec10e53505bea4a3e714b6ef265875fe654498ea",
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/verify_approval_snapshot.py": "81327d8cb6bc941e70230110c33a5925709c2d97",
+    ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/tests/test_approval_snapshot.py": "48f2e9bb8177bdcb2744206a1c0d0c93b39fe5b4",
+    "scripts/source_gate.py": "7e7b8cd698f3e7e153119eee122f7f2410099433",
+    "scripts/fact_gate.py": "2d82f581bc85164c259f7df0dffd013fd37b604f",
+    "scripts/safe_renderer.py": "06c6eeabdc9b0d20696e4142455a5d3932d5ebdf",
+    "scripts/tool_gateway.py": "c28e2c42c4c48ffa5b832963de62869ae5a802ce",
+    "tests/test_source_gate.py": "b605903990761a5d8c2a1145ad9dc04104920a36",
+    "tests/test_fact_gate.py": "a56731d2405809dbf8a34f7e32be240a241374e9",
+    "tests/test_safe_renderer.py": "aed90c2ca2f3c748e3cffda95933223f3604bcdd",
+    "tests/test_tool_gateway.py": "51a4b43ffe6a711917ff3055992d5371318d5925"
+}
+
+
+def check_gqd_composition(root=ROOT):
+    """Check that the approved r2 documents and selected gates match their pinned Git blobs."""
+    root = Path(root)
+    errors = []
+    for relative, expected in GQD_COMPOSITION_PINS.items():
+        path = _contained_file(root, relative)
+        raw = path.read_bytes()
+        header = b"blob " + str(len(raw)).encode("ascii") + b"\\0"
+        actual = hashlib.sha1(header + raw).hexdigest()
+        if actual != expected:
+            errors.append(f"COMPOSITION_SHA_MISMATCH:{relative}")
+    if errors:
+        raise ValueError("; ".join(errors))
+    return {"result": "PASS", "files_checked": len(GQD_COMPOSITION_PINS)}
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Valida composição GQ-D r2 por Git blob SHA")
+    parser.add_argument("--check-gqd-composition", action="store_true")
+    args = parser.parse_args()
+    if not args.check_gqd_composition:
+        parser.error("use --check-gqd-composition")
+    print(check_gqd_composition())
