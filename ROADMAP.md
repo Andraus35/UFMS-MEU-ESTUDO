@@ -83,7 +83,9 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
 
-**Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.\n\n**Dependências:** RM-00 e RM-01 podem avançar em paralelo; RM-02 → RM-03 → RM-04 → RM-05, com RM-06 testando cada incremento; RM-07 requer avaliação independente própria; RM-08/09 e RM-10 dependem de gates técnicos, segurança e autorização.
+**Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.
+
+**Dependências:** RM-00 e RM-01 podem avançar em paralelo; RM-02 → RM-03 → RM-04 → RM-05, com RM-06 testando cada incremento; RM-07 requer avaliação independente própria; RM-08/09 e RM-10 dependem de gates técnicos, segurança e autorização.
 
 ## Critérios de promoção
 
