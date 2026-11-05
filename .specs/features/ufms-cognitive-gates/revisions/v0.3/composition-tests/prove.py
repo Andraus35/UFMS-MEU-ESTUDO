@@ -35,7 +35,7 @@ def verify_parent_chain(parents, main_sha, head_sha):
 
 
 def git_blob(raw):
-    return hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\\0" + raw).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
 
 
 def verify_paths(root):

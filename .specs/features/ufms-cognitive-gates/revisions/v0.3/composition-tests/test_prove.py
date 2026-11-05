@@ -64,11 +64,11 @@ class CompositionContractTests(unittest.TestCase):
         raw = b"abc"
         self.assertEqual(
             git_blob(raw),
-            hashlib.sha1(b"blob 3\\0abc").hexdigest(),
+            hashlib.sha1(b"blob 3\0abc").hexdigest(),
         )
 
     def test_real_composition_if_present(self):
-        repo = Path(__file__).resolve().parents[5]
+        repo = Path(__file__).resolve().parents[6]
         if (repo / "edital/manifest.json").is_file():
             from prove import verify_paths
             self.assertTrue(verify_paths(repo))
