@@ -14,14 +14,14 @@ REFERENCES = (
 )
 READING_CONTRACTS = {
     "AGENTS.md": "2. `ROADMAP.md`",
-    "README.md": "dez arquivos do bootstrap",
-    "docs/OPERACAO.md": "dez arquivos obrigatórios",
+    "README.md": "quatro arquivos do bootstrap",
+    "docs/OPERACAO.md": "quatro arquivos obrigatórios",
 }
 
 def verify(root=ROOT):
     root = Path(root)
     hashes = check_bootstrap(root)
-    if len(BOOTSTRAP_FILES) != 10 or BOOTSTRAP_FILES[1] != "ROADMAP.md":
+    if len(BOOTSTRAP_FILES) != 4 or BOOTSTRAP_FILES[1] != "ROADMAP.md":
         raise ValueError("Ordem do roadmap divergente")
     for path in REFERENCES:
         if "ROADMAP.md" not in (root / path).read_text(encoding="utf-8"):
