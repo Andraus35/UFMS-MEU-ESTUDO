@@ -1,32 +1,29 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-**Checkpoint 05/11/2026.** Autoridade operacional: `state/WORKFLOW.json` e GitHub autenticado.
+**Checkpoint 05/11/2026.** Fonte operacional: GitHub autenticado + `state/WORKFLOW.json`. Repositório público; resultados pessoais permanecem bloqueados.
 
-## Estado
-- Repositório público; `main` protegida; check obrigatório observado: `validate`. Dados individuais, tokens e relatórios privados não podem ser gravados.
-- PRs integrados: #9, #19, #20, #21, #22, #23, #24, #27 e #28.
-- Último merge: PR #28 / SIM-09, commit `c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb`; CI pós-merge `42064489228`: **317 testes, success**.
-- Única frente: SIM-03 / PR #29, branch `fix/sim03-fapec-cli-e2e-20261105`, base `main@c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb`, fase `review`.
-- SIM-03: monitor FAPEC read-only já integrado no PR #21; este PR adiciona prova CLI offline dos estados 0/2/3 e confirma que a execução por fixture não altera o edital original nem o registro de fontes.
-- Limite: o workflow contém cron e `workflow_dispatch`, mas não foi observada execução com `event=schedule`; cron real permanece **NOT_VERIFIED**. A consulta cobre somente uma página FAPEC.
-- Fonte canônica e alerta cronológico do Anexo II, p. 13, permanecem preservados; retificações não são aplicadas automaticamente.
-- SPEC Cognitive Gates r2 continua documental: 0/27 provas E2E; GQ-D REPROVADA pendente de reauditoria, GQ-C NOT_RUN, GQ-O BLOCKED.
-- Inventário SIM-09: 20 branches de trabalho além de `main`: 8 refs de PRs integrados e 12 refs históricas fechadas sem merge. Nenhuma branch apagada.
-- Próxima tarefa após merge de SIM-03: SIM-06, conforme prioridade remanescente da fila. SIM-10 permanece `documentado`; não reabrir.
+## Estado confirmado
+- `main` = `7ad47beb76adae46a6abf44c7b14bcb5b04fd301`.
+- PR #29 / SIM-03 mesclado em `7ad47beb76adae46a6abf44c7b14bcb5b04fd301`; branch `fix/sim03-fapec-cli-e2e-20261105`.
+- CI do HEAD do PR: run `42068807594`, `validate=success`; CI pós-merge: run `42069852620`, `validate=success`, **320 testes**.
+- PRs abertos no momento da retomada: zero. Nenhuma branch histórica foi apagada.
+- SIM-03 adicionou prova CLI offline FAPEC para códigos 0/2/3 e não mutação dos arquivos canônicos. O cron real permanece **NOT_VERIFIED** até run com `event=schedule`; a sonda cobre uma página FAPEC.
+- Única frente seguinte: SIM-06 / `fix/sim06-handoff-reconciliation-20261105`. Objetivo: resumir o estado vigente no topo, separar histórico imutável e testar retomada usando somente AGENTS, ROADMAP, HANDOFF e CURRENT.
+- Próxima tarefa após SIM-06: SIM-07. SPEC Cognitive Gates r2 permanece documental: 0/27 provas funcionais E2E; GQ-D REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED.
+- `state/CURRENT.json`, eventos, resultados pessoais e PDF canônico permanecem intocados.
 
 ## START desta sessão — somente API GitHub
-- HEAD remoto de origem: `c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb`.
-- Arquivos obrigatórios lidos no mesmo HEAD: `AGENTS.md` blob `047176c3a21befc6c1f85612e85a32f7d380ba69`; `ROADMAP.md` blob `6c63f266459db8fcda0c12f57c818ebf6145a566`; `memory/HANDOFF.md` blob `dc0024e9256208e77c7f565b60b3105fffa39a19`; `state/CURRENT.json` blob `f2df048a2bf5ffa4876298a4ebf66bed1767c45a`; `state/WORKFLOW.json` blob `7c2c6a9144d4677879e93c3ec2d96d771db18d2e`.
-- `settings.json` lido: blob `ded39535d4a640cb2f7d34f15d3ef936d293bd76`; política confirmou `personal_results_writes_enabled=false`.
-- **Limite de execução:** sem checkout local, bootstrap/roadmap/write hooks não foram executados nesta sessão. A alteração é feita somente em branch/PR; a CI remota executará os gates no SHA candidato. Não declarar equivalência aos hooks locais.
-- `state/CURRENT.json`, `state/PROGRESS.csv`, eventos e PDF canônico não são modificados.
+- HEAD confirmado: `7ad47beb76adae46a6abf44c7b14bcb5b04fd301`.
+- `AGENTS.md`: `047176c3a21befc6c1f85612e85a32f7d380ba69`; `ROADMAP.md`: `9fa088cf5f8a2c833b6f1e52678e7d5d50933066`; `memory/HANDOFF.md`: `e945a44c96720c55ea2ca65a1d02599cbbb411e5`; `state/CURRENT.json`: `f2df048a2bf5ffa4876298a4ebf66bed1767c45a`; `state/WORKFLOW.json`: `43726795f87f30c8960286395b64a1dfa79d02b1`.
+- `settings.json` confirma `personal_results_writes_enabled=false`.
+- Limite: sessão via API, sem checkout local; bootstrap e hooks locais não foram executados. CI remota é evidência do checkout remoto, não equivalência aos hooks locais.
 
 ## Retomada
-1. Confirmar PR único #29, HEAD exato, check `validate` e CI remota.
-2. Revisar o diff do monitor e os testes CLI; corrigir qualquer falha no mesmo PR.
-3. Antes do merge, exigir CI `success` no HEAD exato e branch `main` protegida; merge com SHA esperado.
-4. Após merge, confirmar novo HEAD, CI pós-merge e ausência de PR aberto.
-5. Manter branches históricas preservadas; nenhuma exclusão sem backup e pedido específico.
+1. Continuar somente SIM-06 na branch declarada em `state/WORKFLOW.json`.
+2. Manter um PR draft aberto; validar CI no HEAD exato e os quatro arquivos mínimos.
+3. Mesclar somente com check obrigatório verde e SHA esperado.
+4. Após merge, confirmar novo HEAD, CI pós-merge e zero PRs abertos.
+5. Preservar branches históricas; exclusão exige backup e pedido específico.
 
 ## Objetivo
 Estudo UFMS cargos 523 e 324, edital 152/2026. O repositório é público; resultados individuais não são persistidos.
