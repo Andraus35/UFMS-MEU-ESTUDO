@@ -22,7 +22,7 @@ def _confirmed(value, label):
     if status == "confirmed":
         if not isinstance(value.get("evidence_ref"), str) or not value["evidence_ref"].strip():
             raise ValueError(label + " confirmado sem evidence_ref")
-    return value
+    return {**value, "status": status}
 
 
 def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
