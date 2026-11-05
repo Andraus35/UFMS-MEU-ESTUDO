@@ -8,7 +8,7 @@
     "merged": false,
     "head_branch": "spec/ufms-cognitive-gates-gqd-correction-v0-3",
     "head_sha": "9f1b347e755c82f15089470749d9d33524167c1f",
-    "base_sha": "c020f78a3e1c..."
+    "base_sha": "c020f78ba07ebb4e2949021b45a7f9b8f2c26d42"
   },
   "legacy_branch_comparison": {
     "base": "main",
@@ -107,7 +107,9 @@
       "check_id": "C1",
       "acceptance_criterion": "AC1",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_bootstrap_exact_nine_files_and_revision"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -115,7 +117,9 @@
       "check_id": "C2",
       "acceptance_criterion": "AC2",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_unknown_normative_source_needs_evidence"
+      ],
       "isolated_candidate_evidence": "C2/C3 isolated tests reported in PR5 candidate; not end-to-end",
       "main_integration": false
     },
@@ -123,7 +127,9 @@
       "check_id": "C3",
       "acceptance_criterion": "AC3",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_source_sha_page_span_resolution"
+      ],
       "isolated_candidate_evidence": "C2/C3 isolated tests reported in PR5 candidate; not end-to-end",
       "main_integration": false
     },
@@ -131,7 +137,9 @@
       "check_id": "C4",
       "acceptance_criterion": "AC4",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_unverified_amendment_does_not_override"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -139,7 +147,9 @@
       "check_id": "C5",
       "acceptance_criterion": "AC5",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_unknown_answer_has_no_fabricated_facts"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -147,7 +157,9 @@
       "check_id": "C6",
       "acceptance_criterion": "AC6",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_recommendation_fields_both_positions"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -155,7 +167,10 @@
       "check_id": "C7",
       "acceptance_criterion": "AC7",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_aggregate_no_inferred_topic_score",
+        "python -m unittest -v tests.test_harness.HarnessTests.test_aggregate_result_does_not_invent_topic_score"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -163,7 +178,9 @@
       "check_id": "C8",
       "acceptance_criterion": "AC8",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_provenance_four_classes"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -171,7 +188,9 @@
       "check_id": "C9",
       "acceptance_criterion": "AC9",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_shared_attempt_no_double_count"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -179,7 +198,9 @@
       "check_id": "C10",
       "acceptance_criterion": "AC10",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_revision_without_evidence_abstains"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -187,7 +208,9 @@
       "check_id": "C11",
       "acceptance_criterion": "AC11",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_untrusted_payload_cannot_change_policy"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -195,7 +218,9 @@
       "check_id": "C12",
       "acceptance_criterion": "AC12",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_personal_write_disabled_zero_calls"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -203,7 +228,9 @@
       "check_id": "C13",
       "acceptance_criterion": "AC13",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_missing_or_expired_human_approval"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -211,7 +238,9 @@
       "check_id": "C14",
       "acceptance_criterion": "AC14",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_authorization_bindings_all_fields"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -219,7 +248,9 @@
       "check_id": "C15",
       "acceptance_criterion": "AC15",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_allowlist_and_rate_limit"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -227,7 +258,9 @@
       "check_id": "C16",
       "acceptance_criterion": "AC16",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_replay_same_event_id_one_effect"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -235,7 +268,9 @@
       "check_id": "C17",
       "acceptance_criterion": "AC17",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_two_concurrent_cas_only_one_writes"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -243,7 +278,9 @@
       "check_id": "C18",
       "acceptance_criterion": "AC18",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_timeout_without_readback_unconfirmed"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -251,7 +288,9 @@
       "check_id": "C19",
       "acceptance_criterion": "AC19",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_receipt_schema_without_raw_pii"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -259,7 +298,9 @@
       "check_id": "C20",
       "acceptance_criterion": "AC20",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_release_rejects_unproven_sha"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -267,7 +308,9 @@
       "check_id": "C21",
       "acceptance_criterion": "AC21",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_weak_assertion_mutant_blocks_release"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -275,7 +318,9 @@
       "check_id": "C22",
       "acceptance_criterion": "AC22",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_direct_tool_bypass_denied"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -283,7 +328,9 @@
       "check_id": "C23",
       "acceptance_criterion": "AC23",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_single_use_nonce_replay_expiry_and_race"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -291,7 +338,9 @@
       "check_id": "C24",
       "acceptance_criterion": "AC24",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_input_utf8_boundaries_exact_and_plus_one"
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     },
@@ -299,7 +348,9 @@
       "check_id": "C25",
       "acceptance_criterion": "AC25",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_false_critical_claim_with_real_citation"
+      ],
       "isolated_candidate_evidence": "C25 isolated fact_gate candidate tests; not end-to-end",
       "main_integration": false
     },
@@ -307,7 +358,9 @@
       "check_id": "C26",
       "acceptance_criterion": "AC26",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_renderer_without_bound_release_token"
+      ],
       "isolated_candidate_evidence": "C26 isolated local-preview renderer candidate tests; not end-to-end",
       "main_integration": false
     },
@@ -315,7 +368,10 @@
       "check_id": "C27",
       "acceptance_criterion": "AC27",
       "status": "NOT_RUN_END_TO_END",
-      "proof_selectors": [],
+      "proof_selectors": [
+        "python -m unittest -v tests.test_cognitive_gates.CognitiveGateTests.test_eval_manifest_required_fields",
+        " acima são **seletores/planos**, não evidências de teste existente ou executado; cada check requer prova positiva e negativa sobre implementação futura. A inexistência do teste é "
+      ],
       "isolated_candidate_evidence": null,
       "main_integration": false
     }
