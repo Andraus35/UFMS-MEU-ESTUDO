@@ -39,3 +39,13 @@
 - **Gates:** PLAN/CHECKS r2 aprovados somente no âmbito documental e bytes intactos; PLAN r3 NÃO APROVADO; 27/27 provas end-to-end Tutor/Coach pendentes; GQ-D independente ainda REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED.
 - **Próxima frente:** testes do renderer automático para ORIENTACAO sem efeito externo, com emissão/consumo seguro e distinção entre orientação e ROTINA_AUTORIZADA; nenhum conector real presumido. Nova CI será necessária no SHA posterior deste checkpoint.
 
+## Checkpoint C26 — safe_renderer local (04/11/2026)
+
+- **HEAD de engenharia testado:** `9192455c59b9582eed0f458e7f61a4e2078af7dc`; merge sintético GitHub `bb5da88d8959a80a69be5101cf800fd90209a083`, com `main` `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68` como primeiro pai; sem merge de produção.
+- **CI composta:** [41952389995](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41952389995), `success`: **18/18 testes novos C26**, **43/43 isolados C2/C3/C25/C26**, **8/8 composição**, **171/171 harness**. Mais quatro workflows de validação documental e técnica do mesmo HEAD concluídos em `success`.
+- **Contrato C26 isolado:** `safe_renderer.py` permite orientações `NONE/ORIENTACAO` para Tutor/Coach no canal de teste `local_preview`, emitidas com token técnico HMAC de uso único, vinculadas a proposta, execução, política, fontes, revisão, papel, canal e destinatário. O token é emitido automaticamente **após recibo ALLOW de supervisor confiável**, sem aprovação humana a cada mensagem. O teste não prova um supervisor seguro instalado.
+- **Contraprovas exercitadas:** adulteração, troca de destinatário/canal, expiração, replay, revogação por release e epoch, corrida de duas instâncias compartilhando ledger SQLite, saída TOOL e readback incerto com `UNCONFIRMED` sem reenvio.
+- **Restrições:** somente sink em memória; nenhum Zapia/Telegram/Agenda, credencial real, armazenamento privado ou publicação externa. Chave de teste não é credencial operacional. Não alegar que o LLM está isolado do emissor, que existe roteamento compulsório ou que a política cognitiva completa foi exercitada. O r3 de TC-05/AC26 permanece **NÃO APROVADO**.
+- **Gates:** PLAN/CHECKS r2 preservados, 27/27 testes end-to-end Tutor/Coach ainda pendentes; GQ-D reprovada até reauditoria independente, GQ-C `NOT_RUN`, GQ-O `BLOCKED`. Este checkpoint documental cria novo HEAD e exige nova CI por SHA.
+- **Próxima tarefa:** integrar supervisor confiável -> gate cognitivo -> emissor interno -> renderer, sem expor chave nem canal externo ao processo LLM; testar bypass e emissão de afirmações não comprovadas antes de conectores reais.
+
