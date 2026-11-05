@@ -1,5 +1,7 @@
 # Handoff pedagógico — ciclo 8
 
+> **ARQUIVO HISTÓRICO — 04/11/2026.** Não representa o estado atual de PRs, branches ou integração. Para retomada operacional, use `/memory/HANDOFF.md` e `state/WORKFLOW.json`.
+
 **Checkpoint:** 04/11/2026, America/Campo_Grande.  
 **Natureza:** prova local de referência isolada, não integração com harness nem homologação de GP-1.
 
