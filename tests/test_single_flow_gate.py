@@ -33,7 +33,8 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)\n        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-00")
+        self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
+        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-00")
 
     def test_rejeita_varias_frentes_habilitadas(self):
         for key, mutation in (
@@ -196,7 +197,7 @@ class SingleFlowTests(unittest.TestCase):
             self.assertEqual(validate_local(root)["next_task_after_merge"], "DONE")
 
     def test_rejeita_estado_terminal_sem_marcador_no_roadmap(self):
-        tmp, root = self.temp_root()
+        tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "DONE"))
         with tmp:
             roadmap = root / "ROADMAP.md"
             current = roadmap.read_text(encoding="utf-8")
