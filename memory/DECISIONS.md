@@ -31,3 +31,7 @@ Estado: **integrado à main via PR #9 (merge 7942771aea28)**. Governança mínim
 ## ADR-008 — Recuperação seletiva de branches legadas (05/11/2026)
 
 Estado: **decisão operacional SIM-01/PR #19, ainda candidata**. Após o merge do PR #9, 13 branches históricas restaram, das quais 12 têm commits exclusivos. Não fazer merge em lote: preferir recuperação seletiva, em um PR e uma capacidade de cada vez, com testes no HEAD atual. Proteger o bloqueio de dados pessoais em repositório público e não instalar infraestrutura não comprovada. Inventário e ordem em `docs/governanca/PLANO_RECUPERACAO_BRANCHES_20261105.md`.
+
+## ADR-009 — API writer em host confiável, não em prompt (SIM-02/PR #20)
+
+Estado: **candidata de integração**. A cadeia histórica #13→#17→#18 tem controles de proposta, readback de bytes e escrita transacional; a versão terminal está sendo recuperada seletivamente no PR #20. A biblioteca de escrita permanece bloqueada por padrão e exige `UFMS_ENABLE_GITHUB_WRITE=1` e `GH_TOKEN` segregado fora do LLM. Mesmo depois de incorporada à `main`, sua implantação e a obrigação de todos os agentes de passarem pelo guard são **gates distintos**. Não alterar a política de resultados individuais em repositório público. Referências: `docs/governanca/CONTRATO_API_PR_ATUAL.md` e `docs/governanca/PLANO_RECUPERACAO_BRANCHES_20261105.md`.
