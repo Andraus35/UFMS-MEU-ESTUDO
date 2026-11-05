@@ -13,9 +13,9 @@
 - `state/CURRENT.json`, eventos, resultados pessoais e PDF canônico permanecem intocados.
 
 ## START desta sessão — somente API GitHub
-- HEAD-base confirmado: `d6390de09419dbf642e8487aeae167a607840f47`.
+- HEAD-base confirmado: `aeb0de34e40b8f32e04345c8428e090fdf32f0ad`.
 - Foram lidos AGENTS, ROADMAP, HANDOFF, CURRENT e WORKFLOW via API; hooks/bootstrap locais não foram executados.
-- CI pós-merge #35: run `42076658860`, job `validate=success`. Isso comprova CI remota no commit, não hooks locais nem required-check configuration.
+- CI pós-merge #36: run `42077837031`, job `validate=success`. Isso comprova CI remota no commit, não hooks locais.
 - A leitura administrativa detalhada foi realizada pelo proprietário via Termux; a saída confirma `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`.
 
 ## Retomada
