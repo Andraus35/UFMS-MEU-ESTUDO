@@ -1,5 +1,8 @@
 # ROADMAP — UFMS MEU ESTUDO
 
+> **ESTADO VIGENTE — CONSULTAR GITHUB, NÃO FOTOGRAFIAS ANTIGAS.** `state/WORKFLOW.json` é a fonte de verdade do ciclo; no último readback, somente PR #9 estava aberto em draft, fase `review`, trabalho SIM-04. O SIM-01 é **próxima tarefa condicionada a merge confirmado do PR #9**. Na `main`, depois do merge, `active` identifica o ciclo anterior; o gate remoto somente devolve `awaiting_next_task` se o PR constar efetivamente mesclado. PR fechado sem merge não habilita nada. As listas de dez PRs e outros números abaixo são fotografias históricas, não situação corrente.
+
+
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -129,17 +132,17 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 4. **Higiene:** somente fechar PR comprovadamente substituído; manter histórico no GitHub. Excluir branch somente depois de inspecionar dependentes e confirmar preservação, sem force-push nem reescrita de histórico.
 5. **Antirregressão:** alteração desta fila exige atualizar seus testes de contrato no mesmo commit. O validador acusa ausência/reordenação/desclassificação ou perda de plano de teste em ALTA/MEDIA, mas não substitui auditoria funcional nem proteção administrativa.
 
-**Leitura do estado no dia 05/11/2026:** `main` = `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`, protegida com check `validate`; repositório público; 22 branches, 10 PRs abertos (#5, #9, #11–#18) e 8 encerrados. São números de inventário, sujeitos a nova conferência; não usar como condição de teste permanente.
+**FOTOGRAFIA HISTÓRICA ANTERIOR AO SANEAMENTO — não usar para decidir:** `main` = `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`, protegida com check `validate`; repositório público; 22 branches, 10 PRs abertos (#5, #9, #11–#18) e 8 encerrados. São números de inventário, sujeitos a nova conferência; não usar como condição de teste permanente.
 
 
-### Checkpoint SIM-05 — candidato de START leve (05/11/2026)
+### HISTÓRICO — checkpoint SIM-05 de START leve (05/11/2026)
 
 A candidata do PR #9 muda a carga de sessão de dez para **quatro arquivos** (`AGENTS.md`, `ROADMAP.md`, `memory/HANDOFF.md`, `state/CURRENT.json`). O edital integral segue imutável, acessível por índice/chunks sob demanda. Os 45 KB de checkpoints antigos ficam preservados em `memory/HANDOFF_ARCHIVE_2026-11-05.md`; somente o handoff vigente é lido em todo START. Exigir CI do HEAD completo, contraprovas negativas, readback remoto e reconciliação de PRs empilhados antes de declarar SIM-05 concluído. Não declarar que a mudança já chegou à `main`.
 
 
-### Inventário de branches/PRs e regra de consolidação (05/11/2026)
+### HISTÓRICO / FOTOGRAFIA SUPERADA — inventário de branches/PRs (05/11/2026, antes do encerramento)
 
-**Fotografia autenticada:** 22 branches; 10 PRs abertos, todos em draft; 8 PRs encerrados. Partição dos refs: 1 `main` protegida + 10 branches HEAD de PRs abertos + 5 branches de PRs já mesclados (#1, #2, #6, #7, #8) + 3 branches de PRs encerrados sem merge (#3, #4, #10) + 3 branches POC Zapia sem PR ativo. Não apagar pelo nome; confirmar HEAD, ancestralidade, dependentes e salvamento do trabalho.
+**FOTOGRAFIA SUPERADA, não vigente:** 22 branches; 10 PRs abertos, todos em draft; 8 PRs encerrados. Partição dos refs: 1 `main` protegida + 10 branches HEAD de PRs abertos + 5 branches de PRs já mesclados (#1, #2, #6, #7, #8) + 3 branches de PRs encerrados sem merge (#3, #4, #10) + 3 branches POC Zapia sem PR ativo. Não apagar pelo nome; confirmar HEAD, ancestralidade, dependentes e salvamento do trabalho.
 
 **Mapa das dez propostas:**
 
@@ -192,3 +195,15 @@ O PR #9 incorpora um **broker local mínimo, somente leitura** em `scripts/agent
 - **Negativos verificados:** sem SHA confiável, SHA Git divergente, checkout sujo, arquivo obrigatório ausente/corrompido, recibo reutilizado após alteração de bytes, symlink, papel desconhecido e ação de escrita/integração externa → **rejeição**. `model_context()` disponibiliza os textos do START validado e seus digests, mas não comprova que um LLM os compreendeu.
 - **Pendência material de ALTA:** este código não é o executor implantado de Tutor/Coach, nem guarda credenciais de serviços. A eficácia universal da leitura somente poderá ser demonstrada quando um orquestrador real passar obrigatoriamente pelo broker, com contraprovas de bypass e bloqueio de tokens diretos; **não promover tal status por CI local**.
 - **Transição preservada:** manter SIM-04 e PR #9 como única frente, sem abrir outro PR para retomar legado. Próxima tarefa SIM-01 somente após revisão e merge do #9. Este parágrafo produz nova revisão e requer CI própria.
+
+### Saneamento determinístico da transição pós-merge — SIM-04 (05/11/2026)
+
+**Não confundir fechamento com integração.** A candidata do PR #9 torna a resolução remota do ciclo explícita:
+
+- **`active_pr`:** exatamente um PR aberto, cujo número e branch coincidem com `state/WORKFLOW.json`; só há trabalho nessa branch.
+- **`awaiting_next_task`:** nenhum PR aberto, evento `push` na `main`, e consulta autenticada ao PR anterior comprova `state=closed`, `merged_at` preenchido, head/base corretos e checkpoint `phase=review` ou `merge_ready`. Neste estado, `active` é referência histórica do ciclo mesclado, e a próxima tarefa vem de `next_task_after_merge`.
+- **`blocked`:** PR encerrado sem merge; PR concorrente; consulta GitHub indisponível; SHA/contexto divergente; tentativa de trabalhar em outra branch; evento desconhecido. Nenhum desses casos permite iniciar tarefa nova.
+- A mensagem do `bootstrap.py` não confunde mais o ciclo local com estado remoto; a sincronização da próxima tarefa com o roadmap é obrigatória e testada.
+- O handoff foi reduzido a instruções vigentes; inventários de dez PRs e cadeias antigas no histórico acima **não têm efeito de autorização**. Trabalhos exclusivos nos PRs encerrados permanecem guardados pelos SHAs.
+
+**Critério desta entrega:** contraprovas de PR fechado sem merge, merge verdadeiro, base divergente, PR concorrente, ausência de leitura confiável, fase anterior não revisada, e compatibilidade dos testes com ciclos futuros; CI no HEAD final e readback do PR. Nenhum merge ou exclusão de branch realizado por esta correção.
