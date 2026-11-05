@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-06 / PR #43 (draft).** PR #42 / RM-05 integrado à `main` em `4425939488bb39291adf63184e33a132c6b461b3`; CI pós-merge `42084811834` (`validate=success`). Frente única: `test/rm06-adversarial-102-traceability-20261105`. RM-06 audita cobertura dos 102 cenários, rastreia lacunas e amplia contraprovas executáveis.
+> **ESTADO VIGENTE — RM-07 / PR #44 (draft).** PR #43 / RM-06 integrado à `main` em `8fda9754846b4fba65cd88244260653cbb606720`; CI pós-merge `42085633053` (`validate=success`). Frente única: `audit/rm07-functional-gates-20261105`. GP-3 continua bloqueado; RM-07 audita independentemente as 9 NCs do PR #5 e os 27 checks funcionais.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-07** após merge de RM-06.
+**Próxima tarefa: RM-08** após merge de RM-07.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -78,7 +78,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
-| RM-07 | P1 | GQ-D/C/O do harness cognitivo | bloqueado | Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional |
+| RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs reaudited: 3 OPEN, 5 PARTIAL candidate, 1 PARTIAL in main; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |

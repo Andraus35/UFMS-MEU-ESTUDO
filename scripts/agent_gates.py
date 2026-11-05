@@ -38,7 +38,7 @@ ROADMAP_APPROVED_BASELINE = {
     "RM-04": ("P1", "implementado_nao_homologado", "Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais"),
     "RM-05": ("P1", "implementado_nao_homologado", "Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada"),
     "RM-06": ("P1", "implementado_nao_homologado", "Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado"),
-    "RM-07": ("P1", "bloqueado", "Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional"),
+    "RM-07": ("P1", "implementado_nao_homologado", "9 NCs reaudited: 3 OPEN, 5 PARTIAL candidate, 1 PARTIAL in main; 0/27 end-to-end PASS; GQ-D/C/O não homologados"),
     "RM-08": ("P2", "bloqueado", "Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos"),
     "RM-09": ("P2", "planejado", "Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3"),
     "RM-10": ("P2", "bloqueado", "Privacidade, autorização, observações reais e avaliação prudente de utilidade"),

@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-06",
-    "branch": "test/rm06-adversarial-102-traceability-20261105",
-    "pr_number": 43,
+    "task_id": "RM-07",
+    "branch": "audit/rm07-functional-gates-20261105",
+    "pr_number": 44,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-07",
+  "next_task_after_merge": "RM-08",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #42 / RM-05 integrado em 4425939488bb39291adf63184e33a132c6b461b3; CI pós-merge 42084811834 validate=success; zero PRs abertos. RM-05 implementa prescrição sem efeitos externos e permanece implementado_nao_homologado até validação real de plataforma. RM-06 audita rastreabilidade e cobertura dos 102 cenários pedagógicos e adiciona contraprovas executáveis sem alegar aprovação de cenários não executados.",
+  "notes": "PR #43 / RM-06 integrado em 8fda9754846b4fba65cd88244260653cbb606720; CI pós-merge 42085633053 validate=success; zero PRs abertos. GP-3 permanece bloqueado: 42 cenários com teste unitário correlato, 60 sem teste canônico, 0 cenários end-to-end PASS. RM-07 inicia reauditoria independente das 9 NCs do PR #5 e dos 27 checks funcionais; nenhum gate operacional será declarado sem evidência.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",
