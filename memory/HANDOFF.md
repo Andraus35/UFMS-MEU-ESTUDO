@@ -19,7 +19,7 @@
 - A leitura administrativa detalhada foi realizada pelo proprietário via Termux; a saída confirma `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`.
 
 ## Retomada
-1. Continuar somente RM-04 / PR #41 na branch declarada em `state/WORKFLOW.json`.
+1. Continuar somente RM-05 / PR #42 na branch declarada em `state/WORKFLOW.json`.
 2. Confirmar CI no HEAD exato e readback do PR #41; manter RM-04 como `implementado_nao_homologado` até calibração com evidência real; depois iniciar RM-05.
 3. Não alegar enforcement universal além dos controles realmente demonstrados.
 4. Exigir CI `validate` verde no HEAD exato e readback após merge.
