@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from agent_gates import BOOTSTRAP_FILES, HOOK_FILES, check_bootstrap, check_hook_contract, validate_roadmap_text, validate_simplification_queue
 from hooks import before_write, after_write, checkpoint
+from interaction_policy import (ALLOWED, CONFIRMED, DENIED, NOT_IMPLEMENTED, NOT_SENT, PENDING_READBACK, ORIENTATION, ROUTINE_AUTHORIZED, SENSITIVE, decide_action, delivery_status)
 
 
 class AgentGateTests(unittest.TestCase):
@@ -167,6 +168,81 @@ class AgentGateTests(unittest.TestCase):
                 p.write_text("def run(): pass\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "divergente"):
                 check_hook_contract(root)
+
+
+class InteractionPolicyTests(unittest.TestCase):
+    def test_orientacao_e_autonoma_sem_integracao_ou_aprovacao(self):
+        result = decide_action(ORIENTATION)
+        self.assertTrue(result["allowed"])
+        self.assertEqual(result["decision"], ALLOWED)
+        self.assertEqual(result["effect"], "NONE")
+        self.assertFalse(result["approval_required"])
+
+    def test_rotina_exige_consentimento_de_escopo_nao_aprovacao_por_mensagem(self):
+        denied = decide_action(
+            ROUTINE_AUTHORIZED,
+            integration_available=True,
+            integration_verified=True,
+        )
+        self.assertFalse(denied["allowed"])
+        self.assertEqual(denied["decision"], DENIED)
+        allowed = decide_action(
+            ROUTINE_AUTHORIZED,
+            integration_available=True,
+            integration_verified=True,
+            scope_authorized=True,
+            explicit_approval=False,
+        )
+        self.assertTrue(allowed["allowed"])
+        self.assertFalse(allowed["approval_required"])
+
+    def test_integracao_ausente_ou_nao_verificada_falha_fechado(self):
+        for available, verified in ((False, False), (True, False)):
+            with self.subTest(available=available, verified=verified):
+                result = decide_action(
+                    ROUTINE_AUTHORIZED,
+                    integration_available=available,
+                    integration_verified=verified,
+                    scope_authorized=True,
+                )
+                self.assertFalse(result["allowed"])
+                self.assertEqual(result["decision"], NOT_IMPLEMENTED)
+
+    def test_acao_sensivel_exige_aprovacao_humana_explicita(self):
+        args = {
+            "integration_available": True,
+            "integration_verified": True,
+        }
+        denied = decide_action(SENSITIVE, **args)
+        self.assertFalse(denied["allowed"])
+        self.assertEqual(denied["decision"], DENIED)
+        self.assertTrue(denied["approval_required"])
+        allowed = decide_action(SENSITIVE, explicit_approval=True, **args)
+        self.assertTrue(allowed["allowed"])
+        self.assertEqual(allowed["decision"], ALLOWED)
+
+    def test_acao_desconhecida_e_bloqueada(self):
+        result = decide_action("send_anything", integration_available=True,
+                               integration_verified=True, scope_authorized=True)
+        self.assertFalse(result["allowed"])
+        self.assertEqual(result["decision"], DENIED)
+
+    def test_nao_alega_entrega_sem_acao_e_readback(self):
+        self.assertEqual(delivery_status(), NOT_IMPLEMENTED)
+        self.assertEqual(
+            delivery_status(integration_available=True, integration_verified=True),
+            NOT_SENT,
+        )
+        self.assertEqual(
+            delivery_status(integration_available=True, integration_verified=True,
+                            action_performed=True),
+            PENDING_READBACK,
+        )
+        self.assertEqual(
+            delivery_status(integration_available=True, integration_verified=True,
+                            action_performed=True, readback_confirmed=True),
+            CONFIRMED,
+        )
 
 
 if __name__ == "__main__":
