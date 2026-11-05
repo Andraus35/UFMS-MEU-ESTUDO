@@ -1,0 +1,46 @@
+name: Monitorar retificações FAPEC (sonda)
+on:
+  schedule:
+    - cron: '17 12 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ufms-fapec-readonly
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar FAPEC sem gravar no repositório
+        shell: bash
+        run: |
+          set +e
+          python scripts/monitor_fapec.py --live > "$RUNNER_TEMP/ufms-fapec-result.json"
+          result=$?
+          set -e
+          cat "$RUNNER_TEMP/ufms-fapec-result.json"
+          echo "## Sonda FAPEC — leitura única" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Resultado JSON no log da execução. Não prova ausência de retificações em outras fontes.' >> "$GITHUB_STEP_SUMMARY"
+          if [ "$result" -eq 0 ]; then
+            echo "Uma página sem mudança observável; não é homologação." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          elif [ "$result" -eq 2 ]; then
+            echo "::warning::Possível publicação FAPEC: revisão humana necessária."
+            echo "Status needs_manual_review: conferir publicação oficial e bytes." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          elif [ "$result" -eq 3 ]; then
+            echo "::warning::Consulta FAPEC inconclusiva; não presumir ausência de retificação."
+            echo "Status unverifiable: fonte não validada." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          else
+            echo "::error::Código inesperado de monitoramento: $result"
+            exit 1
+          fi
