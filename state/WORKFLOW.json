@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-04",
-    "branch": "docs/roadmap-required-bootstrap-20261104",
-    "pr_number": 9,
+    "task_id": "SIM-01",
+    "branch": "fix/sim01-privacy-integration-20261105",
+    "pr_number": 19,
     "base": "main",
-    "phase": "review"
+    "phase": "work"
   },
-  "next_task_after_merge": "SIM-01",
+  "next_task_after_merge": "SIM-02",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -84,6 +84,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "Fonte unica: quando PR #9 estiver aberto, SIM-04 e a unica frente. Quando o PR #9 constar merged em main e nao houver PR aberto, o estado efetivo e awaiting_next_task, com SIM-01 pendente; 'active' passa a representar o ciclo anterior, NAO a tarefa atual. Nunca tratar PR apenas closed como merge. ROADMAP fila; HANDOFF resumo; CURRENT somente estudos. Credenciais e dados pessoais permanecem bloqueados.",
-  "post_merge_resolution": "confirm_merged_pr_then_await_next_task"
+  "notes": "SIM-04/PR #9 mesclado em 7942771aea289afd4eab483c0a89d8144425966b e validado (238 testes). Agora unica frente ativa: SIM-01/PR #19, privacidade em repo publico e recuperacao seletiva de branches legadas. Proxima SIM-02 somente apos merge comprovado do PR #19. Historico #5/#11-#18 mantido em deferred_pull_requests; integracao apenas por diff seletivo, CI e revisao.",
+  "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
+  "last_merged": {
+    "pr_number": 9,
+    "merge_commit_sha": "7942771aea289afd4eab483c0a89d8144425966b",
+    "task_id": "SIM-04"
+  }
 }
