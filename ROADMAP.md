@@ -135,3 +135,21 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 ### Checkpoint SIM-05 — candidato de START leve (05/11/2026)
 
 A candidata do PR #9 muda a carga de sessão de dez para **quatro arquivos** (`AGENTS.md`, `ROADMAP.md`, `memory/HANDOFF.md`, `state/CURRENT.json`). O edital integral segue imutável, acessível por índice/chunks sob demanda. Os 45 KB de checkpoints antigos ficam preservados em `memory/HANDOFF_ARCHIVE_2026-11-05.md`; somente o handoff vigente é lido em todo START. Exigir CI do HEAD completo, contraprovas negativas, readback remoto e reconciliação de PRs empilhados antes de declarar SIM-05 concluído. Não declarar que a mudança já chegou à `main`.
+
+
+### Inventário de branches/PRs e regra de consolidação (05/11/2026)
+
+**Fotografia autenticada:** 22 branches; 10 PRs abertos, todos em draft; 8 PRs encerrados. Partição dos refs: 1 `main` protegida + 10 branches HEAD de PRs abertos + 5 branches de PRs já mesclados (#1, #2, #6, #7, #8) + 3 branches de PRs encerrados sem merge (#3, #4, #10) + 3 branches POC Zapia sem PR ativo. Não apagar pelo nome; confirmar HEAD, ancestralidade, dependentes e salvamento do trabalho.
+
+**Mapa das dez propostas:**
+
+| Cadeia ou frente | PRs abertos | Diretriz de consolidação sem perda |
+|---|---|---|
+| START/roadmap + saneamento documental + broker | #9 → #14 → #15; #11, #12 paralelos | Manter #9 como ponto de reforma; #14 reaplica a capacidade de #12; #15 propõe composição do broker de #11. **Os blobs dos scripts #11/#15 e #12/#14 não são idênticos**, então não fechar por suposição: comparar funcionalidade, arquivos e testes, e recongelar no novo HEAD de #9 antes de substituir os PRs isolados |
+| Segurança de escrita API | #13 → #17 → #18 | Considerar somente a cadeia com correções acumuladas; testar casos negativos reais e reconciliação do HEAD; consolidar numa proposta integrada após homologação, sem merge automático de ancestrais redundantes |
+| Motor cognitivo | #5 | Retomar quando os testes funcionais previstos estiverem implementados, sem usar documentação como prova de operação |
+| Monitor FAPEC | #16 | Frente separada de monitoramento, sem efeitos externos indevidos; auditar idempotência, fonte e permissões antes da integração |
+
+**Higiene segura:** primeiro obter CI e readback na candidata consolidada, depois comprovar com comparação de árvores/blobs e testes quais PRs podem ser fechados como substituídos; fechar PR não exclui branch, e exclusão só após comprovação de não dependência e preservação. As três POCs históricas e as branches de PRs mesclados são candidatas à limpeza posterior (SIM-09 BAIXA), não prioridade sobre privacidade e segurança de escrita. **Nenhum PR foi fechado ou branch removida por esta auditoria.**
+
+**Alerta de integração:** modificar #9 altera a base lógica de #14/#15; a CI de cada HEAD antigo não valida automaticamente a composição contra o novo HEAD. Retarget/rebase e novos testes no commit efetivo são necessários. A `main` não é alterada por este inventário.
