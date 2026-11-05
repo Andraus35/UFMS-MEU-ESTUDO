@@ -103,7 +103,9 @@ def validate_attempt_events(events, topics, allow_private=False):
     topic_ids = {row["topic_id"] for row in topics}
     seen_event_ids = set()
     recommendation_ids = set()
+    recommendation_topics = {}
     latest_by_attempt = {}
+    attempt_metadata = {}
     for event in events:
         if not isinstance(event, dict):
             raise ValueError("Evento deve ser objeto")
@@ -118,6 +120,7 @@ def validate_attempt_events(events, topics, allow_private=False):
                 if not isinstance(rec_id, str) or not rec_id.strip() or rec_id in recommendation_ids:
                     raise ValueError("recommendation_id inválido ou duplicado")
                 recommendation_ids.add(rec_id)
+                recommendation_topics[rec_id] = set(event.get("topic_ids", []))
             continue
         if kind not in ATTEMPT_TYPES:
             continue
@@ -146,6 +149,7 @@ def validate_attempt_events(events, topics, allow_private=False):
         if not isinstance(breakdown, list):
             raise ValueError("topic_results inválido")
         assigned = set()
+        summed = summed_correct = summed_errors = 0
         for item in breakdown:
             topic = item.get("topic_id") if isinstance(item, dict) else None
             if topic not in topic_ids or topic in assigned:
@@ -155,13 +159,24 @@ def validate_attempt_events(events, topics, allow_private=False):
             item_correct = _count(item.get("correct"), "correct")
             if item_correct > attempted:
                 raise ValueError("Mais acertos que tentativas")
+            summed += attempted
+            summed_correct += item_correct
+            summed_errors += attempted - item_correct
+        if summed > correct + errors or summed_correct > correct or summed_errors > errors:
+            raise ValueError("topic_results supera totais agregados")
+        authorized = recommendation_topics[rec_id]
+        if not assigned.issubset(authorized):
+            raise ValueError("Tópico fora da recomendação da tentativa")
         if kind == "attempt_recorded":
             if attempt_id in latest_by_attempt:
                 raise ValueError("attempt_id duplicado; use attempt_corrected")
         else:
             if attempt_id not in latest_by_attempt or event.get("corrects_event_id") != latest_by_attempt[attempt_id]:
                 raise ValueError("Correção sem vínculo com último evento da tentativa")
+            if attempt_metadata[attempt_id] != (rec_id, platform_id):
+                raise ValueError("Correção alterou a identidade da tentativa")
         latest_by_attempt[attempt_id] = event_id
+        attempt_metadata[attempt_id] = (rec_id, platform_id)
     return True
 
 
