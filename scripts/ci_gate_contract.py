@@ -24,7 +24,7 @@ REQUIRED_STEPS = (
     ("Testar regras de integridade", "python -m unittest discover -s tests -v"),
     ("Confirmar projeções reproduzíveis", "python scripts/rebuild.py --check"),
 )
- 
+
 REDUNDANT_STEPS = (
     ("Validar integridade do edital", "python scripts/chunk_edital.py --check"),
     ("Validar linhas do quadro de vagas", "python scripts/index_vagas.py --check"),
@@ -64,8 +64,7 @@ def verify_workflow(workflow):
         if workflow.count(pattern) != 1:
             raise ValueError("Etapa de CI obrigatória ausente/duplicada: " + name)
     for name, command in REDUNDANT_STEPS:
-        pattern = "      - name: " + name + "\n        run: " + command
-        if workflow.count(pattern):
+        if command in workflow:
             raise ValueError("Validação já executada por scripts/validate.py: " + name)
     return True
 
