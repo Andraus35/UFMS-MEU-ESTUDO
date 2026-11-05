@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-08 / PR #25 (draft).** SIM-07/PR #24 integrado à `main` em `cbca1b314b824cc9fd5bed57a637ded3455d6ff2`; CI pós-merge aprovada com 311 testes e gate `awaiting_next_task=SIM-08`. Frente única: `audit/sim08-oracle-telegram-bridge-decision-20261105`, auditoria da ponte Oracle/Telegram/Calendar #3. Decisão candidata: preservar a branch, sem importar aplicação ou credenciais, pois não há implantação nem E2E e a interface final não está confirmada. Próxima SIM-09 após merge #25.
+> **ESTADO VIGENTE — SIM-08 / PR #27 (draft).** SIM-07/PR #24 integrado à `main` em `cbca1b314b824cc9fd5bed57a637ded3455d6ff2`; CI pós-merge aprovada com 311 testes e gate `awaiting_next_task=SIM-08`. Frente única: `audit/sim08-oracle-telegram-bridge-decision-20261105`, auditoria da ponte Oracle/Telegram/Calendar #3. Decisão candidata: preservar a branch, sem importar aplicação ou credenciais, pois não há implantação nem E2E e a interface final não está confirmada. Próxima SIM-09 após merge #25.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -55,7 +55,7 @@ Recuperação estritamente documental da versão v0.3-r2 aprovada para especific
 
 A branch histórica #10 propõe GitHub App externa, host Oracle, token efêmero e chaves Ed25519/RSA. A própria ADR da proposta reconhece que check verde pode persistir por até sete dias e que a janela de 10 minutos do publisher não é lease imposta pelo GitHub; logo, não garante revogação imediata em indisponibilidade. Não há App/Oracle instalados nem E2E real. Para o harness pessoal, manter `main` protegida, CI `validate`, PR serial e revisão; não integrar runtime, workflows ou segredos sem necessidade demonstrada e prova E2E de indisponibilidade/revogação. Ver `docs/governanca/DECISAO_TRUSTED_GOVERNANCE.md`.
 
-## SIM-08 — ponte Oracle/Telegram/Calendar (PR #25)
+## SIM-08 — ponte Oracle/Telegram/Calendar (PR #27)
 
 A branch histórica #3 contém MVP Telegram+Google Calendar com SQLite, Docker, adaptador LLM opt-in e testes offline, mas não há bots provisionados, OAuth real, Oracle implantada, conexão com Tutor/Coach ou auditoria independente. RATE-01, OPS-01 e PED-01 permanecem pendentes; a própria candidata documenta limites de retenção, backup e entrega exactly-once. Como a ponte introduz serviço 24/7, credenciais e uma interface ainda não decidida, não importar o código/workflow neste ciclo. Preservar branch original e considerar retomada em gates independentes após decisão explícita de interface/necessidade. Ver `docs/governanca/DECISAO_ORACLE_TELEGRAM_CALENDAR.md`.
 
@@ -123,7 +123,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Próxima tarefa: SIM-09** — somente após merge comprovado do PR #25/SIM-08. SIM-09 será a consolidação do inventário final das branches históricas e verificação de que nenhuma branch com código exclusivo ficou sem decisão documentada.
+**Próxima tarefa: SIM-09** — somente após merge comprovado do PR #27/SIM-08. SIM-09 será a consolidação do inventário final das branches históricas e verificação de que nenhuma branch com código exclusivo ficou sem decisão documentada.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 
