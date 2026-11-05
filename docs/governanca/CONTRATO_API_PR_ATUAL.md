@@ -31,3 +31,19 @@ O PR #9 (ROADMAP), PR #11 (broker), PR #12 (saneamento) e PR #5
 (especificação) permanecem independentes e sujeitos aos seus próprios
 gates. A mudança do próprio script de segurança precisa de revisão
 humana e auditoria separada antes de integrar à main.
+
+
+## Revisão adicional: alegações locais versus evidência remota
+
+NC-13-01 (P1): check_readback aceitava SHA e estado da CI fornecidos
+pelo próprio chamador, mas devolvia ci=success, confundindo alegação
+com comprovação. O retorno agora declara claimed_ci=success_unverified,
+readback=caller_asserted_only, ci_verified=false e
+authenticated_remote_read=false. Não autoriza merge.
+
+Nova check_authenticated_commit_readback exige GitHub autenticado
+pós-commit, PR ainda draft, base/branch coerentes, HEAD efetivamente
+avançado e pai imediato igual ao SHA anteriormente conferido.
+Reprova troca de base, rebase, merge commit, PR fechado, branch
+concorrente e ausência de prova. Ela NÃO atesta CI, permissões
+administrativas, implantação de serviços ou autorização de merge.

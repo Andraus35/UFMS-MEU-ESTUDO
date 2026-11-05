@@ -7,7 +7,10 @@ from unittest.mock import patch
 from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from api_write_guard import check_proposal, check_authenticated_proposal, github_get_live
+from api_write_guard import (
+    check_proposal, check_authenticated_proposal,
+    check_authenticated_commit_readback, github_get_live,
+)
 
 REPO = "Andraus35/UFMS-MEU-ESTUDO"
 ROOT = "repos/" + REPO
@@ -145,6 +148,73 @@ class ApiRemoteTests(unittest.TestCase):
                      ".github/workflows/validate.yml"):
             with self.assertRaisesRegex(ValueError, "sensível"):
                 check_proposal(proposal(path=path))
+
+    def postcommit(self):
+        data = copy.deepcopy(self.items)
+        data[ROOT + "/pulls/12"]["body"]["head"]["sha"] = "d" * 40
+        data[ROOT + "/branches/" + BRANCH]["body"]["commit"]["sha"] = "d" * 40
+        data[ROOT + "/git/commits/" + "d" * 40] = {
+            "status": 200, "body": {"parents": [{"sha": HEAD}]}}
+        return data
+
+    def test_postcommit_live_readback_passes_without_ci_promotion(self):
+        d = self.postcommit()
+        result = check_authenticated_commit_readback(
+            self.p, "d" * 40, BASE, d.__getitem__)
+        self.assertTrue(result["authenticated_remote_read"])
+        self.assertFalse(result["ci_verified"])
+        self.assertFalse(result["merge_authorized"])
+
+    def test_postcommit_pr_retarget_fails_closed(self):
+        d = self.postcommit()
+        d[ROOT + "/pulls/12"]["body"]["base"]["ref"] = "feature"
+        with self.assertRaisesRegex(ValueError, "identity or base changed"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_rewritten_head_fails_closed(self):
+        d = self.postcommit()
+        d[ROOT + "/pulls/12"]["body"]["head"]["sha"] = "e" * 40
+        with self.assertRaisesRegex(ValueError, "identity or base changed"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_main_moved_fails_closed(self):
+        d = self.postcommit()
+        d[ROOT + "/branches/main"]["body"]["commit"]["sha"] = "e" * 40
+        with self.assertRaisesRegex(ValueError, "Main changed"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_wrong_parent_rejected(self):
+        d = self.postcommit()
+        d[ROOT + "/git/commits/" + "d" * 40]["body"]["parents"] = [
+            {"sha": "e" * 40}]
+        with self.assertRaisesRegex(ValueError, "not a direct descendant"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_merge_commit_rejected(self):
+        d = self.postcommit()
+        d[ROOT + "/git/commits/" + "d" * 40]["body"]["parents"] = [
+            {"sha": HEAD}, {"sha": BASE}]
+        with self.assertRaisesRegex(ValueError, "not a direct descendant"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_branch_changed_rejected(self):
+        d = self.postcommit()
+        d[ROOT + "/branches/" + BRANCH]["body"]["commit"]["sha"] = HEAD
+        with self.assertRaisesRegex(ValueError, "did not advance"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_git_read_unavailable_rejected(self):
+        d = self.postcommit()
+        del d[ROOT + "/git/commits/" + "d" * 40]
+        with self.assertRaisesRegex(ValueError, "Authenticated read unavailable"):
+            check_authenticated_commit_readback(
+                self.p, "d" * 40, BASE, d.__getitem__)
 
     @patch("api_write_guard.subprocess.run")
     def test_gh_reader_accepts_http_200_json(self, run):

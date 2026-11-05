@@ -101,7 +101,7 @@ def check_proposal(proposal):
 
 
 def check_readback(proposal, committed_sha, observed_head_sha, ci_sha, ci_conclusion):
-    """Verificação posterior de commit e CI, sem declarar proteção do servidor."""
+    """Consistency check of caller claims; no authenticated CI readback."""
     summary = check_proposal(proposal)
     committed = _sha(committed_sha, "committed_sha")
     observed = _sha(observed_head_sha, "observed_head_sha")
@@ -110,8 +110,11 @@ def check_readback(proposal, committed_sha, observed_head_sha, ci_sha, ci_conclu
         raise ValueError("Readback remoto divergente; HEAD não corresponde ao commit")
     if committed != validated or ci_conclusion != "success":
         raise ValueError("CI não aprovada para SHA exato do commit")
-    return {**summary, "committed_sha": committed, "ci": "success",
-            "readback": "same_commit", "merge_authorized": False}
+    return {**summary, "committed_sha": committed,
+            "claimed_ci": "success_unverified",
+            "readback": "caller_asserted_only",
+            "ci_verified": False, "authenticated_remote_read": False,
+            "merge_authorized": False}
 
 
 def github_get_live(path):
@@ -209,3 +212,55 @@ def check_authenticated_proposal(proposal, getter=github_get_live):
     return {**record, "authenticated_remote_read": True,
             "preflight": "authenticated_snapshot_only",
             "base_sha": main_sha, "merge_authorized": False}
+
+
+def check_authenticated_commit_readback(proposal, committed_sha,
+                                         expected_base_sha,
+                                         getter=github_get_live):
+    """Read GitHub post-commit; require a single direct-descendant commit.
+
+    The host supplies the authenticated getter and the pre-commit baseline.
+    This reports identity/ancestry only: CI remains UNVERIFIED and merger
+    authorization remains False.
+    """
+    original = check_proposal(proposal)
+    new_sha = _sha(committed_sha, "committed_sha")
+    main_sha = _sha(expected_base_sha, "expected_base_sha")
+    old_sha = original["expected_head_sha"]
+    if new_sha == old_sha:
+        raise ValueError("No new commit to confirm")
+    prefix = "repos/" + REPOSITORY
+    number = original["pr_number"]
+    branch = original["branch"]
+    _, pr = _read(getter, prefix + "/pulls/" + str(number))
+    if (pr.get("number") != number or pr.get("state") != "open"
+            or pr.get("draft") is not True or pr.get("merged_at") is not None
+            or pr.get("merged") is True):
+        raise ValueError("PR not open draft at post-commit readback")
+    head, base = pr.get("head"), pr.get("base")
+    if not isinstance(head, dict) or not isinstance(base, dict):
+        raise ValueError("PR refs unavailable")
+    if (head.get("sha") != new_sha or head.get("ref") != branch
+            or not isinstance(head.get("repo"), dict)
+            or head["repo"].get("full_name") != REPOSITORY
+            or base.get("ref") != "main" or base.get("sha") != main_sha
+            or not isinstance(base.get("repo"), dict)
+            or base["repo"].get("full_name") != REPOSITORY):
+        raise ValueError("PR identity or base changed after commit")
+    _, main = _read(getter, prefix + "/branches/main")
+    if main.get("commit", {}).get("sha") != main_sha:
+        raise ValueError("Main changed after preflight")
+    _, work = _read(getter, prefix + "/branches/"
+                    + quote(branch, safe="/"))
+    if work.get("commit", {}).get("sha") != new_sha:
+        raise ValueError("Branch did not advance to committed SHA")
+    _, commit = _read(getter, prefix + "/git/commits/" + new_sha)
+    parents = commit.get("parents")
+    if (not isinstance(parents, list) or len(parents) != 1
+            or not isinstance(parents[0], dict)
+            or parents[0].get("sha") != old_sha):
+        raise ValueError("New commit not a direct descendant of expected HEAD")
+    return {**original, "committed_sha": new_sha, "base_sha": main_sha,
+            "readback": "authenticated_postcommit_direct_descendant",
+            "authenticated_remote_read": True, "ci_verified": False,
+            "merge_authorized": False}

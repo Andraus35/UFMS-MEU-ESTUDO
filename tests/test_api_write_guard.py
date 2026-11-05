@@ -121,7 +121,10 @@ class ApiWriteGuardTests(unittest.TestCase):
     def test_readback_correspondente_nao_autoriza_merge(self):
         result = check_readback(proposed(), NEW, NEW, NEW, "success")
         self.assertFalse(result["merge_authorized"])
-        self.assertEqual(result["ci"], "success")
+        self.assertEqual(result["claimed_ci"], "success_unverified")
+        self.assertEqual(result["readback"], "caller_asserted_only")
+        self.assertFalse(result["ci_verified"])
+        self.assertFalse(result["authenticated_remote_read"])
 
 
 if __name__ == "__main__":
