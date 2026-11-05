@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-08 / PR #27 (draft).** SIM-07/PR #24 integrado à `main` em `cbca1b314b824cc9fd5bed57a637ded3455d6ff2`; CI pós-merge aprovada com 311 testes e gate `awaiting_next_task=SIM-08`. Frente única: `audit/sim08-oracle-telegram-bridge-decision-20261105`, auditoria da ponte Oracle/Telegram/Calendar #3. Decisão candidata: preservar a branch, sem importar aplicação ou credenciais, pois não há implantação nem E2E e a interface final não está confirmada. Próxima SIM-09 após merge #25.
+> **ESTADO VIGENTE — SIM-08 / PR #27 (draft).** SIM-07/PR #24 integrado à `main` em `cbca1b314b824cc9fd5bed57a637ded3455d6ff2`; CI pós-merge aprovada com 311 testes e gate `awaiting_next_task=SIM-08`. Frente única: `audit/sim08-oracle-telegram-bridge-decision-20261105`, auditoria da ponte Oracle/Telegram/Calendar #3. Decisão candidata: preservar a branch, sem importar aplicação ou credenciais, pois não há implantação nem E2E e a interface final não está confirmada. Próxima SIM-09 após merge #27.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
