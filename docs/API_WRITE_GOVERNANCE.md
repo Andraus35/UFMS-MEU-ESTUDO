@@ -1,5 +1,9 @@
 # P0 — Escritas por API, proteção de `main` e limites do gate
 
+<!-- governance-current:start -->
+**Situação vigente (readback autenticado):** main 676dd5d3259c66ba97c3e7e3338451cfc4e5cd68; PRs mesclados: #1, #2, #6, #7, #8; fechados sem merge: #3, #4, #10. O texto original a seguir é histórico quando mencionar PRs antigos; rever o estado atual antes de cada operação. Consultar [docs/governanca/STATUS_VIGENTE.md](governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 > **ATUALIZAÇÃO DE ESTADO — 04/11/2026 (vigente):** PR #1 foi mesclado à `main`; a descrição abaixo do PR #1 como draft é **histórica**. O PR #9 está aberto como draft, sujeito a auditoria. A API confirma `main.protected=true` e o check `validate` obrigatório. O adaptador `scripts/api_write_guard.py` continua limitado explicitamente ao **PR #1** e rejeita caminhos de governança; **não serve como autorização genérica para o PR #9**. Este último utiliza revisão humana/PR/CI e readback do HEAD, mas **não recebe atestado de preflight pelo adaptador legado**. Não alterar os bloqueios silenciosamente: uma revisão específica desse contrato deve tratar a generalização futura.
 
 

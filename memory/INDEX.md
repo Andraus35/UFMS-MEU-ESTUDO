@@ -1,5 +1,9 @@
 # Índice de memória — carregamento seletivo
 
+<!-- governance-current:start -->
+**Estado corrente recomendado para leitura seletiva:** [docs/governanca/STATUS_VIGENTE.md](../docs/governanca/STATUS_VIGENTE.md). Não substituir o bootstrap obrigatório nem o readback remoto.
+<!-- governance-current:end -->
+
 - `ROADMAP.md` (na raiz): **ler sempre depois de AGENTS.md, antes de qualquer atividade operacional**, conferindo prioridades RM e bloqueadores.
 
 - `memory/HANDOFF.md`: último checkpoint, pendências e próxima ação; **ler sempre**.

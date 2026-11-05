@@ -1,5 +1,9 @@
 # Handoff pedagógico — ciclo 8
 
+<!-- governance-current:start -->
+**Situação vigente (readback autenticado):** main 676dd5d3259c66ba97c3e7e3338451cfc4e5cd68; PRs mesclados: #1, #2, #6, #7, #8; fechados sem merge: #3, #4, #10. O texto original a seguir é histórico quando mencionar PRs antigos; rever o estado atual antes de cada operação. PRs #1/#2 foram mesclados; nenhum motor Tutor/Coach é homologado por essa mudança documental. Consultar [docs/governanca/STATUS_VIGENTE.md](../governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 **Checkpoint:** 04/11/2026, America/Campo_Grande.  
 **Natureza:** prova local de referência isolada, não integração com harness nem homologação de GP-1.
 

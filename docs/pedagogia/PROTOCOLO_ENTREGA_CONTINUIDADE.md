@@ -1,5 +1,9 @@
 # Protocolo START/DELIVERY e continuidade pedagógica
 
+<!-- governance-current:start -->
+**Situação vigente (readback autenticado):** main 676dd5d3259c66ba97c3e7e3338451cfc4e5cd68; PRs mesclados: #1, #2, #6, #7, #8; fechados sem merge: #3, #4, #10. O texto original a seguir é histórico quando mencionar PRs antigos; rever o estado atual antes de cada operação. PRs #1/#2 foram mesclados; nenhum motor Tutor/Coach é homologado por essa mudança documental. Consultar [docs/governanca/STATUS_VIGENTE.md](../governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 **Status:** regra operacional de trabalho solicitada pelo estudante em 04/11/2026. **Aplicação:** entregas substantivas desta sessão sobre estratégia de estudos, registradas no PR pedagógico #2. Não é um hook automático executado pelo ChatGPT, e não substitui instruções de maior prioridade.
 
 ## Objetivo
