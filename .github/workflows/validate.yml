@@ -4,6 +4,7 @@ on:
   pull_request:
 permissions:
   contents: read
+  pull-requests: read
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -18,6 +19,10 @@ jobs:
         run: python scripts/write_policy.py --check
       - name: Validar roadmap e bootstrap
         run: python scripts/roadmap_gate.py --check
+      - name: Garantir trabalho serial e PR unico
+        run: python scripts/single_flow_gate.py --remote
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Validar estrutura e dados
         run: python scripts/validate.py
       - name: Validar integridade do edital
