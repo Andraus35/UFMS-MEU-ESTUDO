@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-03",
-    "branch": "fix/sim03-fapec-cli-e2e-20261105",
-    "pr_number": 29,
+    "task_id": "SIM-06",
+    "branch": "fix/sim06-handoff-reconciliation-20261105",
+    "pr_number": 30,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-06",
+  "next_task_after_merge": "SIM-07",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM-09/PR28 merged em c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb com CI 317/317. SIM-03 retoma a pendencia ALTA: prova CLI offline dos estados FAPEC 0/2/3; cron real segue NOT_VERIFIED ate run com event=schedule. Proxima tarefa apos merge: SIM-06. CURRENT e dados pessoais permanecem intocados.",
+  "notes": "PR #29 / SIM-03 merged em 7ad47beb76adae46a6abf44c7b14bcb5b04fd301; CI pós-merge 42069852620: validate success, 320 testes. SIM-06 reconcilia HANDOFF e ROADMAP; próxima tarefa após merge: SIM-07. CURRENT, eventos, resultados pessoais e PDF canônico permanecem intocados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-09",
-    "pr_number": 28,
-    "merge_commit_sha": "c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb"
+    "task_id": "SIM-03",
+    "pr_number": 29,
+    "merge_commit_sha": "7ad47beb76adae46a6abf44c7b14bcb5b04fd301"
   }
 }
