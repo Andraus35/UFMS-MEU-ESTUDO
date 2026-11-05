@@ -2,7 +2,7 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-07-CLOSEOUT",
+    "task_id": "RM-07",
     "branch": "docs/rm07-closeout-rm08-readiness-20261105",
     "pr_number": 48,
     "base": "main",
