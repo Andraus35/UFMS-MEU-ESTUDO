@@ -56,6 +56,11 @@ class NotebookPrescriberTests(unittest.TestCase):
         self.assertEqual(result["availability_status"], "confirmed")
         self.assertEqual(result["questions_suggested"], 7)
 
+    def test_objeto_de_disponibilidade_vazio_permanece_desconhecido(self):
+        result = prescribe(availability={})
+        self.assertEqual(result["availability_status"], "unavailable_or_unverified")
+        self.assertIsNone(result["questions_suggested"])
+
     def test_confirmacao_sem_evidencia_rejeitada(self):
         with self.assertRaisesRegex(ValueError, "sem evidence_ref"):
             prescribe(availability={"status": "confirmed", "available_count": 10})
