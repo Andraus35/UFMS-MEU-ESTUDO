@@ -6,7 +6,7 @@
     "branch": "audit/sim07-trusted-governance-decision-20261105",
     "pr_number": 24,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "SIM-08",
   "rules": {
@@ -84,7 +84,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM06 PR23 mesclado; CI posmerge 308 testes e awaiting_next_task SIM07. SIM07 audita branch #10 trusted-governance: proposta de GitHub App/Ed25519/Oracle nao instalada, aumenta complexidade e tem limitacao conhecida de check verde obsoleto/sem revogacao imediata. Decisao esperada: nao importar runtime, preservar branch e registrar riscos/criterio. Proxima SIM08 audita bridge Oracle/Telegram/Calendar #3.",
+  "notes": "SIM07 audita branch #10: App/Oracle/Ed25519 nao instalados; check verde pode permanecer ate sete dias, publisher 10 min nao e lease GitHub; outage nao revoga imediatamente. Para uso pessoal, nao importar scripts/workflows/segredos. Nota ADR-011 e testes negativos. Proxima SIM08 audita bridge Oracle/Telegram/Calendar #3 apos merge PR24.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-06",
