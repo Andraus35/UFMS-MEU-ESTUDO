@@ -42,7 +42,7 @@ def report():
     return {
         "event_id": "attempt-normalized-1", "attempt_id": "TRY-FICT-1",
         "recommendation_id": "REC-FICT-1", "platform_notebook_id": "EXT-FICT-44",
-        "recorded_at": RECORDED, "attempt_at": None,
+        "recorded_at": RECORDED, "attempt_at": None, "source_ref": "synthetic-fixture://IGP-12",
         "reported_answered": 12, "reported_unanswered": 3,
         "correct": 8, "incorrect": 4, "topic_results": [],
     }
@@ -58,6 +58,8 @@ class GP1IngestionTests(unittest.TestCase):
     def test_igp12_explicit_excludes_convention_derives_total_15(self):
         result = normalize_external_report(report(), "answered_excludes_unanswered")
         self.assertEqual(result["decision"], "normalized")
+        self.assertIs(result["canonical_event_ready"], True)
+        self.assertIs(result["canonical_event_created"], False)
         self.assertEqual(result["event"]["total"], 15)
         self.assertEqual(result["event"]["acertos"], 8)
         self.assertEqual(result["event"]["erros"], 4)
