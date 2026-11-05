@@ -15,6 +15,8 @@ HEAD = "e" * 40
 
 def fake_roadmap():
     lines = ["# ROADMAP — UFMS MEU ESTUDO", "## Governança e leitura obrigatória",
+             "## Autonomia cognitiva e gates proporcionais",
+             "ORIENTACAO ROTINA_AUTORIZADA SENSIVEL: sem aprovação humana por mensagem.",
              "## Fila de execução", "| ID | P | Frente | Estado | Definition of Done |",
              "| --- | --- | --- | --- | --- |"]
     for i in range(11):
@@ -34,7 +36,10 @@ class EntryGateTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("Documento válido de teste.", encoding="utf-8")
         (self.root / "AGENTS.md").write_text(
-            "# Contrato\n1. `AGENTS.md`\n2. `ROADMAP.md`\n", encoding="utf-8"
+            "# Contrato\n1. `AGENTS.md`\n2. `ROADMAP.md`\n"
+            "## Autonomia cognitiva e gates proporcionais\n"
+            "ORIENTACAO ROTINA_AUTORIZADA SENSIVEL: sem aprovação humana por mensagem.\n",
+            encoding="utf-8"
         )
         (self.root / "ROADMAP.md").write_text(fake_roadmap(), encoding="utf-8")
         (self.root / "settings.json").write_text(
@@ -72,6 +77,21 @@ class EntryGateTests(unittest.TestCase):
                 path.write_text(text, encoding="utf-8")
                 with self.assertRaises(GateClosed):
                     self.verify()
+
+    def test_start_fornece_contrato_de_autonomia_ao_modelo(self):
+        agents, roadmap = self.broker().prompt_context()
+        for document in (agents, roadmap):
+            self.assertIn("## Autonomia cognitiva e gates proporcionais", document)
+            self.assertIn("sem aprovação humana por mensagem", document)
+            self.assertIn("ROTINA_AUTORIZADA", document)
+
+    def test_contrato_autonomia_ausente_bloqueia_start(self):
+        document = self.root / "AGENTS.md"
+        document.write_text(document.read_text(encoding="utf-8").replace(
+            "## Autonomia cognitiva e gates proporcionais", "## Removido"),
+            encoding="utf-8")
+        with self.assertRaisesRegex(GateClosed, "cognitive autonomy contract"):
+            self.verify()
 
     def test_fail_wrong_order(self):
         config = self.root / "settings.json"

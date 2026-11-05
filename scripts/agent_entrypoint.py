@@ -112,6 +112,16 @@ def verify_start(root, trusted_head):
         raise GateClosed("Mandatory file list/order mismatch")
     if "2. `ROADMAP.md`" not in texts["AGENTS.md"]:
         raise GateClosed("AGENTS missing ordered roadmap contract")
+    # START must supply the owner's risk-proportional autonomy contract,
+    # not turn normal tutoring output into a per-message human approval gate.
+    required = (
+        "## Autonomia cognitiva e gates proporcionais",
+        "ORIENTACAO", "ROTINA_AUTORIZADA", "SENSIVEL",
+        "sem aprovação humana por mensagem",
+    )
+    for doc in ("AGENTS.md", "ROADMAP.md"):
+        if any(marker not in texts[doc] for marker in required):
+            raise GateClosed("Missing cognitive autonomy contract: " + doc)
     _roadmap(texts["ROADMAP.md"])
     return {
         "head": trusted_head,

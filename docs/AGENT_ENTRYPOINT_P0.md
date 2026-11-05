@@ -23,6 +23,14 @@
 - O serviço/handler deve registrar em log mínimo HEAD, role, ação, digest e resultado de bloqueio (sem dados pessoais), recusando tentativas de acesso por caminho alternativo.
 - Um teste de ponta a ponta deve provar que chamar Telegram, Calendar ou GitHub diretamente **não é possível** usando credenciais dos agentes; sem esse teste a NC-PR9-02 segue aberta.
 
+## Autonomia cognitiva não é autorização de ferramenta
+
+O `START` agora também verifica que AGENTS e ROADMAP fornecem ao modelo o contrato **ORIENTACAO / ROTINA_AUTORIZADA / SENSIVEL**, contendo a regra **sem aprovação humana por mensagem** para orientação pedagógica comum. Os textos são enviados ao modelo por `prompt_context()` depois da conferência dos bytes e do HEAD; remover o contrato bloqueia o START, mas sua presença não prova qualidade semântica.
+
+Esse gate **não** exige autorização humana para cada ideia, explicação ou mensagem do Tutor/Coach. Ele também **não** implementa publicação: o broker permanece `start/inspect`, com todas as chamadas externas negadas. O futuro renderer poderá entregar `ORIENTACAO` automaticamente após validação cognitiva; o gateway isolado poderá efetuar `ROTINA_AUTORIZADA` dentro de consentimento prévio e limites. Ações `SENSIVEL` têm controle próprio.
+
+A Zapia é a interface de comunicação pretendida, **não integrada neste PR**. Não inventar API ou sucesso de entrega. O repositório segue público, sem habilitar dados pessoais. Não declarar GP/GQ-O homologados por esses testes.
+
 ## Dependência
 
 Este PR é baseado na main atual, que ainda não contém `ROADMAP.md`. Isso é intencional: **um START real nesta base deve falhar**. A execução operacional somente poderá ser experimentada quando o roadmap for integrado após reauditoria G0/GQ-H e autorização explícita. A CI usa fixtures sintéticas isoladas para validar casos positivos e negativos sem executar o tutor real.
