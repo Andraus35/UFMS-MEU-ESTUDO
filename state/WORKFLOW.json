@@ -2,9 +2,9 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-10",
-    "branch": "docs/sim10-pedagogia-archive-and-queue-close-20261105",
-    "pr_number": 34,
+    "task_id": "SIM-11",
+    "branch": "audit/sim11-post-merge-state-reconciliation-20261105",
+    "pr_number": 35,
     "base": "main",
     "phase": "review"
   },
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #33 / SIM-09 merged em be65fe3e1d815be900965eb6adc8e3871f0a66ef; CI pós-merge 42072597026: validate success, 329 testes. SIM-10 organiza o índice pedagógico, rotula handoff/prompt históricos, atualiza inventário pós-#33 e fecha a fila. DONE só é aceito quando todos os dez itens SIM estão concluido/documentado e o ROADMAP contém o marcador terminal. Nenhuma branch apagada.",
+  "notes": "PR #34 / SIM-10 merged em 8bd0fd3fe51ac2ea371f466f55b6edb883e4d589; CI pós-merge 42074582850: validate success. SIM-11 reconcilia inventário autenticado, estado pós-merge e documentos operacionais; inventário-base pós-#34: 28 refs, 15 HEADs contidos, 12 históricas divergentes; 34 PRs anteriores (20 merged, 14 closed without merge). DONE permanece condicionado aos onze itens SIM concluídos e ao marcador terminal no ROADMAP.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-09",
-    "pr_number": 33,
-    "merge_commit_sha": "be65fe3e1d815be900965eb6adc8e3871f0a66ef"
+    "task_id": "SIM-10",
+    "pr_number": 34,
+    "merge_commit_sha": "8bd0fd3fe51ac2ea371f466f55b6edb883e4d589"
   }
 }
