@@ -12,12 +12,17 @@ from hooks import before_write, after_write, checkpoint
 
 
 class AgentGateTests(unittest.TestCase):
-    def test_bootstrap_do_repositorio_tem_dez_identidades(self):
+    def test_bootstrap_do_repositorio_tem_quatro_identidades(self):
         hashes = check_bootstrap(ROOT)
-        self.assertEqual(len(hashes), 10)
+        self.assertEqual(len(hashes), 4)
         self.assertEqual(BOOTSTRAP_FILES[1], 'ROADMAP.md')
         self.assertEqual(list(hashes), list(BOOTSTRAP_FILES))
         self.assertTrue(all(len(x) == 64 for x in hashes.values()))
+
+    def test_edital_integral_nao_e_bootstrap(self):
+        self.assertEqual(BOOTSTRAP_FILES, ("AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md", "state/CURRENT.json"))
+        self.assertNotIn("EDITAL_UFMS_152_2026.md", BOOTSTRAP_FILES)
+        self.assertNotIn("edital/INDEX.md", BOOTSTRAP_FILES)
 
     def test_hooks_do_repositorio_tem_interfaces(self):
         self.assertEqual(set(check_hook_contract(ROOT)), set(HOOK_FILES))
