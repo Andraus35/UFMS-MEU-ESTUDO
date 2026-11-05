@@ -2,28 +2,20 @@
 
 Papel: **tutor-orquestrador de estudos por questões**, adaptativo, rastreável e honesto sobre limites de dados. O agente aconselha; o estudante resolve cadernos no TEC ou Qconcursos e envia resultados.
 
-## Bootstrap obrigatório por chamada operacional
+## Bootstrap obrigatório — 4 arquivos por sessão
 
-Leia nesta ordem, usando a versão do branch/commit atual:
+Conferir a **mesma revisão Git**, nesta ordem:
 
-1. `AGENTS.md`
-2. `ROADMAP.md` — leitura integral **antes de qualquer trabalho operacional**; identificar prioridade, item RM, dependências e bloqueadores
-3. `settings.json`
-4. `rules/CORE.md`
-5. `guardrails/CORE.md`
-6. `memory/INDEX.md`
-7. `memory/HANDOFF.md`
-8. `state/CURRENT.json`
-9. `EDITAL_UFMS_152_2026.md` — conferir a fonte integral, recuperando trechos pertinentes
-10. `edital/INDEX.md` — leitura obrigatória para localizar páginas e chunks
+1. `AGENTS.md` — contrato do agente e segurança.
+2. `ROADMAP.md` — **fila SIM**, próxima tarefa, riscos, dependências e testes.
+3. `memory/HANDOFF.md` — checkpoint vigente e ponto de retomada.
+4. `state/CURRENT.json` — projeção atual dos eventos.
 
-**Gate START:** com checkout, executar `python scripts/bootstrap.py` e `python scripts/roadmap_gate.py --check` antes de agir. Sem checkout, recuperar o conteúdo do roadmap e dos demais obrigatórios no mesmo HEAD via GitHub autenticado. Informar item RM e versão consultados; se a leitura falhar, não prosseguir. Scripts comprovam leitura local dos bytes, não interpretação semântica por LLM.
-
-Se os arquivos já estiverem carregados no mesmo contexto, confirme seu SHA ou versionamento antes de reutilizá-los. **Não afirme ter lido/validado arquivos sem acesso real.** O script `scripts/bootstrap.py` facilita o carregamento, mas não substitui a observação dessas instruções por um agente.
+`settings.json`, `rules/`, `guardrails/`, `memory/DECISIONS.md`, edital, índices, chunks, histórico e contratos de APIs são recuperados **sob demanda**. Para perguntas sobre edital, consultar `edital/INDEX.md` e trechos necessários; **não carregar automaticamente a transcrição integral**. Para qualquer escrita, conferir as regras aplicáveis, o HEAD remoto e os controles de privacidade. `python scripts/bootstrap.py` confere bytes/hash, não compreensão semântica do LLM.
 
 ## Fila de saneamento proporcional (uso pessoal)
 
-Se a tarefa for engenharia, auditoria ou saneamento, consultar **a seção `Fila de simplificação pessoal` de `ROADMAP.md`** e atuar no próximo item SIM de maior criticidade. O teste de contrato deve rejeitar perda da fila, rebaixamento injustificado, ausência de contraprovas em ALTA/MEDIA e omissão de BAIXA. Registrar a próxima ação em toda entrega; não abrir novo PR quando uma frente ativa compatível puder ser atualizada. A migração para START de quatro arquivos pertence ao item SIM-05: até ser implementada, as dez leituras do contrato técnico permanecem exigidas.
+Se a tarefa for engenharia, auditoria ou saneamento, consultar **a seção `Fila de simplificação pessoal` de `ROADMAP.md`** e atuar no próximo item SIM de maior criticidade. O teste de contrato deve rejeitar perda da fila, rebaixamento injustificado, ausência de contraprovas em ALTA/MEDIA e omissão de BAIXA. Registrar a próxima ação em toda entrega; não abrir novo PR quando uma frente ativa compatível puder ser atualizada. A candidata SIM-05 reduz o START aos quatro arquivos acima; exigir CI e readback antes de considerá-la integrada.
 
 ## Ordem operacional
 
