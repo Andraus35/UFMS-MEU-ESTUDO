@@ -52,9 +52,10 @@ class RM07AuditTests(unittest.TestCase):
     def test_gateway_followup_e_separado_do_snapshot_da_reeauditoria(self):
         self.assertEqual(MATRIX["current_main_sha"], "8fda9754846b4fba65cd88244260653cbb606720")
         self.assertTrue((ROOT / "scripts/tool_gateway.py").exists())
-        self.assertFalse((ROOT / "scripts/safe_renderer.py").exists())
+        self.assertTrue((ROOT / "scripts/safe_renderer.py").exists())
+        self.assertTrue((ROOT / "scripts/source_gate.py").exists())
+        self.assertTrue((ROOT / "scripts/fact_gate.py").exists())
         self.assertFalse((ROOT / "tools/verify_spec.py").exists())
-        self.assertFalse((ROOT / ".specs/features/ufms-cognitive-gates/revisions/v0.3/functional-tests").exists())
         self.assertTrue((ROOT / ".specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/verify_approval_snapshot.py").exists())
 
 

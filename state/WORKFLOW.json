@@ -3,8 +3,8 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-07",
-    "branch": "feat/rm07-trusted-tool-gateway-20261105",
-    "pr_number": 45,
+    "branch": "feat/rm07-source-renderer-gates-20261105",
+    "pr_number": 46,
     "base": "main",
     "phase": "review"
   },
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #44 / RM-07 reauditoria documental integrada em c0683804038b197333bcf91af13bada40cf80464; CI pós-merge 42087122993 validate=success; zero PRs abertos. RM-07 continua não homologado. PR #45 implementa gateway confiável em protótipo offline: tokens vinculados, allowlist, nonce/replay, rate limit atômico, stale-state, input-size, receipts e zero efeitos em negações; não habilita publicação real nem credenciais.",
+  "notes": "PR #45 / RM-07 gateway offline integrado em d559f5a7789bf7a85d577bf606cc38baa48049f8; CI pós-merge 42088288929 validate=success; zero PRs abertos. Protótipo adiciona HMAC binding, nonce/rate/idempotência e zero-effect denials, mas não prova isolamento de processo/chaves. PR #46 integra source/fact gates e renderer local com estados/receipts, sem publicação externa.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",

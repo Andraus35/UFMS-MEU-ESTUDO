@@ -11,7 +11,7 @@
 - PR #39 / RM-02 mesclado em `4052a06d530b269410f0300a8ae503e822672caa`; CI pós-merge run `42082155852`, `validate=success`.
 - PR #38 / RM-01 mesclado em `725858292ecc1e3e0ad7a85a0ae9a91966d112ee`; CI pós-merge run `42080519973`, `validate=success`.
 - PR #37 / RM-00 mesclado em `1ab0c25a8b0084034fb1987097bfcb6b38ccea44`; CI pós-merge run `42079838224`, `validate=success`.
-- Única frente ativa: RM-07 / PR draft #45, `feat/rm07-trusted-tool-gateway-20261105`. Escopo: implementar gateway fail-closed de autorização/execução em protótipo offline; nenhum efeito externo.
+- Única frente ativa: RM-07 / PR draft #46, `feat/rm07-source-renderer-gates-20261105`. Escopo: integrar source/fact gates e renderer local com estados/receipts; nenhum efeito externo.
 - Proteção administrativa confirmada pelo proprietário via Termux: required check `validate`; `strict=true`; `reviews=0`; `enforce_admins=true`.
 - RM-01 permanece `implementado_nao_homologado`: nenhum run `event=schedule`, hashes remotos ausentes e `ALERTA-DOC-01` aberto.
 - RM-02 permanece `implementado_nao_homologado`: IGP-12/13/14 implementados por schema aditivo; integração real TEC/Qconcursos não testada.
@@ -31,7 +31,7 @@
 - CI pós-merge #43: run `42085633053`, `validate=success`.
 
 ## Retomada
-1. Continuar somente RM-07 / PR #45 na branch declarada em `state/WORKFLOW.json`.
+1. Continuar somente RM-07 / PR #46 na branch declarada em `state/WORKFLOW.json`.
 2. Validar matriz das 9 NCs e 27 checks; não tratar aprovação documental r2 como GQ-D ou aprovação de BUILD.
 3. Não mesclar PR5 em bloco; qualquer extração deve ser por arquivo/contrato e testada no HEAD atual.
 4. Após merge do relatório, manter GP-3 bloqueado e seguir somente para a próxima frente permitida pelo ROADMAP.

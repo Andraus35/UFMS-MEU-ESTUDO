@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 / PR #45 (draft).** PR #44 / RM-07 reauditoria integrado à `main` em `c0683804038b197333bcf91af13bada40cf80464`; CI pós-merge `42087122993` (`validate=success`). Frente única: `feat/rm07-trusted-tool-gateway-20261105`. Continuação técnica: gateway de autorização/execução fail-closed, sem efeitos externos habilitados.
+> **ESTADO VIGENTE — RM-07 / PR #46 (draft).** PR #45 / RM-07 gateway offline integrado à `main` em `d559f5a7789bf7a85d577bf606cc38baa48049f8`; CI pós-merge `42088288929` (`validate=success`). Frente única: `feat/rm07-source-renderer-gates-20261105`. Continuação técnica: source/fact gates e renderer local com estados explícitos, sem publicação externa.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -78,7 +78,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
-| RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs reaudited: 3 OPEN, 5 PARTIAL candidate, 1 PARTIAL in main; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
+| RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |

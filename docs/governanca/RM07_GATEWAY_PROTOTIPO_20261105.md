@@ -34,3 +34,32 @@
 ## Decisão
 
 Aprovar somente como incremento técnico offline se CI completa e readback passarem. Não promover status para homologado nem habilitar ferramentas externas, escrita pessoal, publicação ou credenciais.
+
+## Follow-up PR #46 — source/fact gates e renderer local
+
+A PR #46 integra, seletivamente, os módulos `source_gate.py`, `fact_gate.py` e `safe_renderer.py` da PR5 à main atual, com testes adaptados em `tests/`.
+
+- C2/C3: fonte original pinada por Git blob, manifesto, 47 páginas, 81 chunks e intervalo literal por página. Referência válida ainda retorna `semantic_support=NOT_CHECKED`.
+- C25: três fatos normativos curados e preservação do conflito ALERTA-DOC-01. Claims fora do catálogo permanecem NEEDS_EVIDENCE; não é interpretador semântico geral.
+- C26: emissão somente em `local_preview`, papéis Tutor/Coach, token vinculado ao contexto, nonce/release atômicos e sem canal externo.
+- Limites: renderer não ligado ao gateway como processo isolado; emissor/supervisor ainda são fronteiras simuladas; sem adapters Zapia/Telegram/Agenda, publicação ou persistência pessoal.
+
+### Estado atualizado das 9 NCs após PR #45/#46
+
+| NC | Estado | Limite remanescente |
+|---|---|---|
+| GQD-01 | PARTIAL_IN_MAIN | Gateway protótipo; caller/issuer sem isolamento OS/secret comprovado |
+| GQD-02 | OPEN | Quatro mutantes semânticos e oráculos humanos independentes ausentes |
+| GQD-03 | PARTIAL_CANDIDATE_NOT_MAIN | Manifesto/CI composição apenas na branch PR5 obsoleta |
+| GQD-04 | PARTIAL_IN_MAIN | Source/fact gates curados; não cobre claims arbitrárias |
+| GQD-05 | PARTIAL_IN_MAIN | Rate limit atômico local; sem store durável nem chamadas externas reais |
+| GQD-06 | PARTIAL_IN_MAIN | Renderer local; runner completo de cinco estados/four exits ainda não integrado |
+| GQD-07 | PARTIAL_IN_MAIN | Recibo r2 documental; não é GQ-D nem autorização de BUILD |
+| GQD-08 | PARTIAL_IN_MAIN | Context binding apenas em prévia local, sem rota externa |
+| GQD-09 | PARTIAL_CANDIDATE_NOT_MAIN | Validadores oficiais executados na branch PR5, ainda não integrados ao pipeline main |
+
+**Contagem:** 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL_CANDIDATE_NOT_MAIN, 0 CLOSED.
+
+**27 checks funcionais:** continuam 0/27 PASS end-to-end. Testes unitários isolados de source_gate, fact_gate, safe_renderer e tool_gateway não equivalem ao fluxo Tutor/Coach/Zapia. GQ-D continua pendente de reauditoria independente; GQ-C NOT_RUN; GQ-O BLOCKED.
+
+Nenhum efeito externo foi executado. Não foram usados dados pessoais.
