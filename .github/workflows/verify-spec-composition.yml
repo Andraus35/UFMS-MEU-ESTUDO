@@ -34,6 +34,12 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/composition-tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/tests.log"
+      - name: Provar C2 e C3 com bytes oficiais do edital, sem LLM ou publicacao
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/functional-tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/c2-c3-tests.log"
+          echo 'C2_C3_SOURCE_RESOLUTION_ISOLATED_ONLY_NO_SEMANTIC_OR_PUBLICATION_APPROVAL'
       - name: Validar harness no commit sintetico
         shell: bash
         run: |
