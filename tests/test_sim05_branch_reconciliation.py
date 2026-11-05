@@ -40,7 +40,7 @@ class Sim05ReconciliationTests(unittest.TestCase):
     def test_handoff_and_adr_record_non_reintegration_decision(self):
         handoff = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8")
         decisions = (ROOT / "memory/DECISIONS.md").read_text(encoding="utf-8")
-        self.assertIn("branches #11/#12/#14/#15", handoff)
+        self.assertIn("Audita branches históricas #11/#12/#14/#15", handoff)
         self.assertIn("ADR-010", decisions)
         self.assertIn("não reintegrar", decisions.lower())
 
