@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-11 / PR #35 (draft).** PR #34 / SIM-10 integrado à `main` em `8bd0fd3fe51ac2ea371f466f55b6edb883e4d589`; CI pós-merge `42074582850` (`validate=success`). Frente única: `audit/sim11-post-merge-state-reconciliation-20261105`, para reconciliar inventário autenticado, WORKFLOW, ROADMAP, HANDOFF e instruções operacionais. Inventário-base pós-#34: 28 refs (27 branches de trabalho + main), 15 HEADs contidos e 12 históricos divergentes; 34 PRs anteriores (20 merged, 14 closed without merge). Nenhuma branch será apagada nem histórico divergente mesclado em lote.
+> **ESTADO VIGENTE — RM-00 / PR #36 (draft).** PR #35 / SIM-11 integrado à `main` em `d6390de09419dbf642e8487aeae167a607840f47`; CI pós-merge `42076658860` (`validate=success`). Frente única: `fix/rm00-delivery-gates-20261105`, para comprovar os gates de entrega e a proteção administrativa da `main`. Inventário-base pós-#35: 29 refs (28 branches de trabalho + main), 16 HEADs contidos e 12 históricos divergentes; 35 PRs anteriores (21 merged, 14 closed without merge). `main.protected=true`; a leitura detalhada da proteção retornou 403 à integração. Nenhuma branch será apagada nem histórico divergente mesclado em lote.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia atualizada em 05/11/2026: `main` = `8bd0fd3fe51ac2ea371f466f55b6edb883e4d589`; CI pós-merge do PR #34, run `42074582850`, `validate=success`. A CI confirma o gate técnico deste commit; não homologa o motor pedagógico nem substitui auditoria funcional.
+Fotografia atualizada em 05/11/2026: `main` = `d6390de09419dbf642e8487aeae167a607840f47`; CI pós-merge do PR #35, run `42076658860`, `validate=success`. API da branch confirma `protected=true`; endpoint detalhado de proteção retorna 403, então required checks não foram independentemente lidos. A CI não homologa o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
@@ -64,6 +64,8 @@ A branch histórica #3 contém MVP Telegram+Google Calendar com SQLite, Docker, 
 O inventário autenticado lista 20 branches de trabalho além da `main`: oito refs de PRs integrados e 12 refs históricos fechados sem merge. As 12 refs têm decisão e SHA registrados em `state/WORKFLOW.json` e `docs/governanca/STATUS_BRANCHES_20261105.md`. Funcionalidades das cadeias API e FAPEC foram recuperadas seletivamente; branches antigas permanecem preservadas. Não apagar branches nesta etapa; qualquer limpeza exige inventário atualizado, backup e pedido separado.
 
 ## Fila de execução
+
+**Próxima tarefa: RM-01** após merge de RM-00.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -127,7 +129,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Tarefa ativa: SIM-11 / PR #35 — reconciliação pós-merge do estado operacional.** Confirmar PR #34 e CI; sincronizar inventário de branches/PRs, `state/WORKFLOW.json`, este ROADMAP, `memory/HANDOFF.md` e instruções em `AGENTS.md`; preservar as 12 branches divergentes e as 15 refs contidas, sem exclusões. Atualizar contraprovas de contagem e coerência. Após merge, não há próxima tarefa SIM: `next_task_after_merge=DONE`. **Fila de simplificação concluída** após SIM-11.
+**Fila SIM concluída:** SIM-11 / PR #35 foi integrado em `d6390de09419dbf642e8487aeae167a607840f47`; inventário e documentos operacionais foram reconciliados. **Fila de simplificação concluída**. O fluxo serial agora avança para a fila funcional RM, começando por RM-00.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 
