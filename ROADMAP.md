@@ -71,7 +71,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 | ID | P | Frente / gate | Estado de partida | Definition of Done |
 |---|---|---|---|---|
-| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Gates automáticos de entrega: proteção main confirmada; gate serial agora vincula PR à base main e ao SHA exato do evento; falta CI verde no HEAD final e auditoria/readback pós-merge |
+| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | gates automáticos de entrega: proteção main confirmada; gate serial agora vincula PR à base main e ao SHA exato do evento; falta CI verde no HEAD final e auditoria/readback pós-merge |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
