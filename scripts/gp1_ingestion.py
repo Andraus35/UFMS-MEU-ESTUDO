@@ -4,6 +4,8 @@ This module does not persist events, authenticate platforms or authorize persona
 """
 from datetime import datetime
 
+from evidence_projection import INDEPENDENCE, FAMILIARITY, DIVERSITY, CONFIDENCE, SOURCE_KIND
+
 ATTEMPT_SCHEMA_VERSION = "1.0"
 ATTEMPT_TYPES = {"attempt_recorded", "attempt_corrected"}
 ANSWERED_CONVENTIONS = {
@@ -81,6 +83,12 @@ def normalize_external_report(report, answered_convention=None):
         "source_ref": report["source_ref"],
         "recorded_at": report["recorded_at"],
         "attempt_at": attempt_at,
+        "independence": report.get("independence", "unknown"),
+        "familiarity": report.get("familiarity", "unknown"),
+        "diversity": report.get("diversity", "unknown"),
+        "confidence": report.get("confidence", "unknown"),
+        "source_kind": report.get("source_kind", "unknown"),
+        "item_set_id": report.get("item_set_id"),
         "total": total,
         "acertos": correct,
         "erros": incorrect,
@@ -144,6 +152,16 @@ def validate_attempt_events(events, topics, allow_private=False):
         source_ref = event.get("source_ref")
         if not isinstance(source_ref, str) or not source_ref.strip():
             raise ValueError("source_ref ausente")
+        for field, allowed in (
+            ("independence", INDEPENDENCE), ("familiarity", FAMILIARITY),
+            ("diversity", DIVERSITY), ("confidence", CONFIDENCE),
+            ("source_kind", SOURCE_KIND),
+        ):
+            if event.get(field, "unknown") not in allowed:
+                raise ValueError("Dimensão de evidência inválida: " + field)
+        item_set_id = event.get("item_set_id")
+        if item_set_id is not None and (not isinstance(item_set_id, str) or not item_set_id.strip()):
+            raise ValueError("item_set_id deve ser string não vazia ou null")
         recorded = _date(event.get("recorded_at"), "recorded_at")
         attempt_at = event.get("attempt_at")
         if attempt_at is not None and _date(attempt_at, "attempt_at") > recorded:
