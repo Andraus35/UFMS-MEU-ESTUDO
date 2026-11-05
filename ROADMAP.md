@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-03 / PR #21 (draft).** SIM-02/PR #20 mesclado na `main` em `05c1900a09b4199d828fa20fbb73a17bec278119`; CI pós-merge passou com 294 testes e gate `awaiting_next_task=SIM-03`. Frente única atual: `automation/sim03-fapec-readonly-20261105`, monitor público de retificações FAPEC apenas leitura. Próximo SIM-05 após merge comprovado do PR #21. Consultar `state/WORKFLOW.json` e GitHub para identidade; inventários antigos abaixo são históricos.
+> **ESTADO VIGENTE — SIM-05 / PR #22 (draft).** PR #21/SIM-03 integrado na `main` em `9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02`; CI pós-merge aprovada com 302 testes e gate `awaiting_next_task=SIM-05`. Frente única: `audit/sim05-broker-reconciliation-20261105`, auditoria seletiva das branches históricas #11/#12/#14/#15. O broker atual de 4/5 arquivos já existe na `main`; versões antigas com bootstrap de 10 arquivos e contrato cognitivo rígido não serão reintegradas sem necessidade. Próxima SIM-06 após merge #22.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia em `main`, commit **`676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`** (revalidar no START). CI do commit: **160 testes técnicos aprovados**, não homologação do motor pedagógico.
+Fotografia histórica substituída. Em 05/11/2026, `main` = `9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02`; CI pós-merge do PR #21: **302 testes técnicos aprovados**, sem homologar o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
@@ -42,6 +42,10 @@ Fotografia em `main`, commit **`676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`** (rev
 | Cognitive Gates | PR #5 com PLAN r2 e CHECKS C1–C27 | 0/27 provas funcionais; GQ-D exige reauditoria independente |
 | Tutor, Coach e integrações | Contratos e POCs sintéticas Zapia | Serviço integrado não homologado; Gemini Notebook/Projects não comprovados de ponta a ponta |
 | Dados de estudo | `state/CURRENT.json`: 0 eventos, 0 resultados | Escrita individual bloqueada |
+
+## SIM-05 — reconciliação do broker (PR #22)
+
+O broker atual `scripts/agent_entrypoint.py` já foi integrado e testado na `main`. A versão atual oferece `ReadOnlyAgentBroker`, perfis `tutor/coach` com START de quatro documentos e `engineer/auditor` com cinco, SHA externo confiável, checkout limpo, verificação de hashes, contexto documental e bloqueio de ações externas. As branches #11/#15 contêm versão anterior com lista de dez documentos, regras RM rígidas e API `AgentBroker` incompatível; sua composição exige métodos antigos que não existem na versão atual. As branches #12/#14 incluem snapshots de estado e documentos de governança desatualizados. Não copiar esses arquivos sobre a `main`. Os testes atuais de `tests/test_agent_entrypoint.py` já cobrem os invariantes ativos. Decisão de SIM-05: documentar a comparação, corrigir estado/handoff e manter branches originais preservadas; importar somente teste/código que demonstre lacuna funcional atual.
 
 ## Fila de execução
 
@@ -107,7 +111,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Próxima tarefa: SIM-05** — somente após a integração comprovada do PR #21/SIM-03. SIM-05 revisará START e componentes do broker/documentação herdados de branches históricas, sem restabelecer leitura pesada do edital nem duplicar mecanismos.
+**Próxima tarefa: SIM-06** — somente após merge comprovado do PR #22/SIM-05. SIM-06 será definida a partir das branches restantes, priorizando especificações cognitivas úteis e mantendo integrações externas fora do escopo até prova de necessidade.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 

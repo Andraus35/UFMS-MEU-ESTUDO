@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-03",
-    "branch": "automation/sim03-fapec-readonly-20261105",
-    "pr_number": 21,
+    "task_id": "SIM-05",
+    "branch": "audit/sim05-broker-reconciliation-20261105",
+    "pr_number": 22,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-05",
+  "next_task_after_merge": "SIM-06",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -84,11 +84,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM02 PR20 mesclado, CI posmerge 294 testes e awaiting_next_task SIM-03. Unico PR ativo #21/SIM03 recupera monitor FAPEC read-only da branch historica #16; teste offline e workflow schedule sao distintos de verificacao real do edital. Proxima SIM05 para reconciliar bootstrap/broker, somente apos merge confirmado PR21. Nenhuma escrita de dados pessoais autorizada.",
+  "notes": "SIM05 revisou branches historicas #11/#12/#14/#15. Broker atual ja integrado na main e mais recente; implementacao antiga usa 10 documentos/API incompatível e docs antigas sao snapshots desatualizados. Decisao: nao importar duplicacoes; preservar branches, documentar ADR010 e contraprovas para impedir regressao. CI PR22 deve validar. Proxima SIM06 apos merge PR22.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-02",
-    "pr_number": 20,
-    "merge_commit_sha": "05c1900a09b4199d828fa20fbb73a17bec278119"
+    "task_id": "SIM-03",
+    "pr_number": 21,
+    "merge_commit_sha": "9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02"
   }
 }
