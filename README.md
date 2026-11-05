@@ -45,6 +45,10 @@ python scripts/protect_main.py --check
 
 **Importante:** não repetir `--apply` sem necessidade: ele substitui a configuração de proteção na API. A verificação ordinária usa apenas `--check`. O contrato do Copilot consultivo está em `.github/copilot-instructions.md`; ele não é enforcement de servidor nem garante interpretação por LLM.
 
+## Fluxo único de desenvolvimento pessoal
+
+O desenvolvimento agora deve usar **uma tarefa, uma branch, um PR draft e um merge por vez**. Não abrir PR paralelo para testes, auditoria, correção ou outro assunto. O registro operacional é `state/WORKFLOW.json` (item ativo, PR, branch, próximos e PRs históricos suspensos), enquanto o `ROADMAP.md` contém a fila e o `memory/HANDOFF.md` orienta a próxima sessão. A verificação `python scripts/single_flow_gate.py --check` é local; o workflow usa `--remote` e falha se encontrar PRs concorrentes. A regra na CI não impede fisicamente a criação por API, mas mantém o PR sem aprovação até saneamento. PRs antigos encerrados sem merge permanecem recuperáveis pelos SHAs.
+
 ## Roadmap estratégico
 
 A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam ausência, placeholder, ordem incorreta, perda da fila SIM e ausência de plano de contraprova para ALTA/MEDIA. Isso **não obriga agentes externos** a executar o bootstrap: a execução compulsória do bootstrap por agentes externos e uma validação independente do workflow proposto continuam pendentes.
