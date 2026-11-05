@@ -85,9 +85,16 @@ class SingleFlowTests(unittest.TestCase):
     def pr(self, n=9, branch=None):
         return {"number": n, "head": {"ref": branch or self.live["active"]["branch"]}}
 
-    def check_remote(self, prs, event="pull_request", ref="9/merge", head=None):
+    def merged_pr(self):
+        return {"number": self.live["active"]["pr_number"], "state": "closed",
+                "merged_at": "2026-11-05T15:00:00Z",
+                "head": {"ref": self.live["active"]["branch"]},
+                "base": {"ref": "main"}}
+
+    def check_remote(self, prs, event="pull_request", ref="9/merge", head=None, prior=None):
         return validate_remote(self.live, prs, event, ref,
-                               self.live["active"]["branch"] if head is None else head)
+                               self.live["active"]["branch"] if head is None else head,
+                               prior)
 
     def test_aceita_um_unico_pr(self):
         self.assertTrue(self.check_remote([self.pr()]))
@@ -118,12 +125,61 @@ class SingleFlowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "sem PR aberto"):
             self.check_remote([], event="push", ref=self.live["active"]["branch"], head="")
 
-    def test_permite_main_sem_pr_apos_merge(self):
-        self.assertTrue(self.check_remote([], event="push", ref="main", head=""))
+    def test_permite_main_sem_pr_apos_merge_comprovado(self):
+        result = self.check_remote([], event="push", ref="main", head="",
+                                   prior=self.merged_pr())
+        self.assertEqual(result["phase"], "awaiting_next_task")
+        self.assertEqual(result["next_task"], "SIM-01")
+        self.assertEqual(result["last_merged_pr"], 9)
 
     def test_rejeita_lista_invalida(self):
         with self.assertRaisesRegex(ValueError, "inválido"):
             self.check_remote(None)
+
+    def test_rejeita_main_sem_prova_de_merge(self):
+        with self.assertRaisesRegex(ValueError, "Sem comprovação"):
+            self.check_remote([], event="push", ref="main", head="")
+
+    def test_rejeita_pr_fechado_sem_merge(self):
+        prior = self.merged_pr()
+        prior["merged_at"] = None
+        with self.assertRaisesRegex(ValueError, "não comprovadamente mesclado"):
+            self.check_remote([], event="push", ref="main", head="", prior=prior)
+
+    def test_rejeita_pr_mesclado_em_base_ou_branch_errada(self):
+        for mutation in (
+            lambda d: d["base"].__setitem__("ref", "other"),
+            lambda d: d["head"].__setitem__("ref", "other"),
+            lambda d: d.__setitem__("number", 18),
+            lambda d: d.__setitem__("state", "open"),
+        ):
+            prior = self.merged_pr()
+            mutation(prior)
+            with self.subTest(prior=prior), self.assertRaisesRegex(
+                    ValueError, "não comprovadamente mesclado"):
+                self.check_remote([], event="push", ref="main", head="", prior=prior)
+
+    def test_rejeita_main_com_pr_em_aberto(self):
+        with self.assertRaisesRegex(ValueError, "fora da única frente"):
+            self.check_remote([self.pr()], event="push", ref="main", head="")
+
+    def test_rejeita_evento_indefinido(self):
+        with self.assertRaisesRegex(ValueError, "Evento GitHub"):
+            self.check_remote([self.pr()], event="", ref="main", head="")
+
+    def test_rejeita_main_pos_merge_sem_revisao(self):
+        from copy import deepcopy
+        state = deepcopy(self.live)
+        state["active"]["phase"] = "work"
+        with self.assertRaisesRegex(ValueError, "sem checkpoint"):
+            validate_remote(state, [], "push", "main", "", self.merged_pr())
+
+    def test_rejeita_remocao_do_contrato_pos_merge(self):
+        tmp, root = self.temp_root(
+            lambda d: d.__setitem__("post_merge_resolution", "assume_closed"))
+        with tmp:
+            with self.assertRaisesRegex(ValueError, "transição pós-merge"):
+                validate_local(root)
 
 if __name__ == "__main__":
     unittest.main()
