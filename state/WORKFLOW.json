@@ -4,7 +4,7 @@
   "active": {
     "task_id": "SIM-08",
     "branch": "audit/sim08-oracle-telegram-bridge-decision-20261105",
-    "pr_number": 26,
+    "pr_number": 27,
     "base": "main",
     "phase": "review"
   },
@@ -84,7 +84,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM08 audita ponte #3: MVP Telegram/Calendar isolado; sem bots, OAuth, Oracle ou LLM conectado; rate limit/retencao/backup/E2E pendentes; nao alinha interface final sem decisao. Nao importar codigo/workflows; preservar branch e documentar plano faseado. Proxima SIM09 apos PR26.",
+  "notes": "SIM08 audita ponte #3: MVP Telegram/Calendar isolado; sem bots, OAuth, Oracle ou LLM conectado; rate limit/retencao/backup/E2E pendentes; nao alinha interface final sem decisao. Nao importar codigo/workflows; preservar branch e documentar plano faseado. Proxima SIM09 apos PR27.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-07",
