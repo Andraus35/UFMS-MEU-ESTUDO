@@ -13,6 +13,12 @@ Conferir a **mesma revisão Git**, nesta ordem:
 
 `settings.json`, `rules/`, `guardrails/`, `memory/DECISIONS.md`, edital, índices, chunks, histórico e contratos de APIs são recuperados **sob demanda**. Para perguntas sobre edital, consultar `edital/INDEX.md` e trechos necessários; **não carregar automaticamente a transcrição integral**. Para qualquer escrita, conferir as regras aplicáveis, o HEAD remoto e os controles de privacidade. `python scripts/bootstrap.py` confere bytes/hash, não compreensão semântica do LLM.
 
+## Regra determinística entre sessões — trabalho único
+
+**Regra prioritária do proprietário:** **uma tarefa por vez → uma branch de trabalho → um PR draft → testes → merge aprovado → próxima tarefa**. O arquivo `state/WORKFLOW.json` é a única fonte do item ativo, branch, PR e próxima tarefa; o ROADMAP é a fila e o HANDOFF é uma visão de retomada. **Não abrir PRs/branches paralelos, empilhados ou exclusivos para auditoria/correção**. Todos os testes e correções da tarefa são commits no mesmo PR. Para engenharia, consultar o estado e executar `python scripts/single_flow_gate.py --check`; a CI executa verificação remota de PRs. Se houver divergência, corrigir o inventário antes de agir. O estado de estudos em `state/CURRENT.json` não é o estado da engenharia.
+
+O PR #9 é a única frente ativa na transição SIM-04; os PRs históricos fechados sem merge continuam acessíveis pelos seus SHAs no inventário. Não mesclar automaticamente nem começar SIM-01 antes do merge e da reconciliação de #9. Leitura e aconselhamento pedagógico sem escrita não criam branch/PR.
+
 ## Fila de saneamento proporcional (uso pessoal)
 
 Se a tarefa for engenharia, auditoria ou saneamento, consultar **a seção `Fila de simplificação pessoal` de `ROADMAP.md`** e atuar no próximo item SIM de maior criticidade. O teste de contrato deve rejeitar perda da fila, rebaixamento injustificado, ausência de contraprovas em ALTA/MEDIA e omissão de BAIXA. Registrar a próxima ação em toda entrega; não abrir novo PR quando uma frente ativa compatível puder ser atualizada. A candidata SIM-05 reduz o START aos quatro arquivos acima; exigir CI e readback antes de considerá-la integrada.
