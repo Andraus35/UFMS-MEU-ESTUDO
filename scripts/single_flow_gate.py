@@ -63,7 +63,7 @@ def validate_local(root=ROOT):
         if ("| " + task + " |") not in roadmap:
             raise ValueError("Tarefa final ausente no roadmap")
     else:
-        if not isinstance(next_task, str) or not re.fullmatch(r"SIM-\\d{2}", next_task):
+        if not isinstance(next_task, str) or not re.fullmatch(r"SIM-\d{2}", next_task):
             raise ValueError("Próxima tarefa inválida")
         if next_task == task:
             raise ValueError("Próxima tarefa não pode repetir a ativa")
