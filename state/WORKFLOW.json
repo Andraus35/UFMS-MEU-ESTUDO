@@ -6,7 +6,7 @@
     "branch": "automation/sim03-fapec-readonly-20261105",
     "pr_number": 21,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "SIM-05",
   "rules": {
