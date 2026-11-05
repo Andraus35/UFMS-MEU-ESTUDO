@@ -105,6 +105,11 @@ class ToolGatewayTests(unittest.TestCase):
             issue_authorization(req, approval, approval_key=APPROVAL_KEY,
                                 gateway_key=GATEWAY_KEY, now=NOW)
 
+    def test_approval_ttl_is_bounded(self):
+        req = request()
+        with self.assertRaisesRegex(ValueError, "TTL exceeds maximum"):
+            token_for(req, expires="2026-11-05T13:00:00+00:00")
+
     def test_actor_cannot_approve_own_action(self):
         req = request()
         payload = {
@@ -248,6 +253,45 @@ class ToolGatewayTests(unittest.TestCase):
         self.assertEqual(second["status"], "DENIED")
         self.assertIn("AUTH_REPLAY", second["receipt"]["reason_codes"])
         self.assertEqual(len(calls), 1)
+
+    def test_same_event_id_with_different_payload_is_conflict(self):
+        gw = gateway()
+        calls = []
+        first = request("evt-conflict", text="first")
+        second = request("evt-conflict", text="second")
+        gw.execute(first, token_for(first), current_state_revision="rev-12",
+            current_policy_sha="b" * 64, current_authorization_epoch=4,
+            caller_identity="trusted_supervisor", adapter=lambda p: calls.append(p), now=NOW)
+        result = gw.execute(second, token_for(second), current_state_revision="rev-12",
+            current_policy_sha="b" * 64, current_authorization_epoch=4,
+            caller_identity="trusted_supervisor", adapter=lambda p: calls.append(p), now=NOW)
+        self.assertEqual(result["status"], "DENIED")
+        self.assertIn("EVENT_ID_CONFLICT", result["receipt"]["reason_codes"])
+        self.assertEqual(len(calls), 1)
+
+    def test_concurrent_nonce_replay_allows_at_most_one_effect(self):
+        gw = gateway()
+        first = request("evt-race-a")
+        second = request("evt-race-b")
+        shared = "race-nonce"
+        first_token = token_for(first, nonce=shared)
+        second_token = token_for(second, nonce=shared)
+        calls = []
+        lock = threading.Lock()
+        def adapter(params):
+            with lock:
+                calls.append(params)
+            return {"ok": True}
+        def run(pair):
+            req, tok = pair
+            return gw.execute(req, tok, current_state_revision="rev-12",
+                current_policy_sha="b" * 64, current_authorization_epoch=4,
+                caller_identity="trusted_supervisor", adapter=adapter, now=NOW)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = list(pool.map(run, [(first, first_token), (second, second_token)]))
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(sum(1 for item in results if item["status"] == "COMMITTED"), 1)
+        self.assertEqual(sum(1 for item in results if item["status"] == "DENIED"), 1)
 
     def test_rate_limit_is_atomic_and_denies_before_second_call(self):
         calls = []
