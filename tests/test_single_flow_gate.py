@@ -34,7 +34,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_estado_unico_valido(self):
         self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
-        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "SIM-12")
+        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-00")
 
     def test_rejeita_varias_frentes_habilitadas(self):
         for key, mutation in (
@@ -85,9 +85,10 @@ class SingleFlowTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "sem estado único"):
                 validate_local(root)
 
-    def pr(self, n=None, branch=None):
+    def pr(self, n=None, branch=None, sha="a" * 40, base="main"):
         return {"number": self.live["active"]["pr_number"] if n is None else n,
-                "head": {"ref": branch or self.live["active"]["branch"]}}
+                "head": {"ref": branch or self.live["active"]["branch"], "sha": sha},
+                "base": {"ref": base}}
 
     def merged_pr(self):
         return {"number": self.live["active"]["pr_number"], "state": "closed",
@@ -98,7 +99,7 @@ class SingleFlowTests(unittest.TestCase):
     def check_remote(self, prs, event="pull_request", ref="unused/merge", head=None, prior=None):
         return validate_remote(self.live, prs, event, ref,
                                self.live["active"]["branch"] if head is None else head,
-                               prior)
+                               prior, "a" * 40)
 
     def test_aceita_um_unico_pr(self):
         self.assertTrue(self.check_remote([self.pr()]))
@@ -116,6 +117,19 @@ class SingleFlowTests(unittest.TestCase):
     def test_rejeita_branch_de_pr_diferente(self):
         with self.assertRaisesRegex(ValueError, "Branch remota diferente"):
             self.check_remote([self.pr(branch="other/branch")])
+
+    def test_rejeita_sha_do_pr_diferente_do_evento(self):
+        with self.assertRaisesRegex(ValueError, "SHA do evento diverge"):
+            self.check_remote([self.pr(sha="b" * 40)])
+
+    def test_rejeita_base_de_pr_diferente_de_main(self):
+        with self.assertRaisesRegex(ValueError, "main como base"):
+            self.check_remote([self.pr(base="develop")])
+
+    def test_rejeita_sha_de_evento_ausente_ou_invalido(self):
+        with self.assertRaisesRegex(ValueError, "SHA do evento ausente"):
+            validate_remote(self.live, [self.pr()], "pull_request", "unused",
+                            self.live["active"]["branch"], None, "")
 
     def test_rejeita_push_em_branch_legada(self):
         with self.assertRaisesRegex(ValueError, "fora da única frente"):
