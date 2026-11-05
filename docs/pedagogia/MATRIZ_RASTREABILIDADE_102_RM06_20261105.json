@@ -1,0 +1,816 @@
+{
+  "schema_version": "1.0",
+  "catalog_source": "docs/pedagogia/CRITERIOS_DE_ACEITACAO.md",
+  "catalog_count": 102,
+  "code_sha": "4425939488bb39291adf63184e33a132c6b461b3",
+  "execution_sha": null,
+  "policy": "A existência de teste unitário correlato não equivale à execução do cenário pedagógico completo.",
+  "status_counts": {
+    "PARTIAL": 42,
+    "NOT_IMPLEMENTED": 60,
+    "PASS": 0,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT_RUN": 102
+  },
+  "scenarios": [
+    {
+      "scenario_id": "PED-01",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_evidence_projection.py::test_e0_without_results"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-02",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_harness.py::test_aggregate_result_does_not_invent_topic_score"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-03",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_evidence_projection.py::test_consultation_does_not_reach_e4"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-04",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_evidence_projection.py::test_e4_requires_independent_recoveries_on_distinct_dates_and_sets"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-05",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-06",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-07",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-08",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_two_attempts_share_external_notebook_without_overwrite"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-09",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-10",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_camadas_de_filtro_preservam_escopo"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-11",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_decision_queue.py::test_desempate_usa_id_estavel"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-12",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp12_rejects_incoherent_count_instead_of_guessing"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-13",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_evidence_projection.py::test_unknown_context_never_promoted_to_e3"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-14",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_correction_replaces_only_selected_attempt"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-15",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-16",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-17",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-18",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_decision_queue.py::test_candidato_compartilhado_523_324_aparece_uma_vez"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PED-19",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PED-20",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_api_write_guard.py::test_rejeita_eventos_pessoais_por_api"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "COMP-01",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-02",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-03",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-04",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-05",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_two_attempts_share_external_notebook_without_overwrite"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "COMP-06",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-07",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-08",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-09",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-10",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-11",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "COMP-12",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-01",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-02",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-03",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-04",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-05",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-06",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-07",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-08",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-09",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "SIM-10",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-01",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-02",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-03",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-04",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-05",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-06",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_correction_replaces_only_selected_attempt"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "EFA-07",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "EFA-08",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-01",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_evidence_projection.py::test_e0_without_results"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-02",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_decision_queue.py::test_mesma_entrada_politica_e_as_of_reproduz_snapshot"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-03",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-04",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_correction_replaces_only_selected_attempt"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-05",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-06",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-07",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-08",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-09",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_evidence_projection.py::test_repeated_items_do_not_reach_e4"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-10",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-11",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_disponibilidade_desconhecida_nao_inventa_quantidade"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-12",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-13",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_harness.py::test_aggregate_result_does_not_invent_topic_score"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-14",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-15",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "FIQ-16",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_decision_queue.py::test_snapshot_muda_quando_as_of_muda"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-17",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_api_write_guard.py::test_rejeita_head_concorrente"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "FIQ-18",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-01",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_recommendation_nao_cria_caderno_nem_id_externo"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-02",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_two_attempts_share_external_notebook_without_overwrite"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-03",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_filtro_nao_confirmado_permanece_pendente"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-04",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_camadas_de_filtro_preservam_escopo"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-05",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-06",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-07",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-08",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp12_explicit_excludes_convention_derives_total_15"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-09",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp12_rejects_incoherent_count_instead_of_guessing"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-10",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp12_includes_convention_derives_12_answered_and_3_blank"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-11",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-12",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_harness.py::test_aggregate_result_does_not_invent_topic_score"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-13",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-14",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-15",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "CDO-16",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp12_rejects_incoherent_count_instead_of_guessing"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-17",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_attempt_results_remain_blocked_for_personal_persistence"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "CDO-18",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PRD-01",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PRD-02",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_start_effectiveness.py::test_receipt_prova_bytes_de_cada_arquivo"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-03",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp13_two_attempts_share_external_notebook_without_overwrite"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-04",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp14_recorded_at_and_unknown_attempt_at_are_separate"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-05",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_gp1_ingestion.py::test_igp12_explicit_excludes_convention_derives_total_15"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-06",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_harness.py::test_aggregate_result_does_not_invent_topic_score"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-07",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_decision_queue.py::test_mesma_entrada_politica_e_as_of_reproduz_snapshot"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-08",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_recommendation_nao_cria_caderno_nem_id_externo"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-09",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_api_write_guard.py::test_rejeita_eventos_pessoais_por_api"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-10",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PRD-11",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PRD-12",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_notebook_prescriber.py::test_disponibilidade_desconhecida_nao_inventa_quantidade"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-13",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PRD-14",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    },
+    {
+      "scenario_id": "PRD-15",
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_sim05_branch_reconciliation.py::test_workflow_has_one_well_formed_current_task"
+      ],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Existe teste unitário correlato, mas o cenário completo não foi executado nem homologado."
+    },
+    {
+      "scenario_id": "PRD-16",
+      "status": "NOT_IMPLEMENTED",
+      "test_refs": [],
+      "execution": "NOT_RUN_AS_SCENARIO",
+      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+    }
+  ]
+}
