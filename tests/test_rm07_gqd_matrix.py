@@ -49,8 +49,9 @@ class RM07AuditTests(unittest.TestCase):
         self.assertEqual(comparison["behind_by"], 587)
         self.assertEqual(comparison["merge_strategy"], "NO_BULK_MERGE")
 
-    def test_gateway_renderer_e_verificador_nao_estao_na_main_atual(self):
-        self.assertFalse((ROOT / "scripts/tool_gateway.py").exists())
+    def test_gateway_followup_e_separado_do_snapshot_da_reeauditoria(self):
+        self.assertEqual(MATRIX["current_main_sha"], "8fda9754846b4fba65cd88244260653cbb606720")
+        self.assertTrue((ROOT / "scripts/tool_gateway.py").exists())
         self.assertFalse((ROOT / "scripts/safe_renderer.py").exists())
         self.assertFalse((ROOT / "tools/verify_spec.py").exists())
         self.assertFalse((ROOT / ".specs/features/ufms-cognitive-gates/revisions/v0.3/functional-tests").exists())
