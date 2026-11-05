@@ -4,6 +4,7 @@ This module does not persist events, authenticate platforms or authorize persona
 """
 from datetime import datetime
 
+ATTEMPT_SCHEMA_VERSION = "1.0"
 ATTEMPT_TYPES = {"attempt_recorded", "attempt_corrected"}
 ANSWERED_CONVENTIONS = {
     "answered_excludes_unanswered",
@@ -73,6 +74,7 @@ def normalize_external_report(report, answered_convention=None):
     event = {
         "event_id": report["event_id"],
         "type": "attempt_recorded",
+        "schema_version": ATTEMPT_SCHEMA_VERSION,
         "attempt_id": report["attempt_id"],
         "recommendation_id": report["recommendation_id"],
         "platform_notebook_id": platform_id,
@@ -124,6 +126,8 @@ def validate_attempt_events(events, topics, allow_private=False):
             continue
         if kind not in ATTEMPT_TYPES:
             continue
+        if event.get("schema_version") != ATTEMPT_SCHEMA_VERSION:
+            raise ValueError("Versão do esquema de tentativa ausente ou incompatível")
         if not allow_private:
             raise ValueError("Resultados individuais bloqueados até confirmar repositório privado")
         attempt_id = event.get("attempt_id")
