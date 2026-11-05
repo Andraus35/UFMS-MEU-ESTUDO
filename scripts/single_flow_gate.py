@@ -56,15 +56,21 @@ def validate_local(root=ROOT):
     if branch == "main" or ".." in branch or "//" in branch or branch.endswith("/"):
         raise ValueError("Branch principal/reservada não é branch de trabalho")
     next_task = data.get("next_task_after_merge")
-    if not isinstance(next_task, str) or not re.fullmatch(r"SIM-\d{2}", next_task):
-        raise ValueError("Próxima tarefa inválida")
-    if next_task == task:
-        raise ValueError("Próxima tarefa não pode repetir a ativa")
     roadmap = (root / "ROADMAP.md").read_text(encoding="utf-8")
-    if "**Próxima tarefa: " + next_task + "**" not in roadmap:
-        raise ValueError("Próxima tarefa do roadmap diverge do estado operacional")
-    if ("| " + task + " |") not in roadmap or ("| " + next_task + " |") not in roadmap:
-        raise ValueError("Tarefa atual ou próxima ausente no roadmap")
+    if next_task == "DONE":
+        if "**Fila de simplificação concluída**" not in roadmap:
+            raise ValueError("Marcador de encerramento da fila ausente no roadmap")
+        if ("| " + task + " |") not in roadmap:
+            raise ValueError("Tarefa final ausente no roadmap")
+    else:
+        if not isinstance(next_task, str) or not re.fullmatch(r"SIM-\\d{2}", next_task):
+            raise ValueError("Próxima tarefa inválida")
+        if next_task == task:
+            raise ValueError("Próxima tarefa não pode repetir a ativa")
+        if "**Próxima tarefa: " + next_task + "**" not in roadmap:
+            raise ValueError("Próxima tarefa do roadmap diverge do estado operacional")
+        if ("| " + task + " |") not in roadmap or ("| " + next_task + " |") not in roadmap:
+            raise ValueError("Tarefa atual ou próxima ausente no roadmap")
     deferred = data.get("deferred_pull_requests")
     if not isinstance(deferred, list) or not deferred:
         raise ValueError("Inventário de PRs legados ausente")
