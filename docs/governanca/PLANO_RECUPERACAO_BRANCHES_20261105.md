@@ -56,3 +56,10 @@ A fotografia atual prevalece sobre qualquer tabela ou snapshot acima, e deve ser
 - SPEC #5: PLAN v0.3-r2 e 27 CHECKS foram recuperados como especificação/documentação em SIM-06/PR #23. Não foi integrado motor funcional. Estado preservado: 0/27 E2E, GQ-D REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED; r3 não aprovada.
 - Trusted Governance #10 (`audit/trusted-governance-p0-20261104`): candidata SIM-07/PR #24. Decisão de não instalar/importar App/Oracle, scripts, workflows ou segredos: a própria ADR reconhece check verde obsoleto por até sete dias e impossibilidade de revogação imediata com checker assíncrono. Não há implantação nem E2E. Preservar branch para referência.
 - Próxima SIM-08: auditar `feature/oracle-telegram-calendar-bridge` (#3), sem presumir autorização para instalar serviços ou credenciais.
+
+ 
+### Atualização SIM-07 / SIM-08 — 05/11/2026
+
+- Trusted Governance #10: PR #24 integrou apenas decisão de não instalar a App/Oracle. Código e workflows externos não importados; branch preservada. CI pós-merge 311 testes.
+- Ponte Oracle/Telegram/Calendar #3: candidata SIM-08/PR #27. Não importar aplicação neste ciclo: sem bots/OAuth/Oracle implantados, sem integração real Tutor/Coach, auditoria apenas interna e pendências RATE-01/OPS-01/PED-01. Interface Telegram e necessidade 24/7 não estão confirmadas. Branch preservada.
+- Próxima SIM-09: inventário final de refs e commits exclusivos, com decisão explícita de integração/deferimento para cada branch. Não apagar branches históricas.
