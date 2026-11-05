@@ -1,15 +1,15 @@
 # Inventário autenticado de branches — 05/11/2026
 
 **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
-**HEAD base da auditoria:** `8bd0fd3fe51ac2ea371f466f55b6edb883e4d589`  
+**HEAD base da auditoria:** `d6390de09419dbf642e8487aeae167a607840f47`  
 **Método:** API GitHub autenticada; comparação de cada ref com `main`; nenhuma exclusão, force-push ou merge de branch histórica.
 
 ## Resumo verificável
 
-- Após o merge #34: **28 refs** (27 branches de trabalho + `main`).
-- PRs existentes até o checkpoint pós-#34: **34**, todos fechados; **20 merged**, **14 closed without merge**. PRs #25 e #26 são tentativas sobre a mesma branch final #27 e não representam refs adicionais.
-- PRs abertos após o merge #34: **zero**.
-- Das 27 branches de trabalho: **15 refs têm HEAD contido em `main`** (compare da branch contra `main`: zero commits exclusivos); **12 refs preservam commits exclusivos e estão fechadas sem merge**.
+- Após o merge #35: **29 refs** (28 branches de trabalho + `main`).
+- PRs existentes até o checkpoint pós-#35: **35**, todos fechados; **21 merged**, **14 closed without merge**. PRs #25 e #26 são tentativas sobre a mesma branch final #27 e não representam refs adicionais.
+- PRs abertos após o merge #35: **zero**.
+- Das 28 branches de trabalho: **16 refs têm HEAD contido em `main`** (compare da branch contra `main`: zero commits exclusivos); **12 refs preservam commits exclusivos e estão fechadas sem merge**.
 - **Decisão:** branches contidas em `main` são candidatas a exclusão pós-backup; branches divergentes permanecem preservadas. Esta entrega não apaga refs e não integra os 12 históricos em bloco.
 
 ## Branches cujo HEAD está contido em main
@@ -29,7 +29,7 @@
 | `fix/sim07-cognitive-effects-policy-20261105` | #31 | `05e54fc3bf9917d8fd3d9802b5e9d00a738ba4fc` | 0 commits exclusivos |
 | `fix/sim08-ci-duplicate-gates-20261105` | #32 | `11e6ba0ce8740f0e4c3ac7954167c3affb3e582b` | 0 commits exclusivos |
 | `audit/sim09-branch-inventory-reconciliation-20261105` | #33 | `578e557929ef3f8d71dfec13d5624a4dc1945065` | 0 commits exclusivos |
-| `docs/sim10-pedagogia-archive-and-queue-close-20261105` | #34 | `6952ba5ba4c9cd6bbfc58cef328bc3092a241841` | 0 commits exclusivos |
+| `docs/sim10-pedagogia-archive-and-queue-close-20261105` | #34 | `6952ba5ba4c9cd6bbfc58cef328bc3092a241841` | 0 commits exclusivos |\n| `audit/sim11-post-merge-state-reconciliation-20261105` | #35 | `251aa81609bbe79bb5ac122ea5b2930ea460e178` | 0 commits exclusivos |
 | `spec/sim06-cognitive-gates-r2-20261105` | #23 | `8bde29b58ee891ee34617a838a458b7124782559` | 0 commits exclusivos |
 
 ## Branches históricas divergentes — preservar, não mesclar em lote
@@ -60,4 +60,4 @@
 
 ## Estado final
 
-O PR #34 foi integrado em `8bd0fd3fe51ac2ea371f466f55b6edb883e4d589`; sua branch também está contida em `main` (0 commits exclusivos; 1 commit atrás devido ao merge). O total de 15 refs contidas inclui os PRs #9, #19–#24 e #27–#34. Nenhuma ref foi apagada.
+O PR #35 foi integrado em `d6390de09419dbf642e8487aeae167a607840f47`; sua branch também está contida em `main` (0 commits exclusivos; 1 commit atrás devido ao merge). O total de 16 refs contidas inclui os PRs #9, #19–#24 e #27–#35. Nenhuma ref foi apagada.
