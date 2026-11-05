@@ -14,4 +14,6 @@
 
 Não carregar todo o histórico em cada chamada. **Não condensar/reescrever eventos originais em resumos de memória.**
 
-- `edital/INDEX.md`: leitura obrigatória; o edital integral e os chunks são consultados seletivamente.
+- `edital/INDEX.md`: consulta sob demanda quando o tema depender do edital; recuperar apenas páginas e chunks necessários.
+
+- `memory/HANDOFF_ARCHIVE_2026-11-05.md`: histórico completo anterior ao handoff curto; leitura apenas quando necessária para auditar decisões.
