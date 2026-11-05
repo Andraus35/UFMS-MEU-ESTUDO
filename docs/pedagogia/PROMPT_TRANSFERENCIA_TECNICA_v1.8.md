@@ -1,7 +1,9 @@
 # Prompt de transferência — implementação técnica do tutor UFMS v1.8
 
+> **ARQUIVO HISTÓRICO — não executar literalmente.** PRs #1 e #2 foram integrados; o repositório é público. Reconsultar `AGENTS.md`, `ROADMAP.md`, `memory/HANDOFF.md` e `state/WORKFLOW.json` antes de qualquer trabalho. Este prompt preserva o planejamento de 04/11/2026, não autoriza ações atuais.
+
 **Uso:** copiar para **outra sessão técnica autorizada**. Este prompt é um pacote de trabalho, não uma autorização tácita para alterar código, configurações, governança ou executar merge.  
-**Repositório privado:** `Andraus35/UFMS-MEU-ESTUDO`  
+**Visibilidade verificada posteriormente:** pública; `Andraus35/UFMS-MEU-ESTUDO`  
 **PR da especificação:** [#2](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/2), branch `docs/especificacao-pedagogica-v1-2`  
 **PR da engenharia de edital/harness:** [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1), branch `setup/harness-memory-v0-2`  
 **Ponto de partida da transferência:** pacote `docs/pedagogia/` até v1.8, no **HEAD atual que deverá ser reconsultado**. Não confiar nos SHAs históricos citados em conversas e handoffs como atuais.
