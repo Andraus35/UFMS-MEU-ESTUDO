@@ -54,3 +54,28 @@ administrativas, implantação de serviços ou autorização de merge.
 O readback antigo só provava identidade do PR, HEAD, base e pai do commit. Um commit descendente com arquivo extra podia receber confirmação estrutural. Agora a comparação autenticada old...new deve mostrar exatamente um commit, o mesmo conjunto de caminhos e operações propostos, sem remoções ou renames. Os blobs são relidos no SHA novo e confrontados com os digests do diff. Metadados incompletos e falhas de rede rejeitam.
 
 O guard continua cooperativo: CI não é verificada pelo método, o cliente com credenciais diretas pode ignorar o fluxo e revisão de conteúdo ainda é necessária. Sem homologação independente, merge, Zapia, credenciais ou dados pessoais.
+
+
+## NC-17-01 — Vinculação ao conteúdo final proposto (candidata empilhada)
+
+Cada arquivo de proposta, em create **e** update, exige `expected_new_blob_sha`
+(SHA-1 do objeto Git blob dos **bytes finais exatos** que o executor enviará).
+O produtor confiável deve calcular o valor com `git_blob_sha(payload)` a partir
+dos mesmos bytes enviados na escrita, **antes** da operação; jamais aceitar
+um hash simplesmente alegado pelo LLM como autorização independente.
+Para update, `expected_blob_sha` continua obrigatoriamente correspondente
+à versão anterior e deve diferir do hash final.
+
+O readback exige simultaneamente: caminho e operação declarados, SHA do blob
+no compare igual ao `expected_new_blob_sha` e SHA do arquivo no novo HEAD
+igual ao mesmo hash. Assim, dois resultados remotos coerentes entre si,
+mas com conteúdo **diferente do proposto**, não satisfazem a validação.
+
+**Limites não resolvidos:** o script não controla o escritor externo,
+não verifica a origem dos bytes que o executor decidiu autorizar,
+não efetua CAS na escrita e não substitui revisão de conteúdo/PII.
+Um token com escrita direta continua capaz de ignorar o guard.
+`github_get_live` usa o executável `gh` do host, cuja identidade e permissões
+devem ser comprovadas pelo operador. Testes simulados **não** homologam
+o getter ou CAS operacional. As flags `ci_verified=false` e
+`merge_authorized=false` permanecem obrigatórias.
