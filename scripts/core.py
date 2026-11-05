@@ -170,6 +170,15 @@ def rebuild(events, topics, schema_version="0.2.0"):
         state["last_event_at"] = last.get("timestamp", last.get("recorded_at"))
         state["results_count"] += attempts["attempts_count"]
         state["last_attempt_id"] = attempts["last_attempt_id"]
+        completed = set(attempts["recommendation_ids"])
+        completed_cadernos = {
+            event.get("caderno_id") for event in legacy
+            if event.get("type") == "caderno_recomendado"
+            and event.get("recommendation_id") in completed
+        }
+        state["pending_cadernos"] = [
+            cid for cid in state["pending_cadernos"] if cid not in completed_cadernos
+        ]
         return state, rows
     progress = {row["topic_id"]: {"attempted": 0, "correct": 0, "revision_due_at": ""} for row in topics}
     recommended = {}
