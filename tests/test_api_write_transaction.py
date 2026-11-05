@@ -12,7 +12,7 @@ from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from api_write_guard import git_blob_sha
-from api_write_transaction import _commit_once, github_write_live, PREFIX
+from api_write_transaction import _commit_once, github_write_live, UnconfirmedWrite, PREFIX
 
 HEAD, BASE = "a"*40, "b"*40
 BRANCH = "audit/clean-docs-20261105"
@@ -134,14 +134,59 @@ class TransactionTests(unittest.TestCase):
 
     def test_conflicting_ref_patch_fails_closed(self):
         self.api.conflict = True
-        with self.assertRaisesRegex(ValueError, "Authenticated write failed closed"):
+        with self.assertRaises(UnconfirmedWrite) as caught:
             self.run_transaction()
+        self.assertEqual(caught.exception.status, "UNCONFIRMED")
+        self.assertFalse(caught.exception.retry_allowed)
+        self.assertEqual(caught.exception.candidate_commit_sha, NEW)
         self.assertEqual(self.api.writes[-1][2]["force"], False)
 
     def test_forged_reference_ack_cannot_pass_readback(self):
         self.api.forge_response = True
         with self.assertRaises(ValueError):
             self.run_transaction()
+
+
+    def test_patch_accepted_but_response_lost_is_unconfirmed(self):
+        def lost_response_writer(method, path, payload):
+            result = self.api.write(method, path, payload)
+            if method == "PATCH":
+                raise TimeoutError("lost acknowledgement after actual update")
+            return result
+        with self.assertRaises(UnconfirmedWrite) as caught:
+            _commit_once(proposal(), {PATH: RAW}, "msg",
+                         self.api.get, lost_response_writer)
+        self.assertEqual(self.api.data[PREFIX + "/branches/" + BRANCH]
+                         ["body"]["commit"]["sha"], NEW)
+        self.assertEqual(caught.exception.candidate_commit_sha, NEW)
+        self.assertEqual(caught.exception.status, "UNCONFIRMED")
+        self.assertFalse(caught.exception.retry_allowed)
+
+    def test_patch_succeeded_but_authenticated_readback_failed(self):
+        def interrupted_get(path):
+            if path == PREFIX + "/git/commits/" + NEW:
+                raise ConnectionError("transient readback outage")
+            return self.api.get(path)
+        with self.assertRaises(UnconfirmedWrite) as caught:
+            _commit_once(proposal(), {PATH: RAW}, "msg",
+                         interrupted_get, self.api.write)
+        self.assertEqual(self.api.data[PREFIX + "/branches/" + BRANCH]
+                         ["body"]["commit"]["sha"], NEW)
+        self.assertEqual(caught.exception.status, "UNCONFIRMED")
+        self.assertFalse(caught.exception.retry_allowed)
+
+    def test_pre_patch_rejection_not_marked_as_remote_unknown(self):
+        with self.assertRaisesRegex(ValueError, "Content bytes differ") as caught:
+            self.run_transaction(content={PATH: "wrong"})
+        self.assertNotIsInstance(caught.exception, UnconfirmedWrite)
+        self.assertEqual(self.api.writes, [])
+
+    def test_forged_patch_ack_now_unconfirmed_and_nonretryable(self):
+        self.api.forge_response = True
+        with self.assertRaises(UnconfirmedWrite) as caught:
+            self.run_transaction()
+        self.assertFalse(caught.exception.retry_allowed)
+        self.assertEqual(caught.exception.candidate_commit_sha, NEW)
 
     def test_move_before_patch_does_not_advance_ref(self):
         reads = [0]

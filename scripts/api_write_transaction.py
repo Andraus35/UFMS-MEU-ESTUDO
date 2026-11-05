@@ -26,6 +26,20 @@ MAX_FILE_BYTES = 256 * 1024
 MAX_TOTAL_BYTES = 1024 * 1024
 
 
+class UnconfirmedWrite(ValueError):
+    """Branch PATCH may have committed despite an error or lost readback.
+
+    The caller MUST reconcile this SHA against a fresh authenticated HEAD.
+    Retrying without reconciliation risks a second, conflicting write.
+    """
+    status = "UNCONFIRMED"
+    retry_allowed = False
+
+    def __init__(self, candidate_commit_sha):
+        super().__init__("Branch update unconfirmed; reconcile HEAD before any retry")
+        self.candidate_commit_sha = candidate_commit_sha
+
+
 def github_write_live(method, path, payload):
     """HTTP Git write via gh on the trusted host; disabled unless opted in.
 
@@ -169,16 +183,21 @@ def _commit_once(proposal, contents, message, getter, writer):
     if second["base_sha"] != planned["base_sha"]:
         raise ValueError("Base moved before reference update")
     ref = PREFIX + "/git/refs/heads/" + quote(proposal["branch"], safe="/")
-    updated = _write(writer, "PATCH", ref, {
-        "sha": new_sha, "force": False,
-    }, 200)
-    if (updated.get("ref") != "refs/heads/" + proposal["branch"]
-            or not isinstance(updated.get("object"), dict)
-            or updated["object"].get("sha") != new_sha):
-        raise ValueError("GitHub reference response diverged")
-    verified = check_authenticated_commit_readback(
-        proposal, new_sha, planned["base_sha"], getter=getter,
-    )
+    # Once PATCH is attempted, even an error/timeout MAY follow a
+    # successful remote update. Never report an ordinary retryable failure.
+    try:
+        updated = _write(writer, "PATCH", ref, {
+            "sha": new_sha, "force": False,
+        }, 200)
+        if (updated.get("ref") != "refs/heads/" + proposal["branch"]
+                or not isinstance(updated.get("object"), dict)
+                or updated["object"].get("sha") != new_sha):
+            raise ValueError("GitHub reference response diverged")
+        verified = check_authenticated_commit_readback(
+            proposal, new_sha, planned["base_sha"], getter=getter,
+        )
+    except Exception as exc:
+        raise UnconfirmedWrite(new_sha) from exc
     return {**verified, "ref_update": "non_forced_fast_forward",
             "ci_verified": False, "merge_authorized": False}
 

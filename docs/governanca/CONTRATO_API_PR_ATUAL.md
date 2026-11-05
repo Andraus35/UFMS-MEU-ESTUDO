@@ -79,3 +79,22 @@ Um token com escrita direta continua capaz de ignorar o guard.
 devem ser comprovadas pelo operador. Testes simulados **não** homologam
 o getter ou CAS operacional. As flags `ci_verified=false` e
 `merge_authorized=false` permanecem obrigatórias.
+
+
+## NC-18-02 — ACK perdido apos PATCH: falha segura sem retry cego
+
+Uma transacao Git pode ter atualizado a referencia antes de timeout,
+erro do leitor remoto ou resposta truncada. Esta situacao e ambigua,
+nao uma falha com garantia de ausencia de efeito.
+
+- Antes do PATCH da ref: erros de entrada, conteudo, snapshot ou criacao
+  de objetos nao alteram a branch por este fluxo.
+- Apos tentar PATCH: qualquer erro de confirmacao ou readback vira
+  UnconfirmedWrite (status UNCONFIRMED, retry_allowed false), com o SHA
+  do commit candidato disponivel para reconciliacao autenticada.
+- O cliente NAO deve fazer retry automatico. Deve reler main, PR,
+  branch e commit, comparar com SHA candidato e investigar conflitos.
+
+Este estado nao comprova commit efetivo, CI ou permissao de merge.
+As contraprovas usam simulacao de resposta perdida depois de PATCH
+realizado pelo fake remoto; nao constituem teste de API GitHub real.
