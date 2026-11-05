@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — SIM-12 / PR #36 (draft).** PR #35 / SIM-11 integrado à `main` em `d6390de09419dbf642e8487aeae167a607840f47`; CI pós-merge `42076658860` (`validate=success`). Frente única: `fix/rm00-delivery-gates-20261105`, para corrigir o fluxo serial e permitir a transição determinística da fila SIM concluída para a fila RM. Inventário-base pós-#35: 29 refs (28 branches de trabalho + main), 16 HEADs contidos e 12 históricos divergentes; 35 PRs anteriores (21 merged, 14 closed without merge). `main.protected=true`; a leitura detalhada da proteção retornou 403 à integração. Nenhuma branch será apagada nem histórico divergente mesclado em lote.
+> **ESTADO VIGENTE — RM-00 / PR #37 (draft).** PR #36 / SIM-12 integrado à `main` em `aeb0de34e40b8f32e04345c8428e090fdf32f0ad`; CI pós-merge `42077837031` (`validate=success`). Frente única: `fix/rm00-head-bound-delivery-gate-20261105`. Proteção administrativa confirmada pelo proprietário: required check `validate`, `strict=true`, `reviews=0`, `enforce_admins=true`. RM-00 fecha o vínculo do gate serial ao SHA exato do evento e exige base `main` no PR. Nenhuma branch histórica será apagada ou mesclada em lote.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia atualizada em 05/11/2026: `main` = `d6390de09419dbf642e8487aeae167a607840f47`; CI pós-merge do PR #35, run `42076658860`, `validate=success`. API da branch confirma `protected=true`; endpoint detalhado de proteção retorna 403, então required checks não foram independentemente lidos. A CI não homologa o motor pedagógico.
+Fotografia atualizada em 05/11/2026: `main` = `aeb0de34e40b8f32e04345c8428e090fdf32f0ad`; CI pós-merge do PR #36, run `42077837031`, `validate=success`. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
@@ -65,13 +65,13 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-00** após merge de SIM-12.
+**Próxima tarefa: RM-01** após merge de RM-00.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
 | ID | P | Frente / gate | Estado de partida | Definition of Done |
 |---|---|---|---|---|
-| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Bootstrap, CI e proteção main verificados; gates automáticos de entrega e teste funcional do Tutor/Coach pendentes |
+| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | Proteção main confirmada; gate serial agora vincula PR à base main e ao SHA exato do evento; falta CI verde no HEAD final e auditoria/readback pós-merge |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
