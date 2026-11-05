@@ -33,6 +33,10 @@
 - Resultados pessoais continuam bloqueados por padrão; `allow_private=True` existe apenas para testes em memória.
 - Não houve escrita em `state/CURRENT.json`, `state/events`, `PROGRESS.csv`, nem alteração de `settings.json`.
 
+## Compatibilidade/migração observada
+
+No HEAD-base, `state/CURRENT.json` registra `event_count=0` e `state/events/2026-11.jsonl` está vazio. Portanto, não havia eventos pessoais históricos para converter; nenhuma migração de dados foi executada. A compatibilidade é aditiva e as regressões do contrato legado continuam executadas pela suíte integrada.
+
 ## Evidência e limites
 A suíte nova `tests/test_gp1_ingestion.py` cobre normalização ambígua/confirmada, duas tentativas no mesmo caderno externo, correção isolada, IDs duplicados, correção órfã, identidade, tempo, versão de schema e bloqueio de escrita. As regressões antigas permanecem em `tests/test_harness.py`.
 
