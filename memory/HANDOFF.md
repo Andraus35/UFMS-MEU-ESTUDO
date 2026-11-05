@@ -29,6 +29,14 @@
 - **Limite P1:** em acesso direto por API, confirmar a identidade do mesmo HEAD remoto de cada documento; hashes locais não o garantem. Fotografias antigas de PRs no roadmap são históricas.
 - **Sequência:** fechar somente esta frente SIM-04 com revisão, gates e merge; depois SIM-01 em uma nova e única branch/PR. Não abrir frente paralela.
 
+## Broker START verificado — checkpoint 05/11/2026
+
+- **Código e testes:** `scripts/agent_entrypoint.py` e `tests/test_agent_entrypoint.py`, reaproveitando a capacidade útil dos PRs legados #11/#15, **sem restaurar o START antigo de dez arquivos**. Apenas leitura, nenhuma capacidade de envio, escrita ou merge.
+- **Evidência:** candidata funcional `7561cba812a4d5545635931594ddae2a99262c45`; CI push `42038174394` e PR `42038187668`: **success, 228/228 testes**. O broker foi executado em CI com SHA do checkout, exibindo papel engineer, cinco arquivos, SIM-04, PR #9 e `external_effects_enabled=false`.
+- **Contraprovas novas (12):** estudo com quatro arquivos; engenharia com cinco; texto entregue ao orquestrador com hashes; HEAD incorreto, checkout sujo, documento ausente/inválido, recibo obsoleto, papel e modo inválidos, symlink, tentativas de operações externas. Falhas causam bloqueio no broker.
+- **Pendente real (ALTA):** integração do executor externo Tutor/Coach/Zapia e restrição de credenciais para obrigar passagem pelo broker. Sem essa implantação, nenhuma alegação de enforcement universal. O PR #9 continua único e draft; **não iniciar nova frente antes do merge**.
+- **Após checkpoint documental:** confirmar CI do novo HEAD; números acima pertencem ao SHA efetivamente testado, não são herdados automaticamente.
+
 ## Regras de entrega e rastreabilidade
 
 - Para ALTA/MEDIA: identificar causa, correção, contraprovas negativas reais, regressão, HEAD/CI e riscos remanescentes. Uma referência a teste não demonstra que ele foi executado. Não promover status antes de comprovação.
