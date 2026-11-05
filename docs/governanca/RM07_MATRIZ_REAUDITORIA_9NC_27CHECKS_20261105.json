@@ -83,8 +83,8 @@
     {
       "nc_id": "NC-UFMS-GQD-07",
       "severity": "P1",
-      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
-      "assessment": "PR5 candidate contains an r2 approval receipt and byte-level tests, but the original approval-to-snapshot link remains marked NOT_VERIFIED in its NC matrix; r3 changes require new human approval.",
+      "status": "PARTIAL_IN_MAIN",
+      "assessment": "main contém approved-r2/APPROVAL_v0.3-r2.md, approval-receipt.json e verify_approval_snapshot.py, com literal APROVO, HEAD/blob/SHA-256 e regra de derivação; recibo limita o escopo a derivação documental e registra GQ-D REPROVADA, VERIFY_C NOT_RUN, VERIFY_O BLOCKED, 0/27. Falta prova independente do vínculo humano fora do próprio repositório e não há homologação funcional.",
       "closed": false
     },
     {
@@ -380,10 +380,23 @@
     "nonconformities": 9,
     "closed": 0,
     "open": 3,
-    "partial_candidate_not_main": 6,
+    "partial_candidate_not_main": 5,
     "functional_checks": 27,
     "passed_end_to_end": 0,
-    "not_run_end_to_end": 27
+    "not_run_end_to_end": 27,
+    "partial_in_main": 1
   },
-  "policy": "Evidência em branch candidata não equivale a correção na main. Sucesso de CI documental/unitária não equivale a PASS funcional end-to-end."
+  "policy": "Evidência em branch candidata não equivale a correção na main. Sucesso de CI documental/unitária não equivale a PASS funcional end-to-end.",
+  "approval_r2_in_main": {
+    "status": "APPROVED_FOR_DOCUMENTARY_DERIVATION_NOT_GQ_D",
+    "literal_user_message": "APROVO",
+    "source_head_commit": "426286a913ea17adddb2cdb951120b45282ad938",
+    "source_git_blob_sha1": "a1482c25e064a1ccc06c4a649a704fbd5bf97cf5",
+    "source_sha256": "e528bd36ff4e106622e04b009a8cce381ea5fa079558cc14adc3f5227f90362c",
+    "independent_GQD": "REPROVADA_PENDING_REAUDIT",
+    "VERIFY_C": "NOT_RUN",
+    "VERIFY_O": "BLOCKED",
+    "functional_checks_pass": 0,
+    "functional_checks_not_run": 27
+  }
 }
