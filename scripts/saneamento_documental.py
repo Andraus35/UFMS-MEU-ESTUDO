@@ -85,8 +85,7 @@ def validate_local(root):
     mandatory = settings.get("bootstrap", {}).get("mandatory")
     require(isinstance(mandatory, list) and len(mandatory) in (9, 10),
             "Unexpected bootstrap length")
-    expected = list(PRESERVED)
-    expected.insert(1, "rules/CORE.md") if False else None
+    # Explicit order is a locally checked contract; preserve either 9 or 10.
     # Canonical list: do not derive policy from an uncontrolled README.
     nine = ["AGENTS.md", "settings.json", "rules/CORE.md",
             "guardrails/CORE.md", "memory/INDEX.md", "memory/HANDOFF.md",
@@ -239,7 +238,8 @@ def status_document(snapshot, context, branch, sha):
         "",
         "- Repositório: " + REPOSITORY,
         "- Main (HEAD confirmado): " + snapshot["main_sha"],
-        "- Revisão local: " + sha + " (" + branch + ")",
+        "- Branch desta leitura: " + branch
+          + " (HEAD próprio omitido para evitar autorreferência)",
         "- Visibilidade: " + snapshot["visibility"],
         "- Campo main.protected: " + str(snapshot["main_protected"]).lower()
           + " (não comprova detalhes de rulesets/bypass)",
@@ -254,8 +254,10 @@ def status_document(snapshot, context, branch, sha):
         "|---|---|---|---|",
     ]
     for p in sorted(snapshot["pull_requests"], key=lambda p: p["number"]):
+        candidate_head = ("SELF_CANDIDATE" if p["head"] == sha
+                          and p["state"] == "open" else p["head"])
         lines.append("| #" + str(p["number"]) + " | " + pr_status(p)
-                     + " | " + p["head"] + " | " + md(p["base"]) + " |")
+                     + " | " + candidate_head + " | " + md(p["base"]) + " |")
     lines += [
         "", "## Regras de interpretação",
         "",

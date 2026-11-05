@@ -66,7 +66,8 @@ class ReconciliationTests(unittest.TestCase):
                              value)
         self.assertFalse(sut.changes(self.root, snapshot(), "audit/example", SHA))
         after = (self.root / "memory/HANDOFF.md").read_bytes()
-        self.assertIn(before, after)
+        self.assertTrue(after.startswith(b"# memory/HANDOFF.md\n"))
+        self.assertIn(b"Historic text: PR #1 draft.\n", after)
         self.assertEqual(after.count(sut.START.encode()), 1)
 
     def test_non_destructive_historical_adr(self):
@@ -130,6 +131,19 @@ class ReconciliationTests(unittest.TestCase):
         self.assertIn("main\\|malicious header", rendered)
         self.assertNotIn("main|malicious\n", rendered)
 
+    def test_self_candidate_does_not_self_invalidate(self):
+        current = snapshot()
+        current["pull_requests"].append({
+            "number": 12, "state": "open", "merged": False,
+            "draft": True, "head": SHA, "base": "main"})
+        before = sut.status_document(current, sut.validate_local(self.root),
+                                     "audit/example", SHA)
+        current["pull_requests"][-1]["head"] = "e" * 40
+        after = sut.status_document(current, sut.validate_local(self.root),
+                                    "audit/example", "e" * 40)
+        self.assertEqual(before, after)
+        self.assertIn("SELF_CANDIDATE", after)
+
     def test_no_permission_to_edit_policies_or_private_state(self):
         for path in ("state/CURRENT.json", "AGENTS.md", "settings.json",
                      ".github/workflows/validate.yml",
@@ -150,7 +164,10 @@ class ReconciliationTests(unittest.TestCase):
         later["pull_requests"][1]["state"] = "closed"
         diff = sut.changes(self.root, later, "audit/example", SHA)
         self.assertIn("docs/pedagogia/HANDOFF.md", diff)
-        self.assertIn(original, diff["docs/pedagogia/HANDOFF.md"])
+        self.assertTrue(diff["docs/pedagogia/HANDOFF.md"].startswith(
+            "# docs/pedagogia/HANDOFF.md\n"))
+        self.assertIn("Historic text: PR #1 draft.\n",
+                      diff["docs/pedagogia/HANDOFF.md"])
         self.assertEqual(diff["docs/pedagogia/HANDOFF.md"].count(sut.START), 1)
 
 
