@@ -185,16 +185,38 @@ class SingleFlowTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "transição pós-merge"):
                 validate_local(root)
 
-    def test_rejeita_roadmap_com_proxima_tarefa_divergente(self):
+    def test_aceita_estado_terminal_da_fila(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            self.assertEqual(validate_local(root)["next_task_after_merge"], "DONE")
+
+    def test_rejeita_estado_terminal_sem_marcador_no_roadmap(self):
         tmp, root = self.temp_root()
         with tmp:
             roadmap = root / "ROADMAP.md"
             current = roadmap.read_text(encoding="utf-8")
             current = current.replace(
-                "**Próxima tarefa: " + self.live["next_task_after_merge"] + "**",
-                "**Próxima tarefa: SIM-99**", 1)
+                "**Fila de simplificação concluída**", "**Próxima tarefa: SIM-99**", 1)
             roadmap.write_text(current, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "diverge"):
+            with self.assertRaisesRegex(ValueError, "Marcador de encerramento"):
+                validate_local(root)
+
+    def test_rejeita_roadmap_com_proxima_tarefa_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            roadmap = root / "ROADMAP.md"
+            current = roadmap.read_text(encoding="utf-8")
+            if self.live["next_task_after_merge"] == "DONE":
+                current = current.replace(
+                    "**Fila de simplificação concluída**", "**Próxima tarefa: SIM-99**", 1)
+                message = "Marcador de encerramento"
+            else:
+                current = current.replace(
+                    "**Próxima tarefa: " + self.live["next_task_after_merge"] + "**",
+                    "**Próxima tarefa: SIM-99**", 1)
+                message = "diverge"
+            roadmap.write_text(current, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, message):
                 validate_local(root)
 
     def test_api_de_merge_indisponivel_bloqueia(self):
