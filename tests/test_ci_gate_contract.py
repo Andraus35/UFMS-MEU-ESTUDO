@@ -40,6 +40,13 @@ class CIGateContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
             verify_workflow(bad)
 
+    def test_remocao_de_broker_de_agente(self):
+        bad = WORKFLOW.replace(
+            "      - name: Validar broker read-only com SHA de checkout\n"
+            "        run: python scripts/agent_entrypoint.py --role engineer --check\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
     def test_remocao_do_gate_privacidade(self):
         bad = WORKFLOW.replace(
             "      - name: Verificar bloqueio de resultados pessoais\n"
