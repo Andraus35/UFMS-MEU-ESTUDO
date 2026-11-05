@@ -38,10 +38,10 @@ class ApiWriteGuardTests(unittest.TestCase):
 
     def test_git_blob_digest_uses_exact_bytes(self):
         import hashlib
-        for payload in ("abc", "á", b"raw\\x00bytes"):
+        for payload in ("abc", "á", b"raw\x00bytes"):
             binary = payload.encode("utf-8") if isinstance(payload, str) else payload
             expected = hashlib.sha1(
-                b"blob " + str(len(binary)).encode("ascii") + b"\\x00" + binary
+                b"blob " + str(len(binary)).encode("ascii") + b"\x00" + binary
             ).hexdigest()
             self.assertEqual(git_blob_sha(payload), expected)
 
