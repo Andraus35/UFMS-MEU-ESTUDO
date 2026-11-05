@@ -21,6 +21,18 @@ class CIGateContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
             verify_workflow(bad)
 
+    def test_remocao_do_gate_de_trabalho_unico(self):
+        bad = WORKFLOW.replace(
+            "      - name: Garantir trabalho serial e PR unico\n"
+            "        run: python scripts/single_flow_gate.py --remote\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
+    def test_remocao_de_permissao_de_leitura_dos_prs(self):
+        bad = WORKFLOW.replace("  pull-requests: read\n", "")
+        with self.assertRaisesRegex(ValueError, "gatilho/permissão"):
+            verify_workflow(bad)
+
     def test_remocao_do_gate_privacidade(self):
         bad = WORKFLOW.replace(
             "      - name: Verificar bloqueio de resultados pessoais\n"
