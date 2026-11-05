@@ -6,7 +6,7 @@
     "branch": "audit/sim05-broker-reconciliation-20261105",
     "pr_number": 22,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "SIM-06",
   "rules": {
@@ -84,7 +84,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM03 PR21 mesclado na main em 9a10c86999c191f2bd5df8a1ceeb8d6f4da25c02; CI posmerge 302 testes e awaiting_next_task SIM05. Unica frente SIM05/PR22 audita/reconcilia broker START e documentos das branches #11/#12/#14/#15. Nenhuma importacao em lote, nenhum gate universal alegado. Proxima SIM06 apenas apos merge real PR22.",
+  "notes": "SIM05 revisou branches historicas #11/#12/#14/#15. Broker atual ja integrado na main e mais recente; implementacao antiga usa 10 documentos/API incompatível e docs antigas sao snapshots desatualizados. Decisao: nao importar duplicacoes; preservar branches, documentar ADR010 e contraprovas para impedir regressao. CI PR22 deve validar. Proxima SIM06 apos merge PR22.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-03",
