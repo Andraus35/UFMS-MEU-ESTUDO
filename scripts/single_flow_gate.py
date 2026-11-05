@@ -40,6 +40,8 @@ def validate_local(root=ROOT):
     for key, expected in required.items():
         if type(rules.get(key)) is not type(expected) or rules.get(key) != expected:
             raise ValueError("Regra sequencial enfraquecida: " + key)
+    if data.get("post_merge_resolution") != "confirm_merged_pr_then_await_next_task":
+        raise ValueError("Contrato de transição pós-merge ausente ou fraco")
     active = data.get("active", {})
     task = active.get("task_id")
     if not isinstance(task, str) or not re.fullmatch(r"SIM-\d{2}", task):
