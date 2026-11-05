@@ -27,7 +27,7 @@ def attempt(event_id, attempt_id, correct=8, errors=4, recorded=RECORDED,
             attempt_at=ATTEMPTED, kind="attempt_recorded", corrects=None):
     event = {
         "event_id": event_id, "type": kind, "schema_version": "1.0", "attempt_id": attempt_id,
-        "recommendation_id": "REC-FICT-1", "platform_notebook_id": "EXT-FICT-44",
+        "recommendation_id": "REC-FICT-1", "platform_notebook_id": "EXT-FICT-44", "source_ref": "synthetic-fixture://IGP-13",
         "recorded_at": recorded, "attempt_at": attempt_at,
         "total": correct + errors, "acertos": correct, "erros": errors,
         "nao_respondidas": 0,
@@ -107,6 +107,12 @@ class GP1IngestionTests(unittest.TestCase):
         value = attempt("a1", "TRY-A")
         value.pop("schema_version")
         with self.assertRaisesRegex(ValueError, "Versão do esquema"):
+            validate_events([recommendation(), value], TOPICS, allow_private=True)
+
+    def test_attempt_without_source_ref_rejected(self):
+        value = attempt("a1", "TRY-A")
+        value.pop("source_ref")
+        with self.assertRaisesRegex(ValueError, "source_ref ausente"):
             validate_events([recommendation(), value], TOPICS, allow_private=True)
 
     def test_igp13_duplicate_attempt_id_rejected(self):
