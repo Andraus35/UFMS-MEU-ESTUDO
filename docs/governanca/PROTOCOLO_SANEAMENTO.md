@@ -72,3 +72,16 @@ Este script elimina ambiguidade de precedência documental, mas não garante
 que todo LLM leia ou obedeça a seus arquivos. O código não modifica a
 segurança de clientes com credenciais externas. Não alegar G0/GQ-H,
 GQ-D/C/O ou GP aprovado por resultado de sincronização.
+
+## Matriz de critérios, sem promover gates
+
+| Família | Tipo | Autoridade e limite |
+|---|---|---|
+| START/DELIVERY | Procedimento | AGENTS + hooks; sem imposição global aos agentes externos |
+| RM-00–RM-10 | Estratégia | ROADMAP PR #9, não vigente na main sem merge |
+| GP-0–GP-5 | Pedagogia | Evidência do motor; especificação não é implantação |
+| GQ-D/C/O | Cognitive Gates | Revisões documental, cognição e operação independentes no PR #5 |
+| G0/GQ-H | Governança | Reauditoria independente do SHA exato, não CI do produtor |
+| ORIENTACAO/ROTINA_AUTORIZADA/SENSIVEL | Efeitos | Autonomia cognitiva livre; ferramentas condicionadas a gates e escopo |
+
+Nenhum gate de uma família é convertido automaticamente em aprovação de outra.

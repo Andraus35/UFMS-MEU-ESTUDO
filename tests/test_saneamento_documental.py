@@ -123,6 +123,13 @@ class ReconciliationTests(unittest.TestCase):
         with self.assertRaisesRegex(sut.ReconciliationError, "managed-block"):
             sut.changes(self.root, snapshot(), "audit/example", SHA)
 
+    def test_gate_matrix_has_separate_authorities(self):
+        doc = sut.status_document(snapshot(), sut.validate_local(self.root),
+                                  "audit/example", SHA)
+        self.assertIn("## Matriz de gates e autoridade", doc)
+        self.assertIn("GQ-D / GQ-C / GQ-O", doc)
+        self.assertIn("não exige autorização humana por mensagem", doc)
+
     def test_markup_untrusted_is_not_executed(self):
         data = snapshot()
         data["pull_requests"][1]["base"] = "main|malicious\nheader"

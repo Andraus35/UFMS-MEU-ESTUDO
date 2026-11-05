@@ -259,7 +259,19 @@ def status_document(snapshot, context, branch, sha):
         lines.append("| #" + str(p["number"]) + " | " + pr_status(p)
                      + " | " + candidate_head + " | " + md(p["base"]) + " |")
     lines += [
-        "", "## Regras de interpretação",
+        "", "## Matriz de gates e autoridade", "",
+        "| Camada | Fonte no repositório | O que comprova | O que NÃO comprova |",
+        "|---|---|---|---|",
+        "| START/DELIVERY | AGENTS, settings, hooks | Regras e verificações locais de leitura/entrega | Obrigatoriedade para clientes com credenciais externas |",
+        "| RM-00 a RM-10 | ROADMAP (proposto no PR #9) | Prioridades e dependências quando integrado | Homologação do motor ou autorização de merge |",
+        "| GP-0 a GP-5 | docs/pedagogia | Evidência de fonte, contratos, tutor, testes e operação por gate | Que a especificação já seja um serviço instalado |",
+        "| GQ-D / GQ-C / GQ-O | SPEC cognitiva no PR #5 | Auditorias documental, cognitiva e operacional separadas | Que CI documental libere entrega a ferramentas |",
+        "| G0 / GQ-H | Auditoria independente de governança | Identidade SHA, revisão adversarial e requisitos do parecer | Que a própria CI do produtor seja aprovação humana |",
+        "| ORIENTACAO / ROTINA_AUTORIZADA / SENSIVEL | Contrato de autonomia no PR #9 | Classificação proporcional de efeitos | Que ferramenta ou canal externo esteja instalado |",
+        "",
+        "**Precedência:** fonte normativa e regras integradas na main; decisões humanas específicas; evidências de gate no SHA exato; propostas em PR não substituem a main. Orientação cognitiva comum não exige autorização humana por mensagem; efeitos externos exigem credenciais isoladas e consentimento conforme o risco.",
+        "",
+        "## Regras de interpretação",
         "",
         "1. Um PR fechado sem merge continua HISTÓRICO, não normativo.",
         "2. Um PR draft não integra a main nem homologa funcionalidade.",
