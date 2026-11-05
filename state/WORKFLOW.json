@@ -2,9 +2,9 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-07",
-    "branch": "docs/rm07-closeout-rm08-readiness-20261105",
-    "pr_number": 48,
+    "task_id": "RM-06",
+    "branch": "docs/gp3-personal-mvp-8-20261105",
+    "pr_number": 49,
     "base": "main",
     "phase": "review"
   },
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #45, #46 e #47 / RM-07 integrados em main; CI pós-merge #47 run 42092410857 validate=success. RM-07 implementado_nao_homologado: 1 NC OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL_CANDIDATE_NOT_MAIN; 0/27 E2E PASS; GQ-D reprovada/pendente de reauditoria, GQ-C NOT_RUN, GQ-O BLOCKED. Próxima frente RM-08 / GP-4 permanece BLOCKED até GP-3/GQ-D ter evidência funcional e reauditoria. PR #48 apenas sincroniza ROADMAP/HANDOFF/WORKFLOW; abordagem pessoal e proporcional, sem integrações ou dados pessoais.",
+  "notes": "RM-06 / GP-3-MVP8 em revisão no PR #49: oito testes canônicos sintéticos existentes (PED-01, PED-02, PED-12, PED-14, FIQ-02, CDO-08, CDO-17, PRD-09). Os outros 94 cenários permanecem backlog. Oito testes unitários não homologam GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real ou GP-5. Dados pessoais continuam bloqueados; RM-08 após merge pode começar somente com ciclo offline sintético, sem persistência real.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-07",
-    "pr_number": 47,
-    "merge_commit_sha": "8107e3dff1b96354aedbd629ffb0cc8519859816"
+    "pr_number": 48,
+    "merge_commit_sha": "e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2"
   }
 }

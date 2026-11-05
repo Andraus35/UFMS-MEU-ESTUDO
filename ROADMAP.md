@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-07 concluído como incremento técnico / PR #47 mesclado.** `main@8107e3dff1b96354aedbd629ffb0cc8519859816`; CI pós-merge `42092410857` (`validate=success`). RM-07 permanece `implementado_nao_homologado`: 1 NC OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL_CANDIDATE_NOT_MAIN; 0/27 checks end-to-end PASS. Próxima frente RM-08 permanece BLOCKED pelos gates GP-3/GQ-D ainda não homologados. Nenhuma integração externa ou escrita pessoal habilitada.
+> **ESTADO VIGENTE — RM-06 / GP-3-MVP8 em revisão no PR #49.** Base `main@e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2`. Recorte de oito testes sintéticos canônicos, reutilizando a suíte existente; os outros 94 cenários permanecem no catálogo/backlog. GP-3 integral e GQ-D não homologados; GP-4 real bloqueado. Nenhuma integração externa ou escrita de resultados pessoais habilitada.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia atualizada em 05/11/2026: `main` = `8107e3dff1b96354aedbd629ffb0cc8519859816`; PR #47 / RM-07 composição por SHA e verificador r2 mesclado; CI pós-merge run `42092410857`, `validate=success`. CI confirma integridade automatizada, não homologação funcional. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
+Fotografia atualizada em 05/11/2026: `main` = `e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2`; PR #48 / fechamento documental RM-07 mesclado; CI pós-merge run `42092867818`, `validate=success`. PR #49 propõe o recorte GP-3-MVP8; ainda aguarda CI e merge. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após merge de RM-07.
+**Próxima tarefa: RM-08** após merge do recorte GP-3-MVP8. RM-08 começa apenas como ciclo offline sintético; escrita pessoal e integrações reais continuam bloqueadas.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 

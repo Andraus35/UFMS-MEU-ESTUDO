@@ -34,7 +34,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_estado_unico_valido(self):
         self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
-        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-07")
+        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-06")
 
     def test_rejeita_varias_frentes_habilitadas(self):
         for key, mutation in (
