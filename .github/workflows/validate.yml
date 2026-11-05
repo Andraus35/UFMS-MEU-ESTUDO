@@ -4,6 +4,7 @@ on:
   pull_request:
 permissions:
   contents: read
+  pull-requests: read
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -16,6 +17,18 @@ jobs:
         run: python scripts/ci_gate_contract.py --check
       - name: Verificar bloqueio de resultados pessoais
         run: python scripts/write_policy.py --check
+      - name: Validar roadmap e bootstrap
+        run: python scripts/roadmap_gate.py --check
+      - name: Garantir trabalho serial e PR unico
+        run: python scripts/single_flow_gate.py --remote
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Validar START controlado de engenharia
+        run: python scripts/bootstrap.py --mode engineering
+      - name: Validar broker read-only com SHA de checkout
+        run: python scripts/agent_entrypoint.py --role engineer --check
+        env:
+          UFMS_TRUSTED_HEAD_SHA: ${{ github.sha }}
       - name: Validar estrutura e dados
         run: python scripts/validate.py
       - name: Validar integridade do edital

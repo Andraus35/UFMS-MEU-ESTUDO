@@ -16,6 +16,10 @@ except ModuleNotFoundError:
 REQUIRED_STEPS = (
     ("Validar contrato de segurança da CI", "python scripts/ci_gate_contract.py --check"),
     ("Verificar bloqueio de resultados pessoais", "python scripts/write_policy.py --check"),
+    ("Validar roadmap e bootstrap", "python scripts/roadmap_gate.py --check"),
+    ("Garantir trabalho serial e PR unico", "python scripts/single_flow_gate.py --remote"),
+    ("Validar START controlado de engenharia", "python scripts/bootstrap.py --mode engineering"),
+    ("Validar broker read-only com SHA de checkout", "python scripts/agent_entrypoint.py --role engineer --check"),
     ("Validar estrutura e dados", "python scripts/validate.py"),
     ("Testar regras de integridade", "python -m unittest discover -s tests -v"),
     ("Confirmar projeções reproduzíveis", "python scripts/rebuild.py --check"),
@@ -26,7 +30,7 @@ def verify_workflow(workflow):
     if not isinstance(workflow, str):
         raise ValueError("Workflow inválido")
     for expected in ("on:", "  push:", "  pull_request:",
-                     "permissions:", "  contents: read"):
+                     "permissions:", "  contents: read", "  pull-requests: read"):
         if len(re.findall(r"(?m)^" + re.escape(expected) + r"\s*$", workflow)) != 1:
             raise ValueError("Workflow sem gatilho/permissão obrigatória: " + expected.strip())
     if re.search(r"(?m)^\s*contents:\s*write\s*$", workflow):
@@ -52,6 +56,11 @@ def verify_security_contract(root=ROOT):
     sources = {
         "scripts/validate.py": ("verify_write_policy(root)", "check_hook_contract(root)"),
         "scripts/rebuild.py": ("verify_write_policy(root)",),
+        "scripts/roadmap_gate.py": ("def verify(", "check_bootstrap(root)"),
+        "scripts/single_flow_gate.py": ("def validate_local(", "def validate_remote(", "def fetch_open_prs(", "def fetch_pr("),
+        "scripts/bootstrap.py": ("def run(", "validate_local(root)", "state/WORKFLOW.json"),
+        "scripts/agent_entrypoint.py": ("def verify_start(", "class ReadOnlyAgentBroker:", "def model_context("),
+        "scripts/protect_main.py": ("def protection_policy(", "def verify_protection("),
         "scripts/write_policy.py": ("def verify_write_policy(",),
         "scripts/api_write_guard.py": ("def check_proposal(", "def check_readback("),
     }

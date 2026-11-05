@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "policy": "single_branch_single_pr_single_merge",
+  "active": {
+    "task_id": "SIM-04",
+    "branch": "docs/roadmap-required-bootstrap-20261104",
+    "pr_number": 9,
+    "base": "main",
+    "phase": "review"
+  },
+  "next_task_after_merge": "SIM-01",
+  "rules": {
+    "max_open_pull_requests": 1,
+    "max_active_work_branches": 1,
+    "require_previous_merge_before_next": true,
+    "allow_parallel_work": false,
+    "allow_concurrent_prs": false,
+    "require_head_ci": true,
+    "require_negative_tests_for_high_medium": true,
+    "allow_legacy_archived_branches_without_open_pr": true
+  },
+  "deferred_pull_requests": [
+    {
+      "number": 5,
+      "branch": "spec/ufms-cognitive-gates-gqd-correction-v0-3",
+      "sha": "9f1b347e755c82f15089470749d9d33524167c1f",
+      "reason": "gates cognitivos: 27 provas funcionais pendentes",
+      "archived_without_merge": true
+    },
+    {
+      "number": 11,
+      "branch": "security/agent-entrypoint-failclosed-20261104",
+      "sha": "c7213f1ac512ede8760f8025a0f5d3db4aa7c288",
+      "reason": "broker START; reconciliar com #15",
+      "archived_without_merge": true
+    },
+    {
+      "number": 12,
+      "branch": "audit/governance-document-reconciliation-20261104",
+      "sha": "36e81390d8b41cf5c62a071e067779d2aed1d805",
+      "reason": "saneador; reconciliar com #14",
+      "archived_without_merge": true
+    },
+    {
+      "number": 13,
+      "branch": "fix/api-write-draft-pr-preflight-20261105",
+      "sha": "27024250463cbc5fa28c50ed5d10323b987f0abd",
+      "reason": "base da cadeia de escrita API",
+      "archived_without_merge": true
+    },
+    {
+      "number": 14,
+      "branch": "audit/compose-roadmap-document-reconciliation-20261105",
+      "sha": "ae8edf3a91d62dff431ea6db2ea88d55b2edc65e",
+      "reason": "composição do #12 sobre #9 antigo",
+      "archived_without_merge": true
+    },
+    {
+      "number": 15,
+      "branch": "security/compose-agent-broker-roadmap-20261105",
+      "sha": "e3a32b92c4c16a98456008718f145d5175f564b3",
+      "reason": "composição do broker sobre #14",
+      "archived_without_merge": true
+    },
+    {
+      "number": 16,
+      "branch": "automation/fapec-readonly-schedule-20261105",
+      "sha": "fd0a81823405e72a0b5fb91abf2a73cb5af685dc",
+      "reason": "monitor FAPEC ainda não integrado",
+      "archived_without_merge": true
+    },
+    {
+      "number": 17,
+      "branch": "audit/postcommit-exact-diff-20261105",
+      "sha": "538909435a945b3801fa6fdd39b9e98b659a34d3",
+      "reason": "intermediário da cadeia API, base para #18",
+      "archived_without_merge": true
+    },
+    {
+      "number": 18,
+      "branch": "fix/api-postcommit-content-bound-20261105",
+      "sha": "daec1f626c0bf43a22a565eaac3a290bc71f83c5",
+      "reason": "candidato API mais avançado, não homologado",
+      "archived_without_merge": true
+    }
+  ],
+  "notes": "Fonte unica: quando PR #9 estiver aberto, SIM-04 e a unica frente. Quando o PR #9 constar merged em main e nao houver PR aberto, o estado efetivo e awaiting_next_task, com SIM-01 pendente; 'active' passa a representar o ciclo anterior, NAO a tarefa atual. Nunca tratar PR apenas closed como merge. ROADMAP fila; HANDOFF resumo; CURRENT somente estudos. Credenciais e dados pessoais permanecem bloqueados.",
+  "post_merge_resolution": "confirm_merged_pr_then_await_next_task"
+}

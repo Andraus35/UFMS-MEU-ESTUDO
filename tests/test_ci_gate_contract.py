@@ -14,6 +14,39 @@ class CIGateContractTests(unittest.TestCase):
     def test_workflow_atual_cumpre_gates(self):
         self.assertTrue(verify_security_contract(ROOT))
 
+    def test_remocao_do_gate_roadmap(self):
+        bad = WORKFLOW.replace(
+            "      - name: Validar roadmap e bootstrap\n"
+            "        run: python scripts/roadmap_gate.py --check\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
+    def test_remocao_do_gate_de_trabalho_unico(self):
+        bad = WORKFLOW.replace(
+            "      - name: Garantir trabalho serial e PR unico\n"
+            "        run: python scripts/single_flow_gate.py --remote\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
+    def test_remocao_de_permissao_de_leitura_dos_prs(self):
+        bad = WORKFLOW.replace("  pull-requests: read\n", "")
+        with self.assertRaisesRegex(ValueError, "gatilho/permissão"):
+            verify_workflow(bad)
+
+    def test_remocao_de_start_engenharia(self):
+        bad = WORKFLOW.replace(
+            "      - name: Validar START controlado de engenharia\n"
+            "        run: python scripts/bootstrap.py --mode engineering\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
+    def test_remocao_de_broker_de_agente(self):
+        bad = WORKFLOW.replace(
+            "      - name: Validar broker read-only com SHA de checkout\n"
+            "        run: python scripts/agent_entrypoint.py --role engineer --check\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
     def test_remocao_do_gate_privacidade(self):
         bad = WORKFLOW.replace(
             "      - name: Verificar bloqueio de resultados pessoais\n"
