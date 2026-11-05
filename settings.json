@@ -9,16 +9,10 @@
     "mandatory": [
       "AGENTS.md",
       "ROADMAP.md",
-      "settings.json",
-      "rules/CORE.md",
-      "guardrails/CORE.md",
-      "memory/INDEX.md",
       "memory/HANDOFF.md",
-      "state/CURRENT.json",
-      "EDITAL_UFMS_152_2026.md",
-      "edital/INDEX.md"
+      "state/CURRENT.json"
     ],
-    "target_tokens": 3000
+    "target_tokens": 2200
   },
   "context": {
     "load_history_on_demand": true,
