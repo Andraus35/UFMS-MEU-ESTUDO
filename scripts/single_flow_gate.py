@@ -95,7 +95,7 @@ def validate_local(root=ROOT):
     return data
 
 
-def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=None):
+def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=None, head_sha=""):
     """Resolve ACTIVE_PR or AWAITING_NEXT_TASK from authenticated GitHub evidence.
 
     A closed PR without a recorded merge never permits advancing the queue.
@@ -114,6 +114,12 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
             raise ValueError("PR remoto diferente do único PR ativo")
         if only.get("head", {}).get("ref") != active["branch"]:
             raise ValueError("Branch remota diferente da branch ativa")
+        if only.get("base", {}).get("ref") != "main":
+            raise ValueError("PR ativo não tem main como base")
+        if not isinstance(head_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", head_sha):
+            raise ValueError("SHA do evento ausente ou inválido")
+        if only.get("head", {}).get("sha") != head_sha:
+            raise ValueError("SHA do evento diverge do HEAD atual do PR")
         if event_name == "pull_request" and head_ref != active["branch"]:
             raise ValueError("PR concorrente ou branch do evento diferente da tarefa ativa")
         if event_name == "push" and ref_name != active["branch"]:
@@ -199,7 +205,8 @@ def main():
                               data["active"]["pr_number"], os.getenv("GITHUB_TOKEN"))
                      if not prs and event == "push" and ref == "main" else None)
             result = validate_remote(data, prs, event, ref,
-                                     os.getenv("GITHUB_HEAD_REF", ""), prior)
+                                     os.getenv("GITHUB_HEAD_REF", ""), prior,
+                                     os.getenv("GITHUB_HEAD_SHA", ""))
             print("OK: fluxo serial remoto: " + json.dumps(result, sort_keys=True))
         else:
             print("OK: política local de tarefa única; PR registrado #" + str(data["active"]["pr_number"]))

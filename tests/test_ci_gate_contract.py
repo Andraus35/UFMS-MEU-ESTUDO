@@ -28,6 +28,18 @@ class CIGateContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
             verify_workflow(bad)
 
+    def test_remocao_do_sha_exato_do_evento(self):
+        bad = WORKFLOW.replace(
+            "          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}\n", "")
+        with self.assertRaisesRegex(ValueError, "SHA exato do evento"):
+            verify_workflow(bad)
+
+    def test_duplicacao_do_sha_exato_do_evento(self):
+        line = "          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}\n"
+        bad = WORKFLOW.replace(line, line + line)
+        with self.assertRaisesRegex(ValueError, "SHA exato do evento"):
+            verify_workflow(bad)
+
     def test_remocao_de_permissao_de_leitura_dos_prs(self):
         bad = WORKFLOW.replace("  pull-requests: read\n", "")
         with self.assertRaisesRegex(ValueError, "gatilho/permissão"):

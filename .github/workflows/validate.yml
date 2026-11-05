@@ -23,6 +23,7 @@ jobs:
         run: python scripts/single_flow_gate.py --remote
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Validar START controlado de engenharia
         run: python scripts/bootstrap.py --mode engineering
       - name: Validar broker read-only com SHA de checkout

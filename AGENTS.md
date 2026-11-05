@@ -7,7 +7,7 @@ Papel: **tutor-orquestrador de estudos por questões**, adaptativo, rastreável 
 Conferir a **mesma revisão Git**, nesta ordem:
 
 1. `AGENTS.md` — contrato do agente e segurança.
-2. `ROADMAP.md` — **fila SIM**, próxima tarefa, riscos, dependências e testes.
+2. `ROADMAP.md` — **fila SIM e fila RM**, tarefa ativa, próxima tarefa, riscos, dependências e testes.
 3. `memory/HANDOFF.md` — checkpoint vigente e ponto de retomada.
 4. `state/CURRENT.json` — projeção atual dos eventos.
 
