@@ -1,48 +1,26 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-**Data:** 05/11/2026. Conferir SHA e estado remoto no GitHub antes de toda operação. Este resumo indica a próxima tarefa; não substitui validação do commit/CI.
+**Data:** 05/11/2026. **Este resumo não é o estado operacional.** Para qualquer trabalho de engenharia, recuperar `state/WORKFLOW.json` e verificar o GitHub no mesmo HEAD. O conteúdo histórico integral permanece em `memory/HANDOFF_ARCHIVE_2026-11-05.md`.
 
-## Estado
+## Retomada em uma única frente
 
-- **Fonte da verdade:** `Andraus35/UFMS-MEU-ESTUDO`; a `main` estava em `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68` na leitura inicial, protegida pelo check `validate`. A reforma SIM está no **PR #9 draft**, ainda não mesclada.
-- **Privacidade:** repositório **público**; nunca armazenar desempenho individual, CPF, relatórios reais ou credenciais. A flag `personal_results_writes_enabled` continua `false`.
-- **Estudo:** cargos 523 (manhã) e 324 (tarde), prova prevista 17/01/2027, sujeito a retificações oficiais. `state/CURRENT.json` informa 0 eventos e 0 resultados no estado inicial; reler sempre no HEAD atual.
-- **Edital:** transcrição integral, manifesto, índices e 81 chunks preservados; consultar somente os recortes pertinentes. A página 13 contém divergência cronológica a acompanhar. Não substituir edital original silenciosamente.
-- **Integrações:** Tutor/Coach podem recomendar livremente, mas não afirmar Zapia/agenda/Oracle/Gemini operacionais sem testes E2E. PR #5 tem especificação não homologada.
+- **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`; `main` protegida por `validate`. A visibilidade verificada é **pública**: gravação de desempenho pessoal e segredos continua bloqueada.
+- **Única proposta aberta na última verificação:** PR #9, branch `docs/roadmap-required-bootstrap-20261104`, base `main`, ainda **draft e sem merge**. Não criar branch/PR adicional enquanto estiver aberto.
+- **Fonte de verdade operacional:** `state/WORKFLOW.json`. Seu ciclo registrado é SIM-04 / PR #9 em fase **review**; `next_task_after_merge=SIM-01` é apenas fila futura. O campo `active` representa a **candidata anterior** após seu merge, não uma tarefa ainda em andamento na `main`.
+- **Resolução obrigatória:** consultar PRs abertos no GitHub. Com #9 aberto, `active_pr`. Sem PR aberto, **somente** confirmar `awaiting_next_task` depois de consultar o PR #9 e verificar `state=closed`, `merged_at` real, head/base esperados e fase de revisão. **PR fechado sem merge, erro de API ou resultado incerto não autoriza avançar.**
+- **Bootstrap:** estudo lê `AGENTS.md`, `ROADMAP.md`, este `memory/HANDOFF.md`, `state/CURRENT.json`. Engenharia lê também `state/WORKFLOW.json`; execução local `python scripts/bootstrap.py --mode engineering`, verificação remota `python scripts/single_flow_gate.py --remote`.
+- **Broker:** `scripts/agent_entrypoint.py` é somente leitura, testado localmente, mas ainda **não é executor de Tutor/Coach/Zapia implantado**. Não confundir bytes verificados com leitura semântica universal.
+- **Estudo:** cargos 523 e 324; `state/CURRENT.json` tem zero eventos e zero resultados no último checkpoint; consultar HEAD atual. Edital e seus 81 chunks sob demanda, com alerta de cronologia na página 13; integrações externas não comprovadas permanecem não implementadas.
 
-## Retomada determinística de engenharia
+## Protocolo de execução e entrega
 
-- **Fonte única de trabalho:** `state/WORKFLOW.json`, leitura obrigatória na engenharia. Não interpretar números antigos deste handoff como estado ativo; conferir o SHA do branch e a lista de PRs aberta no GitHub.
-- **Tarefa única atual:** SIM-04 (saneamento de PRs e persistência da regra), branch `docs/roadmap-required-bootstrap-20261104`, **PR #9** draft. A reforma é candidata, não integrada à `main`.
-- **Próxima tarefa após merge:** SIM-01 (privacidade). Não iniciar SIM-01, SIM-02 nem nenhuma outra frente enquanto #9 continuar aberto.
-- **Inventário legado:** #5, #11, #12, #13, #14, #15, #16, #17 e #18, com HEAD, branch e trabalho exclusivo preservados no `state/WORKFLOW.json`. Encerrar sem merge e manter refs históricos até recuperação sequencial; não tratar encerramento como aprovação técnica.
-- **Gate de início:** `python scripts/bootstrap.py --mode engineering` deve ler quatro arquivos comuns e `state/WORKFLOW.json`, com hashes; `python scripts/single_flow_gate.py --check` confirma a frente e a CI testa `--remote`. Múltiplos PRs abertos bloqueiam o fluxo de engenharia. **Não é enforcement universal dos agentes externos**: sem executor obrigatório, uma sessão pode ignorar scripts.
-- **Fechamento de ciclo:** contraprovas negativas e testes aplicáveis → CI no HEAD → readback → revisão/autorizações cabíveis → **um merge** → próxima branch/PR. Uma branch para cada correção separada é proibida.
+1. **START:** ler os quatro arquivos básicos, mais `state/WORKFLOW.json` para engenharia, de uma mesma revisão. Conferir PRs, HEAD e verificações remotas antes de decisões com efeito.
+2. **Somente SIM-04 no PR #9:** finalizar saneamento da transição pós-merge, referências documentais e contraprovas. Não iniciar SIM-01 antes de integrar #9.
+3. **Gates:** testar PR aberto, PR fechado sem merge, merge comprovado, API indisponível, múltiplos PRs e divergência da próxima tarefa. Exigir CI `validate` e readback do commit exato; CI verde não constitui homologação externa do Tutor/Coach.
+4. **Integração:** só mesclar após gates e autorização aplicável. Após merge, verificar `main` e o PR real; o estado efetivo passa a `awaiting_next_task`. O ciclo seguinte cria uma nova branch e PR somente depois disso.
+5. **Arquivos históricos:** PRs #5, #11–#18 encerrados sem merge preservam SHAs no `state/WORKFLOW.json`. Branches históricas não são frentes ativas; excluir apenas com preservação e análise de dependências. Nenhuma exclusão/merge automático.
+6. **Persistência:** registrar novas evidências no corpo do PR #9 e só atualizar ROADMAP/HANDOFF quando muda o significado; jamais usar uma fotografia histórica como status vigente.
 
-## Último ensaio de START (05/11/2026)
+## Limitações
 
-- **Objeto testado:** PR #9, commit `8170e3771f8b29cfab51f9b4d95b3334e8cac717`. CI push `42037230359` e PR `42037236502` concluídas com sucesso; **215/215 testes**. Este handoff e o roadmap produzem commits posteriores: conferir CI no novo HEAD antes de promover qualquer estado.
-- **START de estudo:** `python scripts/bootstrap.py --mode study` verifica quatro arquivos e emite hashes.
-- **START de engenharia:** `python scripts/bootstrap.py --mode engineering` exige adicionalmente `state/WORKFLOW.json` validado, devolvendo item ativo SIM-04, PR #9, branch e próximo SIM-01 pós-merge.
-- **Contraprovas verificadas:** arquivo ausente/vazio, ordem, tarefa inválida, `WORKFLOW.json` corrompido/ausente, modo inválido e remoção do gate na CI. `tests/test_start_effectiveness.py` mantém os 10 casos.
-- **Limite P0:** nenhuma prova de leitura semântica pelo LLM nem de que agentes externos sejam obrigados a invocar o START; `AGENTS.md` e CI sozinhos não implementam um executor que intercepte todas as ações. **Não declarar universalmente efetivo**.
-- **Limite P1:** em acesso direto por API, confirmar a identidade do mesmo HEAD remoto de cada documento; hashes locais não o garantem. Fotografias antigas de PRs no roadmap são históricas.
-- **Sequência:** fechar somente esta frente SIM-04 com revisão, gates e merge; depois SIM-01 em uma nova e única branch/PR. Não abrir frente paralela.
-
-## Broker START verificado — checkpoint 05/11/2026
-
-- **Código e testes:** `scripts/agent_entrypoint.py` e `tests/test_agent_entrypoint.py`, reaproveitando a capacidade útil dos PRs legados #11/#15, **sem restaurar o START antigo de dez arquivos**. Apenas leitura, nenhuma capacidade de envio, escrita ou merge.
-- **Evidência:** candidata funcional `7561cba812a4d5545635931594ddae2a99262c45`; CI push `42038174394` e PR `42038187668`: **success, 228/228 testes**. O broker foi executado em CI com SHA do checkout, exibindo papel engineer, cinco arquivos, SIM-04, PR #9 e `external_effects_enabled=false`.
-- **Contraprovas novas (12):** estudo com quatro arquivos; engenharia com cinco; texto entregue ao orquestrador com hashes; HEAD incorreto, checkout sujo, documento ausente/inválido, recibo obsoleto, papel e modo inválidos, symlink, tentativas de operações externas. Falhas causam bloqueio no broker.
-- **Pendente real (ALTA):** integração do executor externo Tutor/Coach/Zapia e restrição de credenciais para obrigar passagem pelo broker. Sem essa implantação, nenhuma alegação de enforcement universal. O PR #9 continua único e draft; **não iniciar nova frente antes do merge**.
-- **Após checkpoint documental:** confirmar CI do novo HEAD; números acima pertencem ao SHA efetivamente testado, não são herdados automaticamente.
-
-## Regras de entrega e rastreabilidade
-
-- Para ALTA/MEDIA: identificar causa, correção, contraprovas negativas reais, regressão, HEAD/CI e riscos remanescentes. Uma referência a teste não demonstra que ele foi executado. Não promover status antes de comprovação.
-- Evitar novo PR de saneamento enquanto **PR #9** puder acomodar mudanças. Cadeias empilhadas #9→#14→#15 e #13→#17→#18 precisam ser reconciliadas, não mescladas às cegas; PR #12 pode estar incorporado em #14, mas não deve ser descartado sem verificar equivalência final.
-- Não mesclar nem deletar branches por inferência; manter `main` sem alterações até a integração explicitamente autorizada. Atualizar o topo deste handoff a cada nova entrega, preservando histórico no arquivo de referência.
-
-## Histórico preservado
-
-O conteúdo anterior completo (sem apagamentos) está em `memory/HANDOFF_ARCHIVE_2026-11-05.md`. Decisões em `memory/DECISIONS.md`; prova independente e detalhes históricos devem ser buscados apenas sob demanda.
+Em acesso GitHub via API, hooks locais não são interceptadores globais. O gate de CI ocorre após o push; não bloqueia fisicamente alguém com credenciais de criar PR, fazer push ou pular o bootstrap. Não afirmar implantação externa, autorização de merge ou resultados pessoais sem evidência e readback.
