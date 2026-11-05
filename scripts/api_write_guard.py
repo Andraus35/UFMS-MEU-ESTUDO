@@ -260,7 +260,37 @@ def check_authenticated_commit_readback(proposal, committed_sha,
             or not isinstance(parents[0], dict)
             or parents[0].get("sha") != old_sha):
         raise ValueError("New commit not a direct descendant of expected HEAD")
+    # A descendant can alter unproposed files in the same Git commit.
+    # Verify the complete authenticated delta, never only the parent link.
+    _, comparison = _read(getter, prefix + "/compare/" + old_sha + "..." + new_sha)
+    if (comparison.get("status") != "ahead"
+            or comparison.get("ahead_by") != 1
+            or comparison.get("behind_by") != 0
+            or comparison.get("total_commits") != 1):
+        raise ValueError("Postcommit diff not exactly one direct advance")
+    changed = comparison.get("files")
+    if not isinstance(changed, list) or len(changed) != len(proposal["files"]):
+        raise ValueError("Postcommit changed-file set differs from proposal")
+    expected = {item["path"]: ("modified" if item["operation"] == "update"
+                               else "added") for item in proposal["files"]}
+    observed = {}
+    for item in changed:
+        if not isinstance(item, dict):
+            raise ValueError("Postcommit changed-file metadata invalid")
+        name, status = item.get("filename"), item.get("status")
+        if name not in expected or name in observed or status != expected[name]:
+            raise ValueError("Unexpected file or operation in committed diff")
+        observed[name] = _sha(item.get("sha"), "postcommit_blob_sha")
+    if set(observed) != set(expected):
+        raise ValueError("Committed diff missing proposed files")
+    for path, blob_sha in observed.items():
+        _, content = _read(
+            getter, prefix + "/contents/" + quote(path, safe="/")
+            + "?ref=" + new_sha)
+        if content.get("type") != "file" or content.get("sha") != blob_sha:
+            raise ValueError("Postcommit file blob differs from committed diff")
     return {**original, "committed_sha": new_sha, "base_sha": main_sha,
-            "readback": "authenticated_postcommit_direct_descendant",
+            "readback": "authenticated_postcommit_exact_file_delta",
+            "changed_files_verified": len(observed),
             "authenticated_remote_read": True, "ci_verified": False,
             "merge_authorized": False}

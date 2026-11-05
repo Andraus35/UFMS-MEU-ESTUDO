@@ -47,3 +47,10 @@ avançado e pai imediato igual ao SHA anteriormente conferido.
 Reprova troca de base, rebase, merge commit, PR fechado, branch
 concorrente e ausência de prova. Ela NÃO atesta CI, permissões
 administrativas, implantação de serviços ou autorização de merge.
+
+
+## NC-13-02 — Delta exato do commit (candidata corretiva)
+
+O readback antigo só provava identidade do PR, HEAD, base e pai do commit. Um commit descendente com arquivo extra podia receber confirmação estrutural. Agora a comparação autenticada old...new deve mostrar exatamente um commit, o mesmo conjunto de caminhos e operações propostos, sem remoções ou renames. Os blobs são relidos no SHA novo e confrontados com os digests do diff. Metadados incompletos e falhas de rede rejeitam.
+
+O guard continua cooperativo: CI não é verificada pelo método, o cliente com credenciais diretas pode ignorar o fluxo e revisão de conteúdo ainda é necessária. Sem homologação independente, merge, Zapia, credenciais ou dados pessoais.

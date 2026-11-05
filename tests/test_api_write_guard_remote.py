@@ -155,6 +155,14 @@ class ApiRemoteTests(unittest.TestCase):
         data[ROOT + "/branches/" + BRANCH]["body"]["commit"]["sha"] = "d" * 40
         data[ROOT + "/git/commits/" + "d" * 40] = {
             "status": 200, "body": {"parents": [{"sha": HEAD}]}}
+        data[ROOT + "/compare/" + HEAD + "..." + "d" * 40] = {
+            "status": 200, "body": {
+                "status": "ahead", "ahead_by": 1, "behind_by": 0,
+                "total_commits": 1,
+                "files": [{"filename": "docs/OPERACAO.md", "status": "modified",
+                           "sha": "f" * 40}]}}
+        data[ROOT + "/contents/docs/OPERACAO.md?ref=" + "d" * 40] = {
+            "status": 200, "body": {"type": "file", "sha": "f" * 40}}
         return data
 
     def test_postcommit_live_readback_passes_without_ci_promotion(self):
@@ -164,6 +172,9 @@ class ApiRemoteTests(unittest.TestCase):
         self.assertTrue(result["authenticated_remote_read"])
         self.assertFalse(result["ci_verified"])
         self.assertFalse(result["merge_authorized"])
+        self.assertEqual(result["changed_files_verified"], 1)
+        self.assertEqual(result["readback"],
+                         "authenticated_postcommit_exact_file_delta")
 
     def test_postcommit_pr_retarget_fails_closed(self):
         d = self.postcommit()
@@ -215,6 +226,91 @@ class ApiRemoteTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Authenticated read unavailable"):
             check_authenticated_commit_readback(
                 self.p, "d" * 40, BASE, d.__getitem__)
+
+
+    def test_postcommit_sensitive_extra_file_rejected(self):
+        d = self.postcommit()
+        diff = d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]
+        diff["files"].append({"filename": ".github/workflows/validate.yml",
+                              "status": "modified", "sha": "e" * 40})
+        with self.assertRaisesRegex(ValueError, "changed-file set"):
+            check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_unexpected_file_rejected(self):
+        d = self.postcommit()
+        d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]["files"][0]["filename"] = "docs/other.md"
+        with self.assertRaisesRegex(ValueError, "Unexpected file"):
+            check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_remove_rename_or_wrong_operation_rejected(self):
+        for status in ("removed", "renamed", "added"):
+            with self.subTest(status=status):
+                d = self.postcommit()
+                d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]["files"][0]["status"] = status
+                with self.assertRaisesRegex(ValueError, "Unexpected file"):
+                    check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_missing_or_truncated_delta_rejected(self):
+        for mode in ("missing", "empty", "malformed", "no_blob"):
+            with self.subTest(mode=mode):
+                d = self.postcommit()
+                diff = d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]
+                if mode == "missing": diff.pop("files")
+                elif mode == "empty": diff["files"] = []
+                elif mode == "malformed": diff["files"] = "not a list"
+                else: diff["files"][0].pop("sha")
+                with self.assertRaises(ValueError):
+                    check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_diff_must_be_exact_one_commit(self):
+        for field, value in (("status", "diverged"), ("ahead_by", 2),
+                             ("behind_by", 1), ("total_commits", 2),
+                             ("total_commits", None)):
+            with self.subTest(field=field):
+                d = self.postcommit()
+                d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"][field] = value
+                with self.assertRaisesRegex(ValueError, "exactly one"):
+                    check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_compare_unavailable_fails_closed(self):
+        d = self.postcommit()
+        del d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]
+        with self.assertRaisesRegex(ValueError, "Authenticated read unavailable"):
+            check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_blob_mismatch_symlink_and_404_rejected(self):
+        path = ROOT + "/contents/docs/OPERACAO.md?ref=" + "d" * 40
+        for value in (
+            {"status": 200, "body": {"type": "file", "sha": "e" * 40}},
+            {"status": 200, "body": {"type": "symlink", "sha": "f" * 40}},
+            {"status": 404, "body": {"message": "Not Found"}},
+        ):
+            with self.subTest(value=value):
+                d = self.postcommit()
+                d[path] = value
+                with self.assertRaises(ValueError):
+                    check_authenticated_commit_readback(self.p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_create_requires_added_and_live_blob(self):
+        p = proposal(operation="create", path="docs/new.md")
+        d = self.postcommit()
+        diff = d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]
+        diff["files"] = [{"filename": "docs/new.md", "status": "added", "sha": "f" * 40}]
+        d[ROOT + "/contents/docs/new.md?ref=" + "d" * 40] = {
+            "status": 200, "body": {"type": "file", "sha": "f" * 40}}
+        self.assertEqual(check_authenticated_commit_readback(
+            p, "d" * 40, BASE, d.__getitem__)["changed_files_verified"], 1)
+        diff["files"][0]["status"] = "modified"
+        with self.assertRaisesRegex(ValueError, "Unexpected file"):
+            check_authenticated_commit_readback(p, "d" * 40, BASE, d.__getitem__)
+
+    def test_postcommit_diff_cannot_claim_ci_success(self):
+        d = self.postcommit()
+        d[ROOT + "/compare/" + HEAD + "..." + "d" * 40]["body"]["ci"] = "success"
+        result = check_authenticated_commit_readback(
+            self.p, "d" * 40, BASE, d.__getitem__)
+        self.assertFalse(result["ci_verified"])
+        self.assertFalse(result["merge_authorized"])
 
     @patch("api_write_guard.subprocess.run")
     def test_gh_reader_accepts_http_200_json(self, run):
