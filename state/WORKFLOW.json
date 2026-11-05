@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-03",
-    "branch": "feat/rm03-evidence-projection-20261105",
-    "pr_number": 40,
+    "task_id": "RM-04",
+    "branch": "feat/rm04-deterministic-queue-20261105",
+    "pr_number": 41,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-04",
+  "next_task_after_merge": "RM-05",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #39 / RM-02 integrado em 4052a06d530b269410f0300a8ae503e822672caa; CI pós-merge 42082155852 validate=success; zero PRs abertos após merge. RM-02 implementa IGP-12/13/14 em schema aditivo e permanece implementado_nao_homologado; dados pessoais continuam bloqueados. RM-03 projeta evidências E0-E4 e incertezas sem inferir domínio, com rebuild determinístico.",
+  "notes": "PR #40 / RM-03 integrado em e03c086bcd6b60e5bd60273cf2d50979775a4775; CI pós-merge 42083036692 validate=success; zero PRs abertos. RM-03 projeta E0-E4 com incertezas explícitas; CURRENT permanece E0. RM-04 implementa fila adaptativa determinística por snapshot/as_of, com justificativas e sem dupla contagem; probabilística opcional permanece desativada.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",
