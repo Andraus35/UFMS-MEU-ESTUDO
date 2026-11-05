@@ -202,5 +202,6 @@ def rebuild_attempts(events, topics):
     return {
         "attempts_count": len(attempts),
         "last_attempt_id": next(reversed(attempts), None),
+        "recommendation_ids": sorted({event["recommendation_id"] for event in attempts.values()}),
         "progress": progress,
     }
