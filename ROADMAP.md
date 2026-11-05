@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-00 / PR #37 (draft).** PR #36 / SIM-12 integrado à `main` em `aeb0de34e40b8f32e04345c8428e090fdf32f0ad`; CI pós-merge `42077837031` (`validate=success`). Frente única: `fix/rm00-head-bound-delivery-gate-20261105`. Proteção administrativa confirmada pelo proprietário: required check `validate`, `strict=true`, `reviews=0`, `enforce_admins=true`. RM-00 fecha o vínculo do gate serial ao SHA exato do evento e exige base `main` no PR. Nenhuma branch histórica será apagada ou mesclada em lote.
+> **ESTADO VIGENTE — RM-01 / PR #38 (draft).** PR #37 / RM-00 integrado à `main` em `1ab0c25a8b0084034fb1987097bfcb6b38ccea44`; CI pós-merge `42079838224` (`validate=success`). Frente única: `audit/rm01-source-monitoring-20261105`. Proteção administrativa confirmada: required check `validate`, `strict=true`, `reviews=0`, `enforce_admins=true`. RM-01 audita monitoramento FAPEC/UFMS e preservação do alerta do edital; não incorpora retificações automaticamente.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,13 +65,13 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-01** após merge de RM-00.
+**Próxima tarefa: RM-02** após merge de RM-01.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
 | ID | P | Frente / gate | Estado de partida | Definition of Done |
 |---|---|---|---|---|
-| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | em_andamento | gates automáticos de entrega: proteção main confirmada; gate serial agora vincula PR à base main e ao SHA exato do evento; falta CI verde no HEAD final e auditoria/readback pós-merge |
+| RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | implementado_nao_homologado | Proteção main confirmada; gate serial vincula PR à base main e ao SHA exato; CI verde no HEAD e pós-merge; hooks locais não foram executados via API |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | bloqueado | IGP-12/13/14 integrados, migração sem perda histórica, testes negativos/CI |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
