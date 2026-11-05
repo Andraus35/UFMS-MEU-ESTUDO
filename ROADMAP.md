@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-03 / PR #40 (draft).** PR #39 / RM-02 integrado à `main` em `4052a06d530b269410f0300a8ae503e822672caa`; CI pós-merge `42082155852` (`validate=success`). Frente única: `feat/rm03-evidence-projection-20261105`. RM-03 implementa projeção reprodutível E0–E4 e incertezas, sem converter nível informacional em nota de domínio.
+> **ESTADO VIGENTE — RM-04 / PR #41 (draft).** PR #40 / RM-03 integrado à `main` em `e03c086bcd6b60e5bd60273cf2d50979775a4775`; CI pós-merge `42083036692` (`validate=success`). Frente única: `feat/rm04-deterministic-queue-20261105`. RM-04 implementa fila adaptativa determinística por snapshot e política, sem dupla contagem.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-04** após merge de RM-03.
+**Próxima tarefa: RM-05** após merge de RM-04.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -75,7 +75,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | implementado_nao_homologado | IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | em_andamento | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
-| RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | planejado | Ranking determinístico por snapshot e política, justificativas auditáveis, sem dupla contagem |
+| RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | em_andamento | Ranking determinístico por snapshot e política, justificativas auditáveis, sem dupla contagem |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | planejado | Filtros realistas, fallback e estado do caderno sem inventar ID externo |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | planejado | Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | bloqueado | Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional |
