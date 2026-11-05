@@ -14,3 +14,13 @@ Comando na árvore composta:
 ```sh
 python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/functional-tests -p 'test_*.py' -v
 ```
+
+## Evidência da primeira execução isolada C2/C3 — 04/11/2026
+
+- **HEAD testado:** `dffc56625c92e7a563f81806ac07a91c920b3174`; merge sintético `8caec3a975221e613aaa015a6caf60b8db923141`; main `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68`.
+- **CI composta:** [41941588161](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41941588161): `success`, **12/12 testes isolados C2/C3**, **8/8 testes de composição** e **171/171 testes da suíte técnica**. Recibo e logs do teste estão no artifact do workflow.
+- **Outras CIs do mesmo HEAD:** [harness 41941588160](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41941588160), [r2 formal 41941588156](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41941588156), [r3 documental 41941588174](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41941588174), [r2 push 41941579138](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41941579138), todas `success`.
+- **Alcance:** duas obrigações C2/C3 verificadas **somente no componente isolado de resolução exata**, não na integração Tutor/Coach. As 27 provas funcionais de ponta a ponta continuam `NOT_RUN`; C25/apoio semântico, gateway, renderer e Zapia não foram executados.
+- **Limite de segurança:** o gate prende a fonte a blob conhecido e preserva `semantic_support=NOT_CHECKED` / `publication_authorized=false`. A independência da avaliação e a presença no executor real continuam pendentes. Não declarar GQ-D/GQ-C/GQ-O aprovadas.
+- **Checkpoint documental:** a publicação deste registro gerará novo HEAD, que exigirá nova CI e readback; não herdar automaticamente o resultado desta execução.
+
