@@ -34,7 +34,7 @@ ROADMAP_APPROVED_BASELINE = {
     "RM-00": ("P0", "implementado_nao_homologado", "gates automáticos de entrega: proteção main confirmada; gate serial vincula PR à base main e ao SHA exato; CI verde no HEAD e pós-merge; hooks locais não foram executados via API"),
     "RM-01": ("P0", "implementado_nao_homologado", "Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo"),
     "RM-02": ("P0", "implementado_nao_homologado", "IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada"),
-    "RM-03": ("P1", "planejado", "Projeção reprodutível, origem e incerteza claras, sem inferir domínio"),
+    "RM-03": ("P1", "em_andamento", "Projeção reprodutível, origem e incerteza claras, sem inferir domínio"),
     "RM-04": ("P1", "planejado", "Ranking determinístico por snapshot e política, justificativas auditáveis, sem dupla contagem"),
     "RM-05": ("P1", "planejado", "Filtros realistas, fallback e estado do caderno sem inventar ID externo"),
     "RM-06": ("P1", "planejado", "Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis"),

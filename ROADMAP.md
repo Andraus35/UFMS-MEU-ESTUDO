@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-02 / PR #39 (draft).** PR #38 / RM-01 integrado à `main` em `725858292ecc1e3e0ad7a85a0ae9a91966d112ee`; CI pós-merge `42080519973` (`validate=success`). Frente única: `fix/rm02-igp-contracts-migration-20261105`. RM-02 implementa IGP-12/13/14 como extensão aditiva compatível; resultados pessoais continuam bloqueados.
+> **ESTADO VIGENTE — RM-03 / PR #40 (draft).** PR #39 / RM-02 integrado à `main` em `4052a06d530b269410f0300a8ae503e822672caa`; CI pós-merge `42082155852` (`validate=success`). Frente única: `feat/rm03-evidence-projection-20261105`. RM-03 implementa projeção reprodutível E0–E4 e incertezas, sem converter nível informacional em nota de domínio.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-03** após merge de RM-02.
+**Próxima tarefa: RM-04** após merge de RM-03.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -74,7 +74,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-00 | P0 | Governança, ROADMAP, START/DELIVERY | implementado_nao_homologado | gates automáticos de entrega: proteção main confirmada; gate serial vincula PR à base main e ao SHA exato; CI verde no HEAD e pós-merge; hooks locais não foram executados via API |
 | RM-01 | P0 | ENG-00 / GP-0: edital, recortes e retificações | implementado_nao_homologado | Fonte/versionamento verificados, alerta conhecido preservado, monitoramento efetivo |
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | implementado_nao_homologado | IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada |
-| RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | planejado | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
+| RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | em_andamento | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | planejado | Ranking determinístico por snapshot e política, justificativas auditáveis, sem dupla contagem |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | planejado | Filtros realistas, fallback e estado do caderno sem inventar ID externo |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | planejado | Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis |

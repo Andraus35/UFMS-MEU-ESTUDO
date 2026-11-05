@@ -109,6 +109,12 @@ class GP1IngestionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Versão do esquema"):
             validate_events([recommendation(), value], TOPICS, allow_private=True)
 
+    def test_invalid_evidence_dimension_rejected(self):
+        value = attempt("a1", "TRY-A")
+        value["independence"] = "maybe"
+        with self.assertRaisesRegex(ValueError, "Dimensão de evidência inválida"):
+            validate_events([recommendation(), value], TOPICS, allow_private=True)
+
     def test_attempt_without_source_ref_rejected(self):
         value = attempt("a1", "TRY-A")
         value.pop("source_ref")
