@@ -110,6 +110,12 @@ class AgentGateTests(unittest.TestCase):
         self.assertIn("| implementado_nao_homologado |", line)
         self.assertIn("sem calibração em dados reais", line)
 
+    def test_rm05_nao_homologado_sem_validacao_de_plataforma(self):
+        original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        line = next(line for line in original.splitlines() if line.startswith("| RM-05 |"))
+        self.assertIn("| implementado_nao_homologado |", line)
+        self.assertIn("plataforma real não homologada", line)
+
     def test_alteracao_estrategica_sem_baseline_rejeitada(self):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in original.splitlines() if line.startswith("| RM-02 |"))
