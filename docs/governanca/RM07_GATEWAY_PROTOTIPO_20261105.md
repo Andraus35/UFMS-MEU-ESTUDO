@@ -63,3 +63,14 @@ A PR #46 integra, seletivamente, os módulos `source_gate.py`, `fact_gate.py` e 
 **27 checks funcionais:** continuam 0/27 PASS end-to-end. Testes unitários isolados de source_gate, fact_gate, safe_renderer e tool_gateway não equivalem ao fluxo Tutor/Coach/Zapia. GQ-D continua pendente de reauditoria independente; GQ-C NOT_RUN; GQ-O BLOCKED.
 
 Nenhum efeito externo foi executado. Não foram usados dados pessoais.
+
+## Simplificação de composição — PR #47
+
+Para este projeto pessoal, a validação foi mantida pequena e explícita:
+- 15 arquivos essenciais (PLAN/CHECKS r2, recibo, verificador, gates selecionados e testes) têm seus Git blob SHA-1 registrados em `scripts/agent_gates.py`.
+- `python scripts/agent_gates.py --check-gqd-composition` falha se um arquivo estiver ausente, for alterado ou tiver SHA diferente.
+- A CI também executa o verificador documental r2 já existente; não foi criado outro framework nem um segundo sistema de aprovação.
+- Dois testes cobrem composição íntegra e mutação de um byte.
+- A suíte normal da CI continua executando os testes de source/fact/renderer/gateway.
+
+Isso é uma proteção simples contra divergência acidental e mudança silenciosa. Não é uma fronteira de segurança contra alguém que altere deliberadamente código, pins e workflow no mesmo PR, nem uma prova semântica ou homologação GQ-D. Os 27 checks funcionais seguem 0 PASS / 27 NOT_RUN até serem executados de ponta a ponta.

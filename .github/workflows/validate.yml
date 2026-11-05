@@ -30,6 +30,10 @@ jobs:
         run: python scripts/agent_entrypoint.py --role engineer --check
         env:
           UFMS_TRUSTED_HEAD_SHA: ${{ github.sha }}
+      - name: Conferir composição GQ-D por SHA de Git
+        run: python scripts/agent_gates.py --check-gqd-composition
+      - name: Conferir recibo documental Spec Lean r2
+        run: python .specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2/verify_approval_snapshot.py --root .specs/features/ufms-cognitive-gates/revisions/v0.3/approved-r2
       - name: Validar estrutura e dados
         run: python scripts/validate.py
       - name: Testar regras de integridade
