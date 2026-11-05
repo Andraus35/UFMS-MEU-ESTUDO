@@ -3,7 +3,7 @@ import sys
 import threading
 import unittest
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 ROOT = __import__("pathlib").Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -28,7 +28,7 @@ def request(event_id="evt-1", nonce="nonce-1", text="hello"):
     }
 
 
-def token_for(req, *, nonce=None, expires="2026-11-05T12:01:00+00:00"):
+def token_for(req, *, nonce=None, expires="2026-11-05T12:01:00+00:00", issued_at=NOW):
     payload = {
         "approval_id": "approval-" + req["event_id"],
         "approver_id": "human-supervisor-1", "approved": True,
@@ -42,7 +42,7 @@ def token_for(req, *, nonce=None, expires="2026-11-05T12:01:00+00:00"):
     }
     approval = sign_approval_receipt(payload, APPROVAL_KEY)
     return issue_authorization(req, approval, approval_key=APPROVAL_KEY,
-                               gateway_key=GATEWAY_KEY, now=NOW)
+                               gateway_key=GATEWAY_KEY, now=issued_at)
 
 
 def gateway(**kwargs):
@@ -128,7 +128,7 @@ class ToolGatewayTests(unittest.TestCase):
 
     def test_expired_token_rejected(self):
         req = request()
-        tok = token_for(req, expires="2026-11-05T11:59:00+00:00")
+        tok = token_for(req, expires="2026-11-05T11:59:00+00:00", issued_at=NOW - timedelta(minutes=2))
         calls = []
         result = gateway().execute(req, tok, current_state_revision="rev-12",
             current_policy_sha="b" * 64, current_authorization_epoch=4,
