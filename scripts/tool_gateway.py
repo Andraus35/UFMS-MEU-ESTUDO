@@ -169,6 +169,7 @@ class SQLiteLedger:
                         actor_id TEXT NOT NULL, tool TEXT NOT NULL, created_at TEXT NOT NULL
                     )
                 """)
+                self.connection.execute("DELETE FROM rate_events WHERE created_at<?", (cutoff,))
                 recent = self.connection.execute(
                     "SELECT COUNT(*) FROM rate_events WHERE actor_id=? AND tool=? AND created_at>=?",
                     (actor_id, tool, cutoff),
@@ -271,6 +272,9 @@ class ToolGateway:
         if request.get("authorization_epoch") != current_authorization_epoch:
             receipt = self._receipt(request, "DENIED", ["AUTHORIZATION_REVOKED"])
             return {"status": "DENIED", "exit_code": EXIT_CODES["DENIED"], "receipt": receipt}
+        if not token:
+            receipt = self._receipt(request, "NEEDS_APPROVAL", ["APPROVAL_REQUIRED"])
+            return {"status": "NEEDS_APPROVAL", "exit_code": EXIT_CODES["NEEDS_APPROVAL"], "receipt": receipt}
         try:
             encoded, signature = token.split(".", 1)
             payload = json.loads(_unb64(encoded))
