@@ -31,7 +31,7 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 9)
+        self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
 
     def test_rejeita_varias_frentes_habilitadas(self):
         for key, mutation in (
@@ -52,7 +52,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_rejeita_pr_legado_sem_sha_ou_duplicado(self):
         for mutate in (
             lambda d: d["deferred_pull_requests"][0].__setitem__("sha", ""),
-            lambda d: d["deferred_pull_requests"][0].__setitem__("number", 9),
+            lambda d: d["deferred_pull_requests"][0].__setitem__("number", d["active"]["pr_number"]),
             lambda d: d["deferred_pull_requests"][0].__setitem__("branch", d["active"]["branch"]),
             lambda d: d["deferred_pull_requests"][0].__setitem__("archived_without_merge", False),
         ):
@@ -82,8 +82,9 @@ class SingleFlowTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "sem estado único"):
                 validate_local(root)
 
-    def pr(self, n=9, branch=None):
-        return {"number": n, "head": {"ref": branch or self.live["active"]["branch"]}}
+    def pr(self, n=None, branch=None):
+        return {"number": self.live["active"]["pr_number"] if n is None else n,
+                "head": {"ref": branch or self.live["active"]["branch"]}}
 
     def merged_pr(self):
         return {"number": self.live["active"]["pr_number"], "state": "closed",
@@ -91,7 +92,7 @@ class SingleFlowTests(unittest.TestCase):
                 "head": {"ref": self.live["active"]["branch"]},
                 "base": {"ref": "main"}}
 
-    def check_remote(self, prs, event="pull_request", ref="9/merge", head=None, prior=None):
+    def check_remote(self, prs, event="pull_request", ref="unused/merge", head=None, prior=None):
         return validate_remote(self.live, prs, event, ref,
                                self.live["active"]["branch"] if head is None else head,
                                prior)
@@ -129,8 +130,8 @@ class SingleFlowTests(unittest.TestCase):
         result = self.check_remote([], event="push", ref="main", head="",
                                    prior=self.merged_pr())
         self.assertEqual(result["phase"], "awaiting_next_task")
-        self.assertEqual(result["next_task"], "SIM-01")
-        self.assertEqual(result["last_merged_pr"], 9)
+        self.assertEqual(result["next_task"], self.live["next_task_after_merge"])
+        self.assertEqual(result["last_merged_pr"], self.live["active"]["pr_number"])
 
     def test_rejeita_lista_invalida(self):
         with self.assertRaisesRegex(ValueError, "inválido"):
@@ -179,6 +180,18 @@ class SingleFlowTests(unittest.TestCase):
             lambda d: d.__setitem__("post_merge_resolution", "assume_closed"))
         with tmp:
             with self.assertRaisesRegex(ValueError, "transição pós-merge"):
+                validate_local(root)
+
+    def test_rejeita_roadmap_com_proxima_tarefa_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            roadmap = root / "ROADMAP.md"
+            current = roadmap.read_text(encoding="utf-8")
+            current = current.replace(
+                "**Próxima tarefa: " + self.live["next_task_after_merge"] + "**",
+                "**Próxima tarefa: SIM-99**", 1)
+            roadmap.write_text(current, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "diverge"):
                 validate_local(root)
 
 if __name__ == "__main__":
