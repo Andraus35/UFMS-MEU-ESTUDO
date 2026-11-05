@@ -9,7 +9,7 @@
 - Fotografia do inventário pós-#35 permanece como referência histórica: 29 refs, 16 HEADs contidos e 12 históricas divergentes; a contagem atual será refeita no ciclo de inventário dedicado. Nenhuma branch foi apagada.
 - Única frente ativa: RM-02 / PR draft #39, `fix/rm02-igp-contracts-migration-20261105`. Escopo: implementar IGP-12/13/14 no harness real com compatibilidade aditiva.
 - Proteção administrativa confirmada pelo proprietário via Termux: required check `validate`; `strict=true`; `reviews=0`; `enforce_admins=true`.
-- RM-01 permanece `implementado_nao_homologado`: workflow cron read-only configurado, mas nenhum run com `event=schedule` foi encontrado; bytes remotos continuam sem SHA verificado; `ALERTA-DOC-01` permanece aberto. Auditoria: `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. Próxima tarefa após PR #38: RM-02, bloqueada por IGP-12/13/14. RM-07 permanece bloqueado (0/27 checks funcionais); RM-08 e RM-10 bloqueados.
+- RM-01 permanece `implementado_nao_homologado`: workflow cron read-only configurado, mas nenhum run com `event=schedule` foi encontrado; bytes remotos continuam sem SHA verificado; `ALERTA-DOC-01` permanece aberto. Auditoria: `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-02 está em implementação; relatório: `docs/pedagogia/IMPLEMENTACAO_GP1_RM02_20261105.md`. RM-07 permanece bloqueado (0/27 checks funcionais); RM-08 e RM-10 bloqueados.
 - `state/CURRENT.json`, eventos, resultados pessoais e PDF canônico permanecem intocados.
 
 ## START desta sessão — somente API GitHub
@@ -20,7 +20,7 @@
 
 ## Retomada
 1. Continuar somente RM-02 / PR #39 na branch declarada em `state/WORKFLOW.json`.
-2. Implementar IGP-12/13/14 com migração aditiva e testes sintéticos; manter CURRENT, eventos e resultados pessoais intocados.
+2. Concluir e validar IGP-12/13/14 com migração aditiva e testes sintéticos; manter CURRENT, eventos e resultados pessoais intocados.
 3. Não alegar enforcement universal além dos controles realmente demonstrados.
 4. Exigir CI `validate` verde no HEAD exato e readback após merge.
 5. Após merge, confirmar novo HEAD, CI pós-merge e zero PRs abertos; avançar para RM-03, sem declarar GP-1 homologado enquanto faltarem capacidades.
