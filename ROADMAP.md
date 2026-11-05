@@ -127,7 +127,7 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 
 **Finalidade:** eliminar burocracia de engenharia comercial sem sacrificar privacidade, fonte do edital, rastreabilidade, idempotência ou recuperação entre sessões. **Este bloco é a fila prioritária e operacional de saneamento.** A fila RM-00–RM-10 acima continua como backlog funcional legado até sua reconciliação; em caso de conflito de **ordem de trabalho de saneamento**, prevalece esta fila SIM. Não interpretar documento aprovado ou CI verde como funcionalidade operacional homologada.
 
-**Próxima tarefa: SIM-09** — somente após merge comprovado do PR #27/SIM-08. SIM-09 será a consolidação do inventário final das branches históricas e verificação de que nenhuma branch com código exclusivo ficou sem decisão documentada.
+**Próxima tarefa: SIM-10** — somente após merge comprovado do PR #28/SIM-09. SIM-10 revisará as provas funcionais pendentes da SPEC cognitiva e selecionará um recorte E2E pequeno, sem ativar integrações externas.
 
 **Critério de criticidade:** **ALTA** = exposição de dados, corrupção/duplicação de estado, erro oficial relevante ou escrita com efeito irreversível; **MEDIA** = continuidade, conflitos de integração, manutenção e baixa observabilidade; **BAIXA** = excesso de arquivos, branches históricas e apresentação sem dano imediato. ALTA e MEDIA demandam contraprovas negativas e CI no HEAD antes de encerramento. BAIXA exige inventário/justificativa e pode ser documentada sem bloquear uso cotidiano.
 
