@@ -7,5 +7,19 @@
   "results_count": 0,
   "pending_cadernos": [],
   "pending_reviews": {},
-  "knowledge_status": "unknown_until_evidence"
+  "knowledge_status": "unknown_until_evidence",
+  "evidence_schema_version": "1.0",
+  "evidence_level": "E0",
+  "evidence_dimensions": {
+    "granularity": "none",
+    "independence": "unknown",
+    "familiarity": "unknown",
+    "temporality": "unknown",
+    "diversity": "unknown",
+    "provenance": "unknown",
+    "confidence": "unknown"
+  },
+  "evidence_uncertainties": [
+    "no_assessment"
+  ]
 }
