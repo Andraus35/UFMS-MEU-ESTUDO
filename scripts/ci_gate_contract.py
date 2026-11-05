@@ -57,7 +57,7 @@ def verify_security_contract(root=ROOT):
         "scripts/validate.py": ("verify_write_policy(root)", "check_hook_contract(root)"),
         "scripts/rebuild.py": ("verify_write_policy(root)",),
         "scripts/roadmap_gate.py": ("def verify(", "check_bootstrap(root)"),
-        "scripts/single_flow_gate.py": ("def validate_local(", "def validate_remote(", "def fetch_open_prs("),
+        "scripts/single_flow_gate.py": ("def validate_local(", "def validate_remote(", "def fetch_open_prs(", "def fetch_pr("),
         "scripts/bootstrap.py": ("def run(", "validate_local(root)", "state/WORKFLOW.json"),
         "scripts/agent_entrypoint.py": ("def verify_start(", "class ReadOnlyAgentBroker:", "def model_context("),
         "scripts/protect_main.py": ("def protection_policy(", "def verify_protection("),
