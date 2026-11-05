@@ -27,7 +27,7 @@ O arquivo `scripts/agent_entrypoint.py` contém `ReadOnlyAgentBroker`. Para clie
 
 ## Fila de saneamento proporcional (uso pessoal)
 
-Se a tarefa for engenharia, auditoria ou saneamento, consultar **a seção `Fila de simplificação pessoal` de `ROADMAP.md`** e atuar no único item SIM declarado em `state/WORKFLOW.json`. Se a fila estiver terminal (`DONE`), não reabrir tarefas concluídas por inferência: registrar nova frente SIM somente quando houver escopo, branch e PR únicos explicitamente definidos. O teste de contrato deve rejeitar perda da fila, rebaixamento injustificado e ausência de contraprovas em ALTA/MEDIA. Registrar próxima ação, SHA, CI e limites em toda entrega; não abrir frentes paralelas.
+Se a tarefa for engenharia, auditoria ou saneamento, consultar a fila SIM e a `Fila de execução` RM em `ROADMAP.md`; atuar exclusivamente no item indicado por `state/WORKFLOW.json`. A fila SIM pode permanecer terminal (`DONE`) enquanto a fila funcional RM avança. Não reabrir tarefas concluídas por inferência. O teste de contrato deve rejeitar perda das filas, rebaixamento injustificado e ausência de contraprovas em ALTA/MEDIA. Registrar próxima ação, SHA, CI e limites em toda entrega; não abrir frentes paralelas.
 
 ## Ordem operacional
 

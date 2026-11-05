@@ -32,7 +32,7 @@ class Sim05ReconciliationTests(unittest.TestCase):
     def test_workflow_has_one_well_formed_current_task(self):
         state = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
         active = state["active"]
-        self.assertRegex(active["task_id"], r"^SIM-\d{2}$")
+        self.assertRegex(active["task_id"], r"^(?:SIM|RM)-\d{2}$")
         self.assertIsInstance(active["pr_number"], int)
         self.assertIn(active["phase"], ("work", "review", "merge_ready"))
         next_task = state["next_task_after_merge"]
@@ -40,7 +40,7 @@ class Sim05ReconciliationTests(unittest.TestCase):
             roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
             self.assertIn("**Fila de simplificação concluída**", roadmap)
         else:
-            self.assertRegex(next_task, r"^SIM-\d{2}$")
+            self.assertRegex(next_task, r"^(?:SIM|RM)-\d{2}$")
             self.assertNotEqual(active["task_id"], next_task)
         self.assertIsInstance(state["last_merged"]["pr_number"], int)
 
