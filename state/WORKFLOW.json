@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-01",
-    "branch": "fix/sim01-privacy-integration-20261105",
-    "pr_number": 19,
+    "task_id": "SIM-02",
+    "branch": "fix/sim02-api-write-integrate-20261105",
+    "pr_number": 20,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-02",
+  "next_task_after_merge": "SIM-03",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -84,11 +84,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM-04/PR #9 mesclado em 7942771aea289afd4eab483c0a89d8144425966b e validado (238 testes). Agora unica frente ativa: SIM-01/PR #19, privacidade em repo publico e recuperacao seletiva de branches legadas. Proxima SIM-02 somente apos merge comprovado do PR #19. Historico #5/#11-#18 mantido em deferred_pull_requests; integracao apenas por diff seletivo, CI e revisao.",
+  "notes": "SIM-01/PR19 mesclado; CI pos-merge 244 testes e awaiting_next_task SIM-02. Unica frente ativa SIM-02/PR20: recuperar seletivamente candidata API #18 da cadeia #13→#17→#18, garantir fail-closed, CAS, readback de blobs; escrita externa opt-in apenas host confiavel, sem token no LLM nem habilitacao de dados pessoais. Proxima SIM-03 somente apos merge autenticado deste PR.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "pr_number": 9,
-    "merge_commit_sha": "7942771aea289afd4eab483c0a89d8144425966b",
-    "task_id": "SIM-04"
+    "task_id": "SIM-01",
+    "pr_number": 19,
+    "merge_commit_sha": "fefc821fe79333eedcd5a0dcb2fbedcf8ce0b56e"
   }
 }
