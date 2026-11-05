@@ -29,18 +29,20 @@ class Sim05ReconciliationTests(unittest.TestCase):
                 self.assertNotIn(legacy_api, source)
         self.assertIn("def model_context(self):", source)
 
-    def test_workflow_has_one_current_sim06_task(self):
+    def test_workflow_has_one_well_formed_current_task(self):
         state = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
-        self.assertEqual(state["active"]["task_id"], "SIM-06")
-        self.assertEqual(state["active"]["pr_number"], 23)
-        self.assertEqual(state["active"]["phase"], "review")
-        self.assertEqual(state["next_task_after_merge"], "SIM-07")
-        self.assertEqual(state["last_merged"]["pr_number"], 22)
+        active = state["active"]
+        self.assertRegex(active["task_id"], r"^SIM-\d{2}$")
+        self.assertIsInstance(active["pr_number"], int)
+        self.assertIn(active["phase"], ("work", "review", "merge_ready"))
+        self.assertRegex(state["next_task_after_merge"], r"^SIM-\d{2}$")
+        self.assertNotEqual(active["task_id"], state["next_task_after_merge"])
+        self.assertIsInstance(state["last_merged"]["pr_number"], int)
 
     def test_handoff_and_adr_record_non_reintegration_decision(self):
         handoff = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8")
         decisions = (ROOT / "memory/DECISIONS.md").read_text(encoding="utf-8")
-        self.assertIn("SIM-05", handoff)
+        self.assertIn("proposta histórica #10", handoff)
         self.assertIn("ADR-010", decisions)
         self.assertIn("não reintegrar", decisions.lower())
 

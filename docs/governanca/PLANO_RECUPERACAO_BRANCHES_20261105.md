@@ -49,3 +49,10 @@ As relações de ancestralidade e as contagens acima foram lidas da API GitHub n
 - Próxima recuperação potencial: SPEC cognitiva (#5), após definir quais dos 27 checks ainda são requisitos atuais e quais conflitam com a liberdade cognitiva; não importar gates de aprovação por mensagem. Oracle/Telegram/Calendar segue diferido.
 
 A fotografia atual prevalece sobre qualquer tabela ou snapshot acima, e deve ser revalidada pela API GitHub em cada novo ciclo.
+
+ 
+### Atualização SIM-06 / SIM-07 — 05/11/2026
+
+- SPEC #5: PLAN v0.3-r2 e 27 CHECKS foram recuperados como especificação/documentação em SIM-06/PR #23. Não foi integrado motor funcional. Estado preservado: 0/27 E2E, GQ-D REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED; r3 não aprovada.
+- Trusted Governance #10 (`audit/trusted-governance-p0-20261104`): candidata SIM-07/PR #24. Decisão de não instalar/importar App/Oracle, scripts, workflows ou segredos: a própria ADR reconhece check verde obsoleto por até sete dias e impossibilidade de revogação imediata com checker assíncrono. Não há implantação nem E2E. Preservar branch para referência.
+- Próxima SIM-08: auditar `feature/oracle-telegram-calendar-bridge` (#3), sem presumir autorização para instalar serviços ou credenciais.

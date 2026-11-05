@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-06",
-    "branch": "spec/sim06-cognitive-gates-r2-20261105",
-    "pr_number": 23,
+    "task_id": "SIM-07",
+    "branch": "audit/sim07-trusted-governance-decision-20261105",
+    "pr_number": 24,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-07",
+  "next_task_after_merge": "SIM-08",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -84,11 +84,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM05 PR22 mesclado; CI posmerge 307 testes. SIM06 recupera somente PLAN v0.3-r2 e CHECKS/recibo/verificador. Aceite humano para especificacao; 0/27 E2E, GQ-D REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED. r3 nao aprovada. Proxima SIM07 apos merge PR23.",
+  "notes": "SIM07 audita branch #10: App/Oracle/Ed25519 nao instalados; check verde pode permanecer ate sete dias, publisher 10 min nao e lease GitHub; outage nao revoga imediatamente. Para uso pessoal, nao importar scripts/workflows/segredos. Nota ADR-011 e testes negativos. Proxima SIM08 audita bridge Oracle/Telegram/Calendar #3 apos merge PR24.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-05",
-    "pr_number": 22,
-    "merge_commit_sha": "ace048a05d3a0100ef5f05884745969ff7221d83"
+    "task_id": "SIM-06",
+    "pr_number": 23,
+    "merge_commit_sha": "d3c500c23ccc3a9e24f4f6e28d7f69caec5c98c4"
   }
 }
