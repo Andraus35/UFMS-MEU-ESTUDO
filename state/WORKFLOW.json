@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-04",
-    "branch": "feat/rm04-deterministic-queue-20261105",
-    "pr_number": 41,
+    "task_id": "RM-05",
+    "branch": "feat/rm05-notebook-prescriber-20261105",
+    "pr_number": 42,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-05",
+  "next_task_after_merge": "RM-06",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #40 / RM-03 integrado em e03c086bcd6b60e5bd60273cf2d50979775a4775; CI pós-merge 42083036692 validate=success; zero PRs abertos. RM-03 projeta E0-E4 com incertezas explícitas; CURRENT permanece E0. RM-04 implementa fila adaptativa determinística por snapshot/as_of, com justificativas e sem dupla contagem; probabilística opcional permanece desativada.",
+  "notes": "PR #41 / RM-04 integrado em 3cbe6ffe74babf9f778216c52596994830e64143; CI pós-merge 42083859206 validate=success; zero PRs abertos. RM-04 implementa ranking determinístico com pesos provisórios não calibrados. RM-05 implementa prescritor de cadernos: filtros, fallback, quantidade sugerida e estados honestos, sem inventar IDs ou disponibilidade.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",
