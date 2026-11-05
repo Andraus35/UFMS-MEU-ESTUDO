@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #34 / SIM-10 merged em 8bd0fd3fe51ac2ea371f466f55b6edb883e4d589; CI pós-merge 42074582850: validate success. SIM-11 reconcilia inventário autenticado, estado pós-merge e documentos operacionais; inventário-base pós-#34: 28 refs, 15 HEADs contidos, 12 históricas divergentes; 34 PRs anteriores (20 merged, 14 closed without merge). DONE permanece condicionado aos dez itens SIM concluídos e ao marcador terminal no ROADMAP.",
+  "notes": "PR #34 / SIM-10 merged em 8bd0fd3fe51ac2ea371f466f55b6edb883e4d589; CI pós-merge 42074582850: validate success. SIM-11 reconcilia inventário autenticado, estado pós-merge e documentos operacionais; inventário-base pós-#34: 28 refs, 15 HEADs contidos, 12 históricas divergentes; 34 PRs anteriores (20 merged, 14 closed without merge). DONE permanece condicionado aos onze itens SIM concluídos e ao marcador terminal no ROADMAP.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-10",
     "pr_number": 34,
     "merge_commit_sha": "8bd0fd3fe51ac2ea371f466f55b6edb883e4d589"
   }
-}\n
+}
