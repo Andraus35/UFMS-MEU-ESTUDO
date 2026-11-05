@@ -76,7 +76,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | implementado_nao_homologado | IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | em_andamento | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
-| RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | em_andamento | Filtros realistas, fallback e estado do caderno sem inventar ID externo |
+| RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | planejado | Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | bloqueado | Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
