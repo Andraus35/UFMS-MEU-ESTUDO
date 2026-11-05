@@ -1,5 +1,6 @@
 """Contraprovas dos contratos locais de abertura e fechamento."""
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -131,7 +132,7 @@ class AgentGateTests(unittest.TestCase):
         mutations = (
             roadmap.replace("| SIM-02 | ALTA |", "| SIM-02 | BAIXA |", 1),
             roadmap.replace("| SIM-05 | MEDIA |", "| SIM-05 | BAIXA |", 1),
-            roadmap.replace("**Próxima tarefa: SIM-01**", "**Próxima tarefa: indefinida**", 1),
+            re.sub(r"\*\*Próxima tarefa: SIM-\d{2}\*\*", "**Próxima tarefa: indefinida**", roadmap, count=1),
             roadmap.replace("`tests/test_write_policy.py`", "sem_testes", 1).replace("`tests/test_ci_gate_contract.py`; teste: habilitação", "sem_testes; teste: habilitação", 1),
             roadmap.replace("| SIM-10 | BAIXA |", "| SIM-04 | BAIXA |", 1),
             roadmap.replace("registro: `docs/pedagogia/README.md`", "sem_registro", 1),
