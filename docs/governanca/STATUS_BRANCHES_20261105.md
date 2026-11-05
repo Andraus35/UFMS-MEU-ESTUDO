@@ -26,7 +26,7 @@
 | `fix/sim01-privacy-integration-20261105` | #19 | `bf9fc575a83067a18829e66af4e1e2e8c979bd97` | 0 commits exclusivos |
 | `fix/sim02-api-write-integrate-20261105` | #20 | `f157acb0a6accf3ae5374b459ec83dcc8dd6f264` | 0 commits exclusivos |
 | `fix/sim03-fapec-cli-e2e-20261105` | #29 | `48722b83fd83ada401823c5a7ee25819910bf970` | 0 commits exclusivos |
-| `fix/sim06-handoff-reconciliation-20261105` | #30 | `c6f5e9bdd9791d93a9f63de2d56bfb5b04fd301` | 0 commits exclusivos |
+| `fix/sim06-handoff-reconciliation-20261105` | #30 | `c6f5e9bdd9791d93a9f63de233988189ac68d818` | 0 commits exclusivos |
 | `fix/sim07-cognitive-effects-policy-20261105` | #31 | `05e54fc3bf9917d8fd3d9802b5e9d00a738ba4fc` | 0 commits exclusivos |
 | `fix/sim08-ci-duplicate-gates-20261105` | #32 | `11e6ba0ce8740f0e4c3ac7954167c3affb3e582b` | 0 commits exclusivos |
 | `spec/sim06-cognitive-gates-r2-20261105` | #23 | `8bde29b58ee891ee34617a838a458b7124782559` | 0 commits exclusivos |
