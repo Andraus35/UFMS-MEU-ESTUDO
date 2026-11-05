@@ -1,5 +1,9 @@
 # P0 — Escritas por API, proteção de `main` e limites do gate
 
+<!-- governance-current:start -->
+**Situação vigente (readback autenticado):** main 676dd5d3259c66ba97c3e7e3338451cfc4e5cd68; PRs mesclados: #1, #2, #6, #7, #8; fechados sem merge: #3, #4, #10. O texto original a seguir é histórico quando mencionar PRs antigos; rever o estado atual antes de cada operação. Consultar [docs/governanca/STATUS_VIGENTE.md](governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 **Status:** mitigação em PR #1 draft; **não homologado como controle preventivo universal**. O repositório está **público** na verificação autenticada de 04/11/2026; o Project #2 é painel opcional e não substitui eventos versionados. Escritas pessoais permanecem bloqueadas.
 
 ## Modelo de ameaças e garantias reais

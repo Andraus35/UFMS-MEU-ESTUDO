@@ -1,5 +1,9 @@
 # Índice de memória — carregamento seletivo
 
+<!-- governance-current:start -->
+**Estado corrente recomendado para leitura seletiva:** [docs/governanca/STATUS_VIGENTE.md](../docs/governanca/STATUS_VIGENTE.md). Não substituir o bootstrap obrigatório nem o readback remoto. Consultar [docs/governanca/STATUS_VIGENTE.md](../docs/governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 - `memory/HANDOFF.md`: último checkpoint, pendências e próxima ação; **ler sempre**.
 - `state/CURRENT.json`: estado consolidado e cursor de eventos; **ler sempre**.
 - `memory/PROFILE.md`: preferências e restrições duradouras, não pessoais/sensíveis; ler quando necessário.

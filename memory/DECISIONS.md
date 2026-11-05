@@ -1,5 +1,9 @@
 # Registro de decisões arquiteturais
 
+<!-- governance-current:start -->
+**Situação vigente (readback autenticado):** main 676dd5d3259c66ba97c3e7e3338451cfc4e5cd68; PRs mesclados: #1, #2, #6, #7, #8; fechados sem merge: #3, #4, #10. O texto original a seguir é histórico quando mencionar PRs antigos; rever o estado atual antes de cada operação. Registros ADR anteriores não são apagados nem automaticamente revogados por este script. Consultar [docs/governanca/STATUS_VIGENTE.md](../docs/governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 ## ADR-001 — Repositório como fonte de verdade
 
 Estado: proposto. As sessões são retomadas pelo histórico de eventos, estado derivado e handoff compacto.

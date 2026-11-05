@@ -1,5 +1,9 @@
 # Handoff — harness e checkpoints verificáveis
 
+<!-- governance-current:start -->
+**Situação vigente (readback autenticado):** main 676dd5d3259c66ba97c3e7e3338451cfc4e5cd68; PRs mesclados: #1, #2, #6, #7, #8; fechados sem merge: #3, #4, #10. O texto original a seguir é histórico quando mencionar PRs antigos; rever o estado atual antes de cada operação. Consultar [docs/governanca/STATUS_VIGENTE.md](../docs/governanca/STATUS_VIGENTE.md).
+<!-- governance-current:end -->
+
 - **Estado verificado em 2026-11-04:** harness v0.2 publicado em branch de proposta `setup/harness-memory-v0-2`, por meio do PR draft [#1](https://github.com/Andraus35/UFMS-MEU-ESTUDO/pull/1). **Não está mesclado à main.**
 - **Prova alvo:** 17/01/2027; cargos UFMS 523 (manhã) e 324 (tarde).
 - **Último caderno recomendado:** nenhum.
