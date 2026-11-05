@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from ci_gate_contract import verify_security_contract, verify_workflow
+from ci_gate_contract import verify_composite_validation, verify_security_contract, verify_workflow
 
 WORKFLOW = (ROOT / ".github/workflows/validate.yml").read_text(encoding="utf-8")
 
@@ -83,6 +83,31 @@ class CIGateContractTests(unittest.TestCase):
         bad = WORKFLOW.replace(row, row + row)
         with self.assertRaisesRegex(ValueError, "duplicada"):
             verify_workflow(bad)
+
+
+    def test_validacoes_edital_estao_consolidadas_em_validate(self):
+        self.assertTrue(verify_composite_validation(ROOT))
+
+    def test_remocao_de_validacao_consolidada_falha(self):
+        source = (ROOT / "scripts/validate.py").read_text(encoding="utf-8")
+        tokens = (
+            "chunks = check_edital(root)",
+            "indexed_vagas = check_vagas(root)",
+            "indexed_atribuicoes = check_atribuicoes(root)",
+            "official_observations,verified_amendments,open_alerts = check_sources(root)",
+        )
+        for token in tokens:
+            with self.subTest(token=token):
+                with self.assertRaisesRegex(ValueError, "Validação consolidada"):
+                    verify_composite_validation(ROOT, source.replace(token, "", 1))
+
+    def test_ci_rejeita_repetir_validacao_ja_consolidada(self):
+        duplicate = (
+            "      - name: Validar integridade do edital\\n"
+            "        run: python scripts/chunk_edital.py --check\\n"
+        )
+        with self.assertRaisesRegex(ValueError, "já executada"):
+            verify_workflow(WORKFLOW + duplicate)
 
 
 if __name__ == "__main__":
