@@ -29,3 +29,13 @@
 - **Limite de segurança:** o gate prende a fonte a blob conhecido e preserva `semantic_support=NOT_CHECKED` / `publication_authorized=false`. A independência da avaliação e a presença no executor real continuam pendentes. Não declarar GQ-D/GQ-C/GQ-O aprovadas.
 - **Checkpoint documental:** a publicação deste registro gerará novo HEAD, que exigirá nova CI e readback; não herdar automaticamente o resultado desta execução.
 
+## Checkpoint C25 — afirmações críticas e falsa inferência (04/11/2026)
+
+- **HEAD testado:** `76d9239816baa98fa71b72426a228186e8365482`, merge sintético `39354e7944af2fa2cf06f69857e937135a370e36`, pai `main` `676dd5d3259c66ba97c3e7e3338451cfc4e5cd68` mais HEAD #5; sem merge de produção.
+- **CI de composição:** [41945361675](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41945361675), `success`: **13 testes novos C25** e **25/25 no conjunto C2/C3/C25**, **8/8 de composição**, **171/171 do harness**. Artefatos de execução no workflow.
+- **Demais CI no mesmo HEAD:** [harness 41945362621](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41945362621), [r2 formal PR 41945361669](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41945361669), [r3 documental 41945362110](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41945362110), [r2 formal push 41945355365](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41945355365), todos `success`.
+- **Comportamento isolado:** citação literal verdadeira do item 10.1 não justifica aprovação com zero em Inglês; item 10.2 impede a conclusão; incongruência de datas do Anexo II permanece `SOURCE_CONFLICT`. Avalia apenas identificadores e valores tipados previamente curados, nunca o significado arbitrário de toda resposta.
+- **Limite obrigatório:** `FACT_MATCHED` não é autorização de publicação. `publication_authorized=false`, efeitos externos = 0; sem serviço LLM, renderer, Zapia, Agenda, escrita pessoal ou avaliação completa. A curadoria deste conjunto **não é auditoria independente**.
+- **Gates:** PLAN/CHECKS r2 aprovados somente no âmbito documental e bytes intactos; PLAN r3 NÃO APROVADO; 27/27 provas end-to-end Tutor/Coach pendentes; GQ-D independente ainda REPROVADA, GQ-C NOT_RUN, GQ-O BLOCKED.
+- **Próxima frente:** testes do renderer automático para ORIENTACAO sem efeito externo, com emissão/consumo seguro e distinção entre orientação e ROTINA_AUTORIZADA; nenhum conector real presumido. Nova CI será necessária no SHA posterior deste checkpoint.
+
