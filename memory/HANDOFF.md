@@ -206,3 +206,12 @@ Não atualizar este documento com estados não confirmados nem copiar conversas 
 - PR #4: 15/15 blobs coincidem com #5, encerrado como duplicado, sem merge. PR #11: base retargeted ao branch do PR #9, testa dependência documental sem tocar `main`.
 - Esta nova alteração ainda depende de commit/SHA, testes remotos/CI e auditoria própria; nenhuma autorização de merge/deploy foi dada. Escrita API não comprova hooks locais.
 
+## DELIVERY — saneamento PRs e CI da revisão (04/11/2026)
+
+- **HEAD anterior:** `215781e45ab3bedf458df8281fc9b83c8d60678c`. Runs [push 41937833645](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41937833645) e [PR 41937839676](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41937839676): ambos concluídos em `success`, **184/184 testes**, confirmados nos logs.
+- **PR #4:** closed sem merge, 15/15 blobs iguais aos do PR #5.
+- **PR #10:** closed sem merge, modelo de duas Apps despriorizado para uso pessoal, segurança residual explicitada.
+- **PR #11:** draft, agora apontando à branch do PR #9; START continua apenas local/read-only. Sua CI nova sobre base modificada não foi comprovada nesta entrega.
+- **PR #5:** draft, r2 aprovada para especificação e r3 não aprovada, testes funcionais 0/27.
+- **Novo checkpoint:** confirmar commit SHA, readback e CI posteriores. Modo de escrita: GitHub API; preflight/hook locais `NOT_RUN`; nenhuma modificação de `main` ou merge. Não declarar G0/GQ-H/GQ-D homologados.
+

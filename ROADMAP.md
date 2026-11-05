@@ -84,6 +84,15 @@ Para mudar status, registrar no mesmo fluxo de entrega: `roadmap_id`, base/HEAD 
 - O bloqueio de gravação pessoal em repositório público, a proibição de fingir integração com Zapia e a exigência de autorização humana para merge/alterações estruturais sensíveis permanecem. **Não** há aprovação humana exigida por mensagem de orientação ordinária.
 - A reclassificação estratégica altera o contrato e sua baseline conjuntamente, com testes de regressão no mesmo commit; não promove RM-00 a `homologado` nem encerra NCs por mera declaração.
 
+## Saneamento dos PRs e estado das dependências (04/11/2026)
+
+- **PR #4:** encerrado sem merge por redundância verificável: seus 15 blobs coincidem exatamente com os 15 correspondentes do PR #5. O histórico permanece acessível.
+- **PR #10:** encerrado sem merge como desenho de segurança avançada não implantado, inadequado como pré-requisito geral da cognição pessoal. Permanecem os riscos residuais de origem do check e privilégio administrativo; **não declarar homologação de #10**.
+- **PR #9:** revisão do contrato de autonomia, RM-00 e contraprovas documentais. Head pré-checkpoint `215781e45ab3bedf458df8281fc9b83c8d60678c`, CI push [41937833645](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41937833645) e PR [41937839676](https://github.com/Andraus35/UFMS-MEU-ESTUDO/actions/runs/41937839676), ambos `success`, **184 testes OK**. Não equivale a gate cognitivo funcional homologado.
+- **PR #11:** permanece draft; a base agora é a branch do PR #9 para tornar explícita a dependência dos dez arquivos de START. Seu executor real, Zapia e gateway com credenciais isoladas continuam pendentes.
+- **PR #5:** permanece draft; PLAN r2 aprovado apenas como especificação, proposta r3 não aprovada e 27 checks funcionais ainda `NOT_RUN`. A base antiga e a composição exigem revalidação antes de merge.
+- **`main`:** inalterada. Não houve merge, implantação de App ou habilitação de gravação de dados pessoais. As alterações nesta documentação usam API GitHub, sem execução de hooks locais. O novo SHA de checkpoint e a sua CI exigem readback após publicação.
+
 ## Referências
 
 - [AGENTS](AGENTS.md) · [Settings](settings.json) · [Handoff técnico](memory/HANDOFF.md) · [Handoff pedagógico](docs/pedagogia/HANDOFF.md)
