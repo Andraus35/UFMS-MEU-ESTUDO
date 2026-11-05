@@ -53,8 +53,9 @@ class AgentEntrypointTests(unittest.TestCase):
                 broker = ReadOnlyAgentBroker(ROOT, HEAD, role)
                 receipt = broker.request("start")
                 self.assertEqual(len(receipt["mandatory"]), 5)
-                self.assertEqual(receipt["task"], "SIM-04")
-                self.assertEqual(receipt["pr"], 9)
+                current = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
+                self.assertEqual(receipt["task"], current["active"]["task_id"])
+                self.assertEqual(receipt["pr"], current["active"]["pr_number"])
                 self.assertIn("state/WORKFLOW.json", receipt["mandatory"])
 
     def test_fresh_text_is_supplied_with_sha(self):
@@ -62,7 +63,7 @@ class AgentEntrypointTests(unittest.TestCase):
         prompt = broker.model_context()
         self.assertEqual(set(prompt["documents"]), set(broker.request("start")["mandatory"]))
         self.assertIn("uma tarefa", prompt["documents"]["AGENTS.md"])
-        self.assertIn("SIM-04", prompt["documents"]["state/WORKFLOW.json"])
+        self.assertIn(json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))["active"]["task_id"], prompt["documents"]["state/WORKFLOW.json"])
         import hashlib
         for name, content in prompt["documents"].items():
             self.assertEqual(hashlib.sha256(content.encode("utf-8")).hexdigest(), prompt["sha256"][name])
