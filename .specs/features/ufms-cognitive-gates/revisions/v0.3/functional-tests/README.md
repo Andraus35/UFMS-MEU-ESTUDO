@@ -24,3 +24,20 @@ python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0
 - **Limite de segurança:** o gate prende a fonte a blob conhecido e preserva `semantic_support=NOT_CHECKED` / `publication_authorized=false`. A independência da avaliação e a presença no executor real continuam pendentes. Não declarar GQ-D/GQ-C/GQ-O aprovadas.
 - **Checkpoint documental:** a publicação deste registro gerará novo HEAD, que exigirá nova CI e readback; não herdar automaticamente o resultado desta execução.
 
+
+## C25 — comparação restrita de fatos normativos críticos (nova prova isolada)
+
+O arquivo fact_gate.py verifica fact_id, claimed_value e citações de origem autenticada por C2/C3 contra três regras curadas da página 10 do Edital UFMS 152/2026. Não é interpretador geral de linguagem natural.
+
+- Item 10.1: mínimo de 50% na Prova Objetiva.
+- Item 10.2: zerar qualquer uma das cinco áreas de conhecimento elimina o candidato.
+- A área Língua Inglesa consta explicitamente no item 10.4(f); por isso, a proposição de aprovação com zero em Inglês é falsa, mesmo que a pontuação total seja superior ao mínimo.
+- Conflito do Anexo II na página 13: resultado preliminar 10/02/2027 e recurso impresso 11 e 12/01/2027. A regra devolve NEEDS_EVIDENCE:SOURCE_CONFLICT e não presume uma data corrigida.
+
+Contraprovas: citação verdadeira do 10.1 usada para sustentar o resultado falso sobre Inglês; número mínimo trocado; referência verdadeira a assunto errado; falta da segunda âncora; erro de tipo; mudança de SHA, página e alerta de inconsistência.
+
+FACT_MATCHED atesta apenas compatibilidade do campo estruturado com esse pequeno registro de fatos, não a correção semântica de qualquer frase arbitrária. publication_authorized=false e external_effects=0 são invariantes. O registro foi curado nesta entrega, mas ainda não recebeu auditoria independente. O modelo e o renderer real não são executados aqui.
+
+C25 isolado não significa CHECK C25 completamente homologado no fluxo Tutor/Coach. A suíte completa dos 27 gates, GQ-C, GQ-O e reauditoria GQ-D continuam pendentes.
+
+CI: executar todos os testes de functional-tests, inclusive test_fact_gate.py, sobre o merge sintético de main + PR #5, sem escrita externa.
