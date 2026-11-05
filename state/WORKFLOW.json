@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-00",
+    "task_id": "SIM-12",
     "branch": "fix/rm00-delivery-gates-20261105",
     "pr_number": 36,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-01",
+  "next_task_after_merge": "RM-00",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,7 +105,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #35 / SIM-11 merged em d6390de09419dbf642e8487aeae167a607840f47; CI pós-merge 42076658860: validate success. Inventário pós-#35: 29 refs (28 branches de trabalho + main), 16 HEADs contidos e 12 históricas divergentes; 35 PRs anteriores (21 merged, 14 closed without merge). RM-00 é a frente ativa P0; RM-01 é a próxima após merge. A API confirma main.protected=true, mas o endpoint detalhado de proteção retorna 403 à integração.",
+  "notes": "PR #35 / SIM-11 merged em d6390de09419dbf642e8487aeae167a607840f47; CI pós-merge 42076658860: validate success. Inventário pós-#35: 29 refs (28 branches de trabalho + main), 16 HEADs contidos e 12 históricas divergentes; 35 PRs anteriores (21 merged, 14 closed without merge). SIM-12 corrige o fluxo serial para aceitar tarefas RM da fila funcional; após seu merge, a próxima frente será RM-00. main.protected=true; leitura do endpoint detalhado de proteção retorna 403 à integração.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "SIM-11",
