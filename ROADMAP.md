@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-04 / PR #41 (draft).** PR #40 / RM-03 integrado à `main` em `e03c086bcd6b60e5bd60273cf2d50979775a4775`; CI pós-merge `42083036692` (`validate=success`). Frente única: `feat/rm04-deterministic-queue-20261105`. RM-04 implementa fila adaptativa determinística por snapshot e política, sem dupla contagem.
+> **ESTADO VIGENTE — RM-05 / PR #42 (draft).** PR #41 / RM-04 integrado à `main` em `3cbe6ffe74babf9f778216c52596994830e64143`; CI pós-merge `42083859206` (`validate=success`). Frente única: `feat/rm05-notebook-prescriber-20261105`. RM-05 implementa prescritor com filtros realistas, fallback e estado de caderno sem inventar ID externo.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-05** após merge de RM-04.
+**Próxima tarefa: RM-06** após merge de RM-05.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -76,7 +76,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-02 | P0 | ENG-01/02 / GP-1: contratos, tentativas e ingestão | implementado_nao_homologado | IGP-12/13/14 integrados em schema aditivo; zero eventos pessoais a migrar; regressões legadas e testes negativos CI verdes; plataforma real não homologada |
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | em_andamento | Projeção reprodutível, origem e incerteza claras, sem inferir domínio |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
-| RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | planejado | Filtros realistas, fallback e estado do caderno sem inventar ID externo |
+| RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | em_andamento | Filtros realistas, fallback e estado do caderno sem inventar ID externo |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | planejado | Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | bloqueado | Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
