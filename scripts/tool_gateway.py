@@ -13,6 +13,7 @@ import threading
 from datetime import datetime, timedelta, timezone
 
 MAX_INPUT_BYTES = 65536
+MAX_TOKEN_TTL_SECONDS = 300
 DEFAULT_RATE_LIMIT = 5
 DEFAULT_RATE_WINDOW_SECONDS = 60
 EXIT_CODES = {
@@ -112,8 +113,11 @@ def issue_authorization(request, approval_receipt, *, approval_key, gateway_key,
         if approval.get(field) != value:
             raise ValueError("DENY:AUTH_MISMATCH:" + field)
     expires = _parse_time(approval["expires_at"])
-    if expires <= now:
+    ttl = (expires - now).total_seconds()
+    if ttl <= 0:
         raise ValueError("NEEDS_APPROVAL: approval expired")
+    if ttl > MAX_TOKEN_TTL_SECONDS:
+        raise ValueError("NEEDS_APPROVAL: approval TTL exceeds maximum")
     token_payload = {**expected,
         "approval_id": approval["approval_id"],
         "approver_id": approval["approver_id"],
