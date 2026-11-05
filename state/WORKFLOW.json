@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-07",
-    "branch": "audit/sim07-trusted-governance-decision-20261105",
-    "pr_number": 24,
+    "task_id": "SIM-08",
+    "branch": "audit/sim08-oracle-telegram-bridge-decision-20261105",
+    "pr_number": 25,
     "base": "main",
-    "phase": "review"
+    "phase": "work"
   },
-  "next_task_after_merge": "SIM-08",
+  "next_task_after_merge": "SIM-09",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -84,11 +84,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM07 audita branch #10: App/Oracle/Ed25519 nao instalados; check verde pode permanecer ate sete dias, publisher 10 min nao e lease GitHub; outage nao revoga imediatamente. Para uso pessoal, nao importar scripts/workflows/segredos. Nota ADR-011 e testes negativos. Proxima SIM08 audita bridge Oracle/Telegram/Calendar #3 apos merge PR24.",
+  "notes": "SIM07 PR24 mesclado; CI posmerge 311 testes e awaiting_next_task SIM08. SIM08 audita bridge Oracle/Telegram/Calendar #3: prototipo isolado, sem bots/OAuth/Oracle implantados, sem integracao ao broker e com pendencias de rate/retencao/backup/E2E. Projeto pessoal nao deve instalar servico externo sem decisao explicita de interface e beneficio. Decisao candidata: preservar branch e documentar deferimento. Proxima SIM09 apos merge PR25.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-06",
-    "pr_number": 23,
-    "merge_commit_sha": "d3c500c23ccc3a9e24f4f6e28d7f69caec5c98c4"
+    "task_id": "SIM-07",
+    "pr_number": 24,
+    "merge_commit_sha": "cbca1b314b824cc9fd5bed57a637ded3455d6ff2"
   }
 }
