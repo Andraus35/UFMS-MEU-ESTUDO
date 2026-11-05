@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-05 / PR #42 (draft).** PR #41 / RM-04 integrado à `main` em `3cbe6ffe74babf9f778216c52596994830e64143`; CI pós-merge `42083859206` (`validate=success`). Frente única: `feat/rm05-notebook-prescriber-20261105`. RM-05 implementa prescritor com filtros realistas, fallback e estado de caderno sem inventar ID externo.
+> **ESTADO VIGENTE — RM-06 / PR #43 (draft).** PR #42 / RM-05 integrado à `main` em `4425939488bb39291adf63184e33a132c6b461b3`; CI pós-merge `42084811834` (`validate=success`). Frente única: `test/rm06-adversarial-102-traceability-20261105`. RM-06 audita cobertura dos 102 cenários, rastreia lacunas e amplia contraprovas executáveis.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-06** após merge de RM-05.
+**Próxima tarefa: RM-07** após merge de RM-06.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -77,7 +77,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | implementado_nao_homologado | E0-E4 integrados ao rebuild; desconhecidos explícitos; CI verde; sem evidência real para homologação pedagógica |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
-| RM-06 | P1 | ENG-06 / GP-3: testes adversariais | planejado | Rastrear/implementar/registrar execução dos 102 cenários e mutantes aplicáveis |
+| RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | bloqueado | Reauditar 9 NCs do PR #5, executar 27 checks funcionais; sem confundir validação documental com operacional |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
