@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-06",
-    "branch": "fix/sim06-handoff-reconciliation-20261105",
-    "pr_number": 30,
+    "task_id": "SIM-07",
+    "branch": "fix/sim07-cognitive-effects-policy-20261105",
+    "pr_number": 31,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-07",
+  "next_task_after_merge": "SIM-08",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #29 / SIM-03 merged em 7ad47beb76adae46a6abf44c7b14bcb5b04fd301; CI pós-merge 42069852620: validate success, 320 testes. SIM-06 reconcilia HANDOFF e ROADMAP; próxima tarefa após merge: SIM-07. CURRENT, eventos, resultados pessoais e PDF canônico permanecem intocados.",
+  "notes": "PR #30 / SIM-06 merged em 9b5afe7b34163acb4bd8c01ce68aae1e700db00d; CI pós-merge 42070294698: validate success, 320 testes. SIM-07 implementa política local de efeitos NONE/TOOL, consentimento por escopo, aprovação sensível e readback; não implementa Zapia nem runtime Tutor/Coach. Próxima tarefa após merge: SIM-08.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-03",
-    "pr_number": 29,
-    "merge_commit_sha": "7ad47beb76adae46a6abf44c7b14bcb5b04fd301"
+    "task_id": "SIM-06",
+    "pr_number": 30,
+    "merge_commit_sha": "9b5afe7b34163acb4bd8c01ce68aae1e700db00d"
   }
 }
