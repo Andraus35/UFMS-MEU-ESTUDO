@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-09",
-    "branch": "audit/sim09-final-branch-inventory-20261105",
-    "pr_number": 28,
+    "task_id": "SIM-03",
+    "branch": "fix/sim03-fapec-cli-e2e-20261105",
+    "pr_number": 29,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "SIM-10",
+  "next_task_after_merge": "SIM-06",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM09 inventario autenticado: 20 branches de trabalho alem da main; 8 refs com PRs integrados, 12 historicas fechadas sem merge, todas preservadas. PRs 25/26 foram tentativas da mesma branch SIM08; PR27 merge final. Proxima SIM10 apos PR28: primeiro recorte E2E SPEC cognitiva, sem integracoes externas.",
+  "notes": "SIM-09/PR28 merged em c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb com CI 317/317. SIM-03 retoma a pendencia ALTA: prova CLI offline dos estados FAPEC 0/2/3; cron real segue NOT_VERIFIED ate run com event=schedule. Proxima tarefa apos merge: SIM-06. CURRENT e dados pessoais permanecem intocados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-08",
-    "pr_number": 27,
-    "merge_commit_sha": "3f9411ca00c35713f8b140df6091d92b73ed31d9"
+    "task_id": "SIM-09",
+    "pr_number": 28,
+    "merge_commit_sha": "c93fbfc8850133e2b12d8be2d56c98e2cc70a5cb"
   }
 }
