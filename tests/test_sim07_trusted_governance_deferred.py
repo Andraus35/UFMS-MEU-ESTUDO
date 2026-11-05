@@ -21,7 +21,7 @@ class Sim07TrustedGovernanceTests(unittest.TestCase):
 
     def test_no_credentials_or_personal_results_enabled(self):
         settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
-        self.assertFalse(settings.get("personal_results_writes_enabled", False))
+        self.assertFalse(settings["storage"]["personal_results_writes_enabled"])
         decision = (ROOT / "docs/governanca/DECISAO_TRUSTED_GOVERNANCE.md").read_text(encoding="utf-8")
         self.assertIn("Nenhuma chave privada", decision)
 
