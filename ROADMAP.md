@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia atualizada em 05/11/2026: `main` = `aeb0de34e40b8f32e04345c8428e090fdf32f0ad`; CI pós-merge do PR #36, run `42077837031`, `validate=success`. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
+Fotografia atualizada em 05/11/2026: `main` = `f64fb3f538ac34c83202565b2fc7b6c6e25f5757`; PR #46 / RM-07 source/fact gates e renderer local mesclado; CI pós-merge run `42089150563`, `validate=success`. PR #47 ainda em validação; não altera o estado de homologação. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
