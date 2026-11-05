@@ -41,3 +41,19 @@ FACT_MATCHED atesta apenas compatibilidade do campo estruturado com esse pequeno
 C25 isolado não significa CHECK C25 completamente homologado no fluxo Tutor/Coach. A suíte completa dos 27 gates, GQ-C, GQ-O e reauditoria GQ-D continuam pendentes.
 
 CI: executar todos os testes de functional-tests, inclusive test_fact_gate.py, sobre o merge sintético de main + PR #5, sem escrita externa.
+
+## C26 — safe_renderer somente em prévia local (teste isolado)
+
+O arquivo safe_renderer.py oferece uma autoridade técnica interna para autorizações de saída automáticas (não são autorizações humanas por mensagem), um verificador HMAC de token e um ledger SQLite com reserva única de release_id e nonce. O emissor **deve ser executado por um supervisor confiável**, separado do processo LLM; no protótipo ainda não há prova de isolamento do emissor ou do canal real.
+
+Escopo deliberadamente restrito: ORIENTACAO com effect_kind NONE, papéis Tutor/Coach e canal local_preview. TOOL, Zapia, Telegram, Agenda, publicação a terceiros e escrita pessoal **não** estão habilitados. O LocalPreviewSink apenas registra texto em memória no processo de teste.
+
+Campos vinculados: run_id, proposal_hash, policy_sha, state_revision, source_set_sha, actor_role, channel, recipient, output_kind, expires_at, nonce, authorization_epoch e release_id. A assinatura HMAC autentica os campos; alterar texto, identidade, fonte, revisão, canal ou destinatário invalida o token.
+
+Revogação: autoridade compartilhada pode invalidar um release_id ou avançar authorization_epoch mesmo quando state_revision permanece igual. O SQLite usa transação BEGIN IMMEDIATE para reservar um nonce/release uma única vez entre instâncias. Falha de emissão com resultado incerto retorna UNCONFIRMED e impede reenvio cego.
+
+Contraprovas: token ausente, adulterado ou expirado; divergência de campos; gate simulado não-ALLOW; replay; concorrência de dois renderers; revogação pós-emissão; alteração de epoch sem alteração da revisão; saída TOOL; canal externo; falha após emissão sem readback; verificador com segredo distinto.
+
+Limites obrigatórios: os testes recebem um recibo de gate simulado pelo chamador de confiança, mas ainda não provam que o LLM nunca consiga influenciar um emissor instalado. O relógio do protótipo é argumento de teste; em produção precisa ser autoridade confiável. O ledger SQLite local não prova persistência distribuída/segurança em Oracle nem idempotência do provedor remoto. O resultado COMPLETE é **somente prévia local**, nunca comprovante de mensagem Zapia entregue.
+
+Este lote fornece prova isolada parcial de C26, sem homologação end-to-end C1-C27, GQ-C, GQ-O ou reauditoria GQ-D; mantém PLAN r2 intacto e r3 não aprovada.

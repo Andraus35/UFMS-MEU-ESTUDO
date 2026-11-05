@@ -34,12 +34,12 @@ jobs:
         run: |
           set -euo pipefail
           python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/composition-tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/tests.log"
-      - name: Provar C2 C3 C25 isolados com bytes oficiais do edital
+      - name: Provar C2 C3 C25 C26 isolados sem canal externo
         shell: bash
         run: |
           set -euo pipefail
-          python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/functional-tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/c2-c3-tests.log"
-          echo 'C2_C3_C25_CURATED_FACTS_ISOLATED_NO_GENERAL_SEMANTIC_OR_PUBLICATION_APPROVAL'
+          python -m unittest discover -s .specs/features/ufms-cognitive-gates/revisions/v0.3/functional-tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/pr5-composition/functional-isolated-tests.log"
+          echo 'C2_C3_C25_C26_ISOLATED_LOCAL_PREVIEW_NO_EXTERNAL_CHANNEL_OR_OPERATIONAL_APPROVAL'
       - name: Validar harness no commit sintetico
         shell: bash
         run: |
