@@ -1,4 +1,4 @@
-"""Contraprovas do inventário final de branches preservadas."""
+"""Contraprovas do inventário autenticado de branches."""
 import json
 import unittest
 from pathlib import Path
@@ -7,14 +7,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class Sim09BranchInventoryTests(unittest.TestCase):
-    def test_inventory_has_eight_merged_and_twelve_preserved_legacy_refs(self):
+    def test_inventory_has_thirteen_contained_and_twelve_divergent_refs(self):
         doc = (ROOT / "docs/governanca/STATUS_BRANCHES_20261105.md").read_text(encoding="utf-8")
-        merged = doc.split("## Branches de integração concluída", 1)[1].split("## Branches históricas", 1)[0]
-        legacy = doc.split("## Branches históricas preservadas, sem merge bruto", 1)[1].split("## Fechamento", 1)[0]
-        merged_rows = [line for line in merged.splitlines() if line.startswith("| ") and len(line.split("|")) >= 5]
-        legacy_rows = [line for line in legacy.splitlines() if line.startswith("| ") and len(line.split("|")) >= 5]
-        self.assertEqual(len(merged_rows), 9)  # cabeçalho + 8 branches
-        self.assertEqual(len(legacy_rows), 13)  # cabeçalho + 12 branches
+        contained = doc.split("## Branches cujo HEAD está contido em main", 1)[1].split("## Branches históricas divergentes", 1)[0]
+        legacy = doc.split("## Branches históricas divergentes — preservar, não mesclar em lote", 1)[1].split("## Regras de limpeza", 1)[0]
+        contained_rows = [line for line in contained.splitlines() if line.startswith("| ") and len(line.split("|")) >= 5]
+        legacy_rows = [line for line in legacy.splitlines() if line.startswith("| ") and len(line.split("|")) >= 6]
+        self.assertEqual(len(contained_rows), 14)  # cabeçalho + 13 refs contidas
+        self.assertEqual(len(legacy_rows), 13)  # cabeçalho + 12 refs divergentes
+
 
     def test_all_deferred_refs_have_unique_branches_and_known_shas(self):
         state = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
@@ -28,8 +29,11 @@ class Sim09BranchInventoryTests(unittest.TestCase):
 
     def test_inventory_does_not_claim_legacy_branches_were_deleted(self):
         doc = (ROOT / "docs/governanca/STATUS_BRANCHES_20261105.md").read_text(encoding="utf-8")
-        self.assertIn("20 branches de trabalho preservadas", doc)
-        self.assertIn("Não apagar branches neste ciclo", doc)
+        self.assertIn("12 refs preservam commits exclusivos", doc)
+        self.assertIn("13 refs têm HEAD contido", doc)
+        self.assertIn("Nenhuma branch foi apagada nesta entrega", doc)
+        self.assertIn("Exclusão requer autorização específica", doc)
+
 
 
 if __name__ == "__main__":
