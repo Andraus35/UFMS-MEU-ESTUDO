@@ -1,0 +1,333 @@
+{
+  "schema_version": "1.0",
+  "audit_date": "2026-11-05",
+  "current_main_sha": "8fda9754846b4fba65cd88244260653cbb606720",
+  "legacy_pr": {
+    "number": 5,
+    "state": "closed",
+    "merged": false,
+    "head_branch": "spec/ufms-cognitive-gates-gqd-correction-v0-3",
+    "head_sha": "9f1b347e755c82f15089470749d9d33524167c1f",
+    "base_sha": "c020f78a3e1c..."
+  },
+  "legacy_branch_comparison": {
+    "base": "main",
+    "head": "spec/ufms-cognitive-gates-gqd-correction-v0-3",
+    "ahead_by": 22,
+    "behind_by": 587,
+    "merge_strategy": "NO_BULK_MERGE"
+  },
+  "candidate_runs": [
+    {
+      "run_id": 41952566820,
+      "name": "PR5 - prova de composicao sintetica read-only",
+      "conclusion": "success",
+      "head_sha": "9f1b347e755c82f15089470749d9d33524167c1f"
+    },
+    {
+      "run_id": 41952566886,
+      "name": "Spec Lean UFMS - PLAN r2 aprovado (somente validacao documental)",
+      "conclusion": "success",
+      "head_sha": "9f1b347e755c82f15089470749d9d33524167c1f"
+    },
+    {
+      "run_id": 41952566861,
+      "name": "Validar harness",
+      "conclusion": "success",
+      "head_sha": "9f1b347e755c82f15089470749d9d33524167c1f"
+    }
+  ],
+  "nonconformities": [
+    {
+      "nc_id": "NC-UFMS-GQD-01",
+      "severity": "P0",
+      "status": "OPEN",
+      "assessment": "Current main has interaction policy and write guard, but no trusted tool gateway, isolated approval issuer, or binding of action/tool/recipient/parameters; zero-effect adversarial proof absent.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-02",
+      "severity": "P1",
+      "status": "OPEN",
+      "assessment": "Current main has structural baseline/CI checks, not the four semantic mutators plus independently reviewed human oracles required to reject semantically false claims.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-03",
+      "severity": "P1",
+      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
+      "assessment": "PR5 candidate has composition manifest and a successful synthetic composition workflow, but manifest still says NOT_RUN_FOR_COMPOSITION; candidate branch is 22 ahead and 587 behind current main, so no safe bulk merge.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-04",
+      "severity": "P1",
+      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
+      "assessment": "PR5 candidate has source_gate/fact_gate for exact source spans and a small curated fact set; semantic_support remains NOT_CHECKED for arbitrary claims and the code is not in current main.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-05",
+      "severity": "P1",
+      "status": "OPEN",
+      "assessment": "Current main has no external tool gateway with atomic rate-limit reservation, concurrency proof, or zero calls after denial.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-06",
+      "severity": "P1",
+      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
+      "assessment": "PR5 candidate safe_renderer covers local preview and some uncertain/replay states; no integrated runner proving all five execution states, four exit codes, dependency failure before execution and retry policy.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-07",
+      "severity": "P1",
+      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
+      "assessment": "PR5 candidate contains an r2 approval receipt and byte-level tests, but the original approval-to-snapshot link remains marked NOT_VERIFIED in its NC matrix; r3 changes require new human approval.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-08",
+      "severity": "P1",
+      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
+      "assessment": "PR5 candidate local-preview token binds state/source/channel/recipient fields, but there is no production gateway or external publish route in current main; bypass and zero-publication proof absent.",
+      "closed": false
+    },
+    {
+      "nc_id": "NC-UFMS-GQD-09",
+      "severity": "P2",
+      "status": "PARTIAL_CANDIDATE_NOT_MAIN",
+      "assessment": "Pinned Spec Lean validators and documentary CI succeeded on PR5 candidate HEAD, but those artifacts are not integrated into current main and independent GQ-D re-audit is still pending.",
+      "closed": false
+    }
+  ],
+  "functional_checks": [
+    {
+      "check_id": "C1",
+      "acceptance_criterion": "AC1",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C2",
+      "acceptance_criterion": "AC2",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": "C2/C3 isolated tests reported in PR5 candidate; not end-to-end",
+      "main_integration": false
+    },
+    {
+      "check_id": "C3",
+      "acceptance_criterion": "AC3",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": "C2/C3 isolated tests reported in PR5 candidate; not end-to-end",
+      "main_integration": false
+    },
+    {
+      "check_id": "C4",
+      "acceptance_criterion": "AC4",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C5",
+      "acceptance_criterion": "AC5",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C6",
+      "acceptance_criterion": "AC6",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C7",
+      "acceptance_criterion": "AC7",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C8",
+      "acceptance_criterion": "AC8",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C9",
+      "acceptance_criterion": "AC9",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C10",
+      "acceptance_criterion": "AC10",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C11",
+      "acceptance_criterion": "AC11",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C12",
+      "acceptance_criterion": "AC12",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C13",
+      "acceptance_criterion": "AC13",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C14",
+      "acceptance_criterion": "AC14",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C15",
+      "acceptance_criterion": "AC15",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C16",
+      "acceptance_criterion": "AC16",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C17",
+      "acceptance_criterion": "AC17",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C18",
+      "acceptance_criterion": "AC18",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C19",
+      "acceptance_criterion": "AC19",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C20",
+      "acceptance_criterion": "AC20",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C21",
+      "acceptance_criterion": "AC21",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C22",
+      "acceptance_criterion": "AC22",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C23",
+      "acceptance_criterion": "AC23",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C24",
+      "acceptance_criterion": "AC24",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    },
+    {
+      "check_id": "C25",
+      "acceptance_criterion": "AC25",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": "C25 isolated fact_gate candidate tests; not end-to-end",
+      "main_integration": false
+    },
+    {
+      "check_id": "C26",
+      "acceptance_criterion": "AC26",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": "C26 isolated local-preview renderer candidate tests; not end-to-end",
+      "main_integration": false
+    },
+    {
+      "check_id": "C27",
+      "acceptance_criterion": "AC27",
+      "status": "NOT_RUN_END_TO_END",
+      "proof_selectors": [],
+      "isolated_candidate_evidence": null,
+      "main_integration": false
+    }
+  ],
+  "summary": {
+    "nonconformities": 9,
+    "closed": 0,
+    "open": 3,
+    "partial_candidate_not_main": 6,
+    "functional_checks": 27,
+    "passed_end_to_end": 0,
+    "not_run_end_to_end": 27
+  },
+  "policy": "Evidência em branch candidata não equivale a correção na main. Sucesso de CI documental/unitária não equivale a PASS funcional end-to-end."
+}
