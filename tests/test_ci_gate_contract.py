@@ -33,6 +33,13 @@ class CIGateContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "gatilho/permissão"):
             verify_workflow(bad)
 
+    def test_remocao_de_start_engenharia(self):
+        bad = WORKFLOW.replace(
+            "      - name: Validar START controlado de engenharia\n"
+            "        run: python scripts/bootstrap.py --mode engineering\n", "")
+        with self.assertRaisesRegex(ValueError, "Etapa de CI obrigatória"):
+            verify_workflow(bad)
+
     def test_remocao_do_gate_privacidade(self):
         bad = WORKFLOW.replace(
             "      - name: Verificar bloqueio de resultados pessoais\n"
