@@ -2,13 +2,13 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "SIM-02",
-    "branch": "fix/sim02-api-write-integrate-20261105",
-    "pr_number": 20,
+    "task_id": "SIM-03",
+    "branch": "automation/sim03-fapec-readonly-20261105",
+    "pr_number": 21,
     "base": "main",
-    "phase": "review"
+    "phase": "work"
   },
-  "next_task_after_merge": "SIM-03",
+  "next_task_after_merge": "SIM-05",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -84,11 +84,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "SIM-01/PR19 mesclado; CI pos-merge 244 testes e awaiting_next_task SIM-02. Unica frente ativa SIM-02/PR20: recuperar seletivamente candidata API #18 da cadeia #13→#17→#18, garantir fail-closed, CAS, readback de blobs; escrita externa opt-in apenas host confiavel, sem token no LLM nem habilitacao de dados pessoais. Proxima SIM-03 somente apos merge autenticado deste PR.",
+  "notes": "SIM02 PR20 mesclado, CI posmerge 294 testes e awaiting_next_task SIM-03. Unico PR ativo #21/SIM03 recupera monitor FAPEC read-only da branch historica #16; teste offline e workflow schedule sao distintos de verificacao real do edital. Proxima SIM05 para reconciliar bootstrap/broker, somente apos merge confirmado PR21. Nenhuma escrita de dados pessoais autorizada.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "SIM-01",
-    "pr_number": 19,
-    "merge_commit_sha": "fefc821fe79333eedcd5a0dcb2fbedcf8ce0b56e"
+    "task_id": "SIM-02",
+    "pr_number": 20,
+    "merge_commit_sha": "05c1900a09b4199d828fa20fbb73a17bec278119"
   }
 }
