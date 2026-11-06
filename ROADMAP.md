@@ -62,7 +62,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após o merge comprovado do PR #52 (RM-08-PREP). A frente operacional atual é exclusivamente RM-08-PREP / PR #52 (Draft), limitada à preparação offline sintética. A revisão técnica independente é PASS apenas nesse recorte; a CI funcional de 513 testes foi aprovada, e a CI do HEAD candidato precisa ser confirmada novamente em cada novo SHA. A preparação ainda não foi integrada; a linha formal RM-08 permanece bloqueada e GP-4 real exige baseline auditada e gates próprios.
+**Próxima tarefa: RM-08** após o fechamento documental pós-merge do PR #52. A frente operacional atual é exclusivamente RM-08-PREP / PR #53, limitada à reconciliação de governança e à validação determinística da sincronização documental. A preparação sintética foi integrada pelo PR #52, sem homologar a linha formal RM-08, que permanece bloqueada; GP-4 real exige baseline auditada e gates próprios.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
