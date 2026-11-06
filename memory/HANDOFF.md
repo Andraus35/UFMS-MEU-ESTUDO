@@ -7,6 +7,10 @@
 - PR #51 / RM-06 integrado em `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; CI pós-merge push run `42220289336`, conclusão `success`.
 - Única frente ativa: PR #52 draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, subescopo `RM-08-PREP`; estado operacional aponta para este PR e `main`.
 - Escopo limitado: especificação e protótipo offline sintético recomendação → execução simulada → resultado sintético → validação/reconstrução em memória → nova fila explícita. A RM-08 formal permanece `bloqueado`.
+- Revisão adversarial do RM-08-PREP no PR #52: execução sintética agora exige o candidato recomendado; o resultado precisa carregar a mesma `execution_ref`, preservada no evento reconstruído. Evidência E2 exige ao menos uma tentativa observada por tópico; linha com zero tentativas permanece E1 agregado. Contraprovas adicionadas para execução/resultado/candidato divergentes e tópico com zero tentativas.
+- Arquivos corrigidos nesta revisão: `scripts/tutor_coach_offline_cycle.py`, `scripts/evidence_projection.py`, `tests/test_tutor_coach_offline_cycle.py`, `tests/test_evidence_projection.py` e `docs/pedagogia/RM08_PREPARACAO_OFFLINE_SINTETICA_20261106.md`.
+- CI push run `42248997376` e CI PR run `42249007766` concluíram `success` no HEAD de código `b3dc2e0c7681e301332941b8e7ba11aa261310b5`. A atualização deste handoff gera um novo HEAD e requer confirmação da CI própria.
+- A revisão e as escritas foram feitas pela API GitHub. Hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados; não declarar equivalência ao START/DELIVERY de checkout local.
 - Não há persistência em `state/events`, `state/CURRENT.json` ou `state/PROGRESS.csv`; sem dados pessoais, plataforma externa, Zapia, agenda, replay real ou credenciais.
 - Reavaliação consome fatores da fixture seguinte explicitamente fornecidos; não converte percentuais em domínio, retenção ou probabilidade.
 - `state/CURRENT.json` permanece E0, zero eventos e zero resultados; não foi alterado.
