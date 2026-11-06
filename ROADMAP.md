@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** Revisão técnica independente concluída sem não conformidade bloqueante no escopo offline sintético. HEAD funcional revisado `127744a311c36990339d41f9aafb0fba40e0af65`: 513 testes aprovados; CI push `42253915490` e PR `42253926201` com `validate=success`. HEAD documental vigente `7b161bcf53d641195754ead5480d4a4553e9dc1b`: CI push `42254253375` e PR `42254266731`, ambos `validate=success`.. A preparação está implementada, mas não integrada/homologada; decisão de integração pendente. RM-08 formal permanece bloqueada. Sem dados pessoais, persistência ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
+> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** Revisão técnica independente concluída sem não conformidade bloqueante no escopo offline sintético. HEAD funcional revisado `127744a311c36990339d41f9aafb0fba40e0af65`: 513 testes aprovados; CI push `42253915490` e PR `42253926201` com `validate=success`. HEAD documental vigente `0fef54e22f1beb8aac40b2361e7b404c780eea40`: CI push `42254253375` e PR `42254266731`, ambos `validate=success`. A preparação está implementada, mas não integrada/homologada; decisão de integração pendente. RM-08 formal permanece bloqueada. Sem dados pessoais, persistência ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -29,7 +29,7 @@
 
 - `main` = `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
 - Única frente: RM-08-PREP / PR #52 Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; não integrado.
-- HEAD funcional revisado: `127744a311c36990339d41f9aafb0fba40e0af65`; suíte 513 testes / OK. HEAD documental vigente: `7b161bcf53d641195754ead5480d4a4553e9dc1b`; CI push `42254253375` e PR `42254266731`, ambos `validate=success`. Branch 21 commits à frente e 0 atrás de `main`.
+- HEAD funcional revisado: `127744a311c36990339d41f9aafb0fba40e0af65`; suíte 513 testes / OK. HEAD documental vigente: `0fef54e22f1beb8aac40b2361e7b404c780eea40`; CI push `42254253375` e PR `42254266731`, ambos `validate=success`. Branch 22 commits à frente e 0 atrás de `main`.
 - CI do HEAD funcional: push run `42253915490` e PR run `42253926201`, ambos `validate=success`; log do PR funcional: `Ran 513 tests` / `OK`.
 - CI do HEAD documental `7b161bcf53d641195754ead5480d4a4553e9dc1b`: push run `42254253375` e PR run `42254266731`, ambos `validate=success`; alterações documentais e descrição do PR não mudaram o código funcional.
 - Parecer técnico independente: aprovado para o escopo RM-08-PREP offline sintético, sem homologar RM-08 formal, GP-4 ou integração real. Nenhuma revisão formal GitHub ou thread registrada; PR segue Draft e sem merge.

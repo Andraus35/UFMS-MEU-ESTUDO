@@ -5,9 +5,9 @@
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`
 - `main`: `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; último merge PR #51 / RM-06, CI pós-merge `42220289336=success`.
 - Única frente: RM-08-PREP / PR #52, Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; aberto e não mesclado.
-- HEAD funcional revisado: `127744a311c36990339d41f9aafb0fba40e0af65`; HEAD documental vigente: `7b161bcf53d641195754ead5480d4a4553e9dc1b`; branch 21 commits à frente e 0 atrás de `main`.
+- HEAD funcional revisado: `127744a311c36990339d41f9aafb0fba40e0af65`; HEAD documental vigente: `0fef54e22f1beb8aac40b2361e7b404c780eea40`; branch 22 commits à frente e 0 atrás de `main`.
 - CI do HEAD funcional: push `42253915490`, PR `42253926201`, ambos `validate=success`; suíte: **513 testes / OK**.
-- CI do HEAD documental `7b161bcf53d641195754ead5480d4a4553e9dc1b`: push `42254253375`, PR `42254266731`, ambos `validate=success`.
+- CI do HEAD documental anterior `0fef54e22f1beb8aac40b2361e7b404c780eea40`: push `42254253375`, PR `42254266731`, ambos `validate=success`. A sincronização deste checkpoint exige CI própria.
 - Revisões formais GitHub: nenhuma. Threads: nenhuma. Parecer técnico independente desta auditoria: PASS restrito a RM-08-PREP offline sintético.
 - Saneamento de branches: encerrado; não reabrir sem evidência concreta.
 
