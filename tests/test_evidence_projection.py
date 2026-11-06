@@ -59,6 +59,14 @@ class EvidenceProjectionTests(unittest.TestCase):
         self.assertEqual(result["dimensions"]["granularity"], "topic")
         self.assertEqual(result["dimensions"]["independence"], "unknown")
 
+    def test_zero_topic_attempts_do_not_promote_to_e2(self):
+        event = legacy_result(topic=True)
+        event["topic_results"] = [{"topic_id": TOPIC, "attempted": 0, "correct": 0}]
+        result = derive_evidence_level([event])
+        self.assertEqual(result["level"], "E1")
+        self.assertEqual(result["dimensions"]["granularity"], "aggregate")
+        self.assertIn("aggregate_only_no_topic_breakdown", result["uncertainties"])
+
     def test_e3_contextualized_single_attempt(self):
         result = derive_evidence_level([attempt("e1", "A1", "2026-11-01", "SET-A")])
         self.assertEqual(result["level"], "E3")
