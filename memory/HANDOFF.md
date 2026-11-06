@@ -5,10 +5,10 @@
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
 - Base: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
 - Única frente: RM-08-PREP / PR #52, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; aberto, Draft, não mesclado.
-- HEAD funcional revisado e testado: `127744a311c36990339d41f9aafb0fba40e0af65`; HEAD documental vigente: `0fef54e22f1beb8aac40b2361e7b404c780eea40`; branch 22 commits à frente e 0 atrás de `main`.
+- HEAD funcional revisado e testado: `127744a311c36990339d41f9aafb0fba40e0af65`; HEAD documental anterior: `0fef54e22f1beb8aac40b2361e7b404c780eea40`; checkpoint atual é uma sincronização documental adicional, branch 23 commits à frente e 0 atrás de `main`.
 - Parecer independente: **PASS restrito à preparação offline sintética**. Revisão do código novo e dos módulos afetados não encontrou não conformidade bloqueante. A aprovação não promove RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5.
 - Correções funcionais: validar tópicos de todos os candidatos das duas filas; exigir IDs sintéticos não vazios e refs de fixture com identificador; rejeitar tópicos não textuais, vazios e catálogo com IDs duplicados. Contraprovas adicionais adicionadas no commit funcional.
-- Suíte funcional no HEAD `127744a311c36990339d41f9aafb0fba40e0af65`: **513 testes / OK**. CI funcional push `42253915490` e PR `42253926201`, ambos `validate=success`. CI do HEAD documental `0fef54e22f1beb8aac40b2361e7b404c780eea40`: push `42254253375` e PR `42254266731`, ambos `validate=success`. A atualização documental seguinte depende de sua própria CI.
+- Suíte funcional no HEAD `127744a311c36990339d41f9aafb0fba40e0af65`: **513 testes / OK**. CI funcional push `42253915490` e PR `42253926201`, ambos `validate=success`. CI do HEAD documental anterior `0fef54e22f1beb8aac40b2361e7b404c780eea40`: push `42254253375` e PR `42254266731`, ambos `validate=success`. CI do checkpoint documental atual: pendente após o commit.
 - Revisões formais GitHub e threads: nenhuma. PR continua Draft; não foi mesclado. Decisão de integração não tomada.
 - `state/WORKFLOW.json`: RM-08-PREP, PR #52, branch correta, fase `review`, próxima tarefa após merge RM-08. ROADMAP e STATUS registram o mesmo recorte e estado.
 - Escopo autorizado: somente preparação offline com fixtures sintéticas; sem rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real ou escrita em `state/events`, `state/CURRENT.json` e `state/PROGRESS.csv`.
