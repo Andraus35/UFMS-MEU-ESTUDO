@@ -1,6 +1,18 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-**Checkpoint 05/11/2026.** Fonte operacional: GitHub autenticado + `state/WORKFLOW.json`. Repositório público; resultados pessoais permanecem bloqueados.
+## Checkpoint de retomada — 06/11/2026 (API GitHub)
+
+- `main` = `50ced2966293f0e714fed8a9325f83a4dd79cc09` (squash merge do PR #49 / RM-06 GP-3-MVP8).
+- PR #49: fechado com merge; HEAD `530a06c69ce3e2e9400e5f85673c93172b688ea9`; CI run `42096451811`, job `validate=success`. Isso valida a suíte/contratos executados, não homologa GP-3 integral, Tutor/Coach E2E ou GQ-D.
+- PR #50: reaberto, único PR aberto, base `main`, branch `docs/saneamento-inventario-branches-20261105`, HEAD atual após correção `f33572255603056e6e53ad7d0d0d4a17fe6b5bc1`.
+- A CI inicial do PR #50 (run `42102466006`) falhou no `single_flow_gate.py --remote` porque `state/WORKFLOW.json` ainda declarava PR #49 como ativo. Não houve falha nos gates de privacidade ou roadmap. O estado operacional foi corrigido para active RM-06 / PR #50, registrando PR #49 como último merge (`50ced296...`).
+- Próxima ação: aguardar CI no HEAD corrigido; se verde, revisar diff e confirmar que o documento de inventário permanece idêntico ao snapshot verificado. Não mesclar automaticamente sem a autorização/gate de merge aplicável.
+- Inventário: 42 branches originais, 42 backups verificados 42/42 idênticos; 29 branches sem commits exclusivos; 13 com histórico exclusivo; nenhuma branch excluída. Preservar as 13 históricas e não excluir as 29 sem autorização específica.
+- Após merge do PR #50, iniciar RM-08 somente no recorte offline sintético. GP-4 real, persistência de dados pessoais, integrações externas e homologação permanecem bloqueados.
+- `state/CURRENT.json`, eventos pessoais e resultados individuais permanecem intocados. Esta retomada foi feita pela API GitHub; hooks locais `bootstrap`, `before_write` e `after_write` não foram executados e não devem ser declarados como executados.
+
+
+**Checkpoint histórico 05/11/2026.** Fonte operacional atualizada no bloco de retomada acima: GitHub autenticado + `state/WORKFLOW.json`. Repositório público; resultados pessoais permanecem bloqueados.
 
 ## Estado confirmado
 - `main` = `e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2` (PR #48 / fechamento documental RM-07).
