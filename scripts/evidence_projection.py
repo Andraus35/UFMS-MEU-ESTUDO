@@ -48,7 +48,16 @@ def derive_evidence_level(events):
             "knowledge_status": "unknown_until_evidence",
         }
 
-    topic_level = any(bool(event.get("topic_results")) for event in results)
+    topic_level = any(
+        isinstance(event.get("topic_results"), list)
+        and any(
+            isinstance(row, dict)
+            and type(row.get("attempted")) is int
+            and row["attempted"] > 0
+            for row in event["topic_results"]
+        )
+        for event in results
+    )
     level = "E2" if topic_level else "E1"
     contextual = []
     for event in attempts.values():
