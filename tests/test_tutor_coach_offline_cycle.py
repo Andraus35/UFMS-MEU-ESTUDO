@@ -40,6 +40,7 @@ def scenario():
             "data_origin": "synthetic_fixture",
             "status": "simulated",
             "execution_ref": "synthetic-fixture://execution/01",
+            "candidate_id": "SYNTH-CANDIDATE-01",
         },
         "result_report": {
             "data_origin": "synthetic_fixture",
@@ -49,6 +50,7 @@ def scenario():
             "recorded_at": "2026-11-06T09:30:00-04:00",
             "attempt_at": None,
             "source_ref": "synthetic-fixture://report/01",
+            "execution_ref": "synthetic-fixture://execution/01",
             "answered_convention": "answered_excludes_unanswered",
             "reported_answered": 8,
             "reported_unanswered": 2,
@@ -81,6 +83,8 @@ class OfflineTutorCoachCycleTests(unittest.TestCase):
         self.assertEqual(result["recommendation"]["availability_status"], "unavailable_or_unverified")
         self.assertIsNone(result["recommendation"]["questions_suggested"])
         self.assertEqual(result["execution_simulation"]["status"], "simulated")
+        self.assertEqual(result["result"]["event"]["execution_ref"],
+                         result["execution_simulation"]["execution_ref"])
         self.assertTrue(result["validation"]["schema_valid"])
         self.assertTrue(result["validation"]["in_memory_only"])
         self.assertFalse(result["validation"]["persistence_authorized"])
@@ -155,6 +159,18 @@ class OfflineTutorCoachCycleTests(unittest.TestCase):
         execution = scenario()["execution_simulation"]
         execution["status"] = "completed"
         with self.assertRaisesRegex(ValueError, "somente execução simulada"):
+            self.run_scenario(execution_simulation=execution)
+
+    def test_resultado_de_outra_execucao_e_rejeitado(self):
+        report = scenario()["result_report"]
+        report["execution_ref"] = "synthetic-fixture://execution/other"
+        with self.assertRaisesRegex(ValueError, "não corresponde à execução simulada"):
+            self.run_scenario(result_report=report)
+
+    def test_execucao_de_outro_candidato_e_rejeitada(self):
+        execution = scenario()["execution_simulation"]
+        execution["candidate_id"] = "SYNTH-CANDIDATE-OTHER"
+        with self.assertRaisesRegex(ValueError, "não corresponde ao candidato recomendado"):
             self.run_scenario(execution_simulation=execution)
 
     def test_plataforma_real_nao_e_permitida(self):
