@@ -110,7 +110,7 @@ class AgentGateTests(unittest.TestCase):
         formal = next(line for line in contents.splitlines() if line.startswith("| RM-08 |"))
         prep = next(line for line in contents.splitlines() if line.startswith("| RM-08-PREP |"))
         self.assertIn("| bloqueado |", formal)
-        self.assertIn("| em_andamento |", prep)
+        self.assertIn("| implementado_nao_homologado |", prep)
         self.assertIn("sem promover GP-4", prep)
 
     def test_rm08_prep_nao_pode_alargar_seu_escopo(self):
