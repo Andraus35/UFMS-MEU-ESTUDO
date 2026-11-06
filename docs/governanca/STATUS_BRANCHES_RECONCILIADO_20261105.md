@@ -13,13 +13,13 @@
 - Branches originais com HEAD contido em `main` (zero commits exclusivos): **29**.
 - Branches originais com commits exclusivos: **13**.
 - PRs abertos no momento da consulta: **0**.
-- Exclusões de branches executadas: **0**.
+- Exclusões de branches executadas após o inventário: **29/29 confirmadas** (revalidação individual imediatamente antes de cada exclusão).
 
 As 42 cópias de segurança preservam o HEAD exato de cada branch original no momento da auditoria. O backup da branch `docs/gp3-personal-mvp-8-20261105` também foi criado; sua divergência em relação a `main` decorre do histórico original após squash merge do PR #49, não de conteúdo necessariamente pendente.
 
-## A. Branches contidas em main — candidatas a exclusão após autorização
+## A. Branches contidas em main — classificação histórica das 29 branches posteriormente excluídas
 
-Estas branches foram comparadas com `main` e não possuem commits exclusivos. Todas têm backup verificado.
+Estas branches foram comparadas com `main` e não possuíam commits exclusivos no momento do inventário. Todas tinham backup verificado. A execução posterior e sua confirmação estão registradas ao final deste documento.
 
 | Branch original | Backup |
 |---|---|
@@ -75,12 +75,22 @@ A classificação de 12 históricos conserva as justificativas registradas no in
 
 ## Critérios para a próxima etapa
 
-1. As 29 branches da seção A são **candidatas**, não excluídas automaticamente. A exclusão deve ocorrer somente após autorização específica e nova validação do estado/PR.
+1. As 29 branches da seção A foram excluídas após autorização expressa e revalidação individual imediatamente antes de cada exclusão; ver relatório de execução ao final.
 2. As 13 branches da seção B permanecem preservadas; qualquer recuperação de conteúdo deve ser seletiva, em PR próprio e com testes.
 3. O inventário anterior `STATUS_BRANCHES_20261105.md` é fotografia pós-#35 e permanece como registro histórico. Este arquivo é a reconciliação posterior ao PR #49.
-4. Nenhuma branch original foi apagada ou movida. As cópias são refs adicionais e não substituem as origens.
-5. Limitação operacional desta execução: não há ação de exclusão de branch disponível no conector GitHub utilizado; portanto, não foi realizada exclusão via API alternativa.
+4. As 29 branches da seção A foram removidas; as 13 branches da seção B e as 42 cópias de segurança foram preservadas.
+5. A exclusão foi executada pelo proprietário no Termux, com validação de elegibilidade, igualdade com backup, ancestralidade em `main`, ausência de PR aberto e readback da exclusão.
 
 ## Estado
 
-**Backup completo e verificado: 42/42. Inventário atualizado em branch, aguardando revisão/CI e PR. Nenhuma exclusão executada.**
+**Inventário original preservado como fotografia da classificação pré-exclusão. Execução posterior: 29/29 exclusões confirmadas; 13 históricas e 42 backups preservados; `main` preservada.**
+
+
+## Relatório de execução pós-inventário — 06/11/2026
+
+- PR #50 integrado em `main` no commit `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
+- Conforme saída final do script Termux fornecida pelo proprietário, foram excluídas e confirmadas **29 branches**, com **0 impedimentos**. Cada branch foi revalidada imediatamente antes da exclusão.
+- Resultado final do script: **13 históricas preservadas; 42 backups preservados; `main` preservada** no SHA `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
+- A consulta remota posterior confirmou ausência das 29 candidatas na listagem de branches e ausência de PRs abertos.
+- CI pós-merge do PR #50: run `42158000977`, conclusão `success` no SHA informado.
+- Proveniência: totais operacionais de exclusão/preservação conforme saída do Termux enviada pelo proprietário; estado de PR, HEAD, branches listadas e CI conforme consulta autenticada ao GitHub.
