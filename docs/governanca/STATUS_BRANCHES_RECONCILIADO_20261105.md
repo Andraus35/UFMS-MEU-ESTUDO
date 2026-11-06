@@ -1,21 +1,22 @@
 # Inventário reconciliado de branches — saneamento 05/11/2026
 
 **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
-**Base auditada (`main`):** `50ced2966293f0e714fed8a9325f83a4dd79cc09`  
+**Base usada na classificação original (pré-PR #50):** `50ced2966293f0e714fed8a9325f83a4dd79cc09`  
+**`main` vigente após PR #50:** `4ca27e8db66073ce8ad57b812070094d6c4dca1e`  
 **Último marco integrado:** PR #49 (squash merge).  
 **Método:** comparação autenticada de cada branch de trabalho com `main`; criação de cópia de segurança em `archive/pre-saneamento-20261105/` e comparação de cada origem com sua cópia.
 
-## Resultado atual
+## Fotografia de classificação e situação remota em 06/11/2026
 
 - Branches de trabalho originais inventariadas: **42**.
 - Cópias de segurança criadas: **42**.
 - Cópias verificadas por comparação origem → backup: **42/42 idênticas** (0 à frente, 0 atrás).
-- Branches originais com HEAD contido em `main` (zero commits exclusivos): **29**.
+- Branches originais classificadas como contidas na `main` da base pré-PR #50 (zero commits exclusivos naquele momento): **29**.
 - Branches originais com commits exclusivos: **13**.
-- PRs abertos no momento da consulta: **0**.
+- PRs abertos na consulta que produziu a classificação original: **0** (fotografia histórica; PR #51 foi aberto depois).
 - Exclusões de branches executadas após o inventário: **29/29 confirmadas** (revalidação individual imediatamente antes de cada exclusão).
 
-As 42 cópias de segurança preservam o HEAD exato de cada branch original no momento da auditoria. O backup da branch `docs/gp3-personal-mvp-8-20261105` também foi criado; sua divergência em relação a `main` decorre do histórico original após squash merge do PR #49, não de conteúdo necessariamente pendente.
+As 42 cópias de segurança preservam o HEAD exato de cada branch original no momento da auditoria. A classificação de ancestralidade das 29/13 foi feita contra a base pré-PR #50; não deve ser interpretada como uma nova comparação de ancestralidade contra a `main` atual. O backup da branch `docs/gp3-personal-mvp-8-20261105` também foi criado; sua divergência em relação a `main` decorre do histórico original após squash merge do PR #49, não de conteúdo necessariamente pendente.
 
 ## A. Branches contidas em main — classificação histórica das 29 branches posteriormente excluídas
 
