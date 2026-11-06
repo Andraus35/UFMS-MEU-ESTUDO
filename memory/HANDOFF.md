@@ -9,7 +9,7 @@
 - A listagem remota contém 58 branches: 42 backups em `archive/pre-saneamento-20261105/*`, 13 refs históricas ainda fora de `archive/*`, duas refs documentais (#50 e #51) e `main`.
 - As 13 branches históricas têm backups correspondentes; preservar ambos os conjuntos até que cada par origem/backup seja revalidado por SHA e a política de retenção esteja registrada.
 - O inventário registra 29 exclusões confirmadas pelo proprietário via Termux; a consulta remota confirma ausência dessas 29 refs candidatas.
-- Pendências de saneamento do PR #51: reconciliar o conjunto de 13 refs históricas em `state/WORKFLOW.json`; corrigir o inventário para refletir a fotografia atual de `main`; definir a migração das 13 refs históricas e das duas refs documentais para `archive/*`, sem perda de SHA.
+- Pendências de saneamento do PR #51: corrigir a fotografia/base de classificação no inventário; definir a migração das 13 refs históricas e das duas refs documentais para `archive/*`, sem perda de SHA. O `state/WORKFLOW.json` já enumera as 13 referências históricas, incluindo a branch pós-squash do PR #49.
 - Nenhuma branch histórica ou documental será excluída antes de validar o SHA exato do backup, verificar PRs/dependências e registrar o procedimento de retenção.
 - RM-06 encerrado. `state/WORKFLOW.json` aponta RM-08 como próxima tarefa, mas **RM-08 permanece formalmente bloqueado** pela baseline/gates do ROADMAP. Não iniciar implementação nem alterar baseline.
 - GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não homologados. Dados pessoais, eventos pessoais, `state/CURRENT.json` e integrações reais permanecem bloqueados.
