@@ -17,7 +17,7 @@
 
 - `main` = `4ca27e8db66073ce8ad57b812070094d6c4dca1e`; PR #50 fechado com merge.
 - CI pós-merge PR #50: run `42158000977`, evento `push`, conclusão `success`, HEAD exato acima.
-- PRs abertos: 0 na consulta autenticada.
+- PR #51 é o único PR aberto desta reconciliação; não há outro PR concorrente.
 - Saneamento executado pelo proprietário via Termux: 29 branches candidatas revalidadas individualmente imediatamente antes da exclusão; 29 excluídas e confirmadas; 0 impedimentos.
 - Preservação reportada na auditoria final do script: 13 branches históricas, 42 backups e `main`; os 42 backups estavam presentes na verificação final.
 - A listagem remota posterior mostrou 42 backups e as 13 históricas; nenhuma das 29 candidatas constava. A branch de documentação de PR #50 pode permanecer como ref de trabalho até limpeza separada.
