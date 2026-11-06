@@ -33,7 +33,8 @@
 - Último HEAD candidato verificado antes desta sincronização: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits à frente e 0 atrás da base. No mesmo SHA, CI push `42256101518=success` e pull_request `42256114895=success`.
 - Baseline funcional revisada: `127744a311c36990339d41f9aafb0fba40e0af65`; suíte **513 testes / OK**; CI push `42253915490=success` e pull_request `42253926201=success`.
 - Parecer técnico independente: **PASS restrito a RM-08-PREP offline sintético**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5. Revisões formais GitHub e threads: nenhuma.
-- HANDOFF, WORKFLOW, ROADMAP e STATUS refletem o mesmo item ativo, PR, branch, fase e próxima tarefa. O gate serial agora rejeita divergência entre o estado estruturado e o checkpoint vigente do HANDOFF.
+- HANDOFF, WORKFLOW, ROADMAP e STATUS refletem o mesmo item ativo, PR, branch, fase e próxima tarefa.
+- CI do checkpoint anterior `4fb08ac934eb5f93bdc2eadbcf79a79fda3aa274` falhou nos runs push `42260384767` e pull_request `42260392670` em um caso de teste terminal que alterava WORKFLOW/ROADMAP sem atualizar HANDOFF. O gate detectou corretamente a divergência; este commit corrige o fixture e aplica o recorte exato do checkpoint vigente, sem afrouxar validação. O novo SHA requer CI própria. O gate serial agora rejeita divergência entre o estado estruturado e o checkpoint vigente do HANDOFF.
 - A atualização presente altera documentação de estado e o gate/testes de simetria; o SHA resultante deve ter `validate=success` em push e pull_request. Não herdar resultados de CI de SHA anterior.
 - RM-08-PREP: preparação offline com fixtures sintéticas apenas; sem rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real ou efeitos externos.
 - `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado. `state/PROGRESS.csv` também não é alterado. O estado pedagógico não é substituto de `state/WORKFLOW.json`.

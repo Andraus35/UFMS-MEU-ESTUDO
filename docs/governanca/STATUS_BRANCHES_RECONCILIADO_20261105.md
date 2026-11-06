@@ -10,6 +10,7 @@
 - Baseline funcional: `127744a311c36990339d41f9aafb0fba40e0af65`, **513 testes / OK**; CI push `42253915490=success` e pull_request `42253926201=success`.
 - Parecer técnico independente: **PASS restrito à preparação offline sintética**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5.
 - Revisões formais GitHub: nenhuma. Threads: nenhuma. PR permanece Draft até decisão explícita do proprietário.
+- A CI do checkpoint anterior 4fb08ac934eb5f93bdc2eadbcf79a79fda3aa274 falhou nos runs push 42260384767 e pull_request 42260392670 por um único erro de fixture: test_fila_sim_terminal_pode_avancar_para_rm alterava WORKFLOW/ROADMAP para DONE, mas não atualizava o HANDOFF. O gate identificou corretamente a divergência. Este commit ajusta o teste para espelhar a transição e corrige o recorte do checkpoint vigente; não enfraquece o gate. O novo SHA exige CI própria.
 - HANDOFF, WORKFLOW, ROADMAP e STATUS agora declaram o mesmo identificador, PR, branch, fase e tarefa seguinte; `single_flow_gate.py` passa a testar essa simetria no checkpoint vigente.
 - Esta sincronização gera novo SHA; exigir `validate=success` no HEAD exato em push e pull_request. CIs anteriores não são herdadas.
 - RM-08-PREP permanece restrita a fixtures sintéticas, simulação e validação em memória, sem rede, serviços externos, dados pessoais, credenciais, persistência ou replay real.

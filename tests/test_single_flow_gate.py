@@ -98,7 +98,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_handoff_repete_tarefa_pr_branch_e_proxima_tarefa(self):
         state = validate_local(ROOT)
-        checkpoint = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\\n---\\n", 1)[0]
+        checkpoint = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\n---\n", 1)[0]
         self.assertIn(f"**{state['active']['task_id']} / PR #{state['active']['pr_number']}**", checkpoint)
         self.assertIn(state["active"]["branch"], checkpoint)
         self.assertIn(f"**Próxima tarefa: {state['next_task_after_merge']}**", checkpoint)
@@ -259,6 +259,11 @@ class SingleFlowTests(unittest.TestCase):
     def test_fila_sim_terminal_pode_avancar_para_rm(self):
         tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "DONE"))
         with tmp:
+            handoff = root / "memory/HANDOFF.md"
+            content = handoff.read_text(encoding="utf-8")
+            marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
+            handoff.write_text(content.replace(
+                marker, "**Fila de simplificação concluída**", 1), encoding="utf-8")
             self.assertEqual(validate_local(root)["next_task_after_merge"], "DONE")
 
     def test_rejeita_estado_terminal_sem_marcador_no_roadmap(self):
