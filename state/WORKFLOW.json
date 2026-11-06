@@ -2,11 +2,12 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-06",
-    "branch": "docs/post-saneamento-governance-20261106",
-    "pr_number": 51,
+    "task_id": "RM-08-PREP",
+    "scope": "preparacao_offline_sintetica",
+    "branch": "feat/rm08-offline-synthetic-cycle-20261106",
+    "pr_number": 52,
     "base": "main",
-    "phase": "review"
+    "phase": "work"
   },
   "next_task_after_merge": "RM-08",
   "rules": {
@@ -112,11 +113,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "RM-06 / GP-3-MVP8 integrado no PR #49 (squash merge em 50ced2966293f0e714fed8a9325f83a4dd79cc09). O PR #50, fechamento documental do inventário, foi integrado em 4ca27e8db66073ce8ad57b812070094d6c4dca1e; CI pós-merge run 42158000977=success. Saneamento posterior: 29 branches candidatas excluídas e confirmadas após revalidação individual imediatamente antes de cada exclusão; 13 branches históricas preservadas; 42 backups preservados; main preservada. RM-08 permanece bloqueado na baseline formal: não iniciar implementação nem promover status sem cumprir os gates e a baseline auditada. Preparação offline sintética somente se explicitamente permitida pelo roadmap vigente. GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não estão homologados. Dados pessoais e integrações reais continuam bloqueados. Backup suplementar da branch documental do PR #50 criado em archive/pre-saneamento-20261105/docs--saneamento-inventario-branches-20261105 e validado identical no SHA 186f0aa289fee780d765ec410173cb402506bc67; total atual 43 backups (42 originais + 1 suplementar).",
+  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento de branches encerrado. Frente única atual: RM-08-PREP / PR #52, preparação offline sintética sem persistência pessoal, replay real ou integração externa. Após o merge desta preparação, RM-08 formal continua bloqueado e deverá passar por baseline auditada e gates próprios. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados; state/CURRENT.json e eventos pessoais não foram alterados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-06",
-    "pr_number": 50,
-    "merge_commit_sha": "4ca27e8db66073ce8ad57b812070094d6c4dca1e"
+    "pr_number": 51,
+    "merge_commit_sha": "9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7"
   }
 }

@@ -1,20 +1,18 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-## Checkpoint vigente — 06/11/2026 (reconciliação autenticada)
+## Checkpoint vigente — 06/11/2026 (RM-08-PREP)
 
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
-- `main` = `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
-- PR #50 integrado; CI pós-merge run `42158000977`, conclusão `success`, no SHA acima.
-- PR #51 permanece aberto na branch `docs/post-saneamento-governance-20261106`; é a única frente documental ativa identificada nesta reconciliação.
-- A listagem remota contém 59 branches: 43 backups em `archive/pre-saneamento-20261105/*`, 13 refs históricas ainda fora de `archive/*`, duas refs documentais (#50 e #51) e `main`.
-- As 13 branches históricas têm backups correspondentes; os 13 pares foram comparados como `identical`. A branch documental do PR #50 também recebeu backup suplementar no SHA `186f0aa289fee780d765ec410173cb402506bc67`, comparado como `identical` com a origem. Total atual: 43 backups; a fotografia original de 42 permanece preservada no inventário, com este 43º backup registrado como complemento posterior.
-- O inventário registra 29 exclusões confirmadas pelo proprietário via Termux; a consulta remota confirma ausência dessas 29 refs candidatas.
-- Pendências de saneamento do PR #51: corrigir a fotografia/base de classificação no inventário; definir a migração das 13 refs históricas e da ref documental do PR #50 para `archive/*`, sem perda de SHA. A branch do PR #51 continua sendo a única branch de trabalho ativa. O `state/WORKFLOW.json` já enumera as 13 referências históricas, incluindo a branch pós-squash do PR #49.
-- Nenhuma branch histórica ou documental será excluída antes de validar o SHA exato do backup, verificar PRs/dependências e registrar o procedimento de retenção. A migração dos nomes originais ainda não foi executada.
-- RM-06 encerrado. `state/WORKFLOW.json` aponta RM-08 como próxima tarefa, mas **RM-08 permanece formalmente bloqueado** pela baseline/gates do ROADMAP. Não iniciar implementação nem alterar baseline.
-- GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não homologados. Dados pessoais, eventos pessoais, `state/CURRENT.json` e integrações reais permanecem bloqueados.
-- CI verde valida apenas os checks executados no SHA correspondente; não substitui auditoria nem homologação de gates.
-- Esta reconciliação foi feita pela API GitHub. Hooks locais `bootstrap`, `before_write`, `after_write` e `checkpoint` não foram executados; não declarar equivalência com execução local.
+- `main` = `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`.
+- PR #51 / RM-06 integrado em `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; CI pós-merge push run `42220289336`, conclusão `success`.
+- Única frente ativa: PR #52 draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, subescopo `RM-08-PREP`; estado operacional aponta para este PR e `main`.
+- Escopo limitado: especificação e protótipo offline sintético recomendação → execução simulada → resultado sintético → validação/reconstrução em memória → nova fila explícita. A RM-08 formal permanece `bloqueado`.
+- Não há persistência em `state/events`, `state/CURRENT.json` ou `state/PROGRESS.csv`; sem dados pessoais, plataforma externa, Zapia, agenda, replay real ou credenciais.
+- Reavaliação consome fatores da fixture seguinte explicitamente fornecidos; não converte percentuais em domínio, retenção ou probabilidade.
+- `state/CURRENT.json` permanece E0, zero eventos e zero resultados; não foi alterado.
+- A CI do PR #52 deve ser lida no HEAD final após a vinculação de `state/WORKFLOW.json`; o primeiro commit do PR antecede a reconciliação de estado e não é a candidata final.
+- A operação usa API GitHub. Hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados nesta sessão; não declarar equivalência a um checkout local.
+- A proteção remota da `main` está ativa e exige o check `validate`. Nenhum merge foi realizado no PR #52.
 
 ---
 

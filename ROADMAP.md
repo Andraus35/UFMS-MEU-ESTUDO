@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — PR #51 integrado em `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; preparação RM-08-PREP em execução serial.** A CI pós-merge do HEAD `9525a2dd` (run `42220289336`) concluiu `success`. Saneamento encerrado: 29 branches removidas e confirmadas; históricas e backups preservados conforme handoff. RM-08 formal permanece `bloqueado`; somente o subescopo offline sintético RM-08-PREP está autorizado. GP-3 integral, GQ-D e GP-4 real não estão homologados; dados pessoais e integrações externas continuam bloqueados.
+> **ESTADO VIGENTE — PR #51 integrado em `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; RM-08-PREP / PR #52 é a única frente ativa em draft.** CI pós-merge do HEAD `9525a2dd` (run `42220289336`) concluiu `success`. Saneamento encerrado; não abrir frentes paralelas. RM-08 formal permanece `bloqueado`; o PR #52 contém somente preparação offline sintética, sem dados pessoais, persistência ou integração externa. GP-3 integral, GQ-D e GP-4 real não estão homologados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
