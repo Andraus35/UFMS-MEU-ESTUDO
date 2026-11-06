@@ -3,10 +3,10 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-06",
-    "branch": "docs/saneamento-inventario-branches-20261105",
-    "pr_number": 50,
+    "branch": "docs/post-saneamento-governance-20261106",
+    "pr_number": 51,
     "base": "main",
-    "phase": "merge_ready"
+    "phase": "review"
   },
   "next_task_after_merge": "RM-08",
   "rules": {
