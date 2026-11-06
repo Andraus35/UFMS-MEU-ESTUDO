@@ -16,7 +16,8 @@
 - Não conformidade identificada: candidatos das filas inicial e de reavaliação podiam referenciar tópicos ausentes do catálogo, pois o ranqueador não aplica essa validação.
 - Correção submetida nesta atualização: validação de pertencimento ao catálogo para todos os candidatos de ambas as filas.
 - Contraprovas incluídas: candidato inicial inválido, candidato alternativo inválido e candidato de reavaliação inválido.
-- Resultado de testes desta atualização: **pendente**. Os 505 testes e checks verdes do HEAD anterior não comprovam esta correção.
+- Resultado no HEAD `c45aa5dbefc924ae048d9076d838195fdaf3d31f`: **508 testes aprovados** (`Ran 508 tests` / `OK`). Três contraprovas novas passaram: candidato inicial, candidato alternativo e candidato de reavaliação com tópico inexistente.
+- CI PR: run `42250211184=success`; CI push: run `42250200164=success`.
 
 ## Limites e status do projeto
 
@@ -29,7 +30,7 @@
 
 ## Próxima ação
 
-Executar testes focados e CI completa no novo HEAD; reconciliar este status com `state/WORKFLOW.json`, `ROADMAP.md` e `memory/HANDOFF.md`. Manter PR #52 único e Draft até parecer técnico atualizado e decisão de integração.
+Concluir revisão independente final do HEAD `c45aa5dbefc924ae048d9076d838195fdaf3d31f`; manter PR #52 único e Draft até parecer técnico atualizado e decisão de integração.
 
 ---
 
