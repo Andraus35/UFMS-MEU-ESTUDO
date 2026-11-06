@@ -95,3 +95,16 @@ A classificação de 12 históricos conserva as justificativas registradas no in
 - A consulta remota posterior confirmou ausência das 29 candidatas na listagem de branches e ausência de PRs abertos.
 - CI pós-merge do PR #50: run `42158000977`, conclusão `success` no SHA informado.
 - Proveniência: totais operacionais de exclusão/preservação conforme saída do Termux enviada pelo proprietário; estado de PR, HEAD, branches listadas e CI conforme consulta autenticada ao GitHub.
+
+
+## Backup suplementar posterior — branch documental do PR #50 (06/11/2026)
+
+A fotografia original acima registrou 42 branches originais e 42 backups. Após a integração do PR #50, a branch documental `docs/saneamento-inventario-branches-20261105` permaneceu como referência remota, com histórico exclusivo em relação à `main` atual. Foi criada uma cópia de segurança adicional, sem mover ou excluir a origem:
+
+- Origem: `docs/saneamento-inventario-branches-20261105`.
+- HEAD remoto obtido diretamente de `refs/heads/docs/saneamento-inventario-branches-20261105`: `186f0aa289fee780d765ec410173cb402506bc67`.
+- Backup: `archive/pre-saneamento-20261105/docs--saneamento-inventario-branches-20261105`.
+- HEAD remoto do backup confirmado: `186f0aa289fee780d765ec410173cb402506bc67`.
+- Comparação autenticada origem → backup: `identical`; `ahead_by=0`; `behind_by=0`; nenhum arquivo divergente.
+- Total de backups remotos após este complemento: **43** (42 da fotografia original + 1 suplementar).
+- A referência de origem permanece presente; nenhuma exclusão ou merge ocorreu nesta etapa.
