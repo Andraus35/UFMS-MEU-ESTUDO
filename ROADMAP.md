@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** Revisão técnica independente concluída sem não conformidade bloqueante no escopo offline sintético. HEAD funcional revisado `0b1ab3f86b40db151d334223e564fd7f219f3570`: 513 testes aprovados; CI push `42253083789` e PR `42253093575` com `validate=success`. A preparação está implementada, mas não integrada/homologada; decisão de integração pendente. RM-08 formal permanece bloqueada. Sem dados pessoais, persistência ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
+> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** Revisão técnica independente concluída sem não conformidade bloqueante no escopo offline sintético. HEAD funcional revisado `127744a311c36990339d41f9aafb0fba40e0af65`: 513 testes aprovados; CI push `42253915490` e PR `42253926201` com `validate=success`. A preparação está implementada, mas não integrada/homologada; decisão de integração pendente. RM-08 formal permanece bloqueada. Sem dados pessoais, persistência ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -30,9 +30,9 @@
 - `main` = `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
 - Única frente: RM-08-PREP / PR #52 Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; não integrado.
 - HEAD funcional revisado: `0b1ab3f86b40db151d334223e564fd7f219f3570`; branch 17 commits à frente e 0 atrás de `main` antes desta sincronização documental.
-- CI do HEAD funcional: push run `42253083789` e PR run `42253093575`, ambos `validate=success`; log do PR: `Ran 513 tests` / `OK`.
+- CI do HEAD funcional: push run `42253915490` e PR run `42253926201`, ambos `validate=success`; log do PR: `Ran 513 tests` / `OK`.
 - Parecer técnico independente: aprovado para o escopo RM-08-PREP offline sintético, sem homologar RM-08 formal, GP-4 ou integração real. Nenhuma revisão formal GitHub ou thread registrada; PR segue Draft e sem merge.
-- A sincronização documental é um commit adicional sem alteração funcional; sua CI de HEAD deve ser confirmada antes de avançar.
+- A sincronização documental é um commit adicional sem alteração funcional; confirmar sua CI antes de avançar.
 - Correção funcional em `c45aa5dbefc924ae048d9076d838195fdaf3d31f`: validação de catálogo para todos os candidatos das filas inicial e seguinte; três contraprovas adicionadas. Suíte: 508 testes, OK.
 - CI do PR no HEAD documental `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`: run `42250371115`, job `validate=success`. Nenhuma revisão formal ou thread registrada.
 - `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado.

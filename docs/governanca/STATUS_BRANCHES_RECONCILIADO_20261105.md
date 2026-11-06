@@ -5,8 +5,8 @@
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`
 - `main`: `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; último merge PR #51 / RM-06, CI pós-merge `42220289336=success`.
 - Única frente: RM-08-PREP / PR #52, Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; aberto e não mesclado.
-- HEAD funcional revisado: `0b1ab3f86b40db151d334223e564fd7f219f3570`; 17 commits ahead, 0 behind antes da sincronização documental.
-- CI push: run `42253083789`, `validate=success`. CI PR: run `42253093575`, `validate=success`; suíte completa: **513 testes / OK**.
+- HEAD funcional revisado: `127744a311c36990339d41f9aafb0fba40e0af65`; branch baseada em `main` sem commits de base pendentes.
+- CI push: run `42253915490`, `validate=success`. CI PR: run `42253926201`, `validate=success`; suíte completa: **513 testes / OK**.
 - Revisões formais GitHub: nenhuma. Threads: nenhuma. Parecer técnico independente desta auditoria: PASS restrito a RM-08-PREP offline sintético.
 - Saneamento de branches: encerrado; não reabrir sem evidência concreta.
 
@@ -32,7 +32,7 @@
 
 ## Próxima ação
 
-Confirmar CI no HEAD após a sincronização documental; manter PR #52 Draft até decisão de integração. Sem merge automático.
+Confirmar CI no HEAD após esta sincronização documental; manter PR #52 Draft até decisão de integração. Sem merge automático.
 
 ---
 
