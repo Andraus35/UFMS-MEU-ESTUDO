@@ -32,7 +32,7 @@ Validar o gate de sincronização, as contraprovas e toda a CI do PR #53; soment
 
 ## Limites e status do projeto
 
-- RM-08-PREP: implementada, testada e tecnicamente revisada no escopo sintético; permanece não homologada/não integrada enquanto PR #52 está Draft.
+- RM-08-PREP: preparação offline sintética integrada pelo PR #52; o PR #53 trata somente da reconciliação documental pós-merge. Integração não equivale a homologação formal de RM-08/GP-4.
 - RM-08 formal: bloqueada.
 - `state/CURRENT.json`: E0; zero eventos e zero resultados; preservado.
 - Sem dados pessoais, credenciais, persistência, replay real, rede ou integrações externas.
