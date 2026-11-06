@@ -24,7 +24,7 @@ def verify(root=ROOT):
     merge_pr = merged.get("pr_number")
     merge_sha = merged.get("merge_commit_sha")
 
-    if not isinstance(task, str) or not re.fullmatch(r"(?:SIM-\\d{2}|RM-\\d{2}(?:-PREP)?)", task):
+    if not isinstance(task, str) or not re.fullmatch(r"(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)", task):
         raise ValueError("WORKFLOW sem task_id válido")
     if type(pr) is not int or pr < 1 or not isinstance(branch, str) or not branch:
         raise ValueError("WORKFLOW sem PR/branch ativa válidos")
@@ -35,7 +35,7 @@ def verify(root=ROOT):
     if not isinstance(next_task, str) or not next_task:
         raise ValueError("WORKFLOW sem próxima tarefa")
 
-    handoff = (root / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\\n---\\n", 1)[0]
+    handoff = (root / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\n---\n", 1)[0]
     roadmap = (root / "ROADMAP.md").read_text(encoding="utf-8").splitlines()[:12]
     status_path = root / STATUS
     status = status_path.read_text(encoding="utf-8").splitlines()[:18]
@@ -49,8 +49,8 @@ def verify(root=ROOT):
 
     checks = {
         "HANDOFF": (handoff, (active_marker, branch_marker, next_marker, merge_marker, sha_marker)),
-        "ROADMAP": ("\\n".join(roadmap), (f"{task} / PR #{pr}", branch_marker, merge_marker, sha_marker)),
-        "STATUS": ("\\n".join(status), (f"{task} / PR #{pr}", branch_marker, merge_marker, sha_marker)),
+        "ROADMAP": ("\n".join(roadmap), (f"{task} / PR #{pr}", branch_marker, merge_marker, sha_marker)),
+        "STATUS": ("\n".join(status), (f"{task} / PR #{pr}", branch_marker, merge_marker, sha_marker)),
     }
     for name, (text, markers) in checks.items():
         missing = [marker for marker in markers if marker not in text]
