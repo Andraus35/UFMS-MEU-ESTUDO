@@ -3,8 +3,8 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-06",
-    "branch": "docs/gp3-personal-mvp-8-20261105",
-    "pr_number": 49,
+    "branch": "docs/saneamento-inventario-branches-20261105",
+    "pr_number": 50,
     "base": "main",
     "phase": "review"
   },
@@ -105,11 +105,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "RM-06 / GP-3-MVP8 em revisão no PR #49: oito testes canônicos sintéticos existentes (PED-01, PED-02, PED-12, PED-14, FIQ-02, CDO-08, CDO-17, PRD-09). Os outros 94 cenários permanecem backlog. Oito testes unitários não homologam GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real ou GP-5. Dados pessoais continuam bloqueados; RM-08 após merge pode começar somente com ciclo offline sintético, sem persistência real.",
+  "notes": "RM-06 / GP-3-MVP8 foi integrado no PR #49 (squash merge em 50ced2966293f0e714fed8a9325f83a4dd79cc09). O PR #50 é o fechamento documental do RM-06: reapresenta o inventário autenticado de 42 branches e 42 backups idênticos; 29 branches sem commits exclusivos, 13 com histórico exclusivo; nenhuma exclusão executada. Os outros 94 cenários permanecem backlog. GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não estão homologados. Dados pessoais e integrações reais continuam bloqueados. Após o merge do PR #50, RM-08 poderá iniciar exclusivamente como ciclo offline sintético, sem persistência pessoal nem integração real.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-07",
-    "pr_number": 48,
-    "merge_commit_sha": "e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2"
+    "task_id": "RM-06",
+    "pr_number": 49,
+    "merge_commit_sha": "50ced2966293f0e714fed8a9325f83a4dd79cc09"
   }
 }

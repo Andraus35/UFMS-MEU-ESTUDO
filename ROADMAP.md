@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-06 / GP-3-MVP8 em revisão no PR #49.** Base `main@e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2`. Recorte de oito testes sintéticos canônicos, reutilizando a suíte existente; os outros 94 cenários permanecem no catálogo/backlog. GP-3 integral e GQ-D não homologados; GP-4 real bloqueado. Nenhuma integração externa ou escrita de resultados pessoais habilitada.
+> **ESTADO VIGENTE — RM-06 / fechamento documental e inventário no PR #50 (aberto).** Base `main@50ced2966293f0e714fed8a9325f83a4dd79cc09`; branch `docs/saneamento-inventario-branches-20261105`. O PR #49 / GP-3-MVP8 foi integrado; oito testes sintéticos canônicos foram selecionados, mas os outros 94 cenários permanecem backlog. GP-3 integral, GQ-D e GP-4 real não estão homologados. O PR #50 reapresenta o inventário autenticado de 42 branches e 42 backups; nenhuma branch original foi excluída. Após o merge do #50, RM-08 poderá iniciar somente como ciclo offline sintético; dados pessoais, persistência real e integrações externas continuam bloqueados.
 
 
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -29,7 +29,7 @@
 
 ## Estado observado
 
-Fotografia atualizada em 05/11/2026: `main` = `e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2`; PR #48 / fechamento documental RM-07 mesclado; CI pós-merge run `42092867818`, `validate=success`. PR #49 propõe o recorte GP-3-MVP8; ainda aguarda CI e merge. O proprietário confirmou via API administrativa: `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. A CI não homologa o motor pedagógico.
+Fotografia atualizada em 06/11/2026: `main` = `50ced2966293f0e714fed8a9325f83a4dd79cc09`; PR #49 / RM-06 GP-3-MVP8 mesclado, CI do HEAD `530a06c69ce3e2e9400e5f85673c93172b688ea9`, run `42096451811`, `validate=success`. PR #50 foi reaberto para reapresentar o inventário e regularizar o fluxo serial; o primeiro run `42102466006` falhou porque `state/WORKFLOW.json` ainda apontava para PR #49. O estado foi corrigido no commit `f33572255603056e6e53ad7d0d0d4a17fe6b5bc1`; aguarda CI do HEAD atualizado. O proprietário confirmou `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. CI verde não homologa o motor pedagógico.
 
 | Frente | Evidência | Maturidade e pendência |
 |---|---|---|
@@ -65,7 +65,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após merge do recorte GP-3-MVP8. RM-08 começa apenas como ciclo offline sintético; escrita pessoal e integrações reais continuam bloqueadas.
+**Próxima tarefa: RM-08** após merge do PR #50 (fechamento documental/inventário do RM-06). O escopo inicial autorizado é exclusivamente um ciclo offline sintético, sem persistência pessoal nem integração real. GP-4 real permanece bloqueado até evidência funcional e gates independentes aplicáveis.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -82,6 +82,8 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
+
+**Recorte de preparação RM-08 autorizado para depois do PR #50:** poderá começar exclusivamente com especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Esta preparação não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
 **Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.
 
