@@ -19,6 +19,8 @@ jobs:
         run: python scripts/write_policy.py --check
       - name: Validar roadmap e bootstrap
         run: python scripts/roadmap_gate.py --check
+      - name: Exigir sincronização determinística da governança
+        run: python scripts/governance_sync_gate.py
       - name: Garantir trabalho serial e PR unico
         run: python scripts/single_flow_gate.py --remote
         env:

@@ -1,21 +1,20 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-## Checkpoint vigente — 06/11/2026 (simetria HANDOFF / WORKFLOW / ROADMAP)
+## Checkpoint vigente — 06/11/2026 (reconciliação pós-merge #52)
 
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
-- Base integrada: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
-- Frente ativa: **RM-08-PREP / PR #52**; branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`, Draft, não mesclada, fase `review`. O inventário remoto consultado contém exatamente um PR aberto: #52.
-- Fonte operacional única de engenharia: `state/WORKFLOW.json`. Ela aponta `active.task_id=RM-08-PREP`, `active.scope=preparacao_offline_sintetica`, PR #52, branch indicada e `phase=review`; `next_task_after_merge=RM-08`. ROADMAP e este HANDOFF são projeções documentais desse estado, não fontes concorrentes.
-- **Próxima tarefa: RM-08** somente após merge comprovado do PR #52 e nova validação dos bloqueadores formais. A linha RM-08 continua `bloqueado`; a conclusão de RM-08-PREP não inicia nem homologa RM-08 automaticamente.
-- Último HEAD da candidata verificado antes desta sincronização de governança: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits à frente e 0 atrás de `main`. Nesse SHA, CI **push** run `42256101518=success` e CI **pull_request** run `42256114895=success`. Os IDs foram conferidos pelo evento e pelo SHA, não apenas copiados da descrição do PR.
-- Baseline funcional revisada: HEAD `127744a311c36990339d41f9aafb0fba40e0af65`; suíte `513 testes / OK`; CI **push** `42253915490=success` e **pull_request** `42253926201=success`.
-- Parecer técnico independente: **PASS restrito à preparação offline sintética**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5. Não há revisão formal GitHub nem thread de revisão registrada; PR #52 permanece Draft e sem merge.
-- A CI do checkpoint anterior 4fb08ac934eb5f93bdc2eadbcf79a79fda3aa274 falhou nos runs push 42260384767 e pull_request 42260392670 por um único erro de fixture: test_fila_sim_terminal_pode_avancar_para_rm alterava WORKFLOW/ROADMAP para DONE, mas não atualizava o HANDOFF. O gate identificou corretamente a divergência. Este commit ajusta o teste para espelhar a transição e corrige o recorte do checkpoint vigente; não enfraquece o gate. O novo SHA exige CI própria.
-- Esta atualização sincroniza HANDOFF, WORKFLOW, ROADMAP e STATUS e reforça o teste de coerência do gate serial. O novo HEAD produzido por este commit precisa ter `validate=success` no SHA exato, tanto no evento push quanto no pull_request, antes de qualquer decisão de merge. A CI dos SHAs anteriores não é herdada.
-- Escopo permitido: preparação offline com fixtures sintéticas. Proibidos rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real e escrita em `state/events`, `state/CURRENT.json` ou `state/PROGRESS.csv`.
-- `state/CURRENT.json` permanece E0, zero eventos e zero resultados; é estado pedagógico, distinto do estado operacional de engenharia em `state/WORKFLOW.json`. `state/PROGRESS.csv` também permanece intocado.
-- Escritas desta sessão feitas via API GitHub; hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados. CI remota não equivale à execução desses hooks.
-- Próxima ação: readback do HEAD e CI exatos desta atualização; depois, decisão explícita do proprietário sobre integração do PR #52. Não abrir PR paralelo, não mudar a baseline formal e não mesclar automaticamente.
+- Base integrada: `main@7df4b8fff8d8ed76096d33edb6474808fb2e34ca`; PR #52 / RM-08-PREP integrado em 06/11/2026; CI pós-merge run `42270139613`, job `validate=success`.
+- Último merge comprovado: PR #52
+- SHA do último merge: `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`.
+- Frente ativa: **RM-08-PREP / PR #53**; branch `fix/governance-post-merge-sync-20261106`, base `main`, fase `review`. Este PR é exclusivamente o fechamento documental e a correção determinística da sincronização pós-merge do PR #52; não reabre o ciclo funcional sintético.
+- Fonte operacional única: `state/WORKFLOW.json`. Ela registra o PR #53 como frente de fechamento documental, o PR #52 como último merge comprovado e `next_task_after_merge=RM-08`.
+- **Próxima tarefa: RM-08** somente após o fechamento documental e nova avaliação de seus bloqueadores formais. A linha RM-08 permanece `bloqueado`; este trabalho não a inicia nem homologa GP-4.
+- O gate novo `scripts/governance_sync_gate.py` exige simetria entre WORKFLOW, HANDOFF, ROADMAP e STATUS: tarefa/PR/branch ativos, próxima tarefa e recibo SHA do último merge.
+- Escopo: governança documental e contraprovas. Não alterar `state/CURRENT.json`, eventos, `state/PROGRESS.csv`, dados pessoais, credenciais ou qualquer integração externa.
+- `state/CURRENT.json` permanece E0, zero eventos e zero resultados.
+- Escritas realizadas via API GitHub; hooks locais não foram executados. A CI remota não equivale a hooks locais.
+- Próxima ação: validar o novo SHA exato em push e pull_request, conferir contraprovas e readback; não mesclar automaticamente.
+
 
 ---
 

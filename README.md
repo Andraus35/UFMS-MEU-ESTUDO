@@ -31,7 +31,7 @@ python scripts/rebuild.py --check
 
 `settings.json` é **configuração própria deste projeto**, não um arquivo reconhecido automaticamente por todas as ferramentas de IA. Os hooks exigem registro explícito no ambiente ou execução via workflow/script.
 
-A CI inclui `scripts/write_policy.py --check` e os contratos verificáveis de bootstrap/hooks. Ver `docs/OPERACAO.md` para START/DELIVERY e para as limitações de execução automática.
+A CI inclui `scripts/write_policy.py --check`, `scripts/governance_sync_gate.py` e os contratos verificáveis de bootstrap/hooks. Ver `docs/OPERACAO.md` para START/DELIVERY e para as limitações de execução automática.
 
 Para escritas pela API, a política de pré-validação, a auditoria da CI e os limites de proteção administrativa estão documentados em [`docs/API_WRITE_GOVERNANCE.md`](docs/API_WRITE_GOVERNANCE.md). O adaptador é voluntário: não intercepta chamadas externas, não substitui autenticação/verificação independente e não libera dados pessoais.
 
