@@ -79,9 +79,11 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
-| RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach (início offline sintético) | planejado | Após merge do PR #50, prototipar apenas recomendação → simulação sintética de execução humana → resultado sintético → reavaliação; sem persistência pessoal, serviço real ou integrações. GP-4 real e replay de dados pessoais continuam bloqueados até gates e autorizações próprios |
+| RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
+
+**Recorte de preparação RM-08 autorizado para depois do PR #50:** poderá começar exclusivamente com especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Esta preparação não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
 **Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.
 
