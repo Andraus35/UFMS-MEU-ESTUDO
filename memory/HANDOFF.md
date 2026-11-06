@@ -6,11 +6,11 @@
 - `main` = `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
 - PR #50 integrado; CI pós-merge run `42158000977`, conclusão `success`, no SHA acima.
 - PR #51 permanece aberto na branch `docs/post-saneamento-governance-20261106`; é a única frente documental ativa identificada nesta reconciliação.
-- A listagem remota contém 58 branches: 42 backups em `archive/pre-saneamento-20261105/*`, 13 refs históricas ainda fora de `archive/*`, duas refs documentais (#50 e #51) e `main`.
-- As 13 branches históricas têm backups correspondentes; preservar ambos os conjuntos até que cada par origem/backup seja revalidado por SHA e a política de retenção esteja registrada.
+- A listagem remota contém 59 branches: 43 backups em `archive/pre-saneamento-20261105/*`, 13 refs históricas ainda fora de `archive/*`, duas refs documentais (#50 e #51) e `main`.
+- As 13 branches históricas têm backups correspondentes; os 13 pares foram comparados como `identical`. A branch documental do PR #50 também recebeu backup suplementar no SHA `186f0aa289fee780d765ec410173cb402506bc67`, comparado como `identical` com a origem. Total atual: 43 backups; a fotografia original de 42 permanece preservada no inventário, com este 43º backup registrado como complemento posterior.
 - O inventário registra 29 exclusões confirmadas pelo proprietário via Termux; a consulta remota confirma ausência dessas 29 refs candidatas.
-- Pendências de saneamento do PR #51: corrigir a fotografia/base de classificação no inventário; definir a migração das 13 refs históricas e das duas refs documentais para `archive/*`, sem perda de SHA. O `state/WORKFLOW.json` já enumera as 13 referências históricas, incluindo a branch pós-squash do PR #49.
-- Nenhuma branch histórica ou documental será excluída antes de validar o SHA exato do backup, verificar PRs/dependências e registrar o procedimento de retenção.
+- Pendências de saneamento do PR #51: corrigir a fotografia/base de classificação no inventário; definir a migração das 13 refs históricas e da ref documental do PR #50 para `archive/*`, sem perda de SHA. A branch do PR #51 continua sendo a única branch de trabalho ativa. O `state/WORKFLOW.json` já enumera as 13 referências históricas, incluindo a branch pós-squash do PR #49.
+- Nenhuma branch histórica ou documental será excluída antes de validar o SHA exato do backup, verificar PRs/dependências e registrar o procedimento de retenção. A migração dos nomes originais ainda não foi executada.
 - RM-06 encerrado. `state/WORKFLOW.json` aponta RM-08 como próxima tarefa, mas **RM-08 permanece formalmente bloqueado** pela baseline/gates do ROADMAP. Não iniciar implementação nem alterar baseline.
 - GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não homologados. Dados pessoais, eventos pessoais, `state/CURRENT.json` e integrações reais permanecem bloqueados.
 - CI verde valida apenas os checks executados no SHA correspondente; não substitui auditoria nem homologação de gates.
