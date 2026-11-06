@@ -1,8 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-06 / fechamento documental e inventário no PR #50 (aberto).** Base `main@50ced2966293f0e714fed8a9325f83a4dd79cc09`; branch `docs/saneamento-inventario-branches-20261105`. O PR #49 / GP-3-MVP8 foi integrado; oito testes sintéticos canônicos foram selecionados, mas os outros 94 cenários permanecem backlog. GP-3 integral, GQ-D e GP-4 real não estão homologados. O PR #50 reapresenta o inventário autenticado de 42 branches e 42 backups; nenhuma branch original foi excluída. Após o merge do #50, RM-08 poderá iniciar somente como ciclo offline sintético; dados pessoais, persistência real e integrações externas continuam bloqueados.
-
-
+> **ESTADO VIGENTE — RM-06 encerrado; saneamento pós-merge concluído.** `main@4ca27e8db66073ce8ad57b812070094d6c4dca1e`; PR #50 integrado. Após revalidação individual imediatamente antes de cada exclusão: 29 branches candidatas removidas e confirmadas; 13 branches históricas preservadas; 42 backups preservados. CI pós-merge do PR #50: run `42158000977`, `validate=success`. RM-08 continua formalmente `bloqueado`; não iniciar implementação nem alterar sua baseline sem cumprir os gates e a auditoria exigidos. GP-3 integral, GQ-D e GP-4 real não estão homologados; dados pessoais e integrações externas continuam bloqueados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -247,3 +245,12 @@ O PR #20 é a única frente ativa; seu código deriva seletivamente da branch hi
 ### SIM-03 — monitor FAPEC read-only e prova CLI (PR #21 + PR #29)
 
 O PR #21 já integrou `.github/workflows/monitor-fapec.yml`, `scripts/monitor_fapec.py` e `tests/test_monitor_fapec_schedule.py` à `main`. O workflow tem `schedule` diário (`17 12 * * *` UTC) e `workflow_dispatch`, usa `contents: read`, checkout com `persist-credentials: false`, sem secrets e sem execução em push/PR. O monitor consulta uma única página FAPEC; não verifica exaustivamente boletim UFMS/DOU, não baixa nem aplica retificações e não resolve o alerta cronológico do Anexo II, p. 13. O PR #29 acrescenta teste CLI ponta a ponta com fixtures offline para confirmar os códigos 0 (estabilidade observada somente na página), 2 (revisão humana) e 3 (inconclusivo), além dos metadados `writes=false` e `normative_revision_verified=false`. **A configuração do cron e o teste estático não provam que o GitHub executou um evento `schedule`; até existir run com `event=schedule`, o cron permanece `NOT_VERIFIED`.** O alerta p. 13 e o PDF original permanecem inalterados.
+
+
+## Fechamento pós-merge e saneamento de branches — 06/11/2026
+
+- PR #50 integrado na `main` em `4ca27e8db66073ce8ad57b812070094d6c4dca1e`; CI pós-merge run `42158000977` concluiu `success`.
+- Execução local autenticada pelo proprietário via Termux: 29/29 branches candidatas revalidadas individualmente imediatamente antes da exclusão; 29 exclusões confirmadas; 0 impedimentos.
+- Preservação final reportada pelo script: 13/13 branches históricas, 42/42 refs de backup e `main` no SHA acima.
+- **Limite da evidência:** os totais de exclusão e preservação foram lidos da saída final do script Termux fornecida pelo proprietário; a consulta GitHub confirmou o estado remoto listado, o PR fechado/mesclado e a CI. Não se declara execução dos hooks locais nesta sessão.
+- Próxima tarefa indicada: RM-08. Seu status e baseline formais permanecem `bloqueado`; este registro não constitui autorização para iniciar implementação, mudar baseline, homologar GP-3/GQ-D/GP-4 ou liberar dados pessoais/integrações reais.

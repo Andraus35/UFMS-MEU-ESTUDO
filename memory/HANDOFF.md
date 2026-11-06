@@ -1,19 +1,26 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-## Checkpoint de retomada — 06/11/2026 (API GitHub)
+## Checkpoint vigente — 06/11/2026 (reconciliação autenticada)
 
-- `main` = `50ced2966293f0e714fed8a9325f83a4dd79cc09` (squash merge do PR #49 / RM-06 GP-3-MVP8).
-- PR #49: fechado com merge; HEAD `530a06c69ce3e2e9400e5f85673c93172b688ea9`; CI run `42096451811`, job `validate=success`. Isso valida a suíte/contratos executados, não homologa GP-3 integral, Tutor/Coach E2E ou GQ-D.
-- PR #50: reaberto; único PR aberto; base `main`; branch `docs/saneamento-inventario-branches-20261105`.
-- CI run `42102466006` falhou no `single_flow_gate.py --remote` porque `state/WORKFLOW.json` ainda declarava PR #49 como ativo. A transição foi corrigida no commit `f33572255603056e6e53ad7d0d0d4a17fe6b5bc1`; CI desse commit `42154123481=success`.
-- A tentativa seguinte alterou indevidamente a linha-base formal de RM-08. CI run `42154172514` falhou em `roadmap_gate.py` com `Mudança estratégica exige baseline auditada: RM-08`. A baseline formal foi restaurada para `bloqueado`; o escopo offline sintético foi registrado como preparação limitada, sem promoção de status, no commit `2324741e19bc14442f7eeaa13c0c0a9bf28ee0e0`.
-- CI após a restauração da baseline: run `42154286076` no commit `60265c2ccb2ad8ed5795c882c220f0f71b3ca6df`, job `validate=success`; todos os passos, inclusive `roadmap_gate`, `single_flow_gate`, testes unitários e benchmarks, concluíram com sucesso. O PR #50 continua aberto e não foi mesclado. Revisão do diff concluída: somente `state/WORKFLOW.json`, `ROADMAP.md`, `memory/HANDOFF.md` e o inventário foram alterados; nenhum código funcional ou branch foi removido. A linha formal RM-08 permanece `bloqueado`; preparação offline sintética é o único escopo futuro autorizado após o PR #50. Próxima decisão: autorização explícita para merge do PR #50; não mesclar automaticamente.
-- Inventário: 42 branches originais, 42 backups verificados 42/42 idênticos; 29 branches sem commits exclusivos; 13 com histórico exclusivo; nenhuma branch excluída. Preservar as 13 históricas e não excluir as 29 sem autorização específica.
-- Após merge do PR #50, iniciar RM-08 somente no recorte offline sintético. GP-4 real, persistência de dados pessoais, integrações externas e homologação permanecem bloqueados.
-- `state/CURRENT.json`, eventos pessoais e resultados individuais permanecem intocados. Esta retomada foi feita pela API GitHub; hooks locais `bootstrap`, `before_write` e `after_write` não foram executados e não devem ser declarados como executados.
+- Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
+- `main` = `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
+- PR #50 integrado; CI pós-merge run `42158000977`, conclusão `success`, no SHA acima.
+- PR #51 permanece aberto na branch `docs/post-saneamento-governance-20261106`; é a única frente documental ativa identificada nesta reconciliação.
+- A listagem remota contém 59 branches: 43 backups em `archive/pre-saneamento-20261105/*`, 13 refs históricas ainda fora de `archive/*`, duas refs documentais (#50 e #51) e `main`.
+- As 13 branches históricas têm backups correspondentes; os 13 pares foram comparados como `identical`. A branch documental do PR #50 também recebeu backup suplementar no SHA `186f0aa289fee780d765ec410173cb402506bc67`, comparado como `identical` com a origem. Total atual: 43 backups; a fotografia original de 42 permanece preservada no inventário, com este 43º backup registrado como complemento posterior.
+- O inventário registra 29 exclusões confirmadas pelo proprietário via Termux; a consulta remota confirma ausência dessas 29 refs candidatas.
+- Pendências de saneamento do PR #51: corrigir a fotografia/base de classificação no inventário; definir a migração das 13 refs históricas e da ref documental do PR #50 para `archive/*`, sem perda de SHA. A branch do PR #51 continua sendo a única branch de trabalho ativa. O `state/WORKFLOW.json` já enumera as 13 referências históricas, incluindo a branch pós-squash do PR #49.
+- Nenhuma branch histórica ou documental será excluída antes de validar o SHA exato do backup, verificar PRs/dependências e registrar o procedimento de retenção. A migração dos nomes originais ainda não foi executada.
+- RM-06 encerrado. `state/WORKFLOW.json` aponta RM-08 como próxima tarefa, mas **RM-08 permanece formalmente bloqueado** pela baseline/gates do ROADMAP. Não iniciar implementação nem alterar baseline.
+- GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não homologados. Dados pessoais, eventos pessoais, `state/CURRENT.json` e integrações reais permanecem bloqueados.
+- CI verde valida apenas os checks executados no SHA correspondente; não substitui auditoria nem homologação de gates.
+- Esta reconciliação foi feita pela API GitHub. Hooks locais `bootstrap`, `before_write`, `after_write` e `checkpoint` não foram executados; não declarar equivalência com execução local.
 
+---
 
-**Checkpoint histórico 05/11/2026.** Fonte operacional atualizada no bloco de retomada acima: GitHub autenticado + `state/WORKFLOW.json`. Repositório público; resultados pessoais permanecem bloqueados.
+## Registro histórico — checkpoints anteriores a 06/11/2026
+
+Os registros abaixo são históricos e não representam o estado vigente. Para retomada, prevalece exclusivamente o checkpoint vigente no topo deste arquivo.
 
 ## Estado confirmado
 - `main` = `e5560d452e2cf3ddb1c4e8cc8d6594a4c1cb96f2` (PR #48 / fechamento documental RM-07).

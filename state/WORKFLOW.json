@@ -3,8 +3,8 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-06",
-    "branch": "docs/saneamento-inventario-branches-20261105",
-    "pr_number": 50,
+    "branch": "docs/post-saneamento-governance-20261106",
+    "pr_number": 51,
     "base": "main",
     "phase": "review"
   },
@@ -103,13 +103,20 @@
       "sha": "daec1f626c0bf43a22a565eaac3a290bc71f83c5",
       "reason": "candidata API terminal recuperada seletivamente e integrada no PR20",
       "archived_without_merge": true
+    },
+    {
+      "number": 49,
+      "branch": "docs/gp3-personal-mvp-8-20261105",
+      "sha": "530a06c69ce3e2e9400e5f85673c93172b688ea9",
+      "reason": "PR #49 integrado por squash em main; HEAD original preservado como histórico pós-squash, sem conteúdo pendente presumido",
+      "archived_without_merge": true
     }
   ],
-  "notes": "RM-06 / GP-3-MVP8 foi integrado no PR #49 (squash merge em 50ced2966293f0e714fed8a9325f83a4dd79cc09). O PR #50 é o fechamento documental do RM-06: reapresenta o inventário autenticado de 42 branches e 42 backups idênticos; 29 branches sem commits exclusivos, 13 com histórico exclusivo; nenhuma exclusão executada. Os outros 94 cenários permanecem backlog. GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não estão homologados. Dados pessoais e integrações reais continuam bloqueados. Após o merge do PR #50, RM-08 poderá iniciar exclusivamente como ciclo offline sintético, sem persistência pessoal nem integração real.",
+  "notes": "RM-06 / GP-3-MVP8 integrado no PR #49 (squash merge em 50ced2966293f0e714fed8a9325f83a4dd79cc09). O PR #50, fechamento documental do inventário, foi integrado em 4ca27e8db66073ce8ad57b812070094d6c4dca1e; CI pós-merge run 42158000977=success. Saneamento posterior: 29 branches candidatas excluídas e confirmadas após revalidação individual imediatamente antes de cada exclusão; 13 branches históricas preservadas; 42 backups preservados; main preservada. RM-08 permanece bloqueado na baseline formal: não iniciar implementação nem promover status sem cumprir os gates e a baseline auditada. Preparação offline sintética somente se explicitamente permitida pelo roadmap vigente. GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não estão homologados. Dados pessoais e integrações reais continuam bloqueados. Backup suplementar da branch documental do PR #50 criado em archive/pre-saneamento-20261105/docs--saneamento-inventario-branches-20261105 e validado identical no SHA 186f0aa289fee780d765ec410173cb402506bc67; total atual 43 backups (42 originais + 1 suplementar).",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-06",
-    "pr_number": 49,
-    "merge_commit_sha": "50ced2966293f0e714fed8a9325f83a4dd79cc09"
+    "pr_number": 50,
+    "merge_commit_sha": "4ca27e8db66073ce8ad57b812070094d6c4dca1e"
   }
 }

@@ -26,9 +26,12 @@ class Sim09BranchInventoryTests(unittest.TestCase):
     def test_all_deferred_refs_have_unique_branches_and_known_shas(self):
         state = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
         refs = state["deferred_pull_requests"]
-        self.assertEqual(len(refs), 12)
+        self.assertEqual(len(refs), 13)
         branches = [item["branch"] for item in refs]
         self.assertEqual(len(branches), len(set(branches)))
+        pr49 = next(item for item in refs if item["number"] == 49)
+        self.assertEqual(pr49["branch"], "docs/gp3-personal-mvp-8-20261105")
+        self.assertEqual(pr49["sha"], "530a06c69ce3e2e9400e5f85673c93172b688ea9")
         for item in refs:
             self.assertRegex(item["sha"], r"^[0-9a-f]{40}$")
             self.assertTrue(item["archived_without_merge"])
