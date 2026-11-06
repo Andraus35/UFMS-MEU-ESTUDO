@@ -42,6 +42,10 @@ A segunda fila usa uma lista `next_candidates` explicitamente fornecida, com fat
 - Rejeita origem, IDs e referências não sintéticos, contagens incoerentes, tópico fora do escopo, plataforma externa, execução não simulada e resultado vinculado a outra execução/candidato.
 - Não altera a baseline formal da RM-08 e não homologa GP-4.
 
+## Validação do catálogo de tópicos
+
+Antes do ranqueamento, todos os candidatos da fila inicial e da fila de reavaliação devem ter seus `topic_ids` validados contra o catálogo fornecido. O ranqueador valida estrutura e fatores, mas não conhece o catálogo; portanto essa fronteira pertence ao orquestrador do ciclo. Candidatos alternativos também são validados, mesmo quando não selecionados.
+
 ## Testes
 
 `tests/test_tutor_coach_offline_cycle.py` cobre o caminho sintético completo, reprodutibilidade, E1/E2, ausência de efeitos, contagens incoerentes, origem/IDs/referências inválidas, recomendação divergente, IDs externos, tópicos fora do escopo, execução real e ausência de candidato elegível.

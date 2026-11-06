@@ -185,6 +185,22 @@ class OfflineTutorCoachCycleTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Não há candidato elegível"):
             self.run_scenario(candidates=[blocked])
 
+    def test_topico_inexistente_na_fila_inicial_e_rejeitado(self):
+        invalid = candidate("SYNTH-INVALID-FIRST", topic_id="999-99")
+        with self.assertRaisesRegex(ValueError, "candidates contém tópico ausente"):
+            self.run_scenario(candidates=[invalid])
+
+    def test_topico_inexistente_em_candidato_alternativo_e_rejeitado(self):
+        valid = candidate("SYNTH-VALID-FIRST", learning_need=3)
+        invalid_alternative = candidate("SYNTH-INVALID-ALT", topic_id="999-99", learning_need=1)
+        with self.assertRaisesRegex(ValueError, "candidates contém tópico ausente"):
+            self.run_scenario(candidates=[valid, invalid_alternative])
+
+    def test_topico_inexistente_na_fila_de_reevaluacao_e_rejeitado(self):
+        invalid_next = candidate("SYNTH-INVALID-NEXT", topic_id="999-99")
+        with self.assertRaisesRegex(ValueError, "next_candidates contém tópico ausente"):
+            self.run_scenario(next_candidates=[invalid_next])
+
 
 if __name__ == "__main__":
     unittest.main()

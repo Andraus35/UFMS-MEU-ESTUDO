@@ -137,6 +137,17 @@ def run_offline_cycle(
     if not topic_ids:
         raise ValueError("topics sem topic_id válido")
 
+    # The ranking engine validates candidate shape, not catalogue membership.
+    # Enforce the known topic boundary for every candidate in both snapshots.
+    for label, queue_candidates in (("candidates", candidates), ("next_candidates", next_candidates)):
+        for candidate in queue_candidates:
+            candidate_topics = candidate.get("topic_ids")
+            if not isinstance(candidate_topics, list) or not candidate_topics:
+                raise ValueError(label + " contém candidato sem tópicos válidos")
+            unknown_candidate_topics = set(candidate_topics) - topic_ids
+            if unknown_candidate_topics:
+                raise ValueError(label + " contém tópico ausente do catálogo")
+
     first_queue = rank_candidates(
         candidates, as_of=as_of, source_commit=source_commit,
         edital_version=edital_version, policy=policy,

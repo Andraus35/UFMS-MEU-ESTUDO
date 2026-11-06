@@ -113,7 +113,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento de branches encerrado. Frente única atual: RM-08-PREP / PR #52, preparação offline sintética sem persistência pessoal, replay real ou integração externa. Após o merge desta preparação, RM-08 formal continua bloqueado e deverá passar por baseline auditada e gates próprios. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados; state/CURRENT.json e eventos pessoais não foram alterados.",
+  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento de branches encerrado. Única frente: RM-08-PREP / PR #52 draft na branch feat/rm08-offline-synthetic-cycle-20261106. Auditoria independente identificou lacuna de validação do catálogo em candidatos da fila inicial e da reavaliação; correção e contraprovas estão nesta atualização. RM-08 formal permanece bloqueada; sem persistência pessoal, replay real ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados; state/CURRENT.json e eventos pessoais não alterados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-06",
