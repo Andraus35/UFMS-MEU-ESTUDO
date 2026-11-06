@@ -7,7 +7,7 @@
     "branch": "feat/rm08-offline-synthetic-cycle-20261106",
     "pr_number": 52,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "RM-08",
   "rules": {
@@ -113,7 +113,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento de branches encerrado. Única frente: RM-08-PREP / PR #52 Draft na branch feat/rm08-offline-synthetic-cycle-20261106, base main, fase work. HEAD documental de referência 4c00bf05af410b64d0b780a1fa1fe02c6f5216ae; CI PR run 42250371115=success. Correção funcional no commit c45aa5dbefc924ae048d9076d838195fdaf3d31f; 508 testes aprovados e três contraprovas para tópicos ausentes em candidatos das duas filas. Revisão técnica integral ainda pendente; nenhuma revisão formal ou thread registrada; sem merge. RM-08 formal bloqueada; sem dados pessoais, persistência, replay real ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados; state/CURRENT.json E0, zero eventos e zero resultados.",
+  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento encerrado. Única frente: RM-08-PREP / PR #52 Draft, branch feat/rm08-offline-synthetic-cycle-20261106, base main, fase review. HEAD funcional revisado 0b1ab3f86b40db151d334223e564fd7f219f3570; 513 testes / OK; CI push 42253083789=success e CI PR 42253093575=success (validate). Parecer técnico independente PASS restrito à preparação offline sintética; não homologou RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5. Correções incluem validação de catálogo nas duas filas, IDs sintéticos não vazios, refs que identificam fixture e validação estrita de topic_ids; cinco contraprovas novas. Revisões formais GitHub e threads: nenhuma; PR segue Draft e sem merge, aguardando decisão de integração. state/CURRENT.json permanece E0, zero eventos/resultados. Sem dados pessoais, persistência, replay real ou integrações externas. Escritas via API GitHub; hooks locais não executados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-06",
