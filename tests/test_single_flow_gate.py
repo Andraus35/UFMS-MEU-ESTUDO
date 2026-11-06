@@ -34,7 +34,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_estado_unico_valido(self):
         self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
-        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\\d{2}|RM-\\d{2}(?:-PREP)?)$")
+        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
 
     def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
         state = validate_local(ROOT)

@@ -10,7 +10,7 @@ from decision_queue import FACTOR_NAMES
 from tutor_coach_offline_cycle import run_offline_cycle
 
 SOURCE_COMMIT = "9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7"
-TOPICS = [{"topic_id": "523-06"}]
+TOPICS = [{"topic_id": "523-06"}, {"topic_id": "324-01"}]
 
 
 def candidate(candidate_id, topic_id="523-06", cargo_id="523", learning_need=1):
