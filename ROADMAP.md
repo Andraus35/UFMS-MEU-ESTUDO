@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** Auditoria independente identificou lacuna de validação do catálogo nas filas inicial e de reavaliação; correção incorporada em `c45aa5dbefc924ae048d9076d838195fdaf3d31f`, com 508 testes e CI push/PR aprovadas. PR #52 permanece Draft e não integrado; revisão independente final pendente. RM-08 formal permanece `bloqueado`; sem dados pessoais, persistência ou integração externa. Saneamento encerrado; sem frentes paralelas. GP-3 integral, GQ-D e GP-4 real não homologados.
+> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** Correção funcional de catálogo no commit c45aa5dbefc924ae048d9076d838195fdaf3d31f; 508 testes aprovados. CI do PR no HEAD documental 4c00bf05af410b64d0b780a1fa1fe02c6f5216ae (run 42250371115) aprovada. Revisão independente final pendente; sem merge. RM-08 formal bloqueada; sem dados pessoais, persistência ou integração externa. Saneamento encerrado. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -29,7 +29,7 @@
 
 - `main` = `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
 - Única frente: RM-08-PREP / PR #52 Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; não integrado.
-- HEAD documental de referência: `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`; branch 11 commits à frente e 0 atrás da base.
+- HEAD documental de referência antes da reconciliação: `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`; após sincronização dos quatro documentos, branch 15 commits à frente e 0 atrás da base.
 - Correção funcional em `c45aa5dbefc924ae048d9076d838195fdaf3d31f`: validação de catálogo para todos os candidatos das filas inicial e seguinte; três contraprovas adicionadas. Suíte: 508 testes, OK.
 - CI do PR no HEAD documental `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`: run `42250371115`, job `validate=success`. Nenhuma revisão formal ou thread registrada.
 - `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado.
