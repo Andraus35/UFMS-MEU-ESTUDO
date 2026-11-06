@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-06 encerrado; saneamento pós-merge concluído.** `main@4ca27e8db66073ce8ad57b812070094d6c4dca1e`; PR #50 integrado. Após revalidação individual imediatamente antes de cada exclusão: 29 branches candidatas removidas e confirmadas; 13 branches históricas preservadas; 42 backups preservados. CI pós-merge do PR #50: run `42158000977`, `validate=success`. RM-08 continua formalmente `bloqueado`; não iniciar implementação nem alterar sua baseline sem cumprir os gates e a auditoria exigidos. GP-3 integral, GQ-D e GP-4 real não estão homologados; dados pessoais e integrações externas continuam bloqueados.
+> **ESTADO VIGENTE — PR #51 integrado em `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; preparação RM-08-PREP em execução serial.** A CI pós-merge do HEAD `9525a2dd` (run `42220289336`) concluiu `success`. Saneamento encerrado: 29 branches removidas e confirmadas; históricas e backups preservados conforme handoff. RM-08 formal permanece `bloqueado`; somente o subescopo offline sintético RM-08-PREP está autorizado. GP-3 integral, GQ-D e GP-4 real não estão homologados; dados pessoais e integrações externas continuam bloqueados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -63,7 +63,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após merge do PR #50 (fechamento documental/inventário do RM-06). O escopo inicial autorizado é exclusivamente um ciclo offline sintético, sem persistência pessoal nem integração real. GP-4 real permanece bloqueado até evidência funcional e gates independentes aplicáveis.
+**Próxima tarefa: RM-08** após o merge do PR #51. O primeiro e único subescopo autorizado é RM-08-PREP: especificação e protótipo de ciclo offline sintético, sem persistência pessoal nem integração real. A RM-08 formal permanece bloqueada; GP-4 real exige evidência funcional e gates independentes aplicáveis.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -78,10 +78,11 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
+| RM-08-PREP | P2 | ENG-07 / RM-08: preparação offline sintética (sem promover GP-4) | em_andamento | Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado. |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
 
-**Recorte de preparação RM-08 autorizado para depois do PR #50:** poderá começar exclusivamente com especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Esta preparação não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
+**RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
 **Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.
 

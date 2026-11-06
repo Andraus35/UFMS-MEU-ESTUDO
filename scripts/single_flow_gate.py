@@ -44,7 +44,7 @@ def validate_local(root=ROOT):
         raise ValueError("Contrato de transição pós-merge ausente ou fraco")
     active = data.get("active", {})
     task = active.get("task_id")
-    if not isinstance(task, str) or not re.fullmatch(r"(?:SIM|RM)-\d{2}", task):
+    if not isinstance(task, str) or not re.fullmatch(r"(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)", task):
         raise ValueError("Tarefa ativa inválida")
     if not isinstance(active.get("pr_number"), int) or active["pr_number"] < 1:
         raise ValueError("PR ativo inválido")
