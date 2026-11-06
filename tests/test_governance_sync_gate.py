@@ -35,7 +35,8 @@ class GovernanceSyncGateTests(unittest.TestCase):
         path = self.root / "memory/HANDOFF.md"
         text = path.read_text(encoding="utf-8")
         path.write_text(text.replace(
-            "7df4b8fff8d8ed76096d33edb6474808fb2e34ca", "0" * 40, 1
+            "- SHA do último merge: `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`.",
+            "- SHA do último merge: `" + "0" * 40 + "`.", 1
         ), encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "HANDOFF desatualizado"):
             verify(self.root)
