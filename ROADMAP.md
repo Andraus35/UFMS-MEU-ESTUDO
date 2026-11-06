@@ -25,21 +25,19 @@
 5. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem, fila RM e integridade local; isso não prova compreensão semântica por LLM. A proteção da `main` impõe check de CI na integração, **mas não impede agentes externos de ignorarem bootstrap ou alterarem código e workflow no mesmo PR**. Um verificador de fonte confiável e gates nos orquestradores de Tutor/Coach permanecem pendentes.
 6. Não publicar resultados pessoais enquanto o repositório for público nem habilitar flag por simples alteração. Nenhum merge/deploy sem autorização humana. O PR #3 de ponte Oracle/Telegram está encerrado fora de escopo, sem autorização para retomada.
 
-## Estado observado
+## Estado observado — 06/11/2026
 
-Fotografia atualizada em 06/11/2026: `main` = `50ced2966293f0e714fed8a9325f83a4dd79cc09`; PR #49 / RM-06 GP-3-MVP8 mesclado, CI do HEAD `530a06c69ce3e2e9400e5f85673c93172b688ea9`, run `42096451811`, `validate=success`. PR #50 foi reaberto para reapresentar o inventário e regularizar o fluxo serial; o primeiro run `42102466006` falhou porque `state/WORKFLOW.json` ainda apontava para PR #49. O estado foi corrigido no commit `f33572255603056e6e53ad7d0d0d4a17fe6b5bc1`; aguarda CI do HEAD atualizado. O proprietário confirmou `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. CI verde não homologa o motor pedagógico.
+- `main` = `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
+- Única frente: RM-08-PREP / PR #52 Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; não integrado.
+- HEAD documental de referência: `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`; branch 11 commits à frente e 0 atrás da base.
+- Correção funcional em `c45aa5dbefc924ae048d9076d838195fdaf3d31f`: validação de catálogo para todos os candidatos das filas inicial e seguinte; três contraprovas adicionadas. Suíte: 508 testes, OK.
+- CI do PR no HEAD documental `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`: run `42250371115`, job `validate=success`. Nenhuma revisão formal ou thread registrada.
+- `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado.
+- RM-08 formal bloqueada. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
+- Sem dados pessoais, credenciais, persistência, replay real, rede, TEC/Qconcursos, Zapia, agenda ou integrações externas.
+- Escritas via API GitHub; hooks locais não executados. CI remota não substitui bootstrap/hooks locais.
+- Próxima ação: concluir revisão técnica independente do PR #52; manter Draft e não mesclar automaticamente.
 
-| Frente | Evidência | Maturidade e pendência |
-|---|---|---|
-| Fonte do edital | PDF original local de 47 páginas, transcrição e 81 chunks | Integrada/testada; retificações e alerta cronológico p. 13 precisam de acompanhamento |
-| Busca por cargo/anexo | Índices de tópicos, vagas, atribuições, BM25 e contraprovas | Integrada/testada; requer avaliação independente adicional |
-| Memória, bootstrap e persistência | AGENTS, rules, hooks, eventos, projeções e CI | Infraestrutura testada; invocação universal dos gates não comprovada |
-| Segurança | Bloqueio de resultados pessoais ativo; `main` protegida com `validate` obrigatório | Verificado em nível de branch; hooks dos agentes continuam cooperativos |
-| Ingestão GP-1 | Contratos, fixtures e protótipo isolado com 15 testes | Implementação real de IGP-12/13/14 ainda não integrada |
-| Pedagogia adaptativa | Especificações v1.0–v1.8 e 102 critérios | Documentada; não há execução integral do motor |
-| Cognitive Gates | PR #5 com PLAN r2 e CHECKS C1–C27 | 0/27 provas funcionais; GQ-D exige reauditoria independente |
-| Tutor, Coach e integrações | Contratos e POCs sintéticas Zapia | Serviço integrado não homologado; Gemini Notebook/Projects não comprovados de ponta a ponta |
-| Dados de estudo | `state/CURRENT.json`: 0 eventos, 0 resultados | Escrita individual bloqueada |
 
 ## SIM-05 — reconciliação do broker (PR #22)
 
