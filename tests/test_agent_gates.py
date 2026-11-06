@@ -104,6 +104,22 @@ class AgentGateTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     validate_roadmap_text(mutation)
 
+    def test_rm08_prep_e_subescopo_sintetico_sem_promover_rm08(self):
+        contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        self.assertTrue(validate_roadmap_text(contents))
+        formal = next(line for line in contents.splitlines() if line.startswith("| RM-08 |"))
+        prep = next(line for line in contents.splitlines() if line.startswith("| RM-08-PREP |"))
+        self.assertIn("| bloqueado |", formal)
+        self.assertIn("| implementado_nao_homologado |", prep)
+        self.assertIn("sem promover GP-4", prep)
+
+    def test_rm08_prep_nao_pode_alargar_seu_escopo(self):
+        contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        line = next(line for line in contents.splitlines() if line.startswith("| RM-08-PREP |"))
+        changed = contents.replace(line, line.replace("nenhuma persistência pessoal", "persistência pessoal ativa"), 1)
+        with self.assertRaisesRegex(ValueError, "Subescopo RM-08-PREP alterado"):
+            validate_roadmap_text(changed)
+
     def test_rm03_permanece_nao_homologado_sem_evidencia_real(self):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in original.splitlines() if line.startswith("| RM-03 |"))

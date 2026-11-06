@@ -1,110 +1,50 @@
-# Inventário reconciliado de branches — saneamento 05/11/2026
+# STATUS reconciliado — 06/11/2026
 
-**Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
-**Base usada na classificação original (pré-PR #50):** `50ced2966293f0e714fed8a9325f83a4dd79cc09`  
-**`main` vigente após PR #50:** `4ca27e8db66073ce8ad57b812070094d6c4dca1e`  
-**Último marco integrado:** PR #49 (squash merge).  
-**Método:** comparação autenticada de cada branch de trabalho com `main`; criação de cópia de segurança em `archive/pre-saneamento-20261105/` e comparação de cada origem com sua cópia.
+## Estado vigente da frente
 
-## Fotografia de classificação e situação remota em 06/11/2026
+- Repositório: `Andraus35/UFMS-MEU-ESTUDO`.
+- `main`: `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge push `42220289336=success`.
+- Única frente operacional: **RM-08-PREP / PR #52**, Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`, fase `review`; PR aberto e não mesclado.
+- `state/WORKFLOW.json` é a fonte única do fluxo: `active.task_id=RM-08-PREP`, escopo `preparacao_offline_sintetica`, PR #52 e `next_task_after_merge=RM-08`.
+- Último HEAD verificado antes desta sincronização: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits ahead / 0 behind; CI **push** `42256101518=success` e **pull_request** `42256114895=success`, ambos no mesmo SHA.
+- Baseline funcional: `127744a311c36990339d41f9aafb0fba40e0af65`, **513 testes / OK**; CI push `42253915490=success` e pull_request `42253926201=success`.
+- Parecer técnico independente: **PASS restrito à preparação offline sintética**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5.
+- Revisões formais GitHub: nenhuma. Threads: nenhuma. PR permanece Draft até decisão explícita do proprietário.
+- A CI do checkpoint anterior 4fb08ac934eb5f93bdc2eadbcf79a79fda3aa274 falhou nos runs push 42260384767 e pull_request 42260392670 por um único erro de fixture: test_fila_sim_terminal_pode_avancar_para_rm alterava WORKFLOW/ROADMAP para DONE, mas não atualizava o HANDOFF. O gate identificou corretamente a divergência. Este commit ajusta o teste para espelhar a transição e corrige o recorte do checkpoint vigente; não enfraquece o gate. O novo SHA exige CI própria.
+- HANDOFF, WORKFLOW, ROADMAP e STATUS agora declaram o mesmo identificador, PR, branch, fase e tarefa seguinte; `single_flow_gate.py` passa a testar essa simetria no checkpoint vigente.
+- Esta sincronização gera novo SHA; exigir `validate=success` no HEAD exato em push e pull_request. CIs anteriores não são herdadas.
+- RM-08-PREP permanece restrita a fixtures sintéticas, simulação e validação em memória, sem rede, serviços externos, dados pessoais, credenciais, persistência ou replay real.
+- RM-08 formal permanece `bloqueado`; `state/CURRENT.json` continua E0, zero eventos e zero resultados; `state/PROGRESS.csv` permanece intocado.
+- Escritas por API GitHub; hooks locais não executados. CI remota não equivale aos hooks.
 
-- Branches de trabalho originais inventariadas: **42**.
-- Cópias de segurança criadas: **42**.
-- Cópias verificadas por comparação origem → backup: **42/42 idênticas** (0 à frente, 0 atrás).
-- Branches originais classificadas como contidas na `main` da base pré-PR #50 (zero commits exclusivos naquele momento): **29**.
-- Branches originais com commits exclusivos: **13**.
-- PRs abertos na consulta que produziu a classificação original: **0** (fotografia histórica; PR #51 foi aberto depois).
-- Exclusões de branches executadas após o inventário: **29/29 confirmadas** (revalidação individual imediatamente antes de cada exclusão).
+## Próxima ação
 
-As 42 cópias de segurança preservam o HEAD exato de cada branch original no momento da auditoria. A classificação de ancestralidade das 29/13 foi feita contra a base pré-PR #50; não deve ser interpretada como uma nova comparação de ancestralidade contra a `main` atual. O backup da branch `docs/gp3-personal-mvp-8-20261105` também foi criado; sua divergência em relação a `main` decorre do histórico original após squash merge do PR #49, não de conteúdo necessariamente pendente.
+Obter readback e CI do novo SHA exato; depois, decisão explícita do proprietário sobre a integração do PR #52. Sem merge automático, sem promoção de RM-08 formal e sem abertura de PR concorrente.
 
-## A. Branches contidas em main — classificação histórica das 29 branches posteriormente excluídas
+## Parecer técnico independente
 
-Estas branches foram comparadas com `main` e não possuíam commits exclusivos no momento do inventário. Todas tinham backup verificado. A execução posterior e sua confirmação estão registradas ao final deste documento.
+- Ciclo sintético validado: recomendação, execução simulada, resultado com a mesma `execution_ref`, validação em memória, reconstrução e reavaliação explícita.
+- A execução simulada deve referenciar o candidato recomendado; resultado não pode divergir da recomendação ou da execução.
+- E2 exige tentativas positivas por tópico; zero tentativas não promove E2.
+- Todos os candidatos das filas inicial e de reavaliação são validados contra o catálogo antes do ranqueamento; candidatos alternativos também são cobertos.
+- IDs sintéticos precisam conter identificador após `SYNTH-`; referências precisam identificar uma fixture após `synthetic-fixture://`.
+- Catálogo e `topic_ids` rejeitam valores vazios, não textuais e IDs duplicados.
+- Cinco novas contraprovas cobrem identidade sintética vazia, referências vazias, tópico não textual e catálogo inválido.
+- Nenhuma não conformidade bloqueante encontrada na revisão dos arquivos alterados e dos módulos compartilhados afetados.
+- O parecer é restrito ao protótipo offline. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D nem GP-5.
 
-| Branch original | Backup |
-|---|---|
-| `audit/rm01-source-monitoring-20261105` | `archive/pre-saneamento-20261105/audit--rm01-source-monitoring-20261105` |
-| `audit/rm07-functional-gates-20261105` | `archive/pre-saneamento-20261105/audit--rm07-functional-gates-20261105` |
-| `audit/sim05-broker-reconciliation-20261105` | `archive/pre-saneamento-20261105/audit--sim05-broker-reconciliation-20261105` |
-| `audit/sim07-trusted-governance-decision-20261105` | `archive/pre-saneamento-20261105/audit--sim07-trusted-governance-decision-20261105` |
-| `audit/sim08-oracle-telegram-bridge-decision-20261105` | `archive/pre-saneamento-20261105/audit--sim08-oracle-telegram-bridge-decision-20261105` |
-| `audit/sim09-branch-inventory-reconciliation-20261105` | `archive/pre-saneamento-20261105/audit--sim09-branch-inventory-reconciliation-20261105` |
-| `audit/sim09-final-branch-inventory-20261105` | `archive/pre-saneamento-20261105/audit--sim09-final-branch-inventory-20261105` |
-| `audit/sim11-post-merge-state-reconciliation-20261105` | `archive/pre-saneamento-20261105/audit--sim11-post-merge-state-reconciliation-20261105` |
-| `automation/sim03-fapec-readonly-20261105` | `archive/pre-saneamento-20261105/automation--sim03-fapec-readonly-20261105` |
-| `docs/rm07-closeout-rm08-readiness-20261105` | `archive/pre-saneamento-20261105/docs--rm07-closeout-rm08-readiness-20261105` |
-| `docs/roadmap-required-bootstrap-20261104` | `archive/pre-saneamento-20261105/docs--roadmap-required-bootstrap-20261104` |
-| `docs/sim10-pedagogia-archive-and-queue-close-20261105` | `archive/pre-saneamento-20261105/docs--sim10-pedagogia-archive-and-queue-close-20261105` |
-| `feat/rm03-evidence-projection-20261105` | `archive/pre-saneamento-20261105/feat--rm03-evidence-projection-20261105` |
-| `feat/rm04-deterministic-queue-20261105` | `archive/pre-saneamento-20261105/feat--rm04-deterministic-queue-20261105` |
-| `feat/rm05-notebook-prescriber-20261105` | `archive/pre-saneamento-20261105/feat--rm05-notebook-prescriber-20261105` |
-| `feat/rm07-source-renderer-gates-20261105` | `archive/pre-saneamento-20261105/feat--rm07-source-renderer-gates-20261105` |
-| `feat/rm07-spec-composition-validators-20261105` | `archive/pre-saneamento-20261105/feat--rm07-spec-composition-validators-20261105` |
-| `feat/rm07-trusted-tool-gateway-20261105` | `archive/pre-saneamento-20261105/feat--rm07-trusted-tool-gateway-20261105` |
-| `fix/rm00-delivery-gates-20261105` | `archive/pre-saneamento-20261105/fix--rm00-delivery-gates-20261105` |
-| `fix/rm00-head-bound-delivery-gate-20261105` | `archive/pre-saneamento-20261105/fix--rm00-head-bound-delivery-gate-20261105` |
-| `fix/rm02-igp-contracts-migration-20261105` | `archive/pre-saneamento-20261105/fix--rm02-igp-contracts-migration-20261105` |
-| `fix/sim01-privacy-integration-20261105` | `archive/pre-saneamento-20261105/fix--sim01-privacy-integration-20261105` |
-| `fix/sim02-api-write-integrate-20261105` | `archive/pre-saneamento-20261105/fix--sim02-api-write-integrate-20261105` |
-| `fix/sim03-fapec-cli-e2e-20261105` | `archive/pre-saneamento-20261105/fix--sim03-fapec-cli-e2e-20261105` |
-| `fix/sim06-handoff-reconciliation-20261105` | `archive/pre-saneamento-20261105/fix--sim06-handoff-reconciliation-20261105` |
-| `fix/sim07-cognitive-effects-policy-20261105` | `archive/pre-saneamento-20261105/fix--sim07-cognitive-effects-policy-20261105` |
-| `fix/sim08-ci-duplicate-gates-20261105` | `archive/pre-saneamento-20261105/fix--sim08-ci-duplicate-gates-20261105` |
-| `spec/sim06-cognitive-gates-r2-20261105` | `archive/pre-saneamento-20261105/spec--sim06-cognitive-gates-r2-20261105` |
-| `test/rm06-adversarial-102-traceability-20261105` | `archive/pre-saneamento-20261105/test--rm06-adversarial-102-traceability-20261105` |
+## Limites e status do projeto
 
-## B. Branches com commits exclusivos — preservar e não integrar em lote
+- RM-08-PREP: implementada, testada e tecnicamente revisada no escopo sintético; permanece não homologada/não integrada enquanto PR #52 está Draft.
+- RM-08 formal: bloqueada.
+- `state/CURRENT.json`: E0; zero eventos e zero resultados; preservado.
+- Sem dados pessoais, credenciais, persistência, replay real, rede ou integrações externas.
+- Escritas via API GitHub; hooks locais não executados. CI remota não substitui bootstrap/hooks locais.
 
-| Branch original | PR histórico | Commits exclusivos vs main | Backup |
-|---|---:|---:|---|
-| `audit/compose-roadmap-document-reconciliation-20261105` | #14 | 6 | `archive/pre-saneamento-20261105/audit--compose-roadmap-document-reconciliation-20261105` |
-| `audit/governance-document-reconciliation-20261104` | #12 | 4 | `archive/pre-saneamento-20261105/audit--governance-document-reconciliation-20261104` |
-| `audit/postcommit-exact-diff-20261105` | #17 | 3 | `archive/pre-saneamento-20261105/audit--postcommit-exact-diff-20261105` |
-| `audit/trusted-governance-p0-20261104` | #10 | 44 | `archive/pre-saneamento-20261105/audit--trusted-governance-p0-20261104` |
-| `automation/fapec-readonly-schedule-20261105` | #16 | 1 | `archive/pre-saneamento-20261105/automation--fapec-readonly-schedule-20261105` |
-| `feature/oracle-telegram-calendar-bridge` | #3 | 21 | `archive/pre-saneamento-20261105/feature--oracle-telegram-calendar-bridge` |
-| `fix/api-postcommit-content-bound-20261105` | #18 | 11 | `archive/pre-saneamento-20261105/fix--api-postcommit-content-bound-20261105` |
-| `fix/api-write-draft-pr-preflight-20261105` | #13 | 2 | `archive/pre-saneamento-20261105/fix--api-write-draft-pr-preflight-20261105` |
-| `security/agent-entrypoint-failclosed-20261104` | #11 | 10 | `archive/pre-saneamento-20261105/security--agent-entrypoint-failclosed-20261104` |
-| `security/compose-agent-broker-roadmap-20261105` | #15 | 7 | `archive/pre-saneamento-20261105/security--compose-agent-broker-roadmap-20261105` |
-| `spec/ufms-cognitive-gates-gqd-correction-v0-3` | #5 | 22 | `archive/pre-saneamento-20261105/spec--ufms-cognitive-gates-gqd-correction-v0-3` |
-| `spec/ufms-cognitive-gates-verify-d-20261104` | #4 | 1 | `archive/pre-saneamento-20261105/spec--ufms-cognitive-gates-verify-d-20261104` |
-| `docs/gp3-personal-mvp-8-20261105` | #49 | histórico pós-squash | `archive/pre-saneamento-20261105/docs--gp3-personal-mvp-8-20261105` |
+## Próxima ação
 
-A classificação de 12 históricos conserva as justificativas registradas no inventário anterior: snapshots/handoffs antigos, propostas substituídas ou fora de escopo, controles recuperados seletivamente e funcionalidades ainda sem homologação/E2E. A branch de #49 é separada por causa do squash merge e deve ser tratada como histórico preservado, não como prova automática de código pendente.
+Revisão técnica independente e CI do HEAD documental concluídas; próxima decisão é integração do PR #52 pelo proprietário. Manter Draft até essa decisão. Sem merge automático.
 
-## Critérios para a próxima etapa
+---
 
-1. As 29 branches da seção A foram excluídas após autorização expressa e revalidação individual imediatamente antes de cada exclusão; ver relatório de execução ao final.
-2. As 13 branches da seção B permanecem preservadas; qualquer recuperação de conteúdo deve ser seletiva, em PR próprio e com testes.
-3. O inventário anterior `STATUS_BRANCHES_20261105.md` é fotografia pós-#35 e permanece como registro histórico. Este arquivo é a reconciliação posterior ao PR #49.
-4. As 29 branches da seção A foram removidas; as 13 branches da seção B e as 42 cópias de segurança foram preservadas.
-5. A exclusão foi executada pelo proprietário no Termux, com validação de elegibilidade, igualdade com backup, ancestralidade em `main`, ausência de PR aberto e readback da exclusão.
-
-## Estado
-
-**Inventário original preservado como fotografia da classificação pré-exclusão. Execução posterior: 29/29 exclusões confirmadas; 13 históricas e 42 backups preservados; `main` preservada.**
-
-
-## Relatório de execução pós-inventário — 06/11/2026
-
-- PR #50 integrado em `main` no commit `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
-- Conforme saída final do script Termux fornecida pelo proprietário, foram excluídas e confirmadas **29 branches**, com **0 impedimentos**. Cada branch foi revalidada imediatamente antes da exclusão.
-- Resultado final do script: **13 históricas preservadas; 42 backups preservados; `main` preservada** no SHA `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
-- A consulta remota posterior confirmou ausência das 29 candidatas na listagem de branches e ausência de PRs abertos.
-- CI pós-merge do PR #50: run `42158000977`, conclusão `success` no SHA informado.
-- Proveniência: totais operacionais de exclusão/preservação conforme saída do Termux enviada pelo proprietário; estado de PR, HEAD, branches listadas e CI conforme consulta autenticada ao GitHub.
-
-
-## Backup suplementar posterior — branch documental do PR #50 (06/11/2026)
-
-A fotografia original acima registrou 42 branches originais e 42 backups. Após a integração do PR #50, a branch documental `docs/saneamento-inventario-branches-20261105` permaneceu como referência remota, com histórico exclusivo em relação à `main` atual. Foi criada uma cópia de segurança adicional, sem mover ou excluir a origem:
-
-- Origem: `docs/saneamento-inventario-branches-20261105`.
-- HEAD remoto obtido diretamente de `refs/heads/docs/saneamento-inventario-branches-20261105`: `186f0aa289fee780d765ec410173cb402506bc67`.
-- Backup: `archive/pre-saneamento-20261105/docs--saneamento-inventario-branches-20261105`.
-- HEAD remoto do backup confirmado: `186f0aa289fee780d765ec410173cb402506bc67`.
-- Comparação autenticada origem → backup: `identical`; `ahead_by=0`; `behind_by=0`; nenhum arquivo divergente.
-- Total de backups remotos após este complemento: **43** (42 da fotografia original + 1 suplementar).
-- A referência de origem permanece presente; nenhuma exclusão ou merge ocorreu nesta etapa.
+## Registro histórico

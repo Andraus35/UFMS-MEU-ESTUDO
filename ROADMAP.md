@@ -1,6 +1,6 @@
 # ROADMAP — UFMS MEU ESTUDO
 
-> **ESTADO VIGENTE — RM-06 encerrado; saneamento pós-merge concluído.** `main@4ca27e8db66073ce8ad57b812070094d6c4dca1e`; PR #50 integrado. Após revalidação individual imediatamente antes de cada exclusão: 29 branches candidatas removidas e confirmadas; 13 branches históricas preservadas; 42 backups preservados. CI pós-merge do PR #50: run `42158000977`, `validate=success`. RM-08 continua formalmente `bloqueado`; não iniciar implementação nem alterar sua baseline sem cumprir os gates e a auditoria exigidos. GP-3 integral, GQ-D e GP-4 real não estão homologados; dados pessoais e integrações externas continuam bloqueados.
+> **ESTADO VIGENTE — main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; RM-08-PREP / PR #52 é a única frente ativa, em Draft.** No último HEAD verificado antes desta sincronização (`fbcaccfe4568216c87fb1d0120caf97c499cef28`), CI push `42256101518=success` e pull_request `42256114895=success`. A baseline funcional `127744a311c36990339d41f9aafb0fba40e0af65` tem 513 testes / OK e CI push `42253915490=success` / pull_request `42253926201=success`. Parecer técnico independente: PASS restrito à preparação offline sintética. Este commit também reforça a validação de simetria do HANDOFF com WORKFLOW; seu novo SHA exige CI própria antes de merge. A preparação não está integrada nem homologada; RM-08 formal permanece `bloqueado`. Sem dados pessoais, persistência ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
 
@@ -25,21 +25,22 @@
 5. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem, fila RM e integridade local; isso não prova compreensão semântica por LLM. A proteção da `main` impõe check de CI na integração, **mas não impede agentes externos de ignorarem bootstrap ou alterarem código e workflow no mesmo PR**. Um verificador de fonte confiável e gates nos orquestradores de Tutor/Coach permanecem pendentes.
 6. Não publicar resultados pessoais enquanto o repositório for público nem habilitar flag por simples alteração. Nenhum merge/deploy sem autorização humana. O PR #3 de ponte Oracle/Telegram está encerrado fora de escopo, sem autorização para retomada.
 
-## Estado observado
+## Estado observado — 06/11/2026
 
-Fotografia atualizada em 06/11/2026: `main` = `50ced2966293f0e714fed8a9325f83a4dd79cc09`; PR #49 / RM-06 GP-3-MVP8 mesclado, CI do HEAD `530a06c69ce3e2e9400e5f85673c93172b688ea9`, run `42096451811`, `validate=success`. PR #50 foi reaberto para reapresentar o inventário e regularizar o fluxo serial; o primeiro run `42102466006` falhou porque `state/WORKFLOW.json` ainda apontava para PR #49. O estado foi corrigido no commit `f33572255603056e6e53ad7d0d0d4a17fe6b5bc1`; aguarda CI do HEAD atualizado. O proprietário confirmou `validate` obrigatório, `strict=true`, `reviews=0`, `enforce_admins=true`. CI verde não homologa o motor pedagógico.
-
-| Frente | Evidência | Maturidade e pendência |
-|---|---|---|
-| Fonte do edital | PDF original local de 47 páginas, transcrição e 81 chunks | Integrada/testada; retificações e alerta cronológico p. 13 precisam de acompanhamento |
-| Busca por cargo/anexo | Índices de tópicos, vagas, atribuições, BM25 e contraprovas | Integrada/testada; requer avaliação independente adicional |
-| Memória, bootstrap e persistência | AGENTS, rules, hooks, eventos, projeções e CI | Infraestrutura testada; invocação universal dos gates não comprovada |
-| Segurança | Bloqueio de resultados pessoais ativo; `main` protegida com `validate` obrigatório | Verificado em nível de branch; hooks dos agentes continuam cooperativos |
-| Ingestão GP-1 | Contratos, fixtures e protótipo isolado com 15 testes | Implementação real de IGP-12/13/14 ainda não integrada |
-| Pedagogia adaptativa | Especificações v1.0–v1.8 e 102 critérios | Documentada; não há execução integral do motor |
-| Cognitive Gates | PR #5 com PLAN r2 e CHECKS C1–C27 | 0/27 provas funcionais; GQ-D exige reauditoria independente |
-| Tutor, Coach e integrações | Contratos e POCs sintéticas Zapia | Serviço integrado não homologado; Gemini Notebook/Projects não comprovados de ponta a ponta |
-| Dados de estudo | `state/CURRENT.json`: 0 eventos, 0 resultados | Escrita individual bloqueada |
+- `main` = `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge push run `42220289336=success`.
+- `state/WORKFLOW.json` é a fonte operacional única: `active.task_id=RM-08-PREP`, escopo `preparacao_offline_sintetica`, PR #52, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`, fase `review`; `next_task_after_merge=RM-08`.
+- Inventário remoto consultado: exatamente um PR aberto, #52, em Draft; nenhum PR concorrente. O PR não foi mesclado.
+- Último HEAD candidato verificado antes desta sincronização: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits à frente e 0 atrás da base. No mesmo SHA, CI push `42256101518=success` e pull_request `42256114895=success`.
+- Baseline funcional revisada: `127744a311c36990339d41f9aafb0fba40e0af65`; suíte **513 testes / OK**; CI push `42253915490=success` e pull_request `42253926201=success`.
+- Parecer técnico independente: **PASS restrito a RM-08-PREP offline sintético**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5. Revisões formais GitHub e threads: nenhuma.
+- HANDOFF, WORKFLOW, ROADMAP e STATUS refletem o mesmo item ativo, PR, branch, fase e próxima tarefa.
+- CI do checkpoint anterior `4fb08ac934eb5f93bdc2eadbcf79a79fda3aa274` falhou nos runs push `42260384767` e pull_request `42260392670` em um caso de teste terminal que alterava WORKFLOW/ROADMAP sem atualizar HANDOFF. O gate detectou corretamente a divergência; este commit corrige o fixture e aplica o recorte exato do checkpoint vigente, sem afrouxar validação. O novo SHA requer CI própria. O gate serial agora rejeita divergência entre o estado estruturado e o checkpoint vigente do HANDOFF.
+- A atualização presente altera documentação de estado e o gate/testes de simetria; o SHA resultante deve ter `validate=success` em push e pull_request. Não herdar resultados de CI de SHA anterior.
+- RM-08-PREP: preparação offline com fixtures sintéticas apenas; sem rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real ou efeitos externos.
+- `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado. `state/PROGRESS.csv` também não é alterado. O estado pedagógico não é substituto de `state/WORKFLOW.json`.
+- RM-08 formal permanece `bloqueado`; GP-4 real não homologado. GP-3 integral, GQ-D e GP-5 também não homologados.
+- Escritas via API GitHub; hooks locais não executados. CI remota não substitui bootstrap/hooks locais.
+- Próxima ação: validar o novo HEAD exato e, depois, aguardar decisão explícita do proprietário sobre integração do PR #52. Não mesclar automaticamente nem abrir outra frente.
 
 ## SIM-05 — reconciliação do broker (PR #22)
 
@@ -63,7 +64,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após merge do PR #50 (fechamento documental/inventário do RM-06). O escopo inicial autorizado é exclusivamente um ciclo offline sintético, sem persistência pessoal nem integração real. GP-4 real permanece bloqueado até evidência funcional e gates independentes aplicáveis.
+**Próxima tarefa: RM-08** após o merge comprovado do PR #52 (RM-08-PREP). A frente operacional atual é exclusivamente RM-08-PREP / PR #52 (Draft), limitada à preparação offline sintética. A revisão técnica independente é PASS apenas nesse recorte; a CI funcional de 513 testes foi aprovada, e a CI do HEAD candidato precisa ser confirmada novamente em cada novo SHA. A preparação ainda não foi integrada; a linha formal RM-08 permanece bloqueada e GP-4 real exige baseline auditada e gates próprios.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -78,10 +79,11 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 42 parciais, 60 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
+| RM-08-PREP | P2 | ENG-07 / RM-08: preparação offline sintética (sem promover GP-4) | implementado_nao_homologado | Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado. |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
 
-**Recorte de preparação RM-08 autorizado para depois do PR #50:** poderá começar exclusivamente com especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Esta preparação não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
+**RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
 **Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.
 

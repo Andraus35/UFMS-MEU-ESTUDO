@@ -34,7 +34,18 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_estado_unico_valido(self):
         self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
-        self.assertEqual(validate_local(ROOT)["active"]["task_id"], "RM-06")
+        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
+
+    def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
+        state = validate_local(ROOT)
+        self.assertEqual(state["active"]["task_id"], "RM-08-PREP")
+        self.assertEqual(state["next_task_after_merge"], "RM-08")
+
+    def test_rejeita_subtarefa_nao_autorizada(self):
+        tmp, root = self.temp_root(lambda d: d["active"].__setitem__("task_id", "RM-08-REAL"))
+        with tmp:
+            with self.assertRaisesRegex(ValueError, "Tarefa ativa inválida"):
+                validate_local(root)
 
     def test_rejeita_varias_frentes_habilitadas(self):
         for key, mutation in (
@@ -83,6 +94,46 @@ class SingleFlowTests(unittest.TestCase):
             path.write_text(path.read_text(encoding="utf-8").replace(
                 "state/WORKFLOW.json", "estado_vago"), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "sem estado único"):
+                validate_local(root)
+
+    def test_handoff_repete_tarefa_pr_branch_e_proxima_tarefa(self):
+        state = validate_local(ROOT)
+        checkpoint = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\n---\n", 1)[0]
+        self.assertIn(f"**{state['active']['task_id']} / PR #{state['active']['pr_number']}**", checkpoint)
+        self.assertIn(state["active"]["branch"], checkpoint)
+        self.assertIn(f"**Próxima tarefa: {state['next_task_after_merge']}**", checkpoint)
+
+    def test_rejeita_handoff_com_pr_ativo_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            path = root / "memory/HANDOFF.md"
+            content = path.read_text(encoding="utf-8")
+            active = self.live["active"]
+            marker = f"**{active['task_id']} / PR #{active['pr_number']}**"
+            path.write_text(content.replace(marker, marker.replace(
+                f"#{active['pr_number']}", f"#{active['pr_number'] + 1}"), 1), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
+                validate_local(root)
+
+    def test_rejeita_handoff_com_branch_ativa_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            path = root / "memory/HANDOFF.md"
+            content = path.read_text(encoding="utf-8")
+            path.write_text(content.replace(
+                self.live["active"]["branch"], "wrong/branch", 1), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
+                validate_local(root)
+
+    def test_rejeita_handoff_com_proxima_tarefa_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            path = root / "memory/HANDOFF.md"
+            content = path.read_text(encoding="utf-8")
+            marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
+            path.write_text(content.replace(marker, "**Próxima tarefa: RM-99**", 1),
+                            encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Próxima tarefa do HANDOFF"):
                 validate_local(root)
 
     def pr(self, n=None, branch=None, sha="a" * 40, base="main"):
@@ -208,6 +259,11 @@ class SingleFlowTests(unittest.TestCase):
     def test_fila_sim_terminal_pode_avancar_para_rm(self):
         tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "DONE"))
         with tmp:
+            handoff = root / "memory/HANDOFF.md"
+            content = handoff.read_text(encoding="utf-8")
+            marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
+            handoff.write_text(content.replace(
+                marker, "**Fila de simplificação concluída**", 1), encoding="utf-8")
             self.assertEqual(validate_local(root)["next_task_after_merge"], "DONE")
 
     def test_rejeita_estado_terminal_sem_marcador_no_roadmap(self):

@@ -1,20 +1,21 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-## Checkpoint vigente — 06/11/2026 (reconciliação autenticada)
+## Checkpoint vigente — 06/11/2026 (simetria HANDOFF / WORKFLOW / ROADMAP)
 
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
-- `main` = `4ca27e8db66073ce8ad57b812070094d6c4dca1e`.
-- PR #50 integrado; CI pós-merge run `42158000977`, conclusão `success`, no SHA acima.
-- PR #51 permanece aberto na branch `docs/post-saneamento-governance-20261106`; é a única frente documental ativa identificada nesta reconciliação.
-- A listagem remota contém 59 branches: 43 backups em `archive/pre-saneamento-20261105/*`, 13 refs históricas ainda fora de `archive/*`, duas refs documentais (#50 e #51) e `main`.
-- As 13 branches históricas têm backups correspondentes; os 13 pares foram comparados como `identical`. A branch documental do PR #50 também recebeu backup suplementar no SHA `186f0aa289fee780d765ec410173cb402506bc67`, comparado como `identical` com a origem. Total atual: 43 backups; a fotografia original de 42 permanece preservada no inventário, com este 43º backup registrado como complemento posterior.
-- O inventário registra 29 exclusões confirmadas pelo proprietário via Termux; a consulta remota confirma ausência dessas 29 refs candidatas.
-- Pendências de saneamento do PR #51: corrigir a fotografia/base de classificação no inventário; definir a migração das 13 refs históricas e da ref documental do PR #50 para `archive/*`, sem perda de SHA. A branch do PR #51 continua sendo a única branch de trabalho ativa. O `state/WORKFLOW.json` já enumera as 13 referências históricas, incluindo a branch pós-squash do PR #49.
-- Nenhuma branch histórica ou documental será excluída antes de validar o SHA exato do backup, verificar PRs/dependências e registrar o procedimento de retenção. A migração dos nomes originais ainda não foi executada.
-- RM-06 encerrado. `state/WORKFLOW.json` aponta RM-08 como próxima tarefa, mas **RM-08 permanece formalmente bloqueado** pela baseline/gates do ROADMAP. Não iniciar implementação nem alterar baseline.
-- GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não homologados. Dados pessoais, eventos pessoais, `state/CURRENT.json` e integrações reais permanecem bloqueados.
-- CI verde valida apenas os checks executados no SHA correspondente; não substitui auditoria nem homologação de gates.
-- Esta reconciliação foi feita pela API GitHub. Hooks locais `bootstrap`, `before_write`, `after_write` e `checkpoint` não foram executados; não declarar equivalência com execução local.
+- Base integrada: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
+- Frente ativa: **RM-08-PREP / PR #52**; branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`, Draft, não mesclada, fase `review`. O inventário remoto consultado contém exatamente um PR aberto: #52.
+- Fonte operacional única de engenharia: `state/WORKFLOW.json`. Ela aponta `active.task_id=RM-08-PREP`, `active.scope=preparacao_offline_sintetica`, PR #52, branch indicada e `phase=review`; `next_task_after_merge=RM-08`. ROADMAP e este HANDOFF são projeções documentais desse estado, não fontes concorrentes.
+- **Próxima tarefa: RM-08** somente após merge comprovado do PR #52 e nova validação dos bloqueadores formais. A linha RM-08 continua `bloqueado`; a conclusão de RM-08-PREP não inicia nem homologa RM-08 automaticamente.
+- Último HEAD da candidata verificado antes desta sincronização de governança: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits à frente e 0 atrás de `main`. Nesse SHA, CI **push** run `42256101518=success` e CI **pull_request** run `42256114895=success`. Os IDs foram conferidos pelo evento e pelo SHA, não apenas copiados da descrição do PR.
+- Baseline funcional revisada: HEAD `127744a311c36990339d41f9aafb0fba40e0af65`; suíte `513 testes / OK`; CI **push** `42253915490=success` e **pull_request** `42253926201=success`.
+- Parecer técnico independente: **PASS restrito à preparação offline sintética**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5. Não há revisão formal GitHub nem thread de revisão registrada; PR #52 permanece Draft e sem merge.
+- A CI do checkpoint anterior 4fb08ac934eb5f93bdc2eadbcf79a79fda3aa274 falhou nos runs push 42260384767 e pull_request 42260392670 por um único erro de fixture: test_fila_sim_terminal_pode_avancar_para_rm alterava WORKFLOW/ROADMAP para DONE, mas não atualizava o HANDOFF. O gate identificou corretamente a divergência. Este commit ajusta o teste para espelhar a transição e corrige o recorte do checkpoint vigente; não enfraquece o gate. O novo SHA exige CI própria.
+- Esta atualização sincroniza HANDOFF, WORKFLOW, ROADMAP e STATUS e reforça o teste de coerência do gate serial. O novo HEAD produzido por este commit precisa ter `validate=success` no SHA exato, tanto no evento push quanto no pull_request, antes de qualquer decisão de merge. A CI dos SHAs anteriores não é herdada.
+- Escopo permitido: preparação offline com fixtures sintéticas. Proibidos rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real e escrita em `state/events`, `state/CURRENT.json` ou `state/PROGRESS.csv`.
+- `state/CURRENT.json` permanece E0, zero eventos e zero resultados; é estado pedagógico, distinto do estado operacional de engenharia em `state/WORKFLOW.json`. `state/PROGRESS.csv` também permanece intocado.
+- Escritas desta sessão feitas via API GitHub; hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados. CI remota não equivale à execução desses hooks.
+- Próxima ação: readback do HEAD e CI exatos desta atualização; depois, decisão explícita do proprietário sobre integração do PR #52. Não abrir PR paralelo, não mudar a baseline formal e não mesclar automaticamente.
 
 ---
 

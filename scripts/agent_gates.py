@@ -44,6 +44,15 @@ ROADMAP_APPROVED_BASELINE = {
     "RM-10": ("P2", "bloqueado", "Privacidade, autorização, observações reais e avaliação prudente de utilidade"),
 }
 
+PREPARATION_BASELINE = {
+    "RM-08-PREP": (
+        "P2",
+        "ENG-07 / RM-08: preparação offline sintética (sem promover GP-4)",
+        "Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado.",
+    ),
+}
+
+
 def validate_roadmap_text(contents):
     """Rejeita cabeçalhos-placeholder e fila incompleta ou contraditória."""
     if not isinstance(contents, str):
@@ -54,13 +63,22 @@ def validate_roadmap_text(contents):
         if contents.count(heading) != 1:
             raise ValueError("Seção obrigatória do roadmap ausente/duplicada: " + heading)
     seen = {}
+    preparation_seen = set()
     for line in contents.splitlines():
         if not re.match(r"^\|\s*RM-\d+", line):
             continue
         columns = [item.strip() for item in line.strip().split("|")[1:-1]]
         if len(columns) != 5:
             raise ValueError("Linha de roadmap inválida: " + line[:60])
-        code, priority, _, status, done = columns
+        code, priority, front, status, done = columns
+        if code in PREPARATION_BASELINE:
+            expected_priority, expected_front, expected_done = PREPARATION_BASELINE[code]
+            if (code in preparation_seen or priority != expected_priority
+                    or front != expected_front or status not in {"planejado", "em_andamento", "implementado_nao_homologado"}
+                    or done != expected_done):
+                raise ValueError("Subescopo RM-08-PREP alterado ou duplicado")
+            preparation_seen.add(code)
+            continue
         if code in seen:
             raise ValueError("ID de roadmap duplicado: " + code)
         if priority not in ("P0", "P1", "P2"):
@@ -72,6 +90,8 @@ def validate_roadmap_text(contents):
         if ROADMAP_APPROVED_BASELINE.get(code) != (priority, status, done):
             raise ValueError("Mudança estratégica exige baseline auditada: " + code)
         seen[code] = True
+    if preparation_seen != set(PREPARATION_BASELINE):
+        raise ValueError("Subescopo RM-08-PREP ausente, duplicado ou reordenado")
     if tuple(seen) != ROADMAP_ITEMS:
         raise ValueError("Fila de roadmap incompleta, reordenada ou adulterada")
     return True
