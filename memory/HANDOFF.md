@@ -1,20 +1,21 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-## Checkpoint vigente — 06/11/2026 (auditoria independente / correção de RM-08-PREP)
+## Checkpoint vigente — 06/11/2026 (revisão final pendente)
 
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
-- Base confirmada: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
-- Única frente ativa: PR #52 Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`; HEAD de entrada da auditoria: `5cb0209b0b730a34c121c1b368e24bdf3f0f18ce`; base `main`; não mesclado.
-- Estado do fluxo: `state/WORKFLOW.json` declara `RM-08-PREP`, PR #52, branch acima, fase `work`, e próxima tarefa formal `RM-08`. O roadmap deve manter o mesmo identificador e a mesma fronteira.
-- Parecer independente anterior: vínculo candidato–execução–resultado e contraprova E2/zero tentativas estão presentes. Não aprovar ainda: foi encontrada lacuna adicional porque `rank_candidates` não valida associação de tópicos ao catálogo.
-- Correção desta atualização: validar tópicos de **todos** os candidatos das filas inicial e seguinte antes de ranquear; contraprovas para tópico inválido no candidato inicial, em candidato alternativo e em `next_candidates`.
-- Correção e contraprovas no HEAD `c45aa5dbefc924ae048d9076d838195fdaf3d31f`: CI PR run `42250211184=success`; CI push run `42250200164=success`. A suíte registrou `Ran 508 tests` / `OK`; os três novos testes de tópico inválido (fila inicial, candidato alternativo e `next_candidates`) passaram.
-- Status de integração: PR #52 permanece Draft, sem revisão formal e sem merge. Não iniciar outra branch/PR.
-- Escopo autorizado: somente preparação offline com fixtures sintéticas; sem rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, escrita em `state/events`, `state/CURRENT.json` ou `state/PROGRESS.csv`, nem replay real.
-- `state/CURRENT.json` permanece E0, zero eventos e zero resultados; não foi alterado.
+- Base: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
+- Única frente ativa: PR #52 Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; sem merge.
+- HEAD documental de referência: `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`; 11 commits à frente, 0 atrás da base.
+- Correção funcional: commit `c45aa5dbefc924ae048d9076d838195fdaf3d31f`; todos os candidatos das filas inicial e seguinte são validados contra o catálogo antes do ranqueamento. Três contraprovas cobrem candidato inicial, alternativo e fila seguinte. Suíte: 508 testes / OK.
+- CI do PR no HEAD documental `4c00bf05af410b64d0b780a1fa1fe02c6f5216ae`: run `42250371115`, job `validate=success`. Nenhuma revisão formal ou thread registrada.
+- Revisão independente da correção de catálogo não identificou bypass; revisão técnica integral do PR ainda pendente.
+- `state/WORKFLOW.json`: RM-08-PREP, PR #52, branch correta, fase `work`, próxima tarefa formal RM-08. ROADMAP e STATUS reconciliados com a mesma fronteira.
+- Escopo autorizado: somente preparação offline com fixtures sintéticas; sem rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real ou escrita em `state/events`, `state/CURRENT.json` e `state/PROGRESS.csv`.
+- `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado.
 - RM-08 formal permanece `bloqueado`; GP-4 real não homologado. GP-3 integral, GQ-D e GP-5 também não homologados.
-- Escritas feitas via API GitHub: hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados. CI remota não equivale à execução desses hooks.
-- Próximo passo: revisão independente final da correção no HEAD acima e readback remoto. Se não houver nova não conformidade, registrar parecer; manter Draft até decisão de integração. Sem merge automático.
+- Operação via API GitHub: hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados. CI remota não equivale a esses hooks.
+- Próxima ação: concluir revisão técnica independente do PR #52 e manter Draft até decisão de integração. Não abrir branch/PR paralelo; não fazer merge automaticamente.
+
 
 ---
 
