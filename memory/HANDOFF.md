@@ -13,6 +13,21 @@
 - `state/CURRENT.json`, eventos pessoais e resultados individuais permanecem intocados. Esta retomada foi feita pela API GitHub; hooks locais `bootstrap`, `before_write` e `after_write` não foram executados e não devem ser declarados como executados.
 
 
+## Checkpoint de retomada — 06/11/2026 (pós-merge e saneamento)
+
+- `main` = `4ca27e8db66073ce8ad57b812070094d6c4dca1e`; PR #50 fechado com merge.
+- CI pós-merge PR #50: run `42158000977`, evento `push`, conclusão `success`, HEAD exato acima.
+- PRs abertos: 0 na consulta autenticada.
+- Saneamento executado pelo proprietário via Termux: 29 branches candidatas revalidadas individualmente imediatamente antes da exclusão; 29 excluídas e confirmadas; 0 impedimentos.
+- Preservação reportada na auditoria final do script: 13 branches históricas, 42 backups e `main`; os 42 backups estavam presentes na verificação final.
+- A listagem remota posterior mostrou 42 backups e as 13 históricas; nenhuma das 29 candidatas constava. A branch de documentação de PR #50 pode permanecer como ref de trabalho até limpeza separada.
+- RM-06 encerrado. `state/WORKFLOW.json` mantém RM-06 como último ciclo mesclado e `next_task_after_merge=RM-08`.
+- **RM-08 permanece formalmente bloqueado** pela baseline/gates do ROADMAP; não iniciar implementação, não alterar baseline e não declarar homologação sem cumprir os gates próprios.
+- GP-3 integral, Tutor/Coach E2E, GQ-D, GP-4 real e GP-5 não homologados. Resultados pessoais, eventos pessoais e `state/CURRENT.json` permanecem intocados.
+- START desta reconciliação realizado por leitura autenticada via API GitHub. Hooks locais `bootstrap`, `before_write`, `after_write`, `checkpoint` não foram executados; esta entrega não afirma equivalência com checkout local.
+
+
+
 **Checkpoint histórico 05/11/2026.** Fonte operacional atualizada no bloco de retomada acima: GitHub autenticado + `state/WORKFLOW.json`. Repositório público; resultados pessoais permanecem bloqueados.
 
 ## Estado confirmado
