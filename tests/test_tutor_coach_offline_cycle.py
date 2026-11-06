@@ -209,7 +209,7 @@ class OfflineTutorCoachCycleTests(unittest.TestCase):
             self.run_scenario(candidates=[invalid])
 
     def test_catalogo_com_topico_vazio_e_rejeitado(self):
-        with self.assertRaisesRegex(ValueError, "catalogo contém topic_id inválido"):
+        with self.assertRaisesRegex(ValueError, "catálogo contém topic_id inválido"):
             self.run_scenario(topics=[{"topic_id": ""}])
 
     def test_topico_inexistente_na_fila_inicial_e_rejeitado(self):
