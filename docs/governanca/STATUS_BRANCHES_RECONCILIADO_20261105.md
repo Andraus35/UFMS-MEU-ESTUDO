@@ -40,7 +40,7 @@ Validar o gate de sincronização, as contraprovas e toda a CI do PR #53; soment
 
 ## Próxima ação
 
-Revisão técnica independente e CI do HEAD documental concluídas; próxima decisão é integração do PR #52 pelo proprietário. Manter Draft até essa decisão. Sem merge automático.
+PR #52 está integrado. A frente corrente é PR #53, limitada à reconciliação documental e ao gate de sincronização; aguardar CI do HEAD exato e decisão do proprietário. Sem merge automático.
 
 ---
 
