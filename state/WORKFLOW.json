@@ -6,7 +6,7 @@
     "branch": "docs/saneamento-inventario-branches-20261105",
     "pr_number": 50,
     "base": "main",
-    "phase": "merged"
+    "phase": "merge_ready"
   },
   "next_task_after_merge": "RM-08",
   "rules": {
