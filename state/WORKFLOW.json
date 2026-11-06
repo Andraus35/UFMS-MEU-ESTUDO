@@ -113,7 +113,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento de branches encerrado. Única frente: RM-08-PREP / PR #52 draft na branch feat/rm08-offline-synthetic-cycle-20261106. Auditoria independente identificou lacuna de validação do catálogo em candidatos da fila inicial e da reavaliação; correção e três contraprovas estão no HEAD c45aa5dbefc924ae048d9076d838195fdaf3d31f; CI PR 42250211184=success e push 42250200164=success; 508 testes aprovados. RM-08 formal permanece bloqueada; sem persistência pessoal, replay real ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados; state/CURRENT.json e eventos pessoais não alterados.",
+  "notes": "PR #51 / RM-06 integrado em 9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7; CI pós-merge run 42220289336=success. Saneamento de branches encerrado. Única frente: RM-08-PREP / PR #52 Draft na branch feat/rm08-offline-synthetic-cycle-20261106, base main, fase work. HEAD documental de referência 4c00bf05af410b64d0b780a1fa1fe02c6f5216ae; CI PR run 42250371115=success. Correção funcional no commit c45aa5dbefc924ae048d9076d838195fdaf3d31f; 508 testes aprovados e três contraprovas para tópicos ausentes em candidatos das duas filas. Revisão técnica integral ainda pendente; nenhuma revisão formal ou thread registrada; sem merge. RM-08 formal bloqueada; sem dados pessoais, persistência, replay real ou integração externa. GP-3 integral, GQ-D, GP-4 real e GP-5 não homologados; state/CURRENT.json E0, zero eventos e zero resultados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-06",
