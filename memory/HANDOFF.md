@@ -1,22 +1,20 @@
 # HANDOFF vigente — UFMS MEU ESTUDO
 
-## Checkpoint vigente — 06/11/2026 (parecer técnico independente concluído)
+## Checkpoint vigente — 06/11/2026 (simetria HANDOFF / WORKFLOW / ROADMAP)
 
 - Repositório: `Andraus35/UFMS-MEU-ESTUDO`; branch padrão `main`.
-- Base: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
-- Única frente: RM-08-PREP / PR #52, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; aberto, Draft, não mesclado.
-- HEAD funcional revisado e testado: `127744a311c36990339d41f9aafb0fba40e0af65`; HEAD documental anterior: `0fef54e22f1beb8aac40b2361e7b404c780eea40`; checkpoint atual é uma sincronização documental adicional, branch 23 commits à frente e 0 atrás de `main`.
-- Parecer independente: **PASS restrito à preparação offline sintética**. Revisão do código novo e dos módulos afetados não encontrou não conformidade bloqueante. A aprovação não promove RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5.
-- Correções funcionais: validar tópicos de todos os candidatos das duas filas; exigir IDs sintéticos não vazios e refs de fixture com identificador; rejeitar tópicos não textuais, vazios e catálogo com IDs duplicados. Contraprovas adicionais adicionadas no commit funcional.
-- Suíte funcional no HEAD `127744a311c36990339d41f9aafb0fba40e0af65`: **513 testes / OK**. CI funcional push `42253915490` e PR `42253926201`, ambos `validate=success`. CI do HEAD documental anterior `0fef54e22f1beb8aac40b2361e7b404c780eea40`: push `42254253375` e PR `42254266731`, ambos `validate=success`. CI do checkpoint documental atual: pendente após o commit.
-- Revisões formais GitHub e threads: nenhuma. PR continua Draft; não foi mesclado. Decisão de integração não tomada.
-- `state/WORKFLOW.json`: RM-08-PREP, PR #52, branch correta, fase `review`, próxima tarefa após merge RM-08. ROADMAP e STATUS registram o mesmo recorte e estado.
-- Escopo autorizado: somente preparação offline com fixtures sintéticas; sem rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real ou escrita em `state/events`, `state/CURRENT.json` e `state/PROGRESS.csv`.
-- `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado.
-- RM-08 formal permanece `bloqueado`; GP-4 real não homologado. GP-3 integral, GQ-D e GP-5 também não homologados.
-- Escritas realizadas via API GitHub; hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados. CI remota não equivale a esses hooks.
-- Próxima ação: decisão de integração do PR #52 pelo proprietário. Revisão independente e CI do HEAD documental concluídas; manter Draft até decisão. Não abrir branch/PR paralelo e não fazer merge automaticamente.
-
+- Base integrada: `main@9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge run `42220289336=success`.
+- Frente ativa: **RM-08-PREP / PR #52**; branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`, Draft, não mesclada, fase `review`. O inventário remoto consultado contém exatamente um PR aberto: #52.
+- Fonte operacional única de engenharia: `state/WORKFLOW.json`. Ela aponta `active.task_id=RM-08-PREP`, `active.scope=preparacao_offline_sintetica`, PR #52, branch indicada e `phase=review`; `next_task_after_merge=RM-08`. ROADMAP e este HANDOFF são projeções documentais desse estado, não fontes concorrentes.
+- **Próxima tarefa: RM-08** somente após merge comprovado do PR #52 e nova validação dos bloqueadores formais. A linha RM-08 continua `bloqueado`; a conclusão de RM-08-PREP não inicia nem homologa RM-08 automaticamente.
+- Último HEAD da candidata verificado antes desta sincronização de governança: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits à frente e 0 atrás de `main`. Nesse SHA, CI **push** run `42256101518=success` e CI **pull_request** run `42256114895=success`. Os IDs foram conferidos pelo evento e pelo SHA, não apenas copiados da descrição do PR.
+- Baseline funcional revisada: HEAD `127744a311c36990339d41f9aafb0fba40e0af65`; suíte `513 testes / OK`; CI **push** `42253915490=success` e **pull_request** `42253926201=success`.
+- Parecer técnico independente: **PASS restrito à preparação offline sintética**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5. Não há revisão formal GitHub nem thread de revisão registrada; PR #52 permanece Draft e sem merge.
+- Esta atualização sincroniza HANDOFF, WORKFLOW, ROADMAP e STATUS e reforça o teste de coerência do gate serial. O novo HEAD produzido por este commit precisa ter `validate=success` no SHA exato, tanto no evento push quanto no pull_request, antes de qualquer decisão de merge. A CI dos SHAs anteriores não é herdada.
+- Escopo permitido: preparação offline com fixtures sintéticas. Proibidos rede/API externa, TEC/Qconcursos, Zapia, agenda, dados pessoais, credenciais, persistência, replay real e escrita em `state/events`, `state/CURRENT.json` ou `state/PROGRESS.csv`.
+- `state/CURRENT.json` permanece E0, zero eventos e zero resultados; é estado pedagógico, distinto do estado operacional de engenharia em `state/WORKFLOW.json`. `state/PROGRESS.csv` também permanece intocado.
+- Escritas desta sessão feitas via API GitHub; hooks locais `bootstrap`, `roadmap_gate`, `before_write`, `write_policy`, `after_write` e `checkpoint` não foram executados. CI remota não equivale à execução desses hooks.
+- Próxima ação: readback do HEAD e CI exatos desta atualização; depois, decisão explícita do proprietário sobre integração do PR #52. Não abrir PR paralelo, não mudar a baseline formal e não mesclar automaticamente.
 
 ---
 

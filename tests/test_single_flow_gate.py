@@ -96,6 +96,46 @@ class SingleFlowTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "sem estado único"):
                 validate_local(root)
 
+    def test_handoff_repete_tarefa_pr_branch_e_proxima_tarefa(self):
+        state = validate_local(ROOT)
+        checkpoint = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\\n---\\n", 1)[0]
+        self.assertIn(f"**{state['active']['task_id']} / PR #{state['active']['pr_number']}**", checkpoint)
+        self.assertIn(state["active"]["branch"], checkpoint)
+        self.assertIn(f"**Próxima tarefa: {state['next_task_after_merge']}**", checkpoint)
+
+    def test_rejeita_handoff_com_pr_ativo_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            path = root / "memory/HANDOFF.md"
+            content = path.read_text(encoding="utf-8")
+            active = self.live["active"]
+            marker = f"**{active['task_id']} / PR #{active['pr_number']}**"
+            path.write_text(content.replace(marker, marker.replace(
+                f"#{active['pr_number']}", f"#{active['pr_number'] + 1}"), 1), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
+                validate_local(root)
+
+    def test_rejeita_handoff_com_branch_ativa_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            path = root / "memory/HANDOFF.md"
+            content = path.read_text(encoding="utf-8")
+            path.write_text(content.replace(
+                self.live["active"]["branch"], "wrong/branch", 1), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
+                validate_local(root)
+
+    def test_rejeita_handoff_com_proxima_tarefa_divergente(self):
+        tmp, root = self.temp_root()
+        with tmp:
+            path = root / "memory/HANDOFF.md"
+            content = path.read_text(encoding="utf-8")
+            marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
+            path.write_text(content.replace(marker, "**Próxima tarefa: RM-99**", 1),
+                            encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Próxima tarefa do HANDOFF"):
+                validate_local(root)
+
     def pr(self, n=None, branch=None, sha="a" * 40, base="main"):
         return {"number": self.live["active"]["pr_number"] if n is None else n,
                 "head": {"ref": branch or self.live["active"]["branch"], "sha": sha},

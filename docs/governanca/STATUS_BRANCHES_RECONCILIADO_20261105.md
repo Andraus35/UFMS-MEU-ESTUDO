@@ -2,14 +2,23 @@
 
 ## Estado vigente da frente
 
-- Repositório: `Andraus35/UFMS-MEU-ESTUDO`
-- `main`: `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; último merge PR #51 / RM-06, CI pós-merge `42220289336=success`.
-- Única frente: RM-08-PREP / PR #52, Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`; aberto e não mesclado.
-- HEAD funcional revisado: `127744a311c36990339d41f9aafb0fba40e0af65`; HEAD documental anterior: `0fef54e22f1beb8aac40b2361e7b404c780eea40`; checkpoint atual é uma sincronização documental adicional, branch 23 commits à frente e 0 atrás de `main`.
-- CI do HEAD funcional: push `42253915490`, PR `42253926201`, ambos `validate=success`; suíte: **513 testes / OK**.
-- CI do HEAD documental anterior `0fef54e22f1beb8aac40b2361e7b404c780eea40`: push `42254253375`, PR `42254266731`, ambos `validate=success`. A sincronização deste checkpoint exige CI própria.
-- Revisões formais GitHub: nenhuma. Threads: nenhuma. Parecer técnico independente desta auditoria: PASS restrito a RM-08-PREP offline sintético.
-- Saneamento de branches: encerrado; não reabrir sem evidência concreta.
+- Repositório: `Andraus35/UFMS-MEU-ESTUDO`.
+- `main`: `9525a2dd5a6e3646eaffee4da4b1dd1fca3e1fe7`; PR #51 / RM-06 integrado; CI pós-merge push `42220289336=success`.
+- Única frente operacional: **RM-08-PREP / PR #52**, Draft, branch `feat/rm08-offline-synthetic-cycle-20261106`, base `main`, fase `review`; PR aberto e não mesclado.
+- `state/WORKFLOW.json` é a fonte única do fluxo: `active.task_id=RM-08-PREP`, escopo `preparacao_offline_sintetica`, PR #52 e `next_task_after_merge=RM-08`.
+- Último HEAD verificado antes desta sincronização: `fbcaccfe4568216c87fb1d0120caf97c499cef28`, 24 commits ahead / 0 behind; CI **push** `42256101518=success` e **pull_request** `42256114895=success`, ambos no mesmo SHA.
+- Baseline funcional: `127744a311c36990339d41f9aafb0fba40e0af65`, **513 testes / OK**; CI push `42253915490=success` e pull_request `42253926201=success`.
+- Parecer técnico independente: **PASS restrito à preparação offline sintética**. Não homologa RM-08 formal, GP-4 real, GP-3 integral, GQ-D ou GP-5.
+- Revisões formais GitHub: nenhuma. Threads: nenhuma. PR permanece Draft até decisão explícita do proprietário.
+- HANDOFF, WORKFLOW, ROADMAP e STATUS agora declaram o mesmo identificador, PR, branch, fase e tarefa seguinte; `single_flow_gate.py` passa a testar essa simetria no checkpoint vigente.
+- Esta sincronização gera novo SHA; exigir `validate=success` no HEAD exato em push e pull_request. CIs anteriores não são herdadas.
+- RM-08-PREP permanece restrita a fixtures sintéticas, simulação e validação em memória, sem rede, serviços externos, dados pessoais, credenciais, persistência ou replay real.
+- RM-08 formal permanece `bloqueado`; `state/CURRENT.json` continua E0, zero eventos e zero resultados; `state/PROGRESS.csv` permanece intocado.
+- Escritas por API GitHub; hooks locais não executados. CI remota não equivale aos hooks.
+
+## Próxima ação
+
+Obter readback e CI do novo SHA exato; depois, decisão explícita do proprietário sobre a integração do PR #52. Sem merge automático, sem promoção de RM-08 formal e sem abertura de PR concorrente.
 
 ## Parecer técnico independente
 

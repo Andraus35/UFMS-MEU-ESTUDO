@@ -88,10 +88,22 @@ def validate_local(root=ROOT):
             raise ValueError("PR legado inconsistente, duplicado ou sem SHA")
         seen_numbers.add(number)
         seen_branches.add(old_branch)
-    for path in ("AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md"):
+    handoff = (root / "memory/HANDOFF.md").read_text(encoding="utf-8")
+    for path in ("AGENTS.md", "ROADMAP.md"):
         text = (root / path).read_text(encoding="utf-8")
         if "state/WORKFLOW.json" not in text:
             raise ValueError("Instrução de retomada sem estado único: " + path)
+    if "state/WORKFLOW.json" not in handoff:
+        raise ValueError("Instrução de retomada sem estado único: memory/HANDOFF.md")
+    checkpoint = handoff.split("\\n---\\n", 1)[0]
+    active_marker = f"**{task} / PR #{active['pr_number']}**"
+    if active_marker not in checkpoint or branch not in checkpoint:
+        raise ValueError("HANDOFF diverge do estado operacional (tarefa, PR ou branch)")
+    if next_task == "DONE":
+        if "**Fila de simplificação concluída**" not in checkpoint:
+            raise ValueError("Estado terminal do HANDOFF diverge do WORKFLOW")
+    elif "**Próxima tarefa: " + next_task + "**" not in checkpoint:
+        raise ValueError("Próxima tarefa do HANDOFF diverge do estado operacional")
     return data
 
 
