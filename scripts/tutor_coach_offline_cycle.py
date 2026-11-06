@@ -27,9 +27,9 @@ REPORT_FIELDS = {
     "platform_notebook_id", "recorded_at", "attempt_at", "source_ref",
     "answered_convention", "reported_answered", "reported_unanswered",
     "correct", "incorrect", "independence", "familiarity", "diversity",
-    "confidence", "source_kind", "item_set_id", "topic_results",
+    "confidence", "source_kind", "item_set_id", "topic_results", "execution_ref",
 }
-EXECUTION_FIELDS = {"data_origin", "status", "execution_ref"}
+EXECUTION_FIELDS = {"data_origin", "status", "execution_ref", "candidate_id"}
 
 
 def _synthetic_identifier(value, label):
@@ -46,20 +46,29 @@ def _synthetic_candidates(candidates, label):
         _synthetic_identifier(candidate.get("candidate_id"), label + ".candidate_id")
 
 
-def _execution(execution):
+def _execution(execution, selected_candidate_id):
     if not isinstance(execution, dict) or set(execution) - EXECUTION_FIELDS:
         raise ValueError("Execução simulada contém campos inválidos")
     if execution.get("data_origin") != SYNTHETIC_ORIGIN:
         raise ValueError("Execução precisa ser marcada como synthetic_fixture")
     if execution.get("status") != "simulated":
         raise ValueError("Esta preparação aceita somente execução simulada")
+    candidate_id = execution.get("candidate_id")
+    _synthetic_identifier(candidate_id, "execution.candidate_id")
+    if candidate_id != selected_candidate_id:
+        raise ValueError("Execução simulada não corresponde ao candidato recomendado")
     ref = execution.get("execution_ref")
     if not isinstance(ref, str) or not ref.startswith(SYNTHETIC_REF_PREFIX):
         raise ValueError("execution_ref deve apontar para fixture sintética")
-    return {"data_origin": SYNTHETIC_ORIGIN, "status": "simulated", "execution_ref": ref}
+    return {
+        "data_origin": SYNTHETIC_ORIGIN,
+        "status": "simulated",
+        "execution_ref": ref,
+        "candidate_id": candidate_id,
+    }
 
 
-def _result_report(report, recommendation_id):
+def _result_report(report, recommendation_id, execution_ref):
     if not isinstance(report, dict) or set(report) - REPORT_FIELDS:
         raise ValueError("Relatório sintético contém campos inválidos ou não previstos")
     if report.get("data_origin") != SYNTHETIC_ORIGIN:
@@ -69,6 +78,8 @@ def _result_report(report, recommendation_id):
     supplied_rec = report.get("recommendation_id")
     if supplied_rec is not None and supplied_rec != recommendation_id:
         raise ValueError("Resultado vinculado a recommendation_id diferente")
+    if report.get("execution_ref") != execution_ref:
+        raise ValueError("Resultado não corresponde à execução simulada")
     if report.get("platform_notebook_id") is not None:
         raise ValueError("ID de caderno externo não é permitido no ciclo offline")
 
@@ -144,9 +155,12 @@ def run_offline_cycle(
         question_target=question_target,
         execution_mode="independent",
     )
-    execution = _execution(execution_simulation)
-    normalized = _result_report(result_report, recommendation["recommendation_id"])
+    execution = _execution(execution_simulation, recommendation["candidate_id"])
+    normalized = _result_report(
+        result_report, recommendation["recommendation_id"], execution["execution_ref"]
+    )
     attempt_event = normalized["event"]
+    attempt_event["execution_ref"] = execution["execution_ref"]
 
     unknown_topics = set(recommendation["topic_ids"]) - topic_ids
     if unknown_topics:
