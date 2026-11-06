@@ -23,15 +23,15 @@ A entrega é um protótipo puro em `scripts/tutor_coach_offline_cycle.py`, integ
 A função `run_offline_cycle` exige:
 - candidatos com IDs `SYNTH-`, cargos 523/324, tópicos, fatores e justificativa explícitos;
 - snapshots temporais ISO 8601 com fuso, SHA Git e versão do edital;
-- execução com `data_origin=synthetic_fixture`, `status=simulated` e referência `synthetic-fixture://`;
-- relatório com IDs `SYNTH-`, referência sintética, plataforma `manual_search` e convenção de contagem explícita;
+- execução com `data_origin=synthetic_fixture`, `status=simulated`, referência `synthetic-fixture://` e o ID sintético do candidato recomendado;
+- relatório com IDs `SYNTH-`, referência sintética, plataforma `manual_search`, a mesma `execution_ref` da simulação e convenção de contagem explícita;
 - tópico do resultado contido no escopo da recomendação.
 
 A normalização usa `normalize_external_report`. A validação do schema usa `validate_attempt_events` somente dentro da sandbox sintética em memória; não concede autorização de persistência. A reconstrução usa `rebuild_attempts`; a qualidade de evidência usa `derive_evidence_level`.
 
 ## Reavaliação sem inferência indevida
 
-A segunda fila usa uma lista `next_candidates` explicitamente fornecida, com fatores e justificativas próprios. O protótipo **não** converte percentual de acertos em domínio, retenção, chance de aprovação ou fator de prioridade. Sem dados por tópico, a projeção continua agregada (E1); com decomposição sintética válida por tópico, pode chegar a E2, sem afirmar independência.
+A segunda fila usa uma lista `next_candidates` explicitamente fornecida, com fatores e justificativas próprios. O protótipo **não** converte percentual de acertos em domínio, retenção, chance de aprovação ou fator de prioridade. Sem dados por tópico com tentativas efetivas, a projeção continua agregada (E1); linhas por tópico com zero tentativas não promovem E2. Com decomposição sintética válida e tentativas observadas por tópico, pode chegar a E2, sem afirmar independência.
 
 ## Barreiras verificáveis
 
@@ -39,7 +39,7 @@ A segunda fila usa uma lista `next_candidates` explicitamente fornecida, com fat
 - Não cria IDs de caderno de plataforma nem afirma que um caderno foi criado.
 - Não escreve em `state/events`, `state/CURRENT.json`, `state/PROGRESS.csv` ou qualquer armazenamento.
 - Não habilita `personal_results_writes_enabled` e não altera `settings.json`.
-- Rejeita origem, IDs e referências não sintéticos, contagens incoerentes, tópico fora do escopo, plataforma externa e execução não simulada.
+- Rejeita origem, IDs e referências não sintéticos, contagens incoerentes, tópico fora do escopo, plataforma externa, execução não simulada e resultado vinculado a outra execução/candidato.
 - Não altera a baseline formal da RM-08 e não homologa GP-4.
 
 ## Testes
