@@ -185,6 +185,33 @@ class OfflineTutorCoachCycleTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Não há candidato elegível"):
             self.run_scenario(candidates=[blocked])
 
+    def test_id_sintetico_apenas_com_prefixo_e_rejeitado(self):
+        invalid = candidate("SYNTH-")
+        with self.assertRaisesRegex(ValueError, "identificador SYNTH- não vazio"):
+            self.run_scenario(candidates=[invalid])
+
+    def test_referencia_de_execucao_sintetica_vazia_e_rejeitada(self):
+        execution = scenario()["execution_simulation"]
+        execution["execution_ref"] = "synthetic-fixture://"
+        with self.assertRaisesRegex(ValueError, "identificar uma fixture"):
+            self.run_scenario(execution_simulation=execution)
+
+    def test_referencia_de_resultado_sintetica_vazia_e_rejeitada(self):
+        report = scenario()["result_report"]
+        report["source_ref"] = "synthetic-fixture://"
+        with self.assertRaisesRegex(ValueError, "identificar uma fixture"):
+            self.run_scenario(result_report=report)
+
+    def test_topico_nao_textual_na_fila_e_rejeitado(self):
+        invalid = candidate("SYNTH-INVALID-TYPE")
+        invalid["topic_ids"] = ["523-06", []]
+        with self.assertRaisesRegex(ValueError, "sem tópicos válidos"):
+            self.run_scenario(candidates=[invalid])
+
+    def test_catalogo_com_topico_vazio_e_rejeitado(self):
+        with self.assertRaisesRegex(ValueError, "catalogo contém topic_id inválido"):
+            self.run_scenario(topics=[{"topic_id": ""}])
+
     def test_topico_inexistente_na_fila_inicial_e_rejeitado(self):
         invalid = candidate("SYNTH-INVALID-FIRST", topic_id="999-99")
         with self.assertRaisesRegex(ValueError, "candidates contém tópico ausente"):

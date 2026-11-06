@@ -33,8 +33,17 @@ EXECUTION_FIELDS = {"data_origin", "status", "execution_ref", "candidate_id"}
 
 
 def _synthetic_identifier(value, label):
-    if not isinstance(value, str) or not value.startswith(SYNTHETIC_ID_PREFIX):
-        raise ValueError(label + " deve usar identificador SYNTH-")
+    if (not isinstance(value, str) or not value.startswith(SYNTHETIC_ID_PREFIX)
+            or not value[len(SYNTHETIC_ID_PREFIX):].strip()):
+        raise ValueError(label + " deve usar identificador SYNTH- não vazio")
+
+
+def _synthetic_reference(value, label):
+    suffix = value[len(SYNTHETIC_REF_PREFIX):] if (
+        isinstance(value, str) and value.startswith(SYNTHETIC_REF_PREFIX)
+    ) else ""
+    if not suffix.strip().strip("/"):
+        raise ValueError(label + " deve identificar uma fixture sintética")
 
 
 def _synthetic_candidates(candidates, label):
@@ -58,8 +67,7 @@ def _execution(execution, selected_candidate_id):
     if candidate_id != selected_candidate_id:
         raise ValueError("Execução simulada não corresponde ao candidato recomendado")
     ref = execution.get("execution_ref")
-    if not isinstance(ref, str) or not ref.startswith(SYNTHETIC_REF_PREFIX):
-        raise ValueError("execution_ref deve apontar para fixture sintética")
+    _synthetic_reference(ref, "execution_ref")
     return {
         "data_origin": SYNTHETIC_ORIGIN,
         "status": "simulated",
@@ -86,8 +94,7 @@ def _result_report(report, recommendation_id, execution_ref):
     for field in ("event_id", "attempt_id"):
         _synthetic_identifier(report.get(field), field)
     source_ref = report.get("source_ref")
-    if not isinstance(source_ref, str) or not source_ref.startswith(SYNTHETIC_REF_PREFIX):
-        raise ValueError("source_ref deve apontar para fixture sintética")
+    _synthetic_reference(source_ref, "source_ref")
     item_set_id = report.get("item_set_id")
     if item_set_id is not None:
         _synthetic_identifier(item_set_id, "item_set_id")
@@ -130,19 +137,23 @@ def run_offline_cycle(
     _synthetic_candidates(next_candidates, "next_candidates")
     if not isinstance(topics, list) or not topics:
         raise ValueError("topics precisa conter os tópicos conhecidos")
-    topic_ids = {
-        row.get("topic_id") for row in topics
-        if isinstance(row, dict) and isinstance(row.get("topic_id"), str)
-    }
-    if not topic_ids:
-        raise ValueError("topics sem topic_id válido")
+    topic_ids = set()
+    for row in topics:
+        topic_id = row.get("topic_id") if isinstance(row, dict) else None
+        if not isinstance(topic_id, str) or not topic_id.strip():
+            raise ValueError("catálogo contém topic_id inválido")
+        if topic_id in topic_ids:
+            raise ValueError("catálogo contém topic_id duplicado")
+        topic_ids.add(topic_id)
 
     # The ranking engine validates candidate shape, not catalogue membership.
     # Enforce the known topic boundary for every candidate in both snapshots.
     for label, queue_candidates in (("candidates", candidates), ("next_candidates", next_candidates)):
         for candidate in queue_candidates:
             candidate_topics = candidate.get("topic_ids")
-            if not isinstance(candidate_topics, list) or not candidate_topics:
+            if (not isinstance(candidate_topics, list) or not candidate_topics
+                    or any(not isinstance(topic, str) or not topic.strip()
+                           for topic in candidate_topics)):
                 raise ValueError(label + " contém candidato sem tópicos válidos")
             unknown_candidate_topics = set(candidate_topics) - topic_ids
             if unknown_candidate_topics:
