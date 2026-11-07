@@ -43,4 +43,4 @@ Os outros 94 IDs do catálogo, avaliação humana/adversarial de qualidade pedag
 
 **Estado honesto:** GP-3-MVP8 pode ser aceito como cobertura técnica mínima sintética após CI verde. GP-3 integral continua parcial; GP-4 real permanece bloqueado até haver um ciclo operacional autorizado e readback verificável. GP-5 exige avaliação consentida e não é substituído por fixtures.
 
-**Atualização 07/11/2026:** a rastreabilidade das oito referências é verificada por `tests/test_gp3_mvp8_rastreabilidade.py`. O restante do backlog (agora 55 cenários sem teste canônico na matriz, após SIM-01, 02, 03, 04 e 10) e o que impede cada frente estão em `MAPA_DESBLOQUEIO_FRENTES_20261107.md`.
+**Atualização 07/11/2026:** a rastreabilidade das oito referências é verificada por `tests/test_gp3_mvp8_rastreabilidade.py`. O restante do backlog (agora 50 cenários sem teste canônico na matriz, após SIM-01 a 10) e o que impede cada frente estão em `MAPA_DESBLOQUEIO_FRENTES_20261107.md`.

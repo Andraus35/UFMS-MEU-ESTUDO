@@ -6,8 +6,8 @@
   "execution_sha": null,
   "policy": "A existência de teste unitário correlato não equivale à execução do cenário pedagógico completo.",
   "status_counts": {
-    "PARTIAL": 47,
-    "NOT_IMPLEMENTED": 55,
+    "PARTIAL": 52,
+    "NOT_IMPLEMENTED": 50,
     "PASS": 0,
     "FAIL": 0,
     "BLOCKED": 0,
@@ -302,38 +302,48 @@
     },
     {
       "scenario_id": "SIM-05",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_session.py::test_sim05_duas_tentativas_distintas_sem_nota_conjunta"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_session.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-06",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_session.py::test_sim06_queda_nao_prova_fadiga"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_session.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-07",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_session.py::test_sim07_independencia_nunca_e_presumida"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_session.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-08",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_session.py::test_sim08_amostras_nao_equivalentes_nao_afirmam_melhora_ou_piora"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_session.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-09",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_session.py::test_sim09_nao_inventa_disponibilidade"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_session.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-10",
@@ -823,5 +833,5 @@
       "note": "Sem teste canônico associado; implementar antes de marcar PASS."
     }
   ],
-  "atualizacao_20261107": "SIM-01, SIM-02, SIM-03, SIM-04 e SIM-10 passaram de NOT_IMPLEMENTED a PARTIAL com scripts/simulado_score.py e tests/test_simulado_score.py; code_sha refere-se à medição original de 05/11/2026."
+  "atualizacao_20261107": "SIM-01, 02, 03, 04 e 10 (scripts/simulado_score.py) e SIM-05, 06, 07, 08 e 09 (scripts/simulado_session.py) passaram de NOT_IMPLEMENTED a PARTIAL; code_sha refere-se à medição original de 05/11/2026."
 }
