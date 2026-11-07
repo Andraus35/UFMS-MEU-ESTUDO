@@ -46,9 +46,10 @@ def validate_local(root=ROOT):
     task = active.get("task_id")
     if not isinstance(task, str) or not re.fullmatch(r"(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)", task):
         raise ValueError("Tarefa ativa inválida")
-    if not isinstance(active.get("pr_number"), int) or active["pr_number"] < 1:
+    pr_number = active.get("pr_number")
+    if pr_number is not None and (type(pr_number) is not int or pr_number < 1):
         raise ValueError("PR ativo inválido")
-    if active.get("phase") not in VALID_PHASES or active.get("base") != "main":
+    if active.get("phase") not in ({"work"} if pr_number is None else VALID_PHASES) or active.get("base") != "main":
         raise ValueError("Fase/base inválida")
     branch = active.get("branch")
     if not isinstance(branch, str) or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_./-]{2,150}", branch):
@@ -138,6 +139,10 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
             raise ValueError("Push fora da única frente ativa enquanto existe PR aberto")
         return {"phase": "active_pr", "task": active["task_id"],
                 "pr": active["pr_number"]}
+    if active.get("pr_number") is None:
+        if event_name == "push" and ref_name == active.get("branch") and active.get("phase") == "work":
+            return {"phase": "prepared", "task": active["task_id"], "branch": active["branch"]}
+        raise ValueError("Estado preparado sem PR: somente push na branch registrada é permitido")
     if event_name != "push" or ref_name != "main":
         raise ValueError("Branch sem PR aberto: apenas a main pode verificar transição pós-merge")
     if not isinstance(prior_pr, dict):
