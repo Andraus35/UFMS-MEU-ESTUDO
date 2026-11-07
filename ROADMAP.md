@@ -1,5 +1,9 @@
 # ROADMAP — UFMS MEU ESTUDO
 
+> **ESTADO VIGENTE — main@05b00079794fabf97672baf68821893feb730af2; PR #53 / RM-08-PREP integrado.** Último merge comprovado: PR #53; SHA 05b00079794fabf97672baf68821893feb730af2. Frente ativa única: **RM-08-PREP / PR pendente**, branch fix/governance-idle-state-20261106, fase work, exclusivamente para máquina de estados pós-merge, gates e sincronização documental. Próxima tarefa: RM-08, ainda bloqueado; não iniciar sem avaliação formal. CURRENT permanece E0, zero eventos/resultados.
+
+**Próxima tarefa: RM-08**
+
 > **ESTADO VIGENTE — main@7df4b8fff8d8ed76096d33edb6474808fb2e34ca; PR #52 / RM-08-PREP integrado.** Último merge comprovado: PR #52; SHA `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`. Frente ativa única: **RM-08-PREP / PR #53**, branch `fix/governance-post-merge-sync-20261106`, fase `review`, exclusivamente para fechamento documental pós-merge e gate determinístico de sincronização. Próxima tarefa prevista: RM-08, ainda `bloqueado`; não iniciar sem nova validação dos bloqueadores. `state/CURRENT.json` permanece E0, zero eventos/resultados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
 **Objetivo:** orientar o harness de estudos por questões dos cargos UFMS 523 (Gestão Pública) e 324 (Assuntos Estudantis). Documento de planejamento; não aprova software, PRs, gates ou escrita pessoal.
