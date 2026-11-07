@@ -15,7 +15,9 @@ from single_flow_gate import fetch_pr, validate_local, validate_remote
 class SingleFlowTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.live = validate_local(ROOT)
+        cls.live = copy.deepcopy(validate_local(ROOT))
+        cls.live["active"]["pr_number"] = 54
+        cls.live["active"]["phase"] = "review"
 
     def temp_root(self, mutation=None):
         temp = tempfile.TemporaryDirectory()
@@ -33,7 +35,8 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
+        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 54)
+        self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
 
     def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
@@ -126,14 +129,9 @@ class SingleFlowTests(unittest.TestCase):
                 validate_local(root)
 
     def test_rejeita_handoff_com_proxima_tarefa_divergente(self):
-        tmp, root = self.temp_root()
+        tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "RM-99"))
         with tmp:
-            path = root / "memory/HANDOFF.md"
-            content = path.read_text(encoding="utf-8")
-            marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
-            path.write_text(content.replace(marker, "**Próxima tarefa: RM-99**", 1),
-                            encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "Próxima tarefa do HANDOFF"):
+            with self.assertRaisesRegex(ValueError, "roadmap diverge"):
                 validate_local(root)
 
     def pr(self, n=None, branch=None, sha="a" * 40, base="main"):
@@ -144,8 +142,8 @@ class SingleFlowTests(unittest.TestCase):
     def merged_pr(self):
         return {"number": self.live["active"]["pr_number"], "state": "closed",
                 "merged_at": "2026-11-05T15:00:00Z",
-                "head": {"ref": self.live["active"]["branch"]},
-                "base": {"ref": "main"}}
+                "head": {"ref": self.live["active"]["branch"], "sha": "b" * 40},
+                "base": {"ref": "main"}, "merge_commit_sha": "a" * 40}
 
     def check_remote(self, prs, event="pull_request", ref="unused/merge", head=None, prior=None):
         return validate_remote(self.live, prs, event, ref,
@@ -197,10 +195,31 @@ class SingleFlowTests(unittest.TestCase):
     def test_permite_main_sem_pr_apos_merge_comprovado(self):
         state = copy.deepcopy(self.live)
         state["active"]["phase"] = "review"
-        result = validate_remote(state, [], "push", "main", "", self.merged_pr())
-        self.assertEqual(result["phase"], "awaiting_next_task")
+        result = validate_remote(state, [], "push", "main", "", self.merged_pr(), "a" * 40)
+        self.assertEqual(result["phase"], "idle")
+        self.assertEqual(result["source_head_sha"], "b" * 40)
+        self.assertEqual(result["merge_commit_sha"], "a" * 40)
         self.assertEqual(result["next_task"], self.live["next_task_after_merge"])
         self.assertEqual(result["last_merged_pr"], self.live["active"]["pr_number"])
+
+    def test_rejeita_merge_sha_divergente_do_evento_main(self):
+        prior = self.merged_pr()
+        prior["merge_commit_sha"] = "c" * 40
+        with self.assertRaisesRegex(ValueError, "SHA do evento main diverge"):
+            validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
+
+    def test_rejeita_sha_do_evento_main_ausente_ou_invalido(self):
+        for event_sha in ("", "invalid"):
+            with self.subTest(event_sha=event_sha), self.assertRaisesRegex(
+                    ValueError, "SHA do evento main ausente ou inválido"):
+                validate_remote(self.live, [], "push", "main", "",
+                                self.merged_pr(), event_sha)
+
+    def test_rejeita_sha_de_origem_ausente_no_pr_mesclado(self):
+        prior = self.merged_pr()
+        prior["head"]["sha"] = ""
+        with self.assertRaisesRegex(ValueError, "SHAs válidos"):
+            validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
 
     def test_rejeita_lista_invalida(self):
         with self.assertRaisesRegex(ValueError, "inválido"):
@@ -242,7 +261,7 @@ class SingleFlowTests(unittest.TestCase):
         state = deepcopy(self.live)
         state["active"]["phase"] = "work"
         with self.assertRaisesRegex(ValueError, "sem checkpoint"):
-            validate_remote(state, [], "push", "main", "", self.merged_pr())
+            validate_remote(state, [], "push", "main", "", self.merged_pr(), "a" * 40)
 
     def test_rejeita_remocao_do_contrato_pos_merge(self):
         tmp, root = self.temp_root(
@@ -278,21 +297,17 @@ class SingleFlowTests(unittest.TestCase):
                 validate_local(root)
 
     def test_rejeita_roadmap_com_proxima_tarefa_divergente(self):
-        tmp, root = self.temp_root()
+        tmp, root = self.temp_root(lambda data: data.__setitem__("next_task_after_merge", "RM-99"))
         with tmp:
             roadmap = root / "ROADMAP.md"
-            current = roadmap.read_text(encoding="utf-8")
-            if self.live["next_task_after_merge"] == "DONE":
-                current = current.replace(
-                    "**Fila de simplificação concluída**", "**Próxima tarefa: SIM-99**", 1)
-                message = "Marcador de encerramento"
-            else:
-                current = current.replace(
-                    "**Próxima tarefa: " + self.live["next_task_after_merge"] + "**",
-                    "**Próxima tarefa: SIM-99**", 1)
-                message = "diverge"
+            current = roadmap.read_text(encoding="utf-8").replace(
+                "**Próxima tarefa: RM-08**", "**Próxima tarefa: RM-99**", 1)
             roadmap.write_text(current, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, message):
+            handoff = root / "memory/HANDOFF.md"
+            current_handoff = handoff.read_text(encoding="utf-8").replace(
+                "**Próxima tarefa: RM-08**", "**Próxima tarefa: RM-99**", 1)
+            handoff.write_text(current_handoff, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "ausente no roadmap"):
                 validate_local(root)
 
     def test_api_de_merge_indisponivel_bloqueia(self):

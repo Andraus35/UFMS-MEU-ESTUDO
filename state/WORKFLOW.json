@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-08-PREP",
-    "scope": "preparacao_offline_sintetica",
-    "branch": "fix/governance-post-merge-sync-20261106",
-    "pr_number": 53,
+    "scope": "reconciliacao_pos_merge_e_gate_maquina_estados",
+    "branch": "fix/governance-idle-state-20261106",
+    "pr_number": 54,
     "base": "main",
     "phase": "review"
   },
@@ -113,11 +113,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #52 / RM-08-PREP integrado em main no merge commit 7df4b8fff8d8ed76096d33edb6474808fb2e34ca. CI pós-merge validate=success (run 42270139613). A tarefa RM-08-PREP permanece em fechamento documental pós-merge, exclusivamente para sincronizar governança e fortalecer gate determinístico; PR ativo #53, branch fix/governance-post-merge-sync-20261106, base main, fase review. next_task_after_merge=RM-08; RM-08 formal continua bloqueado e não é liberado automaticamente. state/CURRENT.json permanece E0, zero eventos e zero resultados; state/PROGRESS.csv intocado. Sem dados pessoais, credenciais, persistência, replay real ou integrações externas. A CI deve exigir simetria entre WORKFLOW, HANDOFF, ROADMAP e STATUS, inclusive o último merge comprovado.",
+  "notes": "PR #53 integrado em main no merge commit 05b00079794fabf97672baf68821893feb730af2. Frente ativa unica: RM-08-PREP / PR #54, branch fix/governance-idle-state-20261106, para reconciliacao documental e gates de estado preparado/PR ativo. Proxima tarefa RM-08 permanece bloqueada ate nova avaliacao formal. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Persistencia pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integracoes externas. Alteracoes por API GitHub; hooks locais nao executados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-08-PREP",
-    "pr_number": 52,
-    "merge_commit_sha": "7df4b8fff8d8ed76096d33edb6474808fb2e34ca"
+    "pr_number": 53,
+    "merge_commit_sha": "05b00079794fabf97672baf68821893feb730af2"
   }
 }

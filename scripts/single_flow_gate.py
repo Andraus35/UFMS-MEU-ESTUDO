@@ -46,9 +46,10 @@ def validate_local(root=ROOT):
     task = active.get("task_id")
     if not isinstance(task, str) or not re.fullmatch(r"(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)", task):
         raise ValueError("Tarefa ativa inválida")
-    if not isinstance(active.get("pr_number"), int) or active["pr_number"] < 1:
+    pr_number = active.get("pr_number")
+    if pr_number is not None and (type(pr_number) is not int or pr_number < 1):
         raise ValueError("PR ativo inválido")
-    if active.get("phase") not in VALID_PHASES or active.get("base") != "main":
+    if active.get("phase") not in ({"work"} if pr_number is None else VALID_PHASES) or active.get("base") != "main":
         raise ValueError("Fase/base inválida")
     branch = active.get("branch")
     if not isinstance(branch, str) or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_./-]{2,150}", branch):
@@ -96,7 +97,7 @@ def validate_local(root=ROOT):
     if "state/WORKFLOW.json" not in handoff:
         raise ValueError("Instrução de retomada sem estado único: memory/HANDOFF.md")
     checkpoint = handoff.split("\n---\n", 1)[0]
-    active_marker = f"**{task} / PR #{active['pr_number']}**"
+    active_marker = f"**{task}" + (f" / PR #{active['pr_number']}**" if active['pr_number'] else " / PR pendente**")
     if active_marker not in checkpoint or branch not in checkpoint:
         raise ValueError("HANDOFF diverge do estado operacional (tarefa, PR ou branch)")
     if next_task == "DONE":
@@ -138,19 +139,34 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
             raise ValueError("Push fora da única frente ativa enquanto existe PR aberto")
         return {"phase": "active_pr", "task": active["task_id"],
                 "pr": active["pr_number"]}
+    if active.get("pr_number") is None:
+        if event_name == "push" and ref_name == active.get("branch") and active.get("phase") == "work":
+            return {"phase": "prepared", "task": active["task_id"], "branch": active["branch"]}
+        raise ValueError("Estado preparado sem PR: somente push na branch registrada é permitido")
     if event_name != "push" or ref_name != "main":
         raise ValueError("Branch sem PR aberto: apenas a main pode verificar transição pós-merge")
     if not isinstance(prior_pr, dict):
         raise ValueError("Sem comprovação autenticada do merge anterior")
+    source_head_sha = prior_pr.get("head", {}).get("sha")
+    merge_sha = prior_pr.get("merge_commit_sha")
     if (prior_pr.get("number") != active["pr_number"]
             or prior_pr.get("state") != "closed"
             or not prior_pr.get("merged_at")
             or prior_pr.get("head", {}).get("ref") != active["branch"]
-            or prior_pr.get("base", {}).get("ref") != "main"):
-        raise ValueError("PR anterior não comprovadamente mesclado em main")
+            or prior_pr.get("base", {}).get("ref") != "main"
+            or not isinstance(source_head_sha, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", source_head_sha)
+            or not isinstance(merge_sha, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", merge_sha)):
+        raise ValueError("PR anterior não comprovadamente mesclado em main com SHAs válidos")
     if active["phase"] not in ("review", "merge_ready"):
         raise ValueError("PR anterior mesclado sem checkpoint de revisão no estado")
-    return {"phase": "awaiting_next_task", "last_merged_pr": active["pr_number"],
+    if not isinstance(head_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", head_sha):
+        raise ValueError("SHA do evento main ausente ou inválido; bloquear transição")
+    if merge_sha != head_sha:
+        raise ValueError("SHA do evento main diverge do merge_commit_sha do PR")
+    return {"phase": "idle", "last_merged_pr": active["pr_number"],
+            "source_head_sha": source_head_sha, "merge_commit_sha": merge_sha,
             "next_task": data["next_task_after_merge"]}
 
 
@@ -221,7 +237,7 @@ def main():
                                      os.getenv("GITHUB_HEAD_SHA", ""))
             print("OK: fluxo serial remoto: " + json.dumps(result, sort_keys=True))
         else:
-            print("OK: política local de tarefa única; PR registrado #" + str(data["active"]["pr_number"]))
+            print("OK: política local de tarefa única; " + (("PR registrado #" + str(data["active"]["pr_number"])) if data["active"].get("pr_number") else ("branch preparada sem PR: " + data["active"]["branch"])))
     except (ValueError, OSError, KeyError, json.JSONDecodeError) as exc:
         print("FALHA: fluxo sequencial: " + str(exc), file=sys.stderr)
         raise SystemExit(1)
