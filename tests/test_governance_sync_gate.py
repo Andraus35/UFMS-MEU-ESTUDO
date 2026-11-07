@@ -23,7 +23,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def test_checkpoint_preparado_coerente(self):
         result = verify(self.root)
         self.assertEqual(result["result"], "PASS")
-        self.assertEqual(result["state"], "active")
+        self.assertEqual(result["state"], "prepared")
 
     def test_baseline_rm08_e_estado_preparado_com_rm08_formal_bloqueada(self):
         result = verify(self.root)
@@ -49,7 +49,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
 
     def test_rejeita_documento_com_recibo_stale(self):
         p = self.root / "memory/HANDOFF.md"
-        p.write_text(p.read_text().replace("Último merge comprovado: PR #53", "Último merge comprovado: PR #52", 1), encoding="utf-8")
+        p.write_text(p.read_text().replace("Último merge comprovado: PR #54", "Último merge comprovado: PR #52", 1), encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "último merge|diverge do WORKFLOW"):
             verify(self.root)
 

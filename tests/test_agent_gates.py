@@ -121,7 +121,7 @@ class AgentGateTests(unittest.TestCase):
         self.assertIn("| bloqueado |", formal)
         self.assertIn("| em_andamento |", baseline)
         self.assertIn("sem persistência pessoal", baseline)
-        self.assertIn("sem promover GP-4", baseline)
+        self.assertIn("promoção de GP-4", baseline)
 
     def test_rm08_baseline_nao_pode_alargar_seu_escopo(self):
         contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
