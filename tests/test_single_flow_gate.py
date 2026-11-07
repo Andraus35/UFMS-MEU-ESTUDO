@@ -142,8 +142,8 @@ class SingleFlowTests(unittest.TestCase):
     def merged_pr(self):
         return {"number": self.live["active"]["pr_number"], "state": "closed",
                 "merged_at": "2026-11-05T15:00:00Z",
-                "head": {"ref": self.live["active"]["branch"]},
-                "base": {"ref": "main"}}
+                "head": {"ref": self.live["active"]["branch"], "sha": "b" * 40},
+                "base": {"ref": "main"}, "merge_commit_sha": "a" * 40}
 
     def check_remote(self, prs, event="pull_request", ref="unused/merge", head=None, prior=None):
         return validate_remote(self.live, prs, event, ref,
@@ -196,9 +196,23 @@ class SingleFlowTests(unittest.TestCase):
         state = copy.deepcopy(self.live)
         state["active"]["phase"] = "review"
         result = validate_remote(state, [], "push", "main", "", self.merged_pr())
-        self.assertEqual(result["phase"], "awaiting_next_task")
+        self.assertEqual(result["phase"], "idle")
+        self.assertEqual(result["source_head_sha"], "b" * 40)
+        self.assertEqual(result["merge_commit_sha"], "a" * 40)
         self.assertEqual(result["next_task"], self.live["next_task_after_merge"])
         self.assertEqual(result["last_merged_pr"], self.live["active"]["pr_number"])
+
+    def test_rejeita_merge_sha_divergente_do_evento_main(self):
+        prior = self.merged_pr()
+        prior["merge_commit_sha"] = "c" * 40
+        with self.assertRaisesRegex(ValueError, "SHA do evento main diverge"):
+            validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
+
+    def test_rejeita_sha_de_origem_ausente_no_pr_mesclado(self):
+        prior = self.merged_pr()
+        prior["head"]["sha"] = ""
+        with self.assertRaisesRegex(ValueError, "SHAs válidos"):
+            validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
 
     def test_rejeita_lista_invalida(self):
         with self.assertRaisesRegex(ValueError, "inválido"):
