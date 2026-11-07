@@ -113,7 +113,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #53 integrado em main no merge commit 05b00079794fabf97672baf68821893feb730af2. Frente ativa unica: reconciliação da governança nesta branch; PR será aberto após commit inicial. Próxima tarefa RM-08 permanece bloqueada até nova avaliação formal. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.",
+  "notes": "PR #53 integrado em main no merge commit 05b00079794fabf97672baf68821893feb730af2. Frente ativa unica: RM-08-PREP / PR #54, branch fix/governance-idle-state-20261106, para reconciliacao documental e gates de estado preparado/PR ativo. Proxima tarefa RM-08 permanece bloqueada ate nova avaliacao formal. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Persistencia pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integracoes externas. Alteracoes por API GitHub; hooks locais nao executados.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-08-PREP",
