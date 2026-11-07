@@ -16,7 +16,9 @@
 ## Registro histórico
 
 
-## Estado vigente da frente
+## Histórico — checkpoint substituído
+
+## Estado vigente da frente (registro histórico)
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
 - main: 05b00079794fabf97672baf68821893feb730af2; PR #53 / RM-08-PREP integrado por squash.
