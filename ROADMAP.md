@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #61; SHA d79503b255dd2ae59b56ed08daf452b2e70da41f
-- Frente ativa: **RM-06 / PR #62**; branch `feat/rm06-simulado-sessao-20261107`; base main; fase review.
+- Último merge comprovado: PR #62; SHA b468131df18bfeaa044d2a3b73e1a50435100085
+- Frente ativa: **RM-08 / PR pendente**; branch `feat/rm08-decisoes-adr013-20261107`; base main; fase work.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -80,6 +80,8 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 Frente ativa e próxima tarefa: ver *Checkpoint vigente* e `state/WORKFLOW.json`. A entrega formal RM-08 permanece bloqueada pelos gates documentados. A preparação sintética foi integrada pelo PR #52 (RM-08-PREP) e a baseline formal pelo PR #55 (RM-08-BASELINE), sem homologar a linha formal RM-08; GP-4 real exige gates próprios.
 
 Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogia/MAPA_DESBLOQUEIO_FRENTES_20261107.md`.
+
+**GP-3-MVP8 aceito pelo proprietário em 07/11/2026** como cobertura técnica mínima sintética (8 cenários, CI verde). Não promove GP-3 integral (permanece parcial: 50 sem teste canônico) nem GP-4, e não altera o status de RM-06.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 

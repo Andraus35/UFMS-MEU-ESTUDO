@@ -37,16 +37,26 @@ Este ADR **não altera** `settings.json`, regras ou guardrails e **não habilita
 - **CI não prova privacidade:** a CI do repositório público valida código e testes sintéticos; não comprova a visibilidade nem os controles do repositório privado.
 - **Interface Zapia/Telegram** não está implantada; este desenho não depende dela.
 
-## Decisões em aberto (do proprietário)
+## Decisões do proprietário (07/11/2026)
 
-1. Nome e criação do repositório privado de dados (a criação é ato administrativo seu).
-2. Quem opera o escritor confiável (host/cliente) e onde guarda a credencial.
-3. Texto e versão do consentimento.
-4. Política de retenção e de backup dos dados.
+1. **Repositório privado de dados:** `Andraus35/ufms-meu-estudo-dados`, criado como **privado desde o início**. A criação é ato administrativo do proprietário; **ainda não foi criado** (nem verificado) por este ADR.
+2. **Escritor confiável (P4):** o próprio proprietário, **manualmente pelo Termux**. O modelo não recebe token nem escreve no repositório privado; ele prepara patch ou script, o proprietário revisa e executa. Sem host novo, sem servidor, sem segredo com o modelo (coerente com o ADR-011).
+3. **Retenção e revogação:** dados mantidos **até a prova (17/01/2027) mais uma janela curta**, e a **revogação efetiva é apagar o repositório privado inteiro** (o histórico Git é permanente; apagar arquivo não basta). Sem reescrita de histórico.
+4. **Backup:** não decidido; por padrão, **sem backup externo** do dado pessoal.
+
+## Ainda em aberto
+
+- **Prazo exato da "janela curta"** após a prova (proposta: 30 dias; **não aprovado**).
+- **Aprovação do texto de consentimento** abaixo, que é **rascunho** e não vale como consentimento enquanto não for aprovado e versionado pelo proprietário.
+- **Criação do repositório privado** pelo proprietário e verificação de `private=true` por leitura autenticada.
+
+## Rascunho do texto de consentimento (v1, NÃO aprovado)
+
+> Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Os dados serão mantidos até 17/01/2027 mais a janela de retenção definida, e posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado. Versão: v1.
 
 ## Próximos passos (cada um em PR próprio, em série)
 
-1. Fixtures e contraprovas P1–P3 e P5–P6. **Parcial (07/11/2026):** `scripts/private_persistence_guard.py` e `tests/test_private_persistence_guard.py` cobrem esses controles com leitor de visibilidade injetado (fakes), sem rede e sem gravar. **Falta** a prova contra um repositório privado real de teste, que depende da criação desse repositório pelo proprietário.
+1. (Depende da criação do repositório privado) Fixtures e contraprovas P1–P3 e P5–P6. **Parcial (07/11/2026):** `scripts/private_persistence_guard.py` e `tests/test_private_persistence_guard.py` cobrem esses controles com leitor de visibilidade injetado (fakes), sem rede e sem gravar. **Falta** a prova contra um repositório privado real de teste, que depende da criação desse repositório pelo proprietário.
 2. Escritor confiável (P4) reaproveitando `scripts/api_write_transaction.py` e `scripts/api_write_guard.py`.
 3. Decisão separada de habilitação (flag), com aprovação humana.
 
