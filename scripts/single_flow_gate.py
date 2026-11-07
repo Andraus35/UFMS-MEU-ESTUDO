@@ -147,22 +147,26 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
         raise ValueError("Branch sem PR aberto: apenas a main pode verificar transição pós-merge")
     if not isinstance(prior_pr, dict):
         raise ValueError("Sem comprovação autenticada do merge anterior")
-    head_sha = prior_pr.get("head", {}).get("sha")
+    source_head_sha = prior_pr.get("head", {}).get("sha")
     merge_sha = prior_pr.get("merge_commit_sha")
     if (prior_pr.get("number") != active["pr_number"]
             or prior_pr.get("state") != "closed"
             or not prior_pr.get("merged_at")
             or prior_pr.get("head", {}).get("ref") != active["branch"]
             or prior_pr.get("base", {}).get("ref") != "main"
-            or not isinstance(head_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", head_sha)
-            or not isinstance(merge_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", merge_sha)):
+            or not isinstance(source_head_sha, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", source_head_sha)
+            or not isinstance(merge_sha, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", merge_sha)):
         raise ValueError("PR anterior não comprovadamente mesclado em main com SHAs válidos")
     if active["phase"] not in ("review", "merge_ready"):
         raise ValueError("PR anterior mesclado sem checkpoint de revisão no estado")
+    if not isinstance(head_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", head_sha):
+        raise ValueError("SHA do evento main ausente ou inválido; bloquear transição")
     if merge_sha != head_sha:
         raise ValueError("SHA do evento main diverge do merge_commit_sha do PR")
     return {"phase": "idle", "last_merged_pr": active["pr_number"],
-            "source_head_sha": head_sha, "merge_commit_sha": merge_sha,
+            "source_head_sha": source_head_sha, "merge_commit_sha": merge_sha,
             "next_task": data["next_task_after_merge"]}
 
 
