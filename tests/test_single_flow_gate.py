@@ -284,17 +284,9 @@ class SingleFlowTests(unittest.TestCase):
         with tmp:
             roadmap = root / "ROADMAP.md"
             current = roadmap.read_text(encoding="utf-8")
-            if self.live["next_task_after_merge"] == "DONE":
-                current = current.replace(
-                    "**Fila de simplificação concluída**", "**Próxima tarefa: SIM-99**", 1)
-                message = "Marcador de encerramento"
-            else:
-                current = current.replace(
-                    "**Próxima tarefa: " + self.live["next_task_after_merge"] + "**",
-                    "**Próxima tarefa: SIM-99**", 1)
-                message = "diverge"
+            current = current.replace("Próxima tarefa: RM-08", "Próxima tarefa: RM-99", 1)
             roadmap.write_text(current, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, message):
+            with self.assertRaisesRegex(ValueError, "roadmap diverge"):
                 validate_local(root)
 
     def test_api_de_merge_indisponivel_bloqueia(self):
