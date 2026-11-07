@@ -122,20 +122,9 @@ class AgentsGateTests(unittest.TestCase):
 
     def test_start_de_engenharia_executa_o_gate_mas_estudo_nao(self):
         temp = tempfile.TemporaryDirectory()
-        root = Path(temp.name)
+        root = Path(temp.name) / "repo"
         with temp:
-            for rel in ("AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md", "state/CURRENT.json",
-                        "state/WORKFLOW.json", "settings.json", "config/concursos.json", "hooks/before_write.py",
-                        "hooks/after_write.py", "hooks/checkpoint.py") + FILES:
-                destino = root / rel
-                destino.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(ROOT / rel, destino)
-            for text in (TUTOR, COACH, (ROOT / "PRODUCT.md").read_text(encoding="utf-8")):
-                for ref in set(FILE_REF.findall(text)):
-                    alvo = root / ref
-                    alvo.parent.mkdir(parents=True, exist_ok=True)
-                    if not alvo.exists():
-                        alvo.write_text("x", encoding="utf-8")
+            shutil.copytree(ROOT, root, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache"))
             self.assertEqual(run(root, mode="engineering")["modo"], "engineering")
             (root / "agents/COACH.md").write_text(COACH.replace("- `criar_lembrete`\n", ""), encoding="utf-8")
             with self.assertRaises(ValueError):

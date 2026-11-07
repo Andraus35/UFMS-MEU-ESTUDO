@@ -218,6 +218,11 @@ def check_engineering_bootstrap(root=ROOT):
     except ModuleNotFoundError:
         from scripts.agents_gate import validate as validate_agents
     validate_agents(root)
+    try:
+        from doc_cohesion import validate as validate_cohesion
+    except ModuleNotFoundError:
+        from scripts.doc_cohesion import validate as validate_cohesion
+    validate_cohesion(root)
     ordered = {}
     for name in ENGINEERING_FILES:
         if name in hashes:
