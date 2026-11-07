@@ -195,7 +195,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_permite_main_sem_pr_apos_merge_comprovado(self):
         state = copy.deepcopy(self.live)
         state["active"]["phase"] = "review"
-        result = validate_remote(state, [], "push", "main", "", self.merged_pr())
+        result = validate_remote(state, [], "push", "main", "", self.merged_pr(), "a" * 40)
         self.assertEqual(result["phase"], "idle")
         self.assertEqual(result["source_head_sha"], "b" * 40)
         self.assertEqual(result["merge_commit_sha"], "a" * 40)
