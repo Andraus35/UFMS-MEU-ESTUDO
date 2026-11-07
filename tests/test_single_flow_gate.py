@@ -129,13 +129,9 @@ class SingleFlowTests(unittest.TestCase):
                 validate_local(root)
 
     def test_rejeita_handoff_com_proxima_tarefa_divergente(self):
-        tmp, root = self.temp_root()
+        tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "RM-99"))
         with tmp:
-            path = root / "memory/HANDOFF.md"
-            content = path.read_text(encoding="utf-8")
-            content = content.replace("**Próxima tarefa: RM-08**", "", 1)
-            path.write_text(content, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "Próxima tarefa do HANDOFF"):
+            with self.assertRaisesRegex(ValueError, "roadmap diverge"):
                 validate_local(root)
 
     def pr(self, n=None, branch=None, sha="a" * 40, base="main"):
@@ -280,13 +276,17 @@ class SingleFlowTests(unittest.TestCase):
                 validate_local(root)
 
     def test_rejeita_roadmap_com_proxima_tarefa_divergente(self):
-        tmp, root = self.temp_root()
+        tmp, root = self.temp_root(lambda data: data.__setitem__("next_task_after_merge", "RM-99"))
         with tmp:
             roadmap = root / "ROADMAP.md"
-            current = roadmap.read_text(encoding="utf-8")
-            current = current.replace("**Próxima tarefa: RM-08**", "", 1)
+            current = roadmap.read_text(encoding="utf-8").replace(
+                "**Próxima tarefa: RM-08**", "**Próxima tarefa: RM-99**", 1)
             roadmap.write_text(current, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "Próxima tarefa do roadmap"):
+            handoff = root / "memory/HANDOFF.md"
+            current_handoff = handoff.read_text(encoding="utf-8").replace(
+                "**Próxima tarefa: RM-08**", "**Próxima tarefa: RM-99**", 1)
+            handoff.write_text(current_handoff, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "ausente no roadmap"):
                 validate_local(root)
 
     def test_api_de_merge_indisponivel_bloqueia(self):
