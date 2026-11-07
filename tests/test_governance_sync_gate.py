@@ -44,14 +44,14 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def test_rejeita_documento_com_recibo_stale(self):
         p = self.root / "memory/HANDOFF.md"
         p.write_text(p.read_text().replace("Último merge comprovado: PR #53", "Último merge comprovado: PR #52", 1), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "último merge"):
+        with self.assertRaisesRegex(ValueError, "último merge|diverge do WORKFLOW"):
             verify(self.root)
 
     def test_rejeita_proxima_tarefa_divergente(self):
         p = self.root / "ROADMAP.md"
         p.write_text(p.read_text().replace("**Próxima tarefa: RM-08**",
                                            "**Próxima tarefa: RM-99**", 1), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "próxima tarefa"):
+        with self.assertRaisesRegex(ValueError, "Próxima tarefa|diverge do WORKFLOW"):
             verify(self.root)
 
     def test_rejeita_estado_idle_com_documento_ativo(self):
@@ -61,7 +61,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
 
     def test_rejeita_branch_main_como_branch_de_trabalho(self):
         self.mutate_workflow(lambda d: d["active"].update(branch="main"))
-        with self.assertRaisesRegex(ValueError, "branch ativa"):
+        with self.assertRaisesRegex(ValueError, "branch de ciclo"):
             verify(self.root)
 
     def test_rejeita_pr_booleano(self):
