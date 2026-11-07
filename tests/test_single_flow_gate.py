@@ -35,8 +35,8 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertIsNone(validate_local(ROOT)["active"]["pr_number"])
-        self.assertEqual(validate_local(ROOT)["active"]["phase"], "work")
+        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 54)
+        self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
 
     def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
@@ -133,9 +133,8 @@ class SingleFlowTests(unittest.TestCase):
         with tmp:
             path = root / "memory/HANDOFF.md"
             content = path.read_text(encoding="utf-8")
-            marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
-            path.write_text(content.replace(marker, "**Próxima tarefa: RM-99**", 1),
-                            encoding="utf-8")
+            content = content.replace("Próxima tarefa: RM-08", "Próxima tarefa: RM-99", 1)
+            path.write_text(content, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Próxima tarefa do HANDOFF"):
                 validate_local(root)
 
