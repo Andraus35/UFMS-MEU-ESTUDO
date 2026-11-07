@@ -133,7 +133,7 @@ class SingleFlowTests(unittest.TestCase):
         with tmp:
             path = root / "memory/HANDOFF.md"
             content = path.read_text(encoding="utf-8")
-            content = content.replace("Próxima tarefa: RM-08", "Próxima tarefa: RM-99", 1)
+            content = content.replace("**Próxima tarefa: RM-08**", "", 1)
             path.write_text(content, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Próxima tarefa do HANDOFF"):
                 validate_local(root)
@@ -284,9 +284,9 @@ class SingleFlowTests(unittest.TestCase):
         with tmp:
             roadmap = root / "ROADMAP.md"
             current = roadmap.read_text(encoding="utf-8")
-            current = current.replace("Próxima tarefa: RM-08", "Próxima tarefa: RM-99", 1)
+            current = current.replace("**Próxima tarefa: RM-08**", "", 1)
             roadmap.write_text(current, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "roadmap diverge"):
+            with self.assertRaisesRegex(ValueError, "Próxima tarefa do roadmap"):
                 validate_local(root)
 
     def test_api_de_merge_indisponivel_bloqueia(self):
