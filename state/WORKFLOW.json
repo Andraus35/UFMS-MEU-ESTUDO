@@ -3,11 +3,11 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-08",
-    "scope": "higiene_documental_e_gate_de_marcadores",
-    "branch": "feat/rm08-higiene-20261107",
-    "pr_number": 57,
+    "scope": "adr_persistencia_privada_desenho",
+    "branch": "feat/rm08-adr-persistencia-20261107",
+    "pr_number": null,
     "base": "main",
-    "phase": "review"
+    "phase": "work"
   },
   "next_task_after_merge": "RM-09",
   "rules": {
@@ -113,11 +113,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #56 integrado em main no merge commit 6b9ffa1efdca5e8817760b8a530976c7552ff8a5 (CI push success). Frente única ativa: RM-08 (higiene documental e gate de marcadores), branch feat/rm08-higiene-20261107, PR #57 draft. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #57 integrado em main no merge commit bc4fc2582d443231689550d2dd37653cee9120ec (CI push success). Frente única ativa: RM-08 (ADR de persistência privada, só desenho), branch feat/rm08-adr-persistencia-20261107, PR pendente. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-08",
-    "pr_number": 56,
-    "merge_commit_sha": "6b9ffa1efdca5e8817760b8a530976c7552ff8a5"
+    "pr_number": 57,
+    "merge_commit_sha": "bc4fc2582d443231689550d2dd37653cee9120ec"
   }
 }
