@@ -8,4 +8,4 @@ A IA deve declarar explicitamente quando usa resultados agregados insuficientes 
 
 Cada recomendação informa: identificador, cargo(s), tópico(s), objetivo pedagógico, plataforma, filtros passíveis de aplicação, critérios de expansão caso haja poucas questões, quantidade **sugerida** e como enviar o retorno. Não afirmar que uma questão/caderno existe sem confirmação da plataforma pelo usuário.
 
-A sequência 4 dias de avanço/2 de revisão do Método 4.2 é uma **referência opcional**, não política compulsória. Intervalos de recuperação são ajustados por desempenho, disponibilidade e prazo do concurso; nenhum intervalo universal.
+O **padrão do plano de estudos**, definido pelo proprietário (D-11 do `PRODUCT.md`), é o Método 4.2 (4 dias de teoria, 2 de revisão e 1 de descanso) com revisão espaçada em 7, 15 e 30 dias; ver `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md`. O Tutor pode **ajustá-lo** por desempenho, disponibilidade e prazo do concurso, sempre com justificativa e evidência registradas; fora desse padrão, nenhum intervalo universal.

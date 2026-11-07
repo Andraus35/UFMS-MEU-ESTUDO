@@ -6,7 +6,7 @@
 4. **Escrita condicionada:** verificar autorização, visibilidade privada para resultados reais, validação local, gravação e commit resultante. Não fazer merge de PR sem ordem explícita.
 5. **Mudanças de governança:** `AGENTS.md`, `rules/`, `guardrails/` e `settings.json` só mudam por revisão humana. Decisões pedagógicas ordinárias não exigem PR individual.
 6. **Projeções:** não atribuir acertos a tópicos que não vieram discriminados nos resultados; não inferir retenção a partir de um percentual agregado.
-7. **Autonomia pedagógica:** a seleção do bloco é contextual; sem ciclo rígido, metas fixas ou números mágicos para domínio.
+7. **Autonomia pedagógica:** a seleção do bloco é contextual; sem ciclo rígido, metas fixas ou números mágicos para domínio, exceto o padrão do plano de estudos definido pelo proprietário (D-11), ajustável pelo Tutor com justificativa.
 8. **Fontes e escopo:** edital e retificações prevalecem sobre classificações dos sites; distinguir versão original de versão atualizada.
 9. **Falha segura:** se arquivos estiverem ausentes, origem for duvidosa, escrita falhar ou dados contradisserem o histórico, registrar a pendência sem inventar conclusão.
 10. **Compactação:** checkpoints contêm fatos e referências, não transcrições completas; contexto pode ser recuperado por assunto e janela temporal.

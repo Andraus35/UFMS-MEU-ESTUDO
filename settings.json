@@ -30,6 +30,18 @@
   "study": {
     "fixed_schedule": false,
     "fixed_repetition_intervals": false,
+    "owner_default_plan": {
+      "decision": "D-11",
+      "method": "4.2",
+      "cycle": {
+        "theory_days": 4,
+        "review_days": 2,
+        "rest_days": 1
+      },
+      "max_minutes_per_discipline_theory": 120,
+      "review_intervals_days": [7, 15, 30],
+      "adjustable_with_justification": true
+    },
     "adaptive_blocks": true,
     "require_result_evidence": true
   },

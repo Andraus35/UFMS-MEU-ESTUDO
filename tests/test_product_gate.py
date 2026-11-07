@@ -99,7 +99,10 @@ class ProductGateTests(unittest.TestCase):
 
     def test_nao_afirma_mecanismo_nao_observado(self):
         # A Zapia informou (07/11/2026) que GitHub é API REST e Gemini é interface web, sem MCP.
-        self.assertNotIn("por MCP", TEXT)
+        permitidos = ("não há MCP", "não MCP", "MCP oficial do GitHub foi recusada", "MCP não oficial")
+        for trecho in re.findall(r"[^.;|\n]*\bMCP\b[^.;|\n]*", TEXT):
+            self.assertTrue(any(ok in trecho for ok in permitidos), "menção a MCP sem a ressalva devida: " + trecho)
+        self.assertNotIn("Zapia por MCP", TEXT)
         self.assertNotIn("pelo conector dela", TEXT)
         self.assertIn("não há MCP de GitHub nem de Notebook", TEXT)
         for ref in ("E-01", "E-03", "E-04", "E-06"):
