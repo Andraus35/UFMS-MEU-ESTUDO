@@ -342,5 +342,16 @@ class GqdCompositionTests(unittest.TestCase):
                 check_gqd_composition(ROOT)
 
 
+class HookCliTests(unittest.TestCase):
+    def test_hooks_executam_como_cli_sem_pythonpath(self):
+        import os
+        import subprocess
+        env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+        for hook in ("before_write", "after_write", "checkpoint"):
+            r = subprocess.run([sys.executable, str(ROOT / "hooks" / (hook + ".py"))],
+                               cwd=ROOT, env=env, capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, hook + ": " + r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()
