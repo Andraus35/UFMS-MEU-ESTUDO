@@ -1,10 +1,9 @@
-"""Adversarial tests for deterministic governance-document synchronization."""
+"""Adversarial tests for governance state and document synchronization."""
 import json
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
-
 from scripts.governance_sync_gate import ROOT, verify
 
 
@@ -12,12 +11,8 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
-        for rel in (
-            "state/WORKFLOW.json",
-            "memory/HANDOFF.md",
-            "ROADMAP.md",
-            "docs/governanca/STATUS_BRANCHES_RECONCILIADO_20261105.md",
-        ):
+        for rel in ("state/WORKFLOW.json", "memory/HANDOFF.md", "ROADMAP.md",
+                    "docs/governanca/STATUS_BRANCHES_RECONCILIADO_20261105.md"):
             target = self.root / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / rel, target)
@@ -25,44 +20,53 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_checkpoint_vigente_e_coerente(self):
+    def test_checkpoint_preparado_coerente(self):
         result = verify(self.root)
         self.assertEqual(result["result"], "PASS")
-        self.assertEqual(result["last_merged_pr"], 52)
-        self.assertEqual(result["active_pr"], 53)
+        self.assertEqual(result["state"], "prepared")
 
-    def test_rejeita_handoff_sem_sha_do_ultimo_merge(self):
-        path = self.root / "memory/HANDOFF.md"
-        text = path.read_text(encoding="utf-8")
-        path.write_text(text.replace(
-            "- SHA do último merge: `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`.",
-            "- SHA do último merge: `" + "0" * 40 + "`.", 1
-        ), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "HANDOFF desatualizado"):
-            verify(self.root)
+    def mutate_workflow(self, fn):
+        p = self.root / "state/WORKFLOW.json"
+        data = json.loads(p.read_text(encoding="utf-8"))
+        fn(data)
+        p.write_text(json.dumps(data), encoding="utf-8")
 
-    def test_rejeita_roadmap_com_pr_ativo_antigo(self):
-        path = self.root / "ROADMAP.md"
-        text = path.read_text(encoding="utf-8")
-        path.write_text(text.replace("RM-08-PREP / PR #53", "RM-08-PREP / PR #52", 1),
-                        encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "ROADMAP desatualizado"):
-            verify(self.root)
-
-    def test_rejeita_status_sem_recibo_do_merge(self):
-        path = self.root / "docs/governanca/STATUS_BRANCHES_RECONCILIADO_20261105.md"
-        text = path.read_text(encoding="utf-8")
-        path.write_text(text.replace("Último merge comprovado: PR #52", "Merge pendente", 1),
-                        encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "STATUS desatualizado"):
-            verify(self.root)
-
-    def test_rejeita_workflow_sem_sha_de_merge(self):
-        path = self.root / "state/WORKFLOW.json"
-        data = json.loads(path.read_text(encoding="utf-8"))
-        data["last_merged"]["merge_commit_sha"] = "invalid"
-        path.write_text(json.dumps(data), encoding="utf-8")
+    def test_rejeita_sha_de_merge_invalido(self):
+        self.mutate_workflow(lambda d: d["last_merged"].update(merge_commit_sha="bad"))
         with self.assertRaisesRegex(ValueError, "SHA válido"):
+            verify(self.root)
+
+    def test_rejeita_pr_de_merge_ausente(self):
+        self.mutate_workflow(lambda d: d["last_merged"].update(pr_number=None))
+        with self.assertRaisesRegex(ValueError, "PR do último merge"):
+            verify(self.root)
+
+    def test_rejeita_documento_com_recibo_stale(self):
+        p = self.root / "memory/HANDOFF.md"
+        p.write_text(p.read_text().replace("PR #53", "PR #52", 1), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "frente ativa"):
+            verify(self.root)
+
+    def test_rejeita_proxima_tarefa_divergente(self):
+        p = self.root / "ROADMAP.md"
+        p.write_text(p.read_text().replace("**Próxima tarefa: RM-08**",
+                                           "**Próxima tarefa: RM-99**", 1), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "próxima tarefa"):
+            verify(self.root)
+
+    def test_rejeita_estado_idle_com_documento_ativo(self):
+        self.mutate_workflow(lambda d: d.update(active=None))
+        with self.assertRaisesRegex(ValueError, "ausência de frente ativa"):
+            verify(self.root)
+
+    def test_rejeita_branch_main_como_branch_de_trabalho(self):
+        self.mutate_workflow(lambda d: d["active"].update(branch="main"))
+        with self.assertRaisesRegex(ValueError, "branch ativa"):
+            verify(self.root)
+
+    def test_rejeita_pr_booleano(self):
+        self.mutate_workflow(lambda d: d["active"].update(pr_number=True))
+        with self.assertRaisesRegex(ValueError, "PR ativo inválido"):
             verify(self.root)
 
 
