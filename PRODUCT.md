@@ -64,6 +64,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **D-12 (07/11/2026):** os agentes são criados agora, com perfis em `agents/`. O **Tutor** cuida do ensino, do aprimoramento do estudo, da revisão, da fixação, da busca na memória e das técnicas de estudo; o **Coach**, da motivação, da organização dos estudos, das estatísticas de desempenho e das sugestões e recomendações. **O conteúdo é produzido apenas pelo Tutor.** O Tutor deve acessar o NotebookLM diretamente; a Zapia só faz a ponte se isso não for possível (prioridade ao acesso direto). O TEC Concursos e o Qconcursos fornecem cadernos e estatísticas que os agentes usam para conduzir revisões e melhorias; o humano exporta o caderno de desempenho e o entrega pela Zapia, que o grava no repositório. O ciclo vai até fechar o edital ou o conteúdo priorizado.
 - **D-13 (07/11/2026):** o produto é um **harness cognitivo de uso pessoal com prova marcada**, não um sistema de software comercial: a prioridade é velocidade, sem burocracia. As especificações seguem a Spec Lean da Tech Leads Club **no que couber** (especificar o necessário, verificar o que é verificável, nada além). A pesquisa web fica para a etapa de especificação de cada uma, não para o planejamento. Há quatro especificações: método de estudo e revisão (S1), Tutor (S2), Coach (S3) e operação, que liga ferramentas, agentes e repositório (S4).
 - **D-14 (07/11/2026):** o acesso direto do agente às plataformas TEC Concursos e Qconcursos é a **primeira opção** para obter cadernos e estatísticas; a exportação manual pelo proprietário é a alternativa. Condições: somente leitura; somente a conta do proprietário; baixo volume, sem gerar carga nem alterar cadernos; nenhuma credencial entregue ao modelo nem gravada no repositório; o proprietário aceita o risco de bloqueio da conta pelos termos da plataforma (E-12); começa pelo TEC Concursos, depois de consulta escrita ao suporte (OPEN-12), e o Qconcursos só entra se o teste no TEC for aceito. O que o agente ler vira dado não confiável, validado pelo contrato de ingestão (PR-016) como qualquer entrada.
+- **D-15 (07/11/2026):** o acesso direto da D-14 será feito por um **conector local de leitura**, no computador do proprietário, em navegador com perfil dedicado, no padrão de ponte local do repositório de referência (especificação em `docs/PLATFORMS.md`). Não roda na nuvem, porque isso deixaria a sessão do proprietário fora do controle dele e aumentaria o risco de bloqueio da conta. A exportação manual cobre os dias em que o conector não estiver disponível.
 
 ## 6. Não objetivos e proibições
 
@@ -97,6 +98,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **PR-014 Perfis dos agentes Tutor e Coach:** perfis em `agents/` que separam as responsabilidades, sem estado e sem segredo. Aceite: `python scripts/agents_gate.py --check` passa (estrutura, ausência de estado e segredos, cada operação exclusiva em um só agente) e o bootstrap de engenharia o executa. Elo: RM-08.
 - **PR-015 Plano de estudos padrão:** gerador determinístico do ciclo do Método 4.2 e das revisões em 7, 15 e 30 dias (D-11). Aceite: `scripts/study_plan.py` com testes de contraprova (ciclo 4/2/1, no máximo 120 minutos por disciplina, revisões nos intervalos, fase final, entradas inválidas) e padrões lidos de `settings.json`. Elo: RM-08.
 - **PR-016 Ingestão da exportação de desempenho:** contrato de ingestão validado contra amostras reais anonimizadas do TEC Concursos e do Qconcursos (OPEN-11). Aceite: amostras reais, testes de contraprova e rejeição de arquivo fora do formato. Elo: RM-02.
+- **PR-017 Conector local de leitura das plataformas:** conector somente leitura para TEC Concursos e Qconcursos, no computador do proprietário, conforme `docs/PLATFORMS.md`. Aceite: testes com páginas sintéticas, recusa de domínio fora da lista e de operação de escrita, saída sem credencial nem HTML bruto, limite de taxa; nenhuma leitura em conta real antes da aprovação do proprietário (OPEN-12). Elo: RM-09.
 
 ## 8. Ordem de construção
 
@@ -104,7 +106,7 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 
 - **B1:** PR-001 e PR-011.
 - **B2:** PR-004 (proprietário).
-- **B3:** PR-002, PR-013, PR-014 e PR-015 (independentes, offline).
+- **B3:** PR-002, PR-013, PR-014, PR-015 e PR-017 (independentes, offline; a leitura em conta real do PR-017 depende de OPEN-12).
 - **B4:** PR-003 (depende de B2, de PR-010 e de OPEN-01 e OPEN-02).
 - **B5:** PR-005, PR-012 e PR-016 (dependem de B3; PR-016 depende também de OPEN-11).
 - **B6:** PR-006 (depende de B4 e B5).
@@ -117,7 +119,7 @@ Cada especificação cabe em uma página: objetivo, entradas, saídas, regras, c
 - **S1 Método de estudo e revisão:** já existe em `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `scripts/study_plan.py`. Falta só conferir os critérios de aceite e coletar os insumos do humano (início, tempo diário, descanso, cargo, tópicos estudados). Primeiro, porque o Coach depende do plano.
 - **S2 Tutor:** parte de `agents/TUTOR.md`. Acrescenta: como gera o material de revisão a partir do edital e do desempenho, como pede o prompt ao Notebook e como decide ajustes ao plano. Depende de S1 e de OPEN-10.
 - **S3 Coach:** parte de `agents/COACH.md`. Acrescenta: rotina diária, lembretes, leitura de estatísticas, mensagens motivacionais e limites (não produz conteúdo). Depende de S1.
-- **S4 Operação:** parte de PR-013. Define o esquema dos comandos entre Tutor, Coach e Zapia, o caminho do desempenho exportado até o repositório (PR-016) e as proibições de dados pessoais. Depende de OPEN-01, OPEN-02, OPEN-09 e OPEN-11.
+- **S4 Operação:** parte de PR-013 e do conector de plataformas (PR-017, `docs/PLATFORMS.md`). Define o esquema dos comandos entre Tutor, Coach e Zapia, o caminho do desempenho exportado até o repositório (PR-016) e as proibições de dados pessoais. Depende de OPEN-01, OPEN-02, OPEN-09 e OPEN-11.
 
 Regra de rapidez: o que depender do proprietário (token, repositório privado, exportações reais, data de início) não bloqueia o que é offline; avança-se pelo que já pode ser verificado.
 
