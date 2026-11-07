@@ -55,15 +55,17 @@ class Rodada2RespostaTests(unittest.TestCase):
         self.assertIn("coincidem exatamente", DOC)
 
     def test_product_incorpora_os_fatos_da_rodada_2(self):
-        for trecho in ("E-08", "E-09", "OPEN-07", "OPEN-08", "não está disponível", "sem informação de expiração",
+        for trecho in ("E-08", "E-09", "OPEN-07", "D-08", "D-09", "PR-012", "não está disponível", "sem informação de expiração",
                        "3 repositórios públicos", "exclusão lógica foi **comprovada na rodada 2**",
                        "Não declarar que apagar o repositório privado elimina todas as cópias"):
             self.assertIn(trecho, PRODUCT)
 
-    def test_consentimento_v2_e_rascunho_e_nao_aprovado(self):
-        self.assertIn("Consentimento v2 (RASCUNHO, NÃO aprovado)", ADR)
-        self.assertIn("APROVADO pelo proprietário em 07/11/2026", ADR)       # v1 continua aprovado
-        self.assertIn("**só vale depois de aprovada e versionada pelo proprietário**", ADR)
+    def test_consentimento_v2_aprovado_substitui_o_v1_sem_gravar_nada(self):
+        self.assertIn("Consentimento v2 (APROVADO pelo proprietário em 07/11/2026, sem ajustes; substitui o v1)", ADR)
+        self.assertIn("SUBSTITUÍDO pelo v2", ADR)
+        self.assertIn("A aprovação do texto (v2, abaixo) não grava consentimento", ADR)
+        self.assertIn("consentimento **v2** aprovado, sem ajustes", PRODUCT)
+        self.assertIn("consentimento v2 (D-04) fica registrado no repositório privado antes do primeiro evento", PRODUCT)
 
     def test_testes_sinteticos_seguem_nao_executados(self):
         self.assertIn("não foram executados", DOC)

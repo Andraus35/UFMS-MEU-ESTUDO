@@ -46,7 +46,9 @@ class Adr013Tests(unittest.TestCase):
         self.assertIn("ainda não foi criado", text)
         self.assertIn("APROVADO pelo proprietário em 07/11/2026", text)
         self.assertIn("mais 30 dias", text)
-        self.assertIn("Consentimento v2 (RASCUNHO, NÃO aprovado)", text)
+        self.assertIn("Consentimento v2 (APROVADO pelo proprietário em 07/11/2026, sem ajustes; substitui o v1)", text)
+        self.assertIn("SUBSTITUÍDO pelo v2", text)
+        self.assertNotIn("RASCUNHO", text)
         self.assertIn("apagar o repositório não elimina as cópias na Zapia nem no Google", text)
         self.assertIn("Versão: v2", text)
 

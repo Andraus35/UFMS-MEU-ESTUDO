@@ -47,15 +47,15 @@ Este ADR **não altera** `settings.json`, regras ou guardrails e **não habilita
 ## Ainda em aberto
 
 - **Criação do repositório privado** pelo proprietário e verificação de `private=true` por leitura autenticada.
-- **Registro formal do consentimento** (data, versão e escopo) no repositório privado, antes do primeiro evento (P3). A aprovação do texto abaixo não grava consentimento: ela só fixa a versão.
+- **Registro formal do consentimento** (data, versão e escopo) no repositório privado, antes do primeiro evento (P3). A aprovação do texto (v2, abaixo) não grava consentimento: ela só fixa a versão.
 
-## Texto de consentimento v1 (APROVADO pelo proprietário em 07/11/2026, sem ajustes)
+## Texto de consentimento v1 (aprovado em 07/11/2026 e SUBSTITUÍDO pelo v2 na mesma data)
 
 > Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Os dados serão mantidos até 17/01/2027 mais 30 dias, e posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado. Versão: v1.
 
-## Consentimento v2 (RASCUNHO, NÃO aprovado)
+## Consentimento v2 (APROVADO pelo proprietário em 07/11/2026, sem ajustes; substitui o v1)
 
-O v1 cobre só a gravação no repositório privado. A rodada 2 de verificação da Zapia mostrou que os dados também passam pela **plataforma da Zapia** (servidores nos Estados Unidos; retenção geral de até 36 meses após o encerramento da conta) e, no mínimo necessário, pelo **Google** (Gemini Notebook, Calendar e Tasks). Apagar o repositório privado **não apaga** essas cópias. Proposta de texto, que **só vale depois de aprovada e versionada pelo proprietário**:
+O v1 cobre só a gravação no repositório privado. A rodada 2 de verificação da Zapia mostrou que os dados também passam pela **plataforma da Zapia** (servidores nos Estados Unidos; retenção geral de até 36 meses após o encerramento da conta) e, no mínimo necessário, pelo **Google** (Gemini Notebook, Calendar e Tasks). Apagar o repositório privado **não apaga** essas cópias. Texto aprovado pelo proprietário (versão v2):
 
 > Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Entendo e aceito que esses dados passam pela plataforma Zapia (servidores nos Estados Unidos, retenção conforme a política dela) e que, no mínimo necessário, o assunto e a lacuna de estudo podem ser enviados ao Gemini Notebook, ao Google Calendar e ao Google Tasks. Os dados serão mantidos no repositório privado até 17/01/2027 mais 30 dias. Posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado; **apagar o repositório não elimina as cópias na Zapia nem no Google, que devo pedir separadamente a cada serviço.** Versão: v2.
 

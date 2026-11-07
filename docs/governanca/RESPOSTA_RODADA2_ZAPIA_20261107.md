@@ -270,7 +270,7 @@ Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.m
 | OPEN-05 (privacidade do Gemini) | Não verificada; caminho para o proprietário conferir informado (R21) | Aberto; ação do proprietário |
 | OPEN-06 (exclusão no Google) | Exclusão **lógica** comprovada (`status=cancelled`, `deleted=true`, HTTP 410); eliminação física não | Praticamente resolvido |
 | OPEN-07 (notebook de revisão) | "Como estudar" é público, de terceiros, fora dos notebooks do proprietário | Aberto; decisão do proprietário |
-| **OPEN-08 (novo): consentimento e ciclo de vida dos dados** | A plataforma da Zapia armazena conversas, memórias e arquivos em **servidores nos Estados Unidos**, com retenção geral de **até 36 meses após o encerramento da conta** e até 90 dias para áudios, PDFs, vídeos e imagens; por padrão não treina modelos; exclusão e portabilidade por pedido, sem backup apagado comprovado (R32, documentado) | **O consentimento v1 e a decisão D-03 não cobrem isso**: apagar o repositório privado não apaga as cópias na Zapia nem no Google |
+| **OPEN-08 (novo): consentimento e ciclo de vida dos dados** | A plataforma da Zapia armazena conversas, memórias e arquivos em **servidores nos Estados Unidos**, com retenção geral de **até 36 meses após o encerramento da conta** e até 90 dias para áudios, PDFs, vídeos e imagens; por padrão não treina modelos; exclusão e portabilidade por pedido, sem backup apagado comprovado (R32, documentado) | **O consentimento v1 e a decisão D-03 não cobriam isso**: apagar o repositório privado não apaga as cópias na Zapia nem no Google. **Resolvido em 07/11/2026:** o proprietário aprovou o consentimento v2, que cobre os dois (D-04). O ponto deixou de ser aberto no `PRODUCT.md` |
 
 ## Outros achados
 
@@ -285,4 +285,4 @@ Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.m
 2. **Google:** conferir o histórico da conta e a política do NotebookLM (links em R21).
 3. **Notebook de revisão próprio:** decidir quem cria e alimenta um notebook seu com fontes verificadas.
 4. **Memória da Zapia:** alinhá-la às decisões do `PRODUCT.md`.
-5. **Consentimento:** decidir sobre o **rascunho v2** no ADR-013, que inclui a Zapia e o Google. Sem aprovação, **nada pessoal é gravado**.
+5. ~~Consentimento: decidir sobre o rascunho v2.~~ **Decidido em 07/11/2026:** v2 aprovado sem ajustes. A gravação continua bloqueada até o PR-003 e as demais condições.

@@ -35,7 +35,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **F5 Validar:** a Zapia aplica o contrato de ingestão do harness (coerência de contagens, escopo, convenção de contagem); inconsistência é recusada ou esclarecida, nunca corrigida em silêncio.
 - **F6 Registrar:** a Zapia grava o evento no repositório privado, sob os controles P1 a P9 do ADR-013 (ver D-02). Sem todas as condições cumpridas, o resultado fica pendente e não é declarado registrado.
 - **F7 Reavaliar:** o harness recalcula evidência (E0 a E4) e fila; o que é desconhecido permanece desconhecido.
-- **F8 Revisar:** o harness gera um prompt mínimo de revisão; a Zapia o envia ao Gemini Notebook pela interface web (E-01); a revisão volta à Zapia e ao estudante; o harness guarda só metadados (assunto, data, fonte).
+- **F8 Revisar:** o harness gera os insumos e um prompt mínimo de revisão; a Zapia, no papel de Tutor, elabora o material de revisão no Gemini Notebook pela interface web (E-01), a partir do edital, do cronograma da prova e do que foi estudado por questões (D-08); a revisão volta à Zapia e ao estudante; o harness guarda só metadados (assunto, data, fonte).
 - **F9 Acompanhar:** a Zapia, no papel de Coach, envia mensagens e lembretes dentro de rotina previamente autorizada, com limites, idempotência e readback.
 - **Simulados:** pontuação ponderada e comparabilidade conforme `docs/pedagogia/PROTOCOLO_SIMULADOS_v1.4.md`; nunca declarar aprovação.
 
@@ -51,10 +51,12 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **D-01 (07/11/2026):** repositório privado separado `Andraus35/ufms-meu-estudo-dados`. A criação é ato do proprietário.
 - **D-02 (07/11/2026):** a Zapia grava os resultados desde o início, pela API REST do GitHub com credencial própria dela. Revisa a decisão anterior de que o proprietário gravaria manualmente. A habilitação continua condicionada aos controles P1 a P9, à resolução de OPEN-01 e OPEN-02 e a PR próprio com aprovação humana; até lá `personal_results_writes_enabled` permanece `false`.
 - **D-03 (07/11/2026):** retenção até a prova mais 30 dias; revogação efetiva é apagar o repositório privado inteiro.
-- **D-04 (07/11/2026):** texto de consentimento v1 aprovado (texto no ADR-013).
+- **D-04 (07/11/2026):** texto de consentimento **v2** aprovado, sem ajustes (texto no ADR-013); substitui o v1. Ele cobre a Zapia e o Google e informa que apagar o repositório privado não elimina as cópias nesses serviços (E-09).
 - **D-05 (07/11/2026):** o harness gera o prompt, a Zapia o envia ao Gemini Notebook e só metadados voltam ao repositório. O mecanismo observado é a interface web, não MCP (E-01); a escolha do mecanismo por parte do proprietário precisa ser reconfirmada.
 - **D-06 (07/11/2026):** o recorte GP-3-MVP8 foi aceito como cobertura técnica mínima sintética.
 - **D-07 (07/11/2026):** este arquivo é leitura obrigatória no START de engenharia, como 3º arquivo.
+- **D-08 (07/11/2026):** o Tutor cria o material de revisão com base no edital, no cronograma e no que foi estudado por questões no TEC Concursos e no Qconcursos. Palavras do proprietário; "cronograma" é entendido como o da prova no edital, e o harness não impõe cronograma de estudo (interpretação a confirmar, OPEN-07). Alinha-se à memória da Zapia (E-08).
+- **D-09 (07/11/2026):** o proprietário criará para a Zapia um token fine-grained restrito a este repositório, com expiração; o repositório privado de dados terá outro token, separado, depois de criado. Até a verificação (PR-010), o alcance atual do token (E-03) permanece risco conhecido.
 
 ## 6. Não objetivos e proibições
 
@@ -74,14 +76,15 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **PR-001 START determinístico:** o START de engenharia lê este arquivo como 3º, com hash, e o gate de estrutura o valida. Aceite: `python scripts/bootstrap.py --mode engineering` lista `PRODUCT.md` na 3ª posição com SHA-256 e `python scripts/product_gate.py --check` passa. Elo: RM-00.
 - **PR-002 Gerador de prompt de revisão:** função offline e determinística que monta o prompt mínimo de F8 a partir de assunto, lacuna, método e exigência de fonte; exige fonte verificada, separa títulos citados mas não verificados e recusa dado pessoal. Aceite: testes com fixtures sintéticas, inclusive prompt com dado pessoal recusado e prompt sem fonte recusado. Elo: RM-09.
 - **PR-003 Escrita da Zapia no repositório privado:** proposta, validação P1 a P6, commit e readback. Aceite: provas P1 a P3 e P5 a P6 contra o repositório privado real, com OPEN-01 e OPEN-02 resolvidos. Elo: RM-08.
-- **PR-004 Repositório privado criado e verificado:** Aceite: leitura autenticada devolve `private=true`; dono: proprietário. Elo: RM-08.
+- **PR-004 Repositório privado criado e verificado:** Aceite: leitura autenticada devolve `private=true` e o consentimento v2 (D-04) fica registrado no repositório privado antes do primeiro evento (controle P3); dono: proprietário. Elo: RM-08.
 - **PR-005 Metadados da revisão:** registro de assunto, data e fonte, sem texto integral. Aceite: esquema validado e teste negativo que recusa texto integral. Elo: RM-09.
 - **PR-006 Ciclo ponta a ponta real:** F1 a F8 com um resultado real e consentido, com readback. Aceite: relatório do ciclo e CI verde no HEAD. Elo: RM-08.
 - **PR-007 Rotina do Coach pela Zapia:** mensagens e lembretes autorizados, criados só depois de conferir no estado do harness que a atividade está pendente. Aceite: prova de autorização, idempotência e limites, e recusa de lembrete para atividade já concluída (falha real observada, E-07). Elo: RM-09.
 - **PR-008 Simulados no fluxo:** pontuação e comparação de simulados usadas em F5 e F7. Aceite: `scripts/simulado_score.py` e `scripts/simulado_session.py` acionados nesses passos, com teste. Elo: RM-06.
 - **PR-009 Retomada entre sessões e modelos:** estado reconstruído dos eventos e dos arquivos do START, nunca da conversa. Aceite: `python scripts/rebuild.py --check` passa e nenhum estado existe só em conversa. Elo: RM-00.
-- **PR-010 Credencial mínima da Zapia:** token de escopo único por repositório, sem administração nem workflows e com expiração; o repositório privado usa credencial própria, sem alcance sobre o público. Aceite: o proprietário confirma o escopo nas configurações do GitHub e a Zapia comprova, em teste sintético, que a escrita fora do repositório designado é recusada. Elo: RM-08.
+- **PR-010 Credencial mínima da Zapia (D-09):** token de escopo único por repositório, sem administração nem workflows e com expiração; o repositório privado usa credencial própria, sem alcance sobre o público. Aceite: o proprietário confirma o escopo nas configurações do GitHub e a Zapia comprova, em teste sintético, que a escrita fora do repositório designado é recusada. Elo: RM-08.
 - **PR-011 START de estudo executável pela Zapia:** como ela não lê o repositório sozinha no início da sessão (E-05), executa Python (E-04) e não tem Git (E-08), o início passa a ser um procedimento explícito: obter o repositório por arquivo compactado via API (alternativa ainda não testada), executar `python scripts/bootstrap.py --mode study` e informar os SHA-256 dos 4 arquivos. Aceite: relatório com hashes iguais aos do repositório e teste do procedimento com fixture; é procedimento, não trava técnica. Elo: RM-00.
+- **PR-012 Material de revisão pelo Tutor:** a Zapia cria ou usa um notebook próprio, alimentado com fontes públicas do edital, e elabora a revisão a partir do prompt do harness (D-08). Aceite: teste sintético, sem dado pessoal, de criar o notebook, adicionar uma fonte de texto, enviar o prompt, ler a resposta e abrir uma citação, com relatório; nada disso foi testado até hoje (E-08). Elo: RM-09.
 
 ## 8. Ordem de construção
 
@@ -91,7 +94,7 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 - **B2:** PR-004 (proprietário).
 - **B3:** PR-002 (independente, offline).
 - **B4:** PR-003 (depende de B2, de PR-010 e de OPEN-01 e OPEN-02).
-- **B5:** PR-005 (depende de B3).
+- **B5:** PR-005 e PR-012 (dependem de B3).
 - **B6:** PR-006 (depende de B4 e B5).
 - **B7:** PR-007 e PR-008.
 
@@ -147,5 +150,4 @@ Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo
 - **OPEN-04:** credencial própria e de menor permissão para o repositório privado, ainda inexistente.
 - **OPEN-05:** retenção e política de privacidade da conta do Gemini usada (E-06).
 - **OPEN-06:** a eliminação **física** dos dados em Google Calendar e Tasks não está verificada; a exclusão lógica está comprovada (E-07).
-- **OPEN-07:** notebook de revisão **próprio** do proprietário, com fontes verificadas (edital, legislação), pois "Como estudar" é público e de terceiros (E-08); e como o Tutor "prepara material" nele, já que adicionar fonte e criar notebook não foram testados.
-- **OPEN-08:** o consentimento v1 e a decisão D-03 não cobrem o tratamento pela plataforma da Zapia e pelo Google nem a retenção dessas cópias (E-09, E-06); o rascunho v2 do ADR-013 depende de aprovação do proprietário antes do primeiro evento.
+- **OPEN-07:** a criação de notebook e a adição de fontes de texto pelo Tutor (D-08) não foram testadas (E-08), e "Como estudar" é público e de terceiros; falta provar o procedimento em teste sintético com fontes públicas (PR-012) e confirmar com o proprietário que "cronograma" significa o cronograma da prova no edital.
