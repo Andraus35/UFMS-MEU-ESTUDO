@@ -33,8 +33,8 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertIsNone(validate_local(ROOT)["active"]["pr_number"])
-        self.assertEqual(validate_local(ROOT)["active"]["phase"], "work")
+        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 55)
+        self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)$")
 
     def test_baseline_rm08_e_uma_unica_subtarefa_serial(self):

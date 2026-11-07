@@ -20,12 +20,12 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_checkpoint_preparado_coerente(self):
+    def test_checkpoint_ativo_coerente(self):
         result = verify(self.root)
         self.assertEqual(result["result"], "PASS")
-        self.assertEqual(result["state"], "prepared")
+        self.assertEqual(result["state"], "active")
 
-    def test_baseline_rm08_e_estado_preparado_com_rm08_formal_bloqueada(self):
+    def test_baseline_rm08_e_estado_ativo_com_rm08_formal_bloqueada(self):
         result = verify(self.root)
         self.assertEqual(result["active_task"], "RM-08-BASELINE")
         self.assertEqual(result["state"], "prepared")
