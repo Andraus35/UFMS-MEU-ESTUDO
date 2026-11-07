@@ -28,7 +28,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def test_baseline_rm08_e_estado_ativo_com_rm08_formal_bloqueada(self):
         result = verify(self.root)
         self.assertEqual(result["active_task"], "RM-08-BASELINE")
-        self.assertEqual(result["state"], "prepared")
+        self.assertEqual(result["state"], "active")
         self.assertEqual(result["next_task"], "RM-08")
 
     def mutate_workflow(self, fn):
