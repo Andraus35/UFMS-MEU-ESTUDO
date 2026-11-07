@@ -213,6 +213,11 @@ def check_engineering_bootstrap(root=ROOT):
     except ModuleNotFoundError:
         from scripts.product_gate import validate as validate_product
     validate_product(root)
+    try:
+        from agents_gate import validate as validate_agents
+    except ModuleNotFoundError:
+        from scripts.agents_gate import validate as validate_agents
+    validate_agents(root)
     ordered = {}
     for name in ENGINEERING_FILES:
         if name in hashes:
