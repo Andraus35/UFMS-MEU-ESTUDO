@@ -38,8 +38,8 @@ Os 8 cenários do recorte mínimo (`GP3_MVP_PESSOAL_8_20261105.md`) têm referê
 
 ## Decisões que só o proprietário pode tomar
 
-1. **Aceitar o GP-3-MVP8** como cobertura técnica mínima sintética (sim/não).
-2. **ADR-013:** nome do repositório privado, operador do escritor confiável, texto do consentimento, retenção. Sem isso, nada de real é gravado e RM-02 a RM-05 e RM-08 não avançam.
+1. ~~Aceitar o GP-3-MVP8~~ **Decidido em 07/11/2026: aceito** como cobertura técnica mínima sintética.
+2. **ADR-013:** decidido em 07/11/2026 o repositório (`ufms-meu-estudo-dados`, privado), o escritor (o proprietário, manualmente pelo Termux) e a retenção (até a prova mais janela curta; revogação = apagar o repositório). **Em aberto:** prazo da janela, aprovação do texto de consentimento (rascunho v1) e **criação do repositório pelo proprietário**. Sem isso, nada de real é gravado e RM-02 a RM-05 e RM-08 não avançam.
 3. **Começar a registrar uso real**, o que só vale depois do item 2.
 
 ## Limites
