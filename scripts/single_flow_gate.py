@@ -97,7 +97,7 @@ def validate_local(root=ROOT):
     if "state/WORKFLOW.json" not in handoff:
         raise ValueError("Instrução de retomada sem estado único: memory/HANDOFF.md")
     checkpoint = handoff.split("\n---\n", 1)[0]
-    active_marker = f"**{task} / PR #{active['pr_number']}**"
+    active_marker = f"**{task}" + (f" / PR #{active['pr_number']}**" if active['pr_number'] else " / PR pendente**")
     if active_marker not in checkpoint or branch not in checkpoint:
         raise ValueError("HANDOFF diverge do estado operacional (tarefa, PR ou branch)")
     if next_task == "DONE":
@@ -226,7 +226,7 @@ def main():
                                      os.getenv("GITHUB_HEAD_SHA", ""))
             print("OK: fluxo serial remoto: " + json.dumps(result, sort_keys=True))
         else:
-            print("OK: política local de tarefa única; PR registrado #" + str(data["active"]["pr_number"]))
+            print("OK: política local de tarefa única; " + (("PR registrado #" + str(data["active"]["pr_number"])) if data["active"].get("pr_number") else ("branch preparada sem PR: " + data["active"]["branch"])))
     except (ValueError, OSError, KeyError, json.JSONDecodeError) as exc:
         print("FALHA: fluxo sequencial: " + str(exc), file=sys.stderr)
         raise SystemExit(1)
