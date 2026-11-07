@@ -105,6 +105,23 @@ class ProductGateTests(unittest.TestCase):
         for ref in ("E-01", "E-03", "E-04", "E-06"):
             self.assertIn(ref, TEXT)
 
+    def test_zapia_e_interface_e_executora_nao_decide(self):
+        # Decisão do proprietário (D-10): Tutor e Coach decidem; a Zapia só executa o que eles comandam.
+        self.assertIn("**apenas a interface**", TEXT)
+        self.assertIn("restrita às diretrizes do harness e aos comandos do Tutor e do Coach", TEXT)
+        self.assertIn("nunca dela", TEXT)
+        self.assertNotIn("executa os papéis Tutor", TEXT)
+        self.assertNotIn("no papel de Tutor", TEXT)
+        self.assertNotIn("no papel de Coach", TEXT)
+        self.assertIn("| Tutor (persona Aragonê) |", TEXT)
+        self.assertIn("| Coach (persona Carter) |", TEXT)
+        for ref in ("D-10", "E-10", "OPEN-09", "PR-013"):
+            self.assertIn(ref, TEXT)
+
+    def test_credenciais_so_com_a_zapia(self):
+        self.assertIn("as credenciais ficam só com a Zapia", TEXT)
+        self.assertIn("Não conceder token de escrita pessoal a agente construtor, Tutor ou Coach", TEXT)
+
     def test_pr003_permanece_bloqueado_ate_credencial_de_escopo_unico(self):
         self.assertIn("PR-010", TEXT)
         self.assertIn("o PR-003 está bloqueado", TEXT)

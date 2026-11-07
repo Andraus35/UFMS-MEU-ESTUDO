@@ -39,7 +39,8 @@ class Adr013Tests(unittest.TestCase):
     def test_decisoes_do_proprietario_registradas_sem_criar_nada(self):
         text = DOC.read_text(encoding="utf-8")
         self.assertIn("Andraus35/ufms-meu-estudo-dados", text)
-        self.assertIn("Zapia grava desde o início", text)
+        self.assertIn("Zapia, como executora, grava desde o início", text)
+        self.assertIn("só por comando do Tutor", text)
         self.assertIn("OPEN-02", text)
         self.assertIn("17/01/2027", text)
         self.assertIn("apagar o repositório privado inteiro", text)
