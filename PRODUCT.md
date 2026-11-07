@@ -132,7 +132,7 @@ As POCs não provam execução recorrente, acesso às plataformas de questões n
 
 ## 12. Pontos a confirmar
 
-Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo. Roteiro de perguntas: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md`. Só respostas com status `OBSERVADO` ou `DOCUMENTADO` resolvem um ponto.
+Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo. Roteiros de perguntas: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md` (rodada 1) e `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.md` (rodada 2). Só respostas com status `OBSERVADO` ou `DOCUMENTADO` resolvem um ponto.
 
 - **OPEN-01:** não há trava técnica que garanta o controle P1 (visibilidade `private=true` antes de gravar) nem a confirmação antes de escrever (E-04). Até existir mecanismo técnico, por exemplo a credencial de escopo único de PR-010 e a checagem de visibilidade como passo do fluxo, **o PR-003 está bloqueado**.
 - **OPEN-02:** escopo, permissões e expiração do token que a Zapia usa hoje (E-03), a conferir pelo proprietário no GitHub, e se a mesma credencial alcança repositórios privados.
