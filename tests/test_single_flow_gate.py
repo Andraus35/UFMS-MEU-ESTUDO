@@ -67,7 +67,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_rejeita_pr_legado_sem_sha_ou_duplicado(self):
         for mutate in (
             lambda d: d["deferred_pull_requests"][0].__setitem__("sha", ""),
-            lambda d: d["deferred_pull_requests"][0].__setitem__("number", 55),
+            lambda d: d["deferred_pull_requests"][0].__setitem__("number", d["deferred_pull_requests"][1]["number"]),
             lambda d: d["deferred_pull_requests"][0].__setitem__("branch", d["active"]["branch"]),
             lambda d: d["deferred_pull_requests"][0].__setitem__("archived_without_merge", False),
         ):
