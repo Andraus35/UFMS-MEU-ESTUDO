@@ -208,6 +208,13 @@ class SingleFlowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "SHA do evento main diverge"):
             validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
 
+    def test_rejeita_sha_do_evento_main_ausente_ou_invalido(self):
+        for event_sha in ("", "invalid"):
+            with self.subTest(event_sha=event_sha), self.assertRaisesRegex(
+                    ValueError, "SHA do evento main ausente ou inválido"):
+                validate_remote(self.live, [], "push", "main", "",
+                                self.merged_pr(), event_sha)
+
     def test_rejeita_sha_de_origem_ausente_no_pr_mesclado(self):
         prior = self.merged_pr()
         prior["head"]["sha"] = ""
@@ -254,7 +261,7 @@ class SingleFlowTests(unittest.TestCase):
         state = deepcopy(self.live)
         state["active"]["phase"] = "work"
         with self.assertRaisesRegex(ValueError, "sem checkpoint"):
-            validate_remote(state, [], "push", "main", "", self.merged_pr())
+            validate_remote(state, [], "push", "main", "", self.merged_pr(), "a" * 40)
 
     def test_rejeita_remocao_do_contrato_pos_merge(self):
         tmp, root = self.temp_root(
