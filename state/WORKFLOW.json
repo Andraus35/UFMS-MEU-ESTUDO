@@ -5,9 +5,9 @@
     "task_id": "RM-08-PREP",
     "scope": "reconciliacao_pos_merge_e_gate_maquina_estados",
     "branch": "fix/governance-idle-state-20261106",
-    "pr_number": null,
+    "pr_number": 54,
     "base": "main",
-    "phase": "work"
+    "phase": "review"
   },
   "next_task_after_merge": "RM-08",
   "rules": {
