@@ -137,3 +137,31 @@ FORMATO FINAL (um bloco JSON, sem texto fora dele além de uma frase de abertura
 5. R25 pode **reverter a conclusão "exclusão não confirmada"** da rodada 1.
 6. R32 e R21 alimentam a revisão do texto de consentimento: hoje ele só descreve gravação no repositório privado, mas os dados também passam pela plataforma da Zapia e pelo Google.
 7. Testes T1 a T3 seguem dependentes de autorização literal do proprietário.
+
+## Continuação: R30 a R34 (a resposta anterior foi truncada)
+
+`docs/governanca/RESPOSTA_RODADA2_ZAPIA_20261107.md` registra R1 a R29; o R30 chegou cortado e R31 a R34 não chegaram.
+
+```text
+Você é a Zapia. Continuação da RODADA 2 do projeto "UFMS-MEU-ESTUDO". Sua resposta anterior foi
+TRUNCADA no meio do R30. Responda SOMENTE R30, R31, R32, R33 e R34, mantendo as mesmas regras:
+status OBSERVADO | DOCUMENTADO | DESCONHECIDO (não adivinhe); NUNCA imprima tokens, chaves, cookies
+ou cabeçalhos de autorização; SOMENTE LEITURA (sem gravar, sem enviar mensagens, sem criar
+eventos/tarefas/automações); não reproduza conteúdo pessoal (e-mails, eventos, tarefas, conversas).
+Para não ser cortada de novo, envie em DUAS mensagens, cada uma com um bloco JSON válido:
+mensagem 1 = R30 e R31; mensagem 2 = R32, R33 e R34.
+
+R30 Limites atuais da conta (automações ativas, execuções por dia, mensagens), com o contador se
+    estiver disponível. Reescreva a resposta inteira, pois a anterior foi cortada.
+R31 Você consegue enviar uma mensagem ao proprietário e guardar comprovante de envio e de leitura? O
+    que é comprovável e o que não é?
+R32 Onde a Zapia armazena conversas, memórias e arquivos? Por quanto tempo? São usados para treinar
+    modelos? Dá para exportar e apagar tudo? (Os resultados de estudo passarão por aqui.)
+R33 Já houve neste projeto algum conteúdo externo com instruções embutidas (injeção)? O que foi feito?
+R34 Leia PRODUCT.md no branch "feat/product-md-20261107" de Andraus35/UFMS-MEU-ESTUDO (ainda não está
+    na main), seções 2 a 5, 7 e 12. Em lista, aponte: (a) o que o documento afirma e contradiz o que
+    você realmente faz ou consegue; (b) o que falta para você operar F1 a F9. Só leitura.
+
+FORMATO (um bloco JSON por mensagem, sem texto fora dele além de uma frase de abertura)
+[{"id":"R30","status":"OBSERVADO|DOCUMENTADO|DESCONHECIDO","resposta":"...","evidencia":"como você sabe","risco":"se houver"}, ...]
+```
