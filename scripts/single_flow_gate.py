@@ -147,15 +147,22 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
         raise ValueError("Branch sem PR aberto: apenas a main pode verificar transição pós-merge")
     if not isinstance(prior_pr, dict):
         raise ValueError("Sem comprovação autenticada do merge anterior")
+    head_sha = prior_pr.get("head", {}).get("sha")
+    merge_sha = prior_pr.get("merge_commit_sha")
     if (prior_pr.get("number") != active["pr_number"]
             or prior_pr.get("state") != "closed"
             or not prior_pr.get("merged_at")
             or prior_pr.get("head", {}).get("ref") != active["branch"]
-            or prior_pr.get("base", {}).get("ref") != "main"):
-        raise ValueError("PR anterior não comprovadamente mesclado em main")
+            or prior_pr.get("base", {}).get("ref") != "main"
+            or not isinstance(head_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", head_sha)
+            or not isinstance(merge_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", merge_sha)):
+        raise ValueError("PR anterior não comprovadamente mesclado em main com SHAs válidos")
     if active["phase"] not in ("review", "merge_ready"):
         raise ValueError("PR anterior mesclado sem checkpoint de revisão no estado")
-    return {"phase": "awaiting_next_task", "last_merged_pr": active["pr_number"],
+    if head_sha == merge_sha:
+        raise ValueError("SHA de origem e SHA de merge não podem ser confundidos")
+    return {"phase": "idle", "last_merged_pr": active["pr_number"],
+            "source_head_sha": head_sha, "merge_commit_sha": merge_sha,
             "next_task": data["next_task_after_merge"]}
 
 
