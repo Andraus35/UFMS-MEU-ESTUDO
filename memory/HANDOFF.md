@@ -5,7 +5,7 @@
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
 - Último merge comprovado: PR #64; SHA 11213da2942b9aab52ec16b91b7562198c393154
-- Frente ativa: **RM-00 / PR pendente**; branch `feat/product-md-20261107`; base main; fase work.
+- Frente ativa: **RM-00 / PR #65**; branch `feat/product-md-20261107`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
