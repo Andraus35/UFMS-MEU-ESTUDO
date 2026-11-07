@@ -119,7 +119,7 @@ class AgentGateTests(unittest.TestCase):
         formal = next(line for line in contents.splitlines() if line.startswith("| RM-08 |"))
         baseline = next(line for line in contents.splitlines() if line.startswith("| RM-08-BASELINE |"))
         self.assertIn("| bloqueado |", formal)
-        self.assertIn("| em_andamento |", baseline)
+        self.assertIn("| implementado_nao_homologado |", baseline)
         self.assertIn("sem persistência pessoal", baseline)
         self.assertIn("promoção de GP-4", baseline)
 

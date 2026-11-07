@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STATUS = "docs/governanca/STATUS_BRANCHES_RECONCILIADO_20261105.md"
 TASK_RE = r"(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)"
 SHA_RE = re.compile(r"[0-9a-f]{40}")
+NEXT_RE = re.compile(r"\*\*Próxima tarefa: ([^*]+)\*\*")
 
 
 def _read(root, path):
@@ -76,6 +77,15 @@ def verify(root=ROOT):
         for marker in required:
             if marker not in content:
                 raise ValueError(f"{name} diverge do WORKFLOW: marcador ausente {marker}")
+    # Nenhum marcador de próxima tarefa pode divergir do WORKFLOW em qualquer ponto
+    # dos três documentos (inclusive fora do bloco delimitado).
+    for name, path in paths.items():
+        found = NEXT_RE.findall(_read(root, path))
+        if next_task == "DONE" and found:
+            raise ValueError(f"{name} diverge do WORKFLOW: marcador de próxima tarefa com fila concluída")
+        for value in found:
+            if value != next_task:
+                raise ValueError(f"{name} diverge do WORKFLOW: marcador de próxima tarefa divergente {value}")
     return {
         "result": "PASS",
         "state": "prepared" if pr is None else "active",

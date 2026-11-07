@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #55; SHA 937f3c72be8e5812b077b1e5f0cb8115836d1cff
-- Frente ativa: **RM-08 / PR #56**; branch `feat/rm08-gates-20261107`; base main; fase review.
+- Último merge comprovado: PR #56; SHA 6b9ffa1efdca5e8817760b8a530976c7552ff8a5
+- Frente ativa: **RM-08 / PR #57**; branch `feat/rm08-higiene-20261107`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -18,7 +18,6 @@
 
 > **CHECKPOINT HISTÓRICO — main@05b00079794fabf97672baf68821893; PR #53 / RM-08-PREP integrado.** Último merge comprovado: PR #53; SHA 05b00079794fabf97672baf68821893feb730af2. Frente ativa única: **RM-08-PREP / PR #54**, branch `fix/governance-idle-state-20261106`, fase review, exclusivamente para máquina de estados pós-merge, gates e sincronização documental. Próxima tarefa: RM-08, ainda bloqueado; não iniciar sem avaliação formal. CURRENT permanece E0, zero eventos/resultados.
 
-**Próxima tarefa: RM-08**
 
 > **CHECKPOINT HISTÓRICO — main@7df4b8fff8d8ed76096d33edb6474808fb2e34ca; PR #52 / RM-08-PREP integrado.** Último merge comprovado: PR #52; SHA `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`. Frente ativa única: **RM-08-PREP / PR #53**, branch `fix/governance-post-merge-sync-20261106`, fase `review`, exclusivamente para fechamento documental pós-merge e gate determinístico de sincronização. Próxima tarefa prevista: RM-08, ainda `bloqueado`; não iniciar sem nova validação dos bloqueadores. `state/CURRENT.json` permanece E0, zero eventos/resultados.
 **Versão:** 1.0 · **Referência:** 04/11/2026 · **Repositório:** `Andraus35/UFMS-MEU-ESTUDO`  
@@ -45,20 +44,16 @@
 5. **Limite verificável:** o bootstrap lê bytes, confere UTF-8, presença, ordem, fila RM e integridade local; isso não prova compreensão semântica por LLM. A proteção da `main` impõe check de CI na integração, **mas não impede agentes externos de ignorarem bootstrap ou alterarem código e workflow no mesmo PR**. Um verificador de fonte confiável e gates nos orquestradores de Tutor/Coach permanecem pendentes.
 6. Não publicar resultados pessoais enquanto o repositório for público nem habilitar flag por simples alteração. Nenhum merge/deploy sem autorização humana. O PR #3 de ponte Oracle/Telegram está encerrado fora de escopo, sem autorização para retomada.
 
-## Estado observado — 06/11/2026
+## Estado observado
 
-- `main` = `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`; PR #52 / RM-08-PREP integrado; CI pós-merge run `42270139613`, `validate=success`.
-- Último merge comprovado: PR #52; SHA `7df4b8fff8d8ed76096d33edb6474808fb2e34ca`.
-- `state/WORKFLOW.json` é a fonte operacional única: fechamento documental pós-merge da RM-08-PREP no PR #53, branch `fix/governance-post-merge-sync-20261106`, base `main`, fase `review`; próxima tarefa prevista RM-08.
-- PR #53 não reabre nem amplia o ciclo Tutor–Coach. Seu escopo é reconciliar WORKFLOW, HANDOFF, ROADMAP e STATUS e adicionar validação determinística de consistência documental.
-- O novo `scripts/governance_sync_gate.py` verifica tarefa/PR/branch ativos, próxima tarefa e recibo SHA do último merge nos quatro documentos estratégicos. A CI deve executar esse gate junto aos demais.
+O estado vigente (`main`, último merge, frente ativa, PR e próxima tarefa) consta **somente** no bloco *Checkpoint vigente* e em `state/WORKFLOW.json`; esta seção não o duplica. Fatos estáveis:
+
 - A obrigação de leitura permanece: AGENTS.md, ROADMAP.md, memory/HANDOFF.md e state/CURRENT.json; em engenharia, state/WORKFLOW.json também. Bootstrap verifica bytes e hashes, não compreensão semântica universal.
+- `scripts/governance_sync_gate.py` verifica tarefa/PR/branch ativos, próxima tarefa e recibo SHA do último merge nos três documentos de checkpoint, e rejeita marcador de próxima tarefa divergente em qualquer ponto deles.
 - RM-08 formal permanece `bloqueado`; GP-4 real não homologado. GP-3 integral, GQ-D e GP-5 também não homologados.
-- `state/CURRENT.json`: E0, zero eventos e zero resultados; preservado. `state/PROGRESS.csv` permanece intocado.
+- `state/CURRENT.json`: E0, zero eventos e zero resultados; `state/PROGRESS.csv` intocado.
 - Sem dados pessoais, credenciais, persistência, replay real, rede ou integrações externas.
-- Escritas via API GitHub; hooks locais não executados. CI remota não substitui bootstrap/hooks locais.
-- A validação deve ser feita no SHA exato do PR #53 em push e pull_request; não herdar CI anterior.
-
+- A CI remota não substitui bootstrap e hooks locais. A validação deve ser feita no SHA exato do PR, em push e pull_request; não herdar CI anterior.
 
 ## SIM-05 — reconciliação do broker (PR #22)
 
@@ -82,7 +77,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após a conclusão da subetapa RM-08-BASELINE; a entrega formal RM-08 permanece bloqueada pelos gates documentados. A frente operacional atual é exclusivamente RM-08-PREP / PR #53, limitada à reconciliação de governança e à validação determinística da sincronização documental. A preparação sintética foi integrada pelo PR #52, sem homologar a linha formal RM-08, que permanece bloqueada; GP-4 real exige baseline auditada e gates próprios.
+Frente ativa e próxima tarefa: ver *Checkpoint vigente* e `state/WORKFLOW.json`. A entrega formal RM-08 permanece bloqueada pelos gates documentados. A preparação sintética foi integrada pelo PR #52 (RM-08-PREP) e a baseline formal pelo PR #55 (RM-08-BASELINE), sem homologar a linha formal RM-08; GP-4 real exige gates próprios.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -98,7 +93,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-08-PREP | P2 | ENG-07 / RM-08: preparação offline sintética (sem promover GP-4) | implementado_nao_homologado | Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado. |
-| RM-08-BASELINE | P2 | ENG-07 / RM-08: baseline formal e avaliação de bloqueadores | em_andamento | Baseline documentada no HEAD vigente; status e proveniência de GP-3, GQ-D, GQ-C e GQ-O reconciliados; critérios mínimos do ciclo e bloqueadores explícitos; sem persistência pessoal, integração externa ou promoção de GP-4. |
+| RM-08-BASELINE | P2 | ENG-07 / RM-08: baseline formal e avaliação de bloqueadores | implementado_nao_homologado | Baseline documentada no HEAD vigente; status e proveniência de GP-3, GQ-D, GQ-C e GQ-O reconciliados; critérios mínimos do ciclo e bloqueadores explícitos; sem persistência pessoal, integração externa ou promoção de GP-4. |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
 
@@ -276,4 +271,4 @@ O PR #21 já integrou `.github/workflows/monitor-fapec.yml`, `scripts/monitor_fa
 - Execução local autenticada pelo proprietário via Termux: 29/29 branches candidatas revalidadas individualmente imediatamente antes da exclusão; 29 exclusões confirmadas; 0 impedimentos.
 - Preservação final reportada pelo script: 13/13 branches históricas, 42/42 refs de backup e `main` no SHA acima.
 - **Limite da evidência:** os totais de exclusão e preservação foram lidos da saída final do script Termux fornecida pelo proprietário; a consulta GitHub confirmou o estado remoto listado, o PR fechado/mesclado e a CI. Não se declara execução dos hooks locais nesta sessão.
-- Próxima tarefa indicada: RM-08. Seu status e baseline formais permanecem `bloqueado`; este registro não constitui autorização para iniciar implementação, mudar baseline, homologar GP-3/GQ-D/GP-4 ou liberar dados pessoais/integrações reais.
+- Próxima tarefa então indicada (06/11/2026): RM-08. Seu status e baseline formais permanecem `bloqueado`; este registro não constitui autorização para iniciar implementação, mudar baseline, homologar GP-3/GQ-D/GP-4 ou liberar dados pessoais/integrações reais.

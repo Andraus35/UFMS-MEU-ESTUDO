@@ -33,15 +33,17 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 56)
-        self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
+        active = validate_local(ROOT)["active"]
+        self.assertTrue(active["pr_number"] is None or type(active["pr_number"]) is int)
+        self.assertEqual(active["phase"], "work" if active["pr_number"] is None else active["phase"])
+        self.assertIn(active["phase"], ("work", "review", "merge_ready"))
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)$")
 
-    def test_rm08_e_a_unica_tarefa_serial_ativa(self):
+    def test_estado_serial_coerente_com_recibo_do_ultimo_merge(self):
         state = validate_local(ROOT)
-        self.assertEqual(state["active"]["task_id"], "RM-08")
-        self.assertEqual(state["next_task_after_merge"], "RM-09")
-        self.assertEqual(state["last_merged"]["pr_number"], 55)
+        self.assertNotEqual(state["active"]["task_id"], state["next_task_after_merge"])
+        self.assertNotEqual(state["active"]["pr_number"], state["last_merged"]["pr_number"])
+        self.assertRegex(state["last_merged"]["merge_commit_sha"], r"^[0-9a-f]{40}$")
 
     def test_rejeita_subtarefa_nao_autorizada(self):
         tmp, root = self.temp_root(lambda d: d["active"].__setitem__("task_id", "RM-08-REAL"))
@@ -114,9 +116,10 @@ class SingleFlowTests(unittest.TestCase):
             path = root / "memory/HANDOFF.md"
             content = path.read_text(encoding="utf-8")
             task, pr = self.live["active"]["task_id"], self.live["active"]["pr_number"]
-            marker = f"**{task} / PR #{pr}**"
+            marker = f"**{task} / PR pendente**" if pr is None else f"**{task} / PR #{pr}**"
+            wrong = f"**{task} / PR #{1 if pr is None else pr + 1}**"
             self.assertIn(marker, content)
-            path.write_text(content.replace(marker, f"**{task} / PR #{pr + 1}**", 1), encoding="utf-8")
+            path.write_text(content.replace(marker, wrong, 1), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
                 validate_local(root)
 
@@ -312,14 +315,15 @@ class SingleFlowTests(unittest.TestCase):
         tmp, root = self.temp_root(lambda data: data.__setitem__("next_task_after_merge", "RM-99"))
         with tmp:
             roadmap = root / "ROADMAP.md"
+            live_marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
             current = roadmap.read_text(encoding="utf-8").replace(
-                "**Próxima tarefa: RM-08**", "**Próxima tarefa: RM-99**", 1)
+                live_marker, "**Próxima tarefa: RM-99**", 1)
             roadmap.write_text(current, encoding="utf-8")
             handoff = root / "memory/HANDOFF.md"
             current_handoff = handoff.read_text(encoding="utf-8").replace(
-                "**Próxima tarefa: RM-08**", "**Próxima tarefa: RM-99**", 1)
+                live_marker, "**Próxima tarefa: RM-99**", 1)
             handoff.write_text(current_handoff, encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "ausente no roadmap"):
+            with self.assertRaisesRegex(ValueError, "ausente no roadmap|diverge do estado operacional"):
                 validate_local(root)
 
     def test_api_de_merge_indisponivel_bloqueia(self):

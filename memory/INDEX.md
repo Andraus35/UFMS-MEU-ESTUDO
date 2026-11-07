@@ -4,6 +4,7 @@
 
 - `memory/HANDOFF.md`: último checkpoint, pendências e próxima ação; **ler sempre**.
 - `state/CURRENT.json`: estado consolidado e cursor de eventos; **ler sempre**.
+- `state/WORKFLOW.json`: tarefa, branch e PR ativos, último merge e próxima tarefa (fonte única de engenharia); **ler sempre em engenharia**.
 - `memory/PROFILE.md`: preferências e restrições duradouras, não pessoais/sensíveis; ler quando necessário.
 - `memory/DECISIONS.md`: registro de decisões estruturais e razões; consultar quando surgir mudança de regras ou divergência.
 - `state/events/*.jsonl`: histórico append-only; consultar por caderno, assunto ou período quando necessário.
