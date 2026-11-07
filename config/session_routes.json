@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "descricao": "Rotas determinísticas de sessão: em que ordem ler os documentos de governança e persistência, o que verificar e quando parar. Dado, não estado. Executado por scripts/session_route.py.",
+  "rotas": {
+    "study": {
+      "descricao": "Orientação de estudo (Tutor e Coach). Sem escrita.",
+      "etapas": [
+        {
+          "id": "ST1",
+          "tipo": "ler",
+          "arquivo": "AGENTS.md",
+          "porque": "contrato do agente e segurança"
+        },
+        {
+          "id": "ST2",
+          "tipo": "ler",
+          "arquivo": "ROADMAP.md",
+          "porque": "fila e criticidade"
+        },
+        {
+          "id": "ST3",
+          "tipo": "ler",
+          "arquivo": "memory/HANDOFF.md",
+          "porque": "checkpoint e retomada"
+        },
+        {
+          "id": "ST4",
+          "tipo": "ler",
+          "arquivo": "state/CURRENT.json",
+          "porque": "projeção atual dos eventos de estudo"
+        },
+        {
+          "id": "ST5",
+          "tipo": "executar",
+          "comando": "python scripts/bootstrap.py"
+        },
+        {
+          "id": "ST6",
+          "tipo": "consultar_se",
+          "arquivo": "edital/INDEX.md",
+          "quando": "a pergunta envolver o edital; citar página e trecho"
+        },
+        {
+          "id": "ST7",
+          "tipo": "consultar_se",
+          "arquivo": "rules/STUDY.md",
+          "quando": "for recomendar caderno, revisão ou plano"
+        },
+        {
+          "id": "ST8",
+          "tipo": "consultar_se",
+          "arquivo": "docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md",
+          "quando": "for montar ou ajustar o plano de estudos"
+        },
+        {
+          "id": "ST9",
+          "tipo": "aviso_se",
+          "condicao": "gravacao_pessoal_bloqueada",
+          "mensagem": "Não gravar resultados pessoais: entregar o conteúdo ou a operação pendente (AGENTS.md, passo 7)."
+        }
+      ]
+    },
+    "engineering": {
+      "descricao": "Construção, auditoria e saneamento (agentes construtores).",
+      "etapas": [
+        {
+          "id": "EN1",
+          "tipo": "ler",
+          "arquivo": "AGENTS.md",
+          "porque": "contrato do agente e segurança (precede tudo)"
+        },
+        {
+          "id": "EN2",
+          "tipo": "ler",
+          "arquivo": "ROADMAP.md",
+          "porque": "fila SIM e fila RM"
+        },
+        {
+          "id": "EN3",
+          "tipo": "ler",
+          "arquivo": "PRODUCT.md",
+          "porque": "o que construir e decisões do proprietário"
+        },
+        {
+          "id": "EN4",
+          "tipo": "ler",
+          "arquivo": "memory/HANDOFF.md",
+          "porque": "checkpoint e ponto de retomada"
+        },
+        {
+          "id": "EN5",
+          "tipo": "ler",
+          "arquivo": "state/CURRENT.json",
+          "porque": "estado de estudo (não é o estado da engenharia)"
+        },
+        {
+          "id": "EN6",
+          "tipo": "ler",
+          "arquivo": "state/WORKFLOW.json",
+          "porque": "tarefa ativa, branch, PR, próxima tarefa e fila de trabalho"
+        },
+        {
+          "id": "EN7",
+          "tipo": "executar",
+          "comando": "python scripts/bootstrap.py --mode engineering"
+        },
+        {
+          "id": "EN8",
+          "tipo": "executar",
+          "comando": "python scripts/single_flow_gate.py --check"
+        },
+        {
+          "id": "EN9",
+          "tipo": "executar",
+          "comando": "python scripts/next_task.py"
+        },
+        {
+          "id": "EN10",
+          "tipo": "consultar_se",
+          "arquivo": "docs/especificacoes/README.md",
+          "quando": "o próximo item for uma especificação (pesquisa obrigatória)"
+        }
+      ]
+    },
+    "write": {
+      "descricao": "Qualquer escrita autorizada no repositório.",
+      "etapas": [
+        {
+          "id": "WR1",
+          "tipo": "ler",
+          "arquivo": "AGENTS.md",
+          "porque": "escrita controlada e limites dos hooks"
+        },
+        {
+          "id": "WR2",
+          "tipo": "ler",
+          "arquivo": "rules/CORE.md",
+          "porque": "regras centrais"
+        },
+        {
+          "id": "WR3",
+          "tipo": "ler",
+          "arquivo": "guardrails/CORE.md",
+          "porque": "guardrails"
+        },
+        {
+          "id": "WR4",
+          "tipo": "ler",
+          "arquivo": "docs/API_WRITE_GOVERNANCE.md",
+          "porque": "escrita por API, proteção de main e limites do gate"
+        },
+        {
+          "id": "WR5",
+          "tipo": "ler",
+          "arquivo": "docs/OPERACAO.md",
+          "porque": "START e DELIVERY"
+        },
+        {
+          "id": "WR6",
+          "tipo": "executar",
+          "comando": "python scripts/bootstrap.py --mode engineering"
+        },
+        {
+          "id": "WR7",
+          "tipo": "executar",
+          "comando": "python scripts/roadmap_gate.py --check"
+        },
+        {
+          "id": "WR8",
+          "tipo": "executar",
+          "comando": "python hooks/before_write.py"
+        },
+        {
+          "id": "WR9",
+          "tipo": "executar",
+          "comando": "python scripts/write_policy.py --check"
+        },
+        {
+          "id": "WR10",
+          "tipo": "manual",
+          "texto": "Escrever a mudança, rodar os testes e fazer o commit na branch única da tarefa."
+        },
+        {
+          "id": "WR11",
+          "tipo": "executar",
+          "comando": "python hooks/after_write.py"
+        },
+        {
+          "id": "WR12",
+          "tipo": "executar",
+          "comando": "python hooks/checkpoint.py"
+        },
+        {
+          "id": "WR13",
+          "tipo": "executar",
+          "comando": "python scripts/governance_sync_gate.py"
+        },
+        {
+          "id": "WR14",
+          "tipo": "executar",
+          "comando": "python scripts/doc_cohesion.py --check"
+        },
+        {
+          "id": "WR15",
+          "tipo": "manual",
+          "texto": "Confirmar no GitHub o SHA remoto do commit e a CI verde nesse mesmo SHA; só então declarar a persistência."
+        }
+      ]
+    },
+    "governance": {
+      "descricao": "Mudança em regras, guardrails, settings, workflows ou escopo oficial.",
+      "etapas": [
+        {
+          "id": "GV1",
+          "tipo": "ler",
+          "arquivo": "AGENTS.md",
+          "porque": "contrato e segurança"
+        },
+        {
+          "id": "GV2",
+          "tipo": "ler",
+          "arquivo": "rules/CORE.md",
+          "porque": "regras centrais"
+        },
+        {
+          "id": "GV3",
+          "tipo": "ler",
+          "arquivo": "rules/STUDY.md",
+          "porque": "regras de estudo"
+        },
+        {
+          "id": "GV4",
+          "tipo": "ler",
+          "arquivo": "guardrails/CORE.md",
+          "porque": "guardrails"
+        },
+        {
+          "id": "GV5",
+          "tipo": "ler",
+          "arquivo": "guardrails/SOURCES.md",
+          "porque": "fontes permitidas"
+        },
+        {
+          "id": "GV6",
+          "tipo": "ler",
+          "arquivo": "memory/DECISIONS.md",
+          "porque": "decisões vigentes (ADRs)"
+        },
+        {
+          "id": "GV7",
+          "tipo": "ler",
+          "arquivo": "docs/PROTECAO_MAIN.md",
+          "porque": "proteção de main"
+        },
+        {
+          "id": "GV8",
+          "tipo": "ler",
+          "arquivo": "PRODUCT.md",
+          "porque": "decisões do proprietário a respeitar"
+        },
+        {
+          "id": "GV9",
+          "tipo": "parar_se",
+          "condicao": "sempre",
+          "mensagem": "Mudança em regras, guardrails ou escopo oficial exige aprovação humana: apresentar a emenda ao proprietário e só prosseguir com a aprovação (AGENTS.md).",
+          "situacao": "requer_aprovacao_humana"
+        },
+        {
+          "id": "GV10",
+          "tipo": "executar",
+          "comando": "python scripts/doc_cohesion.py --check"
+        }
+      ]
+    },
+    "persistence": {
+      "descricao": "Gravar resultados, dados pessoais ou estado de estudo.",
+      "etapas": [
+        {
+          "id": "PE1",
+          "tipo": "ler",
+          "arquivo": "AGENTS.md",
+          "porque": "dados pessoais bloqueados e escrita controlada"
+        },
+        {
+          "id": "PE2",
+          "tipo": "ler",
+          "arquivo": "docs/governanca/ADR013_PERSISTENCIA_PRIVADA_DESENHO_20261107.md",
+          "porque": "controles P1 a P9 e consentimento v2"
+        },
+        {
+          "id": "PE3",
+          "tipo": "ler",
+          "arquivo": "memory/DECISIONS.md",
+          "porque": "ADR-013 e ADR-014"
+        },
+        {
+          "id": "PE4",
+          "tipo": "ler",
+          "arquivo": "settings.json",
+          "porque": "flags de privacidade"
+        },
+        {
+          "id": "PE5",
+          "tipo": "ler",
+          "arquivo": "scripts/private_persistence_guard.py",
+          "porque": "guard offline (condição necessária, nunca suficiente)"
+        },
+        {
+          "id": "PE6",
+          "tipo": "ler",
+          "arquivo": "docs/API_WRITE_GOVERNANCE.md",
+          "porque": "escrita por API e readback"
+        },
+        {
+          "id": "PE7",
+          "tipo": "parar_se",
+          "condicao": "gravacao_pessoal_bloqueada",
+          "mensagem": "Gravação pessoal desabilitada (personal_results_writes_enabled=false): não gravar. Entregar o conteúdo ou a operação pendente e não declarar persistência."
+        },
+        {
+          "id": "PE8",
+          "tipo": "executar",
+          "comando": "python scripts/doc_cohesion.py --check"
+        }
+      ]
+    }
+  }
+}

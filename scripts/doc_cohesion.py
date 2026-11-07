@@ -9,7 +9,8 @@ Verificações determinísticas (sem LLM, sem rede):
   C5 `settings.json` e documentos concordam (intervalos de revisão, flags de agenda fixa, START de engenharia);
   C6 frases superadas (decisões revogadas) não reaparecem nos normativos;
   C7 toda especificação em docs/especificacoes/S*.md tem a seção "## Pesquisa" com link e linha de lacunas (D-16);
-  C8 a fila work_queue de state/WORKFLOW.json é válida (campos, ids únicos, dependências, tarefa no ROADMAP, entrega em docs/especificacoes).
+  C8 a fila work_queue de state/WORKFLOW.json é válida (campos, ids únicos, dependências, tarefa no ROADMAP, entrega em docs/especificacoes);
+  C9 as rotas de sessão (config/session_routes.json) existem, apontam para arquivos e scripts reais e concordam com settings.json e com as regras de escrita do AGENTS.md.
 
 Uso: python scripts/doc_cohesion.py --check [--root DIR]
 Não prova compreensão semântica: pega divergência mecânica. Estado do ciclo é coberto por governance_sync_gate.
@@ -250,6 +251,68 @@ def check_queue(root: Path) -> list[str]:
     return errs
 
 
+WRITE_BEFORE = ("python scripts/bootstrap.py --mode engineering", "python scripts/roadmap_gate.py --check",
+                "python hooks/before_write.py", "python scripts/write_policy.py --check")
+WRITE_AFTER = ("python hooks/after_write.py", "python hooks/checkpoint.py", "python scripts/governance_sync_gate.py")
+
+
+def check_routes(root: Path) -> list[str]:
+    try:
+        from session_route import COMMAND_RE, CONDITIONS, INTENTS, SITUACOES, TYPES
+    except ModuleNotFoundError:
+        from scripts.session_route import COMMAND_RE, CONDITIONS, INTENTS, SITUACOES, TYPES
+    errs = []
+    data = json.loads((root / "config/session_routes.json").read_text(encoding="utf-8"))
+    routes = data.get("rotas", {})
+    for intent in INTENTS:
+        if intent not in routes:
+            errs.append(f"C9 session_routes.json: rota ausente ({intent})")
+    seen = set()
+    for intent, route in routes.items():
+        for st in route.get("etapas", []):
+            sid, kind = st.get("id"), st.get("tipo")
+            if sid in seen:
+                errs.append(f"C9 session_routes.json: id de etapa repetido ({sid})")
+            seen.add(sid)
+            if kind not in TYPES:
+                errs.append(f"C9 session_routes.json: etapa {sid} com tipo inválido ({kind})")
+            if kind in ("ler", "consultar_se") and not (root / st.get("arquivo", "")).is_file():
+                errs.append(f"C9 session_routes.json: etapa {sid} aponta arquivo inexistente ({st.get('arquivo')})")
+            if kind == "executar":
+                cmd = st.get("comando", "")
+                if not COMMAND_RE.fullmatch(cmd):
+                    errs.append(f"C9 session_routes.json: etapa {sid} com comando fora da lista permitida")
+                elif not (root / cmd.split()[1]).is_file():
+                    errs.append(f"C9 session_routes.json: etapa {sid} aponta script inexistente ({cmd.split()[1]})")
+            if kind in ("parar_se", "aviso_se") and st.get("condicao") not in CONDITIONS:
+                errs.append(f"C9 session_routes.json: etapa {sid} com condição desconhecida")
+            if kind == "parar_se" and st.get("situacao", "bloqueada") not in SITUACOES:
+                errs.append(f"C9 session_routes.json: etapa {sid} com situação inválida")
+    if errs:
+        return errs
+    settings = json.loads((root / "settings.json").read_text(encoding="utf-8"))
+    boot = settings.get("bootstrap", {})
+    for intent, key in (("study", "mandatory"), ("engineering", "engineering_mandatory")):
+        reads = [st["arquivo"] for st in routes[intent]["etapas"] if st["tipo"] == "ler"]
+        if reads != boot.get(key):
+            errs.append(f"C9 session_routes.json: a rota {intent} diverge de settings.json bootstrap.{key}")
+    steps = routes["write"]["etapas"]
+    cmds = [st["comando"] for st in steps if st["tipo"] == "executar"]
+    manual = [i for i, st in enumerate(steps) if st["tipo"] == "manual"]
+    pos = {st["comando"]: i for i, st in enumerate(steps) if st["tipo"] == "executar"}
+    for c in WRITE_BEFORE + WRITE_AFTER:
+        if c not in cmds:
+            errs.append(f"C9 session_routes.json: a rota write não executa `{c}` (AGENTS.md, escrita controlada)")
+    if not errs and manual:
+        if not all(pos[c] < manual[0] for c in WRITE_BEFORE) or not all(pos[c] > manual[0] for c in WRITE_AFTER):
+            errs.append("C9 session_routes.json: a rota write não respeita antes/depois da escrita")
+    if not any(st["tipo"] == "parar_se" and st.get("situacao") == "requer_aprovacao_humana" for st in routes["governance"]["etapas"]):
+        errs.append("C9 session_routes.json: a rota governance precisa parar por aprovação humana")
+    if not any(st["tipo"] == "parar_se" and st.get("condicao") == "gravacao_pessoal_bloqueada" for st in routes["persistence"]["etapas"]):
+        errs.append("C9 session_routes.json: a rota persistence precisa parar se a gravação pessoal estiver bloqueada")
+    return errs
+
+
 def validate(root=ROOT) -> dict:
     root = Path(root)
     files = _files(root, NORMATIVE, NORMATIVE_GLOBS)
@@ -263,6 +326,7 @@ def validate(root=ROOT) -> dict:
         errs += check_stale(root, files)
         errs += check_specs(root)
         errs += check_queue(root)
+        errs += check_routes(root)
     if errs:
         raise ValueError("coesão documental: " + str(len(errs)) + " divergência(s)\n  " + "\n  ".join(errs))
     return {"documents": len(files), "result": "PASS"}

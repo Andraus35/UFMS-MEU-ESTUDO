@@ -35,7 +35,7 @@ Regras:
 
 Qualquer sessão de engenharia segue estes passos, só com o que está no repositório:
 
-1. `python scripts/bootstrap.py --mode engineering`. Ele já inclui o resultado de `python scripts/next_task.py`: o estado real do ciclo e o próximo item da fila `work_queue` de `state/WORKFLOW.json`.
+1. `python scripts/session_route.py --intent engineering --run` (ou `python scripts/bootstrap.py --mode engineering`). Ele lista os documentos na ordem, executa as verificações e já inclui o resultado de `python scripts/next_task.py`: o estado real do ciclo e o próximo item da fila `work_queue` de `state/WORKFLOW.json`.
 2. Se o ciclo estiver `encerrado_recibo_pendente`, o PR registrado já foi mesclado: registrar o recibo com `python scripts/record_merge_receipt.py` (veja `--help`) no primeiro commit da próxima tarefa. Se estiver `em_andamento`, continuar nesse PR; em dúvida, confirmar no GitHub autenticado.
 3. Executar o item indicado: **pesquisa obrigatória**, escrita da especificação no caminho de `deliverable`, gates (`doc_cohesion`, `product_gate`, `roadmap_gate`, `governance_sync_gate`, `single_flow_gate`), testes, branch única, PR draft, CI verde.
 4. **Parar** no pedido de merge ao proprietário: o merge só ocorre por pedido explícito dele (`AGENTS.md`).
