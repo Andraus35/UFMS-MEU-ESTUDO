@@ -41,18 +41,17 @@ Este ADR **não altera** `settings.json`, regras ou guardrails e **não habilita
 
 1. **Repositório privado de dados:** `Andraus35/ufms-meu-estudo-dados`, criado como **privado desde o início**. A criação é ato administrativo do proprietário; **ainda não foi criado** (nem verificado) por este ADR.
 2. **Escritor confiável (P4):** o próprio proprietário, **manualmente pelo Termux**. O modelo não recebe token nem escreve no repositório privado; ele prepara patch ou script, o proprietário revisa e executa. Sem host novo, sem servidor, sem segredo com o modelo (coerente com o ADR-011).
-3. **Retenção e revogação:** dados mantidos **até a prova (17/01/2027) mais uma janela curta**, e a **revogação efetiva é apagar o repositório privado inteiro** (o histórico Git é permanente; apagar arquivo não basta). Sem reescrita de histórico.
+3. **Retenção e revogação:** dados mantidos **até a prova (17/01/2027) mais 30 dias** (janela curta definida pelo proprietário em 07/11/2026), e a **revogação efetiva é apagar o repositório privado inteiro** (o histórico Git é permanente; apagar arquivo não basta). Sem reescrita de histórico.
 4. **Backup:** não decidido; por padrão, **sem backup externo** do dado pessoal.
 
 ## Ainda em aberto
 
-- **Prazo exato da "janela curta"** após a prova (proposta: 30 dias; **não aprovado**).
-- **Aprovação do texto de consentimento** abaixo, que é **rascunho** e não vale como consentimento enquanto não for aprovado e versionado pelo proprietário.
 - **Criação do repositório privado** pelo proprietário e verificação de `private=true` por leitura autenticada.
+- **Registro formal do consentimento** (data, versão e escopo) no repositório privado, antes do primeiro evento (P3). A aprovação do texto abaixo não grava consentimento: ela só fixa a versão.
 
-## Rascunho do texto de consentimento (v1, NÃO aprovado)
+## Texto de consentimento v1 (APROVADO pelo proprietário em 07/11/2026, sem ajustes)
 
-> Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Os dados serão mantidos até 17/01/2027 mais a janela de retenção definida, e posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado. Versão: v1.
+> Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Os dados serão mantidos até 17/01/2027 mais 30 dias, e posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado. Versão: v1.
 
 ## Próximos passos (cada um em PR próprio, em série)
 

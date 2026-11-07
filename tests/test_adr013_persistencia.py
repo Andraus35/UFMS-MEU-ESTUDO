@@ -43,7 +43,9 @@ class Adr013Tests(unittest.TestCase):
         self.assertIn("17/01/2027", text)
         self.assertIn("apagar o repositório privado inteiro", text)
         self.assertIn("ainda não foi criado", text)
-        self.assertIn("NÃO aprovado", text)
+        self.assertIn("APROVADO pelo proprietário em 07/11/2026", text)
+        self.assertIn("mais 30 dias", text)
+        self.assertNotIn("NÃO aprovado", text)
 
     def test_repositorio_privado_difere_do_publico(self):
         from private_persistence_guard import PUBLIC_REPOSITORY, check_destination

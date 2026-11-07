@@ -6,8 +6,8 @@
   "execution_sha": null,
   "policy": "A existência de teste unitário correlato não equivale à execução do cenário pedagógico completo.",
   "status_counts": {
-    "PARTIAL": 52,
-    "NOT_IMPLEMENTED": 50,
+    "PARTIAL": 56,
+    "NOT_IMPLEMENTED": 46,
     "PASS": 0,
     "FAIL": 0,
     "BLOCKED": 0,
@@ -134,10 +134,12 @@
     },
     {
       "scenario_id": "PED-15",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_retomada_sessao.py::test_processo_novo_reconstroi_as_projecoes_versionadas"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/rebuild.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "PED-16",
@@ -485,10 +487,12 @@
     },
     {
       "scenario_id": "FIQ-10",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_prescriber_pendentes.py::test_fiq10_mesmo_candidato_com_outro_objetivo_continua_duplicado"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/notebook_prescriber.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "FIQ-11",
@@ -663,10 +667,12 @@
     },
     {
       "scenario_id": "CDO-14",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_prescriber_pendentes.py::test_cdo14_pendente_identico_exige_reutilizacao_ou_substituicao"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/notebook_prescriber.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "CDO-15",
@@ -702,10 +708,12 @@
     },
     {
       "scenario_id": "PRD-01",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_bootstrap_doc_sync.py::test_documentos_declaram_a_contagem_efetiva_do_settings"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (tests/test_bootstrap_doc_sync.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "PRD-02",
@@ -833,5 +841,5 @@
       "note": "Sem teste canônico associado; implementar antes de marcar PASS."
     }
   ],
-  "atualizacao_20261107": "SIM-01, 02, 03, 04 e 10 (scripts/simulado_score.py) e SIM-05, 06, 07, 08 e 09 (scripts/simulado_session.py) passaram de NOT_IMPLEMENTED a PARTIAL; code_sha refere-se à medição original de 05/11/2026."
+  "atualizacao_20261107": "SIM-01..10 (scripts/simulado_score.py e scripts/simulado_session.py), CDO-14 e FIQ-10 (notebook_prescriber), PRD-01 e PED-15 passaram de NOT_IMPLEMENTED a PARTIAL; code_sha refere-se à medição original de 05/11/2026."
 }
