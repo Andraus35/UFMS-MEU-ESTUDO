@@ -25,11 +25,50 @@ def _confirmed(value, label):
     return {**value, "status": status}
 
 
+def _find_pending_duplicate(pending, candidate_id, platform, intervention):
+    if pending is None:
+        return None
+    if not isinstance(pending, list):
+        raise ValueError("pending_recommendations deve ser lista")
+    found = None
+    for item in pending:
+        if not isinstance(item, dict) or not isinstance(item.get("recommendation_id"), str) \
+                or not item["recommendation_id"].strip():
+            raise ValueError("Recomendação pendente inválida")
+        key = (item.get("candidate_id"), item.get("platform"), item.get("intervention"))
+        if key == (candidate_id, platform, intervention) and found is None:
+            found = item
+    return found
+
+
+def _check_resolution(resolution, duplicate):
+    if resolution is None:
+        return None
+    if duplicate is None:
+        raise ValueError("Resolução informada sem pendência duplicada correspondente")
+    if not isinstance(resolution, dict) or resolution.get("action") not in {"reuse", "replace"}:
+        raise ValueError("Resolução deve ser reuse ou replace")
+    if resolution.get("recommendation_id") != duplicate["recommendation_id"]:
+        raise ValueError("Resolução refere outra recomendação pendente")
+    reason = resolution.get("reason")
+    if not isinstance(reason, str) or not reason.strip():
+        raise ValueError("Resolução exige justificativa")
+    return {"action": resolution["action"], "reason": reason.strip(),
+            "recommendation_id": resolution["recommendation_id"]}
+
+
 def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
                        platform, platform_capabilities=None, availability=None,
                        question_target=None, execution_mode="independent",
-                       selection_override_reason=None):
-    """Create an auditable instruction plan, not an external notebook."""
+                       selection_override_reason=None, pending_recommendations=None,
+                       pending_resolution=None):
+    """Create an auditable instruction plan, not an external notebook.
+
+    `pending_recommendations` (opcional) lista prescrições anteriores ainda pendentes.
+    Uma prescrição para o mesmo candidato, plataforma e intervenção de uma pendente é
+    duplicada e só é aceita com `pending_resolution` explícito: reutilizar ou substituir,
+    sempre com justificativa. Sem pendências informadas, o comportamento não muda.
+    """
     if not isinstance(queue_snapshot, dict) or not queue_snapshot.get("snapshot_id"):
         raise ValueError("Snapshot de fila ausente")
     ranked = queue_snapshot.get("ranked")
@@ -51,6 +90,13 @@ def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
         raise ValueError("execution_mode inválido")
     if question_target is not None and (type(question_target) is not int or question_target <= 0):
         raise ValueError("question_target deve ser inteiro positivo ou null")
+    duplicate = _find_pending_duplicate(pending_recommendations, candidate_id, platform, intervention)
+    resolution = _check_resolution(pending_resolution, duplicate)
+    if duplicate is not None and resolution is None:
+        raise ValueError("Caderno pendente duplicado: informar reutilização ou substituição explícita")
+    if duplicate is not None and resolution["action"] == "reuse":
+        return {**duplicate, "status": "reused_pending", "reuse_reason": resolution["reason"],
+                "side_effects_performed": False}
 
     capabilities = platform_capabilities or {}
     if not isinstance(capabilities, dict) or set(capabilities) - CAPABILITIES:
@@ -159,6 +205,8 @@ def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
         "selection_override_reason": selection_override_reason,
         "fallback": fallback,
         "status": "recommended",
+        "supersedes": resolution["recommendation_id"] if resolution else None,
+        "supersede_reason": resolution["reason"] if resolution else None,
         "creation_status": "not_created",
         "platform_notebook_id": None,
         "platform_notebook_id_status": "unknown",
