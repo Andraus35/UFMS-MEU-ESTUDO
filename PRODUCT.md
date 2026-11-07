@@ -20,7 +20,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 | Ator | Papel | Não faz |
 |---|---|---|
 | Estudante | cria e resolve cadernos no TEC Concursos ou Qconcursos, devolve resultados, aprova mudanças estruturais e merges | — |
-| Zapia | assistente de IA do produto; executa os papéis Tutor e Coach; acessa o harness no GitHub e o Gemini Notebook por MCP | acessar contas das plataformas por robô, inventar dados, mudar regras |
+| Zapia | assistente de IA do produto; executa os papéis Tutor (persona Aragonê) e Coach (persona Carter); acessa o GitHub pela API REST, com credencial em gerenciador seguro, e o Gemini Notebook pela interface web autenticada; não há MCP de GitHub nem de Notebook conectado (E-01) | acessar contas das plataformas por robô, inventar dados, mudar regras |
 | Harness (este repositório) | fonte de verdade persistente: regras, validadores, edital indexado, fila, prescritor, pontuação de simulados, gerador de prompt de revisão | executar ação externa por conta própria |
 | Gemini Notebook | ambiente de revisão e fonte de método; recebe o prompt e devolve a revisão | ser fonte normativa do edital, guardar dado pessoal além do prompt mínimo |
 | TEC Concursos e Qconcursos | plataformas de questões, operadas pelo estudante | — |
@@ -35,7 +35,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **F5 Validar:** a Zapia aplica o contrato de ingestão do harness (coerência de contagens, escopo, convenção de contagem); inconsistência é recusada ou esclarecida, nunca corrigida em silêncio.
 - **F6 Registrar:** a Zapia grava o evento no repositório privado, sob os controles P1 a P9 do ADR-013 (ver D-02). Sem todas as condições cumpridas, o resultado fica pendente e não é declarado registrado.
 - **F7 Reavaliar:** o harness recalcula evidência (E0 a E4) e fila; o que é desconhecido permanece desconhecido.
-- **F8 Revisar:** o harness gera um prompt mínimo de revisão; a Zapia o envia ao Gemini Notebook por MCP; a revisão volta à Zapia e ao estudante; o harness guarda só metadados (assunto, data, fonte).
+- **F8 Revisar:** o harness gera um prompt mínimo de revisão; a Zapia o envia ao Gemini Notebook pela interface web (E-01); a revisão volta à Zapia e ao estudante; o harness guarda só metadados (assunto, data, fonte).
 - **F9 Acompanhar:** a Zapia, no papel de Coach, envia mensagens e lembretes dentro de rotina previamente autorizada, com limites, idempotência e readback.
 - **Simulados:** pontuação ponderada e comparabilidade conforme `docs/pedagogia/PROTOCOLO_SIMULADOS_v1.4.md`; nunca declarar aprovação.
 
@@ -43,16 +43,16 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 
 - **Repositório público (este):** regras, código, edital, fixtures sintéticas. Nunca dado pessoal.
 - **Repositório privado `Andraus35/ufms-meu-estudo-dados`:** resultados e eventos, somente depois de criado pelo proprietário, com consentimento registrado e controles P1 a P9.
-- **Gemini Notebook:** recebe só o mínimo do prompt (assunto, lacuna, método, exigência de fonte). Enviar dado a terceiro é ação sensível.
+- **Gemini Notebook:** recebe só o mínimo do prompt (assunto, lacuna, método, exigência de fonte). Enviar dado a terceiro é ação sensível, e a retenção na conta do Gemini não foi verificada (E-06, OPEN-05).
 - **Em lugar nenhum:** CPF, documentos, credenciais, tokens, exports brutos, capturas de tela, texto integral de questões ou comentários de professores.
 
 ## 5. Decisões do proprietário
 
 - **D-01 (07/11/2026):** repositório privado separado `Andraus35/ufms-meu-estudo-dados`. A criação é ato do proprietário.
-- **D-02 (07/11/2026):** a Zapia grava os resultados desde o início, pelo conector dela. Revisa a decisão anterior de que o proprietário gravaria manualmente. A habilitação continua condicionada aos controles P1 a P9, à resolução de OPEN-01 e OPEN-02 e a PR próprio com aprovação humana; até lá `personal_results_writes_enabled` permanece `false`.
+- **D-02 (07/11/2026):** a Zapia grava os resultados desde o início, pela API REST do GitHub com credencial própria dela. Revisa a decisão anterior de que o proprietário gravaria manualmente. A habilitação continua condicionada aos controles P1 a P9, à resolução de OPEN-01 e OPEN-02 e a PR próprio com aprovação humana; até lá `personal_results_writes_enabled` permanece `false`.
 - **D-03 (07/11/2026):** retenção até a prova mais 30 dias; revogação efetiva é apagar o repositório privado inteiro.
 - **D-04 (07/11/2026):** texto de consentimento v1 aprovado (texto no ADR-013).
-- **D-05 (07/11/2026):** o harness gera o prompt, a Zapia o envia ao Gemini Notebook por MCP e só metadados voltam ao repositório.
+- **D-05 (07/11/2026):** o harness gera o prompt, a Zapia o envia ao Gemini Notebook e só metadados voltam ao repositório. O mecanismo observado é a interface web, não MCP (E-01); a escolha do mecanismo por parte do proprietário precisa ser reconfirmada.
 - **D-06 (07/11/2026):** o recorte GP-3-MVP8 foi aceito como cobertura técnica mínima sintética.
 - **D-07 (07/11/2026):** este arquivo é leitura obrigatória no START de engenharia, como 3º arquivo.
 
@@ -77,15 +77,17 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **PR-007 Rotina do Coach pela Zapia:** mensagens e lembretes autorizados. Aceite: prova de autorização, idempotência e limites. Elo: RM-09.
 - **PR-008 Simulados no fluxo:** pontuação e comparação de simulados usadas em F5 e F7. Aceite: `scripts/simulado_score.py` e `scripts/simulado_session.py` acionados nesses passos, com teste. Elo: RM-06.
 - **PR-009 Retomada entre sessões e modelos:** estado reconstruído dos eventos e dos arquivos do START, nunca da conversa. Aceite: `python scripts/rebuild.py --check` passa e nenhum estado existe só em conversa. Elo: RM-00.
+- **PR-010 Credencial mínima da Zapia:** token de escopo único por repositório, sem administração nem workflows e com expiração; o repositório privado usa credencial própria, sem alcance sobre o público. Aceite: o proprietário confirma o escopo nas configurações do GitHub e a Zapia comprova, em teste sintético, que a escrita fora do repositório designado é recusada. Elo: RM-08.
+- **PR-011 START de estudo executável pela Zapia:** como ela não lê o repositório sozinha no início da sessão (E-05) e executa Python (E-04), o início passa a ser um procedimento explícito: obter o repositório, executar `python scripts/bootstrap.py --mode study` e informar os SHA-256 dos 4 arquivos. Aceite: relatório com hashes iguais aos do repositório e teste do procedimento com fixture; é procedimento, não trava técnica. Elo: RM-00.
 
 ## 8. Ordem de construção
 
 Dependências, não status (o status vive no `ROADMAP.md`):
 
-- **B1:** PR-001.
+- **B1:** PR-001 e PR-011.
 - **B2:** PR-004 (proprietário).
 - **B3:** PR-002 (independente, offline).
-- **B4:** PR-003 (depende de B2 e de OPEN-01 e OPEN-02).
+- **B4:** PR-003 (depende de B2, de PR-010 e de OPEN-01 e OPEN-02).
 - **B5:** PR-005 (depende de B3).
 - **B6:** PR-006 (depende de B4 e B5).
 - **B7:** PR-007 e PR-008.
@@ -96,7 +98,7 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 - **Gemini Notebook:** ambiente de revisão no Gemini usado pela Zapia (por exemplo o notebook "Como estudar"). Não é caderno de questões.
 - **`notebook_prescriber`:** prescreve cadernos de questões; não gera prompts para o Gemini.
 - **Prescrição:** plano de caderno sem efeito externo. Recomendação, confirmação e execução são estados distintos.
-- **Tutor e Coach:** papéis executados pela Zapia. O Tutor orienta e escolhe intervenções; o Coach acompanha e lembra.
+- **Tutor e Coach:** papéis executados pela Zapia, hoje com as personas Aragonê (Tutor) e Carter (Coach); não são agentes permanentes separados. O Tutor orienta e escolhe intervenções; o Coach acompanha e lembra.
 - **Harness:** este repositório (regras, estado, validadores).
 - **Revisão:** estudo guiado de um assunto com lacuna, elaborado no Gemini Notebook.
 - **E0 a E4:** níveis de evidência definidos em `docs/pedagogia/MODELO_EVIDENCIAS_v1.2.md`.
@@ -117,17 +119,23 @@ Apontar, não copiar:
 
 ## 11. Evidências de referência
 
-Fatos datados, não estado:
+Fatos datados, não estado. Os itens E-01 a E-06 são **autorrelato da Zapia** (07/11/2026), registrado em `docs/governanca/RESPOSTA_VERIFICACAO_ZAPIA_20261107.md`; nenhum agente construtor os reverificou, exceto o que consta naquele documento.
 
-- Em 04/11/2026, provas de conceito sintéticas mostraram a Zapia lendo e escrevendo registros em branches deste repositório e abrindo o Gemini Notebook "Como estudar", verificando uma fonte (`poc/README.md`). Não provam execução recorrente, acesso às plataformas de questões nem domínio pedagógico.
+- **E-01 Mecanismo de acesso:** GitHub pela API REST, por HTTP a partir do ambiente de execução da Zapia, com credencial em gerenciador seguro; a tentativa de conectar o MCP oficial do GitHub foi recusada. Gemini Notebook pela interface web autenticada do navegador; não há MCP de Notebook. As POCs de 04/11/2026 existem em `poc/README.md` e são provas sintéticas.
+- **E-02 Capacidades testadas:** GitHub: ler arquivo, criar branch e gravar commit. Não testadas: abrir PR, ler CI, apagar. Notebook: abrir, ler fontes, enviar prompt, ler a resposta e conferir uma citação. Não testadas: listar, adicionar fonte, criar, apagar.
+- **E-03 Credencial:** guardada em gerenciador seguro e usada por referência; a Zapia afirma não receber o valor como texto (documentado, não verificável por agente construtor). Escopo, permissões e expiração do token **não verificados**. Acesso verificado apenas ao repositório deste projeto.
+- **E-04 Controles:** não há trava técnica que force a checagem de visibilidade nem a confirmação humana antes de escrever; existe apenas protocolo conversacional. A Zapia executa comandos e Python. Os commits das POCs constam com a autoria do proprietário, então o histórico não distingue quem gravou.
+- **E-05 Memória e rotina:** memória persistente própria; não lê o repositório sozinha no início da sessão. Um lembrete estático no app foi entregue em 04/11/2026; WhatsApp não está comprovado como recebido pelo aparelho; Telegram exige aprovação; a exclusão de eventos do Calendar não foi confirmada por leitura.
+- **E-06 Privacidade do Gemini:** o prompt e o contexto do notebook vão ao serviço do Google; retenção e política da conta **não verificadas**.
+
+As POCs não provam execução recorrente, acesso às plataformas de questões nem domínio pedagógico.
 
 ## 12. Pontos a confirmar
 
-Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo.
+Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo. Roteiro de perguntas: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md`. Só respostas com status `OBSERVADO` ou `DOCUMENTADO` resolvem um ponto.
 
-Roteiro de perguntas para a Zapia: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md`. Só respostas com status `OBSERVADO` ou `DOCUMENTADO` resolvem um ponto.
-
-- **OPEN-01:** como a Zapia cumpre o controle P1 (visibilidade `private=true` verificada antes de gravar), já que o guard do harness é biblioteca offline e não intercepta o conector dela.
-- **OPEN-02:** onde fica a credencial de escrita da Zapia e se o modelo da Zapia a enxerga.
-- **OPEN-03:** como exatamente a Zapia entrega o prompt ao Gemini Notebook por MCP e recebe a revisão (a prova de conceito só comprova abrir um notebook e ler uma fonte).
-- **OPEN-04:** se a Zapia terá acesso ao repositório privado com a menor permissão possível.
+- **OPEN-01:** não há trava técnica que garanta o controle P1 (visibilidade `private=true` antes de gravar) nem a confirmação antes de escrever (E-04). Até existir mecanismo técnico, por exemplo a credencial de escopo único de PR-010 e a checagem de visibilidade como passo do fluxo, **o PR-003 está bloqueado**.
+- **OPEN-02:** escopo, permissões e expiração do token que a Zapia usa hoje (E-03), a conferir pelo proprietário no GitHub, e se a mesma credencial alcança repositórios privados.
+- **OPEN-03:** estabilidade e regras da automação pela interface web do Gemini Notebook, que depende de sessão, de mudanças de interface e das regras do Google (E-01, E-02).
+- **OPEN-04:** credencial própria e de menor permissão para o repositório privado, ainda inexistente.
+- **OPEN-05:** retenção e política de privacidade da conta do Gemini usada (E-06).

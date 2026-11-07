@@ -2,6 +2,8 @@
 
 **Data:** 07/11/2026 · **Natureza:** roteiro de perguntas; **não é evidência**. Só o que a Zapia responder com status `OBSERVADO` ou `DOCUMENTADO` pode virar decisão ou requisito no `PRODUCT.md`, por PR. `DESCONHECIDO` mantém o ponto aberto.
 
+**Respondido em 07/11/2026:** ver `docs/governanca/RESPOSTA_VERIFICACAO_ZAPIA_20261107.md` (T1 a T3 não executados).
+
 **Como usar:** o proprietário cola o prompt abaixo na Zapia, devolve a resposta (idealmente o bloco JSON final) e o agente construtor transcreve o que for confirmado, sem completar lacunas por suposição.
 
 **Mapa das perguntas:** Q3 a Q9 resolvem OPEN-01, OPEN-02 e OPEN-04; Q10 a Q14 resolvem OPEN-03; Q1, Q2, Q15 a Q21 completam o quadro de capacidades e limites (Coach, memória, segurança).

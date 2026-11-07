@@ -97,6 +97,18 @@ class ProductGateTests(unittest.TestCase):
         self.rejects(TEXT.replace("OPEN-01 e OPEN-02", "OPEN-01 e OPEN-77", 1), "OPEN")
         self.rejects(TEXT.replace("(ver D-02)", "(ver D-77)", 1), "decisão")
 
+    def test_nao_afirma_mecanismo_nao_observado(self):
+        # A Zapia informou (07/11/2026) que GitHub é API REST e Gemini é interface web, sem MCP.
+        self.assertNotIn("por MCP", TEXT)
+        self.assertNotIn("pelo conector dela", TEXT)
+        self.assertIn("não há MCP de GitHub nem de Notebook", TEXT)
+        for ref in ("E-01", "E-03", "E-04", "E-06"):
+            self.assertIn(ref, TEXT)
+
+    def test_pr003_permanece_bloqueado_ate_credencial_de_escopo_unico(self):
+        self.assertIn("PR-010", TEXT)
+        self.assertIn("o PR-003 está bloqueado", TEXT)
+
     def test_arquivo_citado_inexistente(self):
         temp, root = self.make_root()
         with temp:
