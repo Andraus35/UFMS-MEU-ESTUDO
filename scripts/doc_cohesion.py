@@ -7,7 +7,8 @@ Verificações determinísticas (sem LLM, sem rede):
   C3 IDs D-xx, PR-xxx, OPEN-xx, E-xx e RM-xx citados estão definidos (PRODUCT.md / ROADMAP.md);
   C4 IDs definidos em PRODUCT.md não se repetem;
   C5 `settings.json` e documentos concordam (intervalos de revisão, flags de agenda fixa, START de engenharia);
-  C6 frases superadas (decisões revogadas) não reaparecem nos normativos.
+  C6 frases superadas (decisões revogadas) não reaparecem nos normativos;
+  C7 toda especificação em docs/especificacoes/S*.md tem a seção "## Pesquisa" com link e linha de lacunas (D-16).
 
 Uso: python scripts/doc_cohesion.py --check [--root DIR]
 Não prova compreensão semântica: pega divergência mecânica. Estado do ciclo é coberto por governance_sync_gate.
@@ -27,9 +28,9 @@ NORMATIVE = (
     "AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md",
     "docs/OPERACAO.md", "docs/PLATFORMS.md", "docs/METHOD.md",
     "docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md",
-    "docs/pedagogia/README.md",
+    "docs/pedagogia/README.md", "docs/especificacoes/README.md",
 )
-NORMATIVE_GLOBS = ("agents/*.md", "rules/*.md")
+NORMATIVE_GLOBS = ("agents/*.md", "rules/*.md", "docs/especificacoes/S*.md")
 # IDs do PRODUCT.md só são citados com esse significado nestes documentos.
 PRODUCT_ID_DOCS = (
     "PRODUCT.md", "AGENTS.md", "docs/PLATFORMS.md",
@@ -201,6 +202,22 @@ def check_stale(root: Path, files) -> list[str]:
     return errs
 
 
+def check_specs(root: Path) -> list[str]:
+    errs = []
+    for f in sorted((root / "docs/especificacoes").glob("S*.md")):
+        text = f.read_text(encoding="utf-8")
+        m = re.search(r"^## Pesquisa\b.*?(?=^## |\Z)", text, re.M | re.S)
+        rel = _rel(root, f)
+        if not m:
+            errs.append(f"C7 {rel}: falta a seção '## Pesquisa' (D-16)")
+            continue
+        if not re.search(r"https?://", m.group(0)):
+            errs.append(f"C7 {rel}: a seção Pesquisa não tem nenhum link")
+        if not re.search(r"^- \*\*Lacunas:\*\*", m.group(0), re.M):
+            errs.append(f"C7 {rel}: a seção Pesquisa não termina com a linha '- **Lacunas:**'")
+    return errs
+
+
 def validate(root=ROOT) -> dict:
     root = Path(root)
     files = _files(root, NORMATIVE, NORMATIVE_GLOBS)
@@ -212,6 +229,7 @@ def validate(root=ROOT) -> dict:
         errs += check_ids(root)
         errs += check_settings_vs_docs(root)
         errs += check_stale(root, files)
+        errs += check_specs(root)
     if errs:
         raise ValueError("coesão documental: " + str(len(errs)) + " divergência(s)\n  " + "\n  ".join(errs))
     return {"documents": len(files), "result": "PASS"}

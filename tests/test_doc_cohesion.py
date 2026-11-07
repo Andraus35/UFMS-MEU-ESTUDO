@@ -86,6 +86,27 @@ class DocCohesionTests(unittest.TestCase):
         self._append("docs/PLATFORMS.md", "\nFora do padrão do proprietário, nenhum intervalo universal.\n")
         self.assertEqual(doc_cohesion.validate(self.tmp)["result"], "PASS")
 
+    def _spec(self, body):
+        d = self.tmp / "docs/especificacoes"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "S9_teste.md").write_text(body, encoding="utf-8")
+
+    def test_c7_especificacao_sem_pesquisa(self):
+        self._spec("# S9\n\n## Objetivo\nx\n\n## Requisitos\ny\n")
+        self._fails("C7")
+
+    def test_c7_pesquisa_sem_link(self):
+        self._spec("# S9\n\n## Pesquisa\n- fonte sem link\n- **Lacunas:** nenhuma\n\n## Requisitos\ny\n")
+        self._fails("C7")
+
+    def test_c7_pesquisa_sem_lacunas(self):
+        self._spec("# S9\n\n## Pesquisa\n- https://exemplo.org (confiança B)\n\n## Requisitos\ny\n")
+        self._fails("C7")
+
+    def test_c7_pesquisa_completa_passa(self):
+        self._spec("# S9\n\n## Pesquisa\n- https://exemplo.org (confiança B)\n- **Lacunas:** página bloqueada.\n\n## Requisitos\ny\n")
+        self.assertEqual(doc_cohesion.validate(self.tmp)["result"], "PASS")
+
     def test_c0_documento_normativo_ausente(self):
         (self.tmp / "docs/PLATFORMS.md").unlink()
         self._fails("C0")

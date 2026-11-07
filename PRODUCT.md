@@ -65,6 +65,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **D-13 (07/11/2026):** o produto é um **harness cognitivo de uso pessoal com prova marcada**, não um sistema de software comercial: a prioridade é velocidade, sem burocracia. As especificações seguem a Spec Lean da Tech Leads Club **no que couber** (especificar o necessário, verificar o que é verificável, nada além). A pesquisa web fica para a etapa de especificação de cada uma, não para o planejamento. Há quatro especificações: método de estudo e revisão (S1), Tutor (S2), Coach (S3) e operação, que liga ferramentas, agentes e repositório (S4).
 - **D-14 (07/11/2026):** o acesso direto do agente às plataformas TEC Concursos e Qconcursos é a **primeira opção** para obter cadernos e estatísticas; a exportação manual pelo proprietário é a alternativa. Condições: somente leitura; somente a conta do proprietário; baixo volume, sem gerar carga nem alterar cadernos; nenhuma credencial entregue ao modelo nem gravada no repositório; o proprietário aceita o risco de bloqueio da conta pelos termos da plataforma (E-12); começa pelo TEC Concursos, depois de consulta escrita ao suporte (OPEN-12), e o Qconcursos só entra se o teste no TEC for aceito. O que o agente ler vira dado não confiável, validado pelo contrato de ingestão (PR-016) como qualquer entrada.
 - **D-15 (07/11/2026):** o mecanismo do acesso direto da D-14 **será escolhido na fase de especificação, depois de testar todas as possibilidades** (conector local por navegador com perfil dedicado, navegador do assistente do proprietário, navegador da Zapia, navegador na nuvem, suporte ou API oficial e exportação manual como linha de base), com os critérios de `docs/PLATFORMS.md`. Hipótese de partida, não decisão: conector local de leitura no computador do proprietário, no padrão de ponte local do repositório de referência, porque mantém a sessão fora do modelo e do repositório.
+- **D-16 (07/11/2026):** toda especificação (S1 a S4 e as futuras) é feita pelo modelo enxuto da Spec Lean (D-13) e **começa por uma pesquisa obrigatória** de estado da arte, melhores práticas e benchmarks em repositórios públicos e em sites especializados em técnicas de estudo para concursos públicos, com fontes, data, grau de confiança e lacunas registrados (`docs/especificacoes/README.md`). Palavras do proprietário. Não há requisito sem essa pesquisa.
 
 ## 6. Não objetivos e proibições
 
@@ -99,6 +100,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **PR-015 Plano de estudos padrão:** gerador determinístico do ciclo do Método 4.2 e das revisões em 7, 15 e 30 dias (D-11). Aceite: `scripts/study_plan.py` com testes de contraprova (ciclo 4/2/1, no máximo 120 minutos por disciplina, revisões nos intervalos, fase final, entradas inválidas) e padrões lidos de `settings.json`. Elo: RM-08.
 - **PR-016 Ingestão da exportação de desempenho:** contrato de ingestão validado contra amostras reais anonimizadas do TEC Concursos e do Qconcursos (OPEN-11). Aceite: amostras reais, testes de contraprova e rejeição de arquivo fora do formato. Elo: RM-02.
 - **PR-017 Leitura direta das plataformas:** acesso somente leitura ao TEC Concursos e ao Qconcursos pelo mecanismo escolhido na especificação (D-15), conforme `docs/PLATFORMS.md`. Aceite: testes com páginas sintéticas, recusa de domínio fora da lista e de operação de escrita, saída sem credencial nem HTML bruto, limite de taxa; nenhuma leitura em conta real antes da aprovação do proprietário (OPEN-12). Elo: RM-09.
+- **PR-018 Pesquisa obrigatória nas especificações:** cada especificação em `docs/especificacoes/` tem a seção `## Pesquisa` com fontes e a linha de lacunas (D-16). Aceite: `python scripts/doc_cohesion.py --check` rejeita especificação sem a seção, sem link ou sem lacunas, com contraprova em teste. Elo: RM-09.
 
 ## 8. Ordem de construção
 
@@ -106,7 +108,7 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 
 - **B1:** PR-001 e PR-011.
 - **B2:** PR-004 (proprietário).
-- **B3:** PR-002, PR-013, PR-014, PR-015 e PR-017 (independentes, offline; a leitura em conta real do PR-017 depende de OPEN-12).
+- **B3:** PR-002, PR-013, PR-014, PR-015, PR-017 e PR-018 (independentes, offline; a leitura em conta real do PR-017 depende de OPEN-12).
 - **B4:** PR-003 (depende de B2, de PR-010 e de OPEN-01 e OPEN-02).
 - **B5:** PR-005, PR-012 e PR-016 (dependem de B3; PR-016 depende também de OPEN-11).
 - **B6:** PR-006 (depende de B4 e B5).
@@ -148,6 +150,7 @@ Apontar, não copiar:
 - Provas de conceito da Zapia (sintéticas): `poc/README.md`.
 - Agentes, plano de estudos e pesquisa: `agents/README.md`, `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `docs/pedagogia/ESTADO_DA_ARTE_TUTOR_COACH_20261107.md`.
 - Operação, START e DELIVERY: `docs/OPERACAO.md`.
+- Como escrever uma especificação e a pesquisa obrigatória: `docs/especificacoes/README.md`.
 - Coesão entre os documentos normativos: `scripts/doc_cohesion.py` (executado no START de engenharia).
 - **Substituído como porta de entrada de construção:** `docs/pedagogia/PROMPT_TRANSFERENCIA_TECNICA_v1.8.md` (histórico).
 
