@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-06",
-    "scope": "simulado_score_sim01_04_10_e_mapa_desbloqueio",
-    "branch": "feat/rm06-simulado-score-20261107",
-    "pr_number": 61,
+    "scope": "simulado_sessao_independencia_comparacao_sim05_09",
+    "branch": "feat/rm06-simulado-sessao-20261107",
+    "pr_number": 62,
     "base": "main",
     "phase": "review"
   },
@@ -113,11 +113,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #60 integrado em main no merge commit f2c855b3f8f25d577382492cfac754ee5291fa42 (CI push success). Frente única ativa: RM-06 (pontuação ponderada de simulado SIM-01..04/10 e mapa de desbloqueio pedagógico), branch feat/rm06-simulado-score-20261107, PR #61 draft. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #61 integrado em main no merge commit d79503b255dd2ae59b56ed08daf452b2e70da41f (CI push success). Frente única ativa: RM-06 (regras de sessão, independência e comparação de simulados SIM-05..09), branch feat/rm06-simulado-sessao-20261107, PR #62 draft. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-01",
-    "pr_number": 60,
-    "merge_commit_sha": "f2c855b3f8f25d577382492cfac754ee5291fa42"
+    "task_id": "RM-06",
+    "pr_number": 61,
+    "merge_commit_sha": "d79503b255dd2ae59b56ed08daf452b2e70da41f"
   }
 }

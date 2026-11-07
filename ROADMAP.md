@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #60; SHA f2c855b3f8f25d577382492cfac754ee5291fa42
-- Frente ativa: **RM-06 / PR #61**; branch `feat/rm06-simulado-score-20261107`; base main; fase review.
+- Último merge comprovado: PR #61; SHA d79503b255dd2ae59b56ed08daf452b2e70da41f
+- Frente ativa: **RM-06 / PR #62**; branch `feat/rm06-simulado-sessao-20261107`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -91,7 +91,7 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 | RM-03 | P1 | ENG-03 / GP-2: evidências E0–E4 | implementado_nao_homologado | E0-E4 integrados ao rebuild; desconhecidos explícitos; CI verde; sem evidência real para homologação pedagógica |
 | RM-04 | P1 | ENG-04 / GP-2: fila adaptativa 523/324 | implementado_nao_homologado | Ranking por snapshot/política; desconhecidos explícitos; CI e contraprovas verdes; pesos provisórios sem calibração em dados reais |
 | RM-05 | P1 | ENG-05 / GP-2: prescritor de cadernos | implementado_nao_homologado | Filtros em camadas e fallback; disponibilidade/IDs desconhecidos preservados; CI e contraprovas verdes; plataforma real não homologada |
-| RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 47 parciais, 55 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
+| RM-06 | P1 | ENG-06 / GP-3: testes adversariais | implementado_nao_homologado | Matriz 102 IDs criada: 52 parciais, 50 sem teste canônico, 0 cenários end-to-end PASS; GP-3 permanece bloqueado |
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-08-PREP | P2 | ENG-07 / RM-08: preparação offline sintética (sem promover GP-4) | implementado_nao_homologado | Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado. |

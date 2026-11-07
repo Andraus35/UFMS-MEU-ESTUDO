@@ -160,7 +160,7 @@ class AgentGateTests(unittest.TestCase):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in original.splitlines() if line.startswith("| RM-06 |"))
         self.assertIn("| implementado_nao_homologado |", line)
-        self.assertIn("55 sem teste canônico", line)
+        self.assertIn("50 sem teste canônico", line)
 
     def test_rm05_nao_homologado_sem_validacao_de_plataforma(self):
         original = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
