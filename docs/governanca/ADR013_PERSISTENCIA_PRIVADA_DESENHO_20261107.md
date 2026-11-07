@@ -46,7 +46,7 @@ Este ADR **não altera** `settings.json`, regras ou guardrails e **não habilita
 
 ## Próximos passos (cada um em PR próprio, em série)
 
-1. Fixtures e contraprovas P1–P3 e P5–P6 contra um repositório de teste **sintético e privado**.
+1. Fixtures e contraprovas P1–P3 e P5–P6. **Parcial (07/11/2026):** `scripts/private_persistence_guard.py` e `tests/test_private_persistence_guard.py` cobrem esses controles com leitor de visibilidade injetado (fakes), sem rede e sem gravar. **Falta** a prova contra um repositório privado real de teste, que depende da criação desse repositório pelo proprietário.
 2. Escritor confiável (P4) reaproveitando `scripts/api_write_transaction.py` e `scripts/api_write_guard.py`.
 3. Decisão separada de habilitação (flag), com aprovação humana.
 
