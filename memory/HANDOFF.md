@@ -16,5 +16,3 @@
 ---
 
 ## Registro histórico
-
-## Registro histórico
