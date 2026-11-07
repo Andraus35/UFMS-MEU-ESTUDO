@@ -42,7 +42,7 @@
 26. [Critérios de aceitação](CRITERIOS_DE_ACEITACAO.md): cenários documentados para implementação posterior.
 27. [Protocolo START/DELIVERY](PROTOCOLO_ENTREGA_CONTINUIDADE.md): commit, readback e handoff a cada entrega relevante.
 28. [Handoff pedagógico — histórico](HANDOFF.md): checkpoint do ciclo 8, 04/11/2026; não usar como handoff operacional atual.
-29. [Prompt de transferência técnica v1.8 — histórico](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md): pacote de planejamento antigo; PRs #1/#2 já foram integrados e instruções de estado devem ser revalidadas.
+29. [Prompt de transferência técnica v1.8 — histórico](PROMPT_TRANSFERENCIA_TECNICA_v1.8.md): pacote de planejamento antigo; PRs #1/#2 já foram integrados e instruções de estado devem ser revalidadas. **Substituído como porta de entrada de construção por `/PRODUCT.md` (raiz do repositório).**
 
 ## Hierarquia e limites
 

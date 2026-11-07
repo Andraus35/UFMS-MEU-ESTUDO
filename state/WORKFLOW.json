@@ -2,10 +2,10 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-06",
-    "scope": "gp3_pendentes_prd01_ped15_e_registro_do_consentimento",
-    "branch": "feat/rm06-gp3-pendentes-20261107",
-    "pr_number": 64,
+    "task_id": "RM-00",
+    "scope": "product_md_start_de_engenharia_e_roteiro_zapia",
+    "branch": "feat/product-md-20261107",
+    "pr_number": 65,
     "base": "main",
     "phase": "review"
   },
@@ -113,11 +113,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #63 integrado em main no merge commit a8c56bb312f2a9dc4f2b9815c60d98726772ad13 (CI push success nos checks do PR). Frente única ativa: RM-06 (GP-3: caderno pendente, sincronização do bootstrap, retomada; e registro do consentimento v1), branch feat/rm06-gp3-pendentes-20261107, PR #64 draft. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #64 integrado em main no merge commit 11213da2942b9aab52ec16b91b7562198c393154 (CI dos checks do PR verde). Frente única ativa: RM-00 (PRODUCT.md como 3º arquivo do START de engenharia, product_gate e roteiro de verificação da Zapia), branch feat/product-md-20261107, PR #65 draft. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-08",
-    "pr_number": 63,
-    "merge_commit_sha": "a8c56bb312f2a9dc4f2b9815c60d98726772ad13"
+    "task_id": "RM-06",
+    "pr_number": 64,
+    "merge_commit_sha": "11213da2942b9aab52ec16b91b7562198c393154"
   }
 }

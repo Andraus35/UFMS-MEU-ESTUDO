@@ -40,23 +40,29 @@ Este ADR **não altera** `settings.json`, regras ou guardrails e **não habilita
 ## Decisões do proprietário (07/11/2026)
 
 1. **Repositório privado de dados:** `Andraus35/ufms-meu-estudo-dados`, criado como **privado desde o início**. A criação é ato administrativo do proprietário; **ainda não foi criado** (nem verificado) por este ADR.
-2. **Escritor confiável (P4):** o próprio proprietário, **manualmente pelo Termux**. O modelo não recebe token nem escreve no repositório privado; ele prepara patch ou script, o proprietário revisa e executa. Sem host novo, sem servidor, sem segredo com o modelo (coerente com o ADR-011).
+2. **Escritor (P4), revisado em 07/11/2026:** a **Zapia, como executora, grava desde o início, só por comando do Tutor e dentro das diretrizes do harness, pela API REST do GitHub com credencial própria dela** (decisões D-02 e D-10 do `PRODUCT.md`; não há conector nem MCP de GitHub, segundo o autorrelato de 07/11/2026). Isso **substitui** a decisão anterior, de que o proprietário gravaria manualmente pelo Termux. Condições mantidas: controles P1 a P9, flag `false` até PR próprio com aprovação humana, e resolução de OPEN-01 e OPEN-02 do `PRODUCT.md`. A Zapia informou que **não há trava técnica** para P1 nem para a confirmação antes de escrever (só protocolo), e que o escopo do token atual não foi verificado; por isso o PR-003 está bloqueado até a credencial de escopo único (PR-010). Agentes construtores continuam sem credencial de escrita pessoal.
 3. **Retenção e revogação:** dados mantidos **até a prova (17/01/2027) mais 30 dias** (janela curta definida pelo proprietário em 07/11/2026), e a **revogação efetiva é apagar o repositório privado inteiro** (o histórico Git é permanente; apagar arquivo não basta). Sem reescrita de histórico.
 4. **Backup:** não decidido; por padrão, **sem backup externo** do dado pessoal.
 
 ## Ainda em aberto
 
 - **Criação do repositório privado** pelo proprietário e verificação de `private=true` por leitura autenticada.
-- **Registro formal do consentimento** (data, versão e escopo) no repositório privado, antes do primeiro evento (P3). A aprovação do texto abaixo não grava consentimento: ela só fixa a versão.
+- **Registro formal do consentimento** (data, versão e escopo) no repositório privado, antes do primeiro evento (P3). A aprovação do texto (v2, abaixo) não grava consentimento: ela só fixa a versão.
 
-## Texto de consentimento v1 (APROVADO pelo proprietário em 07/11/2026, sem ajustes)
+## Texto de consentimento v1 (aprovado em 07/11/2026 e SUBSTITUÍDO pelo v2 na mesma data)
 
 > Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Os dados serão mantidos até 17/01/2027 mais 30 dias, e posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado. Versão: v1.
+
+## Consentimento v2 (APROVADO pelo proprietário em 07/11/2026, sem ajustes; substitui o v1)
+
+O v1 cobre só a gravação no repositório privado. A rodada 2 de verificação da Zapia mostrou que os dados também passam pela **plataforma da Zapia** (servidores nos Estados Unidos; retenção geral de até 36 meses após o encerramento da conta) e, no mínimo necessário, pelo **Google** (Gemini Notebook, Calendar e Tasks). Apagar o repositório privado **não apaga** essas cópias. Texto aprovado pelo proprietário (versão v2):
+
+> Autorizo o registro, no repositório privado `ufms-meu-estudo-dados`, dos resultados dos meus cadernos e simulados de estudo (data, caderno relacionado, convenção de contagem e totais por tópico quando eu informar), exclusivamente para orientar meus estudos para os cargos UFMS 523 e 324. Não autorizo registrar CPF, documentos, credenciais, exports brutos, capturas de tela nem texto de questões. Entendo e aceito que esses dados passam pela plataforma Zapia (servidores nos Estados Unidos, retenção conforme a política dela) e que, no mínimo necessário, o assunto e a lacuna de estudo podem ser enviados ao Gemini Notebook, ao Google Calendar e ao Google Tasks. Os dados serão mantidos no repositório privado até 17/01/2027 mais 30 dias. Posso revogar este consentimento a qualquer momento, o que suspende novas gravações e leva ao apagamento do repositório privado; **apagar o repositório não elimina as cópias na Zapia nem no Google, que devo pedir separadamente a cada serviço.** Versão: v2.
 
 ## Próximos passos (cada um em PR próprio, em série)
 
 1. (Depende da criação do repositório privado) Fixtures e contraprovas P1–P3 e P5–P6. **Parcial (07/11/2026):** `scripts/private_persistence_guard.py` e `tests/test_private_persistence_guard.py` cobrem esses controles com leitor de visibilidade injetado (fakes), sem rede e sem gravar. **Falta** a prova contra um repositório privado real de teste, que depende da criação desse repositório pelo proprietário.
-2. Escritor confiável (P4) reaproveitando `scripts/api_write_transaction.py` e `scripts/api_write_guard.py`.
+2. Escritor (P4): reaproveitar `scripts/api_write_transaction.py` e `scripts/api_write_guard.py` onde servirem ao fluxo do conector da Zapia (depende de OPEN-01 e OPEN-02).
 3. Decisão separada de habilitação (flag), com aprovação humana.
 
 RM-08 formal permanece `bloqueado`. Este ADR é desenho, não homologação de GP-4.

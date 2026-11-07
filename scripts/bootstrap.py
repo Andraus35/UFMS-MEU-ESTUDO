@@ -21,9 +21,9 @@ def run(root=ROOT, mode="study"):
         raise ValueError("Modo de START invalido")
     cfg = load_json(root / "settings.json")
     try:
-        from agent_gates import check_bootstrap, check_hook_contract
+        from agent_gates import check_bootstrap, check_engineering_bootstrap, check_hook_contract
     except ModuleNotFoundError:
-        from scripts.agent_gates import check_bootstrap, check_hook_contract
+        from scripts.agent_gates import check_bootstrap, check_engineering_bootstrap, check_hook_contract
     digests = check_bootstrap(root)
     check_hook_contract(root)
     flow = None
@@ -33,8 +33,9 @@ def run(root=ROOT, mode="study"):
         except ModuleNotFoundError:
             from scripts.single_flow_gate import validate_local
         flow = validate_local(root)
-        raw = (root / "state/WORKFLOW.json").read_bytes()
-        digests["state/WORKFLOW.json"] = hashlib.sha256(raw).hexdigest()
+        digests = check_engineering_bootstrap(root)
+        if "state/WORKFLOW.json" not in digests or "PRODUCT.md" not in digests:
+            raise ValueError("START de engenharia sem WORKFLOW.json ou PRODUCT.md")
     state = load_json(root / "state/CURRENT.json")
     concursos = load_json(root / "config/concursos.json")
     result = {

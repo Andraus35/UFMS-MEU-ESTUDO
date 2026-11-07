@@ -12,6 +12,14 @@
       "memory/HANDOFF.md",
       "state/CURRENT.json"
     ],
+    "engineering_mandatory": [
+      "AGENTS.md",
+      "ROADMAP.md",
+      "PRODUCT.md",
+      "memory/HANDOFF.md",
+      "state/CURRENT.json",
+      "state/WORKFLOW.json"
+    ],
     "target_tokens": 2200
   },
   "context": {

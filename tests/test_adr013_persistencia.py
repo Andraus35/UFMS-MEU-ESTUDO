@@ -39,13 +39,19 @@ class Adr013Tests(unittest.TestCase):
     def test_decisoes_do_proprietario_registradas_sem_criar_nada(self):
         text = DOC.read_text(encoding="utf-8")
         self.assertIn("Andraus35/ufms-meu-estudo-dados", text)
-        self.assertIn("manualmente pelo Termux", text)
+        self.assertIn("Zapia, como executora, grava desde o início", text)
+        self.assertIn("só por comando do Tutor", text)
+        self.assertIn("OPEN-02", text)
         self.assertIn("17/01/2027", text)
         self.assertIn("apagar o repositório privado inteiro", text)
         self.assertIn("ainda não foi criado", text)
         self.assertIn("APROVADO pelo proprietário em 07/11/2026", text)
         self.assertIn("mais 30 dias", text)
-        self.assertNotIn("NÃO aprovado", text)
+        self.assertIn("Consentimento v2 (APROVADO pelo proprietário em 07/11/2026, sem ajustes; substitui o v1)", text)
+        self.assertIn("SUBSTITUÍDO pelo v2", text)
+        self.assertNotIn("RASCUNHO", text)
+        self.assertIn("apagar o repositório não elimina as cópias na Zapia nem no Google", text)
+        self.assertIn("Versão: v2", text)
 
     def test_repositorio_privado_difere_do_publico(self):
         from private_persistence_guard import PUBLIC_REPOSITORY, check_destination

@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from bootstrap import run
 
 BASIC = ("AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md", "state/CURRENT.json")
-ENGINEERING = BASIC + ("state/WORKFLOW.json",)
+ENGINEERING = ("AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md", "state/CURRENT.json", "state/WORKFLOW.json")
 FIXTURES = ENGINEERING + ("settings.json", "config/concursos.json",
                          "hooks/before_write.py", "hooks/after_write.py", "hooks/checkpoint.py")
 
@@ -33,7 +33,7 @@ class StartEffectivenessTests(unittest.TestCase):
         self.assertEqual(list(receipt["sha256_dos_arquivos"]), list(BASIC))
         self.assertNotIn("state/WORKFLOW.json", receipt["sha256_dos_arquivos"])
 
-    def test_engenharia_le_cinco_arquivos_em_ordem(self):
+    def test_engenharia_le_seis_arquivos_em_ordem(self):
         receipt = run(ROOT, mode="engineering")
         self.assertEqual(receipt["obrigatorios"], list(ENGINEERING))
         self.assertEqual(list(receipt["sha256_dos_arquivos"]), list(ENGINEERING))

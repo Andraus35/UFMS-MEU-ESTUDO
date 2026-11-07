@@ -13,7 +13,7 @@ from agent_entrypoint import ReadOnlyAgentBroker, StartBlocked, verify_start
 
 HEAD = "d" * 40
 COPIES = (
-    "AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md", "state/CURRENT.json",
+    "AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md", "state/CURRENT.json",
     "state/WORKFLOW.json", "settings.json", "config/concursos.json",
     "hooks/before_write.py", "hooks/after_write.py", "hooks/checkpoint.py",
 )
@@ -52,7 +52,8 @@ class AgentEntrypointTests(unittest.TestCase):
             with self.subTest(role=role):
                 broker = ReadOnlyAgentBroker(ROOT, HEAD, role)
                 receipt = broker.request("start")
-                self.assertEqual(len(receipt["mandatory"]), 5)
+                self.assertEqual(len(receipt["mandatory"]), 6)
+                self.assertEqual(receipt["mandatory"][2], "PRODUCT.md")
                 current = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
                 self.assertEqual(receipt["task"], current["active"]["task_id"])
                 self.assertEqual(receipt["pr"], current["active"]["pr_number"])
