@@ -113,6 +113,24 @@ class AgentGateTests(unittest.TestCase):
         self.assertIn("| implementado_nao_homologado |", prep)
         self.assertIn("sem promover GP-4", prep)
 
+    def test_rm08_baseline_e_subescopo_sem_desbloquear_rm08(self):
+        contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        self.assertTrue(validate_roadmap_text(contents))
+        formal = next(line for line in contents.splitlines() if line.startswith("| RM-08 |"))
+        baseline = next(line for line in contents.splitlines() if line.startswith("| RM-08-BASELINE |"))
+        self.assertIn("| bloqueado |", formal)
+        self.assertIn("| em_andamento |", baseline)
+        self.assertIn("sem persistência pessoal", baseline)
+        self.assertIn("promoção de GP-4", baseline)
+
+    def test_rm08_baseline_nao_pode_alargar_seu_escopo(self):
+        contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        line = next(line for line in contents.splitlines() if line.startswith("| RM-08-BASELINE |"))
+        changed = contents.replace(line, line.replace(
+            "sem persistência pessoal", "persistência pessoal ativa"), 1)
+        with self.assertRaisesRegex(ValueError, "RM-08-BASELINE alterado"):
+            validate_roadmap_text(changed)
+
     def test_rm08_prep_nao_pode_alargar_seu_escopo(self):
         contents = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         line = next(line for line in contents.splitlines() if line.startswith("| RM-08-PREP |"))
@@ -322,6 +340,17 @@ class GqdCompositionTests(unittest.TestCase):
         with patch.object(Path, "read_bytes", mutated):
             with self.assertRaisesRegex(ValueError, "COMPOSITION_SHA_MISMATCH"):
                 check_gqd_composition(ROOT)
+
+
+class HookCliTests(unittest.TestCase):
+    def test_hooks_executam_como_cli_sem_pythonpath(self):
+        import os
+        import subprocess
+        env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+        for hook in ("before_write", "after_write", "checkpoint"):
+            r = subprocess.run([sys.executable, str(ROOT / "hooks" / (hook + ".py"))],
+                               cwd=ROOT, env=env, capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, hook + ": " + r.stderr)
 
 
 if __name__ == "__main__":

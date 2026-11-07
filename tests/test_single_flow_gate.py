@@ -16,8 +16,6 @@ class SingleFlowTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.live = copy.deepcopy(validate_local(ROOT))
-        cls.live["active"]["pr_number"] = 54
-        cls.live["active"]["phase"] = "review"
 
     def temp_root(self, mutation=None):
         temp = tempfile.TemporaryDirectory()
@@ -35,13 +33,13 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 54)
+        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 55)
         self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
-        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
+        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)$")
 
-    def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
+    def test_baseline_rm08_e_uma_unica_subtarefa_serial(self):
         state = validate_local(ROOT)
-        self.assertEqual(state["active"]["task_id"], "RM-08-PREP")
+        self.assertEqual(state["active"]["task_id"], "RM-08-BASELINE")
         self.assertEqual(state["next_task_after_merge"], "RM-08")
 
     def test_rejeita_subtarefa_nao_autorizada(self):
@@ -69,7 +67,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_rejeita_pr_legado_sem_sha_ou_duplicado(self):
         for mutate in (
             lambda d: d["deferred_pull_requests"][0].__setitem__("sha", ""),
-            lambda d: d["deferred_pull_requests"][0].__setitem__("number", d["active"]["pr_number"]),
+            lambda d: d["deferred_pull_requests"][0].__setitem__("number", d["deferred_pull_requests"][1]["number"]),
             lambda d: d["deferred_pull_requests"][0].__setitem__("branch", d["active"]["branch"]),
             lambda d: d["deferred_pull_requests"][0].__setitem__("archived_without_merge", False),
         ):
@@ -102,19 +100,23 @@ class SingleFlowTests(unittest.TestCase):
     def test_handoff_repete_tarefa_pr_branch_e_proxima_tarefa(self):
         state = validate_local(ROOT)
         checkpoint = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8").split("\n---\n", 1)[0]
-        self.assertIn(f"**{state['active']['task_id']} / PR #{state['active']['pr_number']}**", checkpoint)
+        marker = (f"**{state['active']['task_id']} / PR pendente**"
+                  if state["active"]["pr_number"] is None
+                  else f"**{state['active']['task_id']} / PR #{state['active']['pr_number']}**")
+        self.assertIn(marker, checkpoint)
         self.assertIn(state["active"]["branch"], checkpoint)
         self.assertIn(f"**Próxima tarefa: {state['next_task_after_merge']}**", checkpoint)
 
     def test_rejeita_handoff_com_pr_ativo_divergente(self):
-        tmp, root = self.temp_root()
+        tmp, root = self.temp_root(lambda d: d["active"].update(pr_number=55, phase="review"))
         with tmp:
             path = root / "memory/HANDOFF.md"
             content = path.read_text(encoding="utf-8")
-            active = self.live["active"]
-            marker = f"**{active['task_id']} / PR #{active['pr_number']}**"
-            path.write_text(content.replace(marker, marker.replace(
-                f"#{active['pr_number']}", f"#{active['pr_number'] + 1}"), 1), encoding="utf-8")
+            marker = f"**{self.live['active']['task_id']} / PR pendente**"
+            active_marker = f"**{self.live['active']['task_id']} / PR #55**"
+            content = content.replace(marker, active_marker, 1)
+            content = content.replace(active_marker, f"**{self.live['active']['task_id']} / PR #56**", 1)
+            path.write_text(content, encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
                 validate_local(root)
 
@@ -135,18 +137,24 @@ class SingleFlowTests(unittest.TestCase):
                 validate_local(root)
 
     def pr(self, n=None, branch=None, sha="a" * 40, base="main"):
-        return {"number": self.live["active"]["pr_number"] if n is None else n,
+        return {"number": 55 if n is None else n,
                 "head": {"ref": branch or self.live["active"]["branch"], "sha": sha},
                 "base": {"ref": base}}
 
     def merged_pr(self):
-        return {"number": self.live["active"]["pr_number"], "state": "closed",
+        return {"number": 55, "state": "closed",
                 "merged_at": "2026-11-05T15:00:00Z",
                 "head": {"ref": self.live["active"]["branch"], "sha": "b" * 40},
                 "base": {"ref": "main"}, "merge_commit_sha": "a" * 40}
 
+    def active_pr_state(self):
+        state = copy.deepcopy(self.live)
+        state["active"]["pr_number"] = 55
+        state["active"]["phase"] = "review"
+        return state
+
     def check_remote(self, prs, event="pull_request", ref="unused/merge", head=None, prior=None):
-        return validate_remote(self.live, prs, event, ref,
+        return validate_remote(self.active_pr_state(), prs, event, ref,
                                self.live["active"]["branch"] if head is None else head,
                                prior, "a" * 40)
 
@@ -157,11 +165,11 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_rejeita_dois_prs_simultaneos(self):
         with self.assertRaisesRegex(ValueError, "Múltiplos PRs"):
-            self.check_remote([self.pr(), self.pr(self.live["active"]["pr_number"] + 1, "fix/other")])
+            self.check_remote([self.pr(), self.pr(56, "fix/other")])
 
     def test_rejeita_pr_diferente(self):
         with self.assertRaisesRegex(ValueError, "PR remoto diferente"):
-            self.check_remote([self.pr(self.live["active"]["pr_number"] + 1, "fix/other")])
+            self.check_remote([self.pr(56, "fix/other")])
 
     def test_rejeita_branch_de_pr_diferente(self):
         with self.assertRaisesRegex(ValueError, "Branch remota diferente"):
@@ -177,7 +185,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_rejeita_sha_de_evento_ausente_ou_invalido(self):
         with self.assertRaisesRegex(ValueError, "SHA do evento ausente"):
-            validate_remote(self.live, [self.pr()], "pull_request", "unused",
+            validate_remote(self.active_pr_state(), [self.pr()], "pull_request", "unused",
                             self.live["active"]["branch"], None, "")
 
     def test_rejeita_push_em_branch_legada(self):
@@ -193,33 +201,32 @@ class SingleFlowTests(unittest.TestCase):
             self.check_remote([], event="push", ref=self.live["active"]["branch"], head="")
 
     def test_permite_main_sem_pr_apos_merge_comprovado(self):
-        state = copy.deepcopy(self.live)
-        state["active"]["phase"] = "review"
+        state = self.active_pr_state()
         result = validate_remote(state, [], "push", "main", "", self.merged_pr(), "a" * 40)
         self.assertEqual(result["phase"], "idle")
         self.assertEqual(result["source_head_sha"], "b" * 40)
         self.assertEqual(result["merge_commit_sha"], "a" * 40)
         self.assertEqual(result["next_task"], self.live["next_task_after_merge"])
-        self.assertEqual(result["last_merged_pr"], self.live["active"]["pr_number"])
+        self.assertEqual(result["last_merged_pr"], 55)
 
     def test_rejeita_merge_sha_divergente_do_evento_main(self):
         prior = self.merged_pr()
         prior["merge_commit_sha"] = "c" * 40
         with self.assertRaisesRegex(ValueError, "SHA do evento main diverge"):
-            validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
+            validate_remote(self.active_pr_state(), [], "push", "main", "", prior, "a" * 40)
 
     def test_rejeita_sha_do_evento_main_ausente_ou_invalido(self):
         for event_sha in ("", "invalid"):
             with self.subTest(event_sha=event_sha), self.assertRaisesRegex(
                     ValueError, "SHA do evento main ausente ou inválido"):
-                validate_remote(self.live, [], "push", "main", "",
+                validate_remote(self.active_pr_state(), [], "push", "main", "",
                                 self.merged_pr(), event_sha)
 
     def test_rejeita_sha_de_origem_ausente_no_pr_mesclado(self):
         prior = self.merged_pr()
         prior["head"]["sha"] = ""
         with self.assertRaisesRegex(ValueError, "SHAs válidos"):
-            validate_remote(self.live, [], "push", "main", "", prior, "a" * 40)
+            validate_remote(self.active_pr_state(), [], "push", "main", "", prior, "a" * 40)
 
     def test_rejeita_lista_invalida(self):
         with self.assertRaisesRegex(ValueError, "inválido"):
@@ -239,7 +246,7 @@ class SingleFlowTests(unittest.TestCase):
         for mutation in (
             lambda d: d["base"].__setitem__("ref", "other"),
             lambda d: d["head"].__setitem__("ref", "other"),
-            lambda d: d.__setitem__("number", self.live["active"]["pr_number"] + 1),
+            lambda d: d.__setitem__("number", 56),
             lambda d: d.__setitem__("state", "open"),
         ):
             prior = self.merged_pr()
@@ -258,7 +265,7 @@ class SingleFlowTests(unittest.TestCase):
 
     def test_rejeita_main_pos_merge_sem_revisao(self):
         from copy import deepcopy
-        state = deepcopy(self.live)
+        state = deepcopy(self.active_pr_state())
         state["active"]["phase"] = "work"
         with self.assertRaisesRegex(ValueError, "sem checkpoint"):
             validate_remote(state, [], "push", "main", "", self.merged_pr(), "a" * 40)
@@ -283,6 +290,11 @@ class SingleFlowTests(unittest.TestCase):
             marker = f"**Próxima tarefa: {self.live['next_task_after_merge']}**"
             handoff.write_text(content.replace(
                 marker, "**Fila de simplificação concluída**", 1), encoding="utf-8")
+            roadmap = root / "ROADMAP.md"
+            roadmap_content = roadmap.read_text(encoding="utf-8")
+            roadmap_marker = "**Próxima tarefa: RM-08**"
+            roadmap.write_text(roadmap_content.replace(
+                roadmap_marker, "**Fila de simplificação concluída**", 1), encoding="utf-8")
             self.assertEqual(validate_local(root)["next_task_after_merge"], "DONE")
 
     def test_rejeita_estado_terminal_sem_marcador_no_roadmap(self):
@@ -314,7 +326,7 @@ class SingleFlowTests(unittest.TestCase):
         with patch("single_flow_gate.urlopen", side_effect=URLError("simulated outage")):
             with self.assertRaisesRegex(ValueError, "indisponível"):
                 fetch_pr("Andraus35/UFMS-MEU-ESTUDO",
-                         self.live["active"]["pr_number"], token="teste")
+                         55, token="teste")
 
     def test_pr_remoto_invalido_nao_aceita_comprovacao(self):
         with self.assertRaisesRegex(ValueError, "Número do PR"):

@@ -20,10 +20,16 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def test_checkpoint_preparado_coerente(self):
+    def test_checkpoint_ativo_coerente(self):
         result = verify(self.root)
         self.assertEqual(result["result"], "PASS")
         self.assertEqual(result["state"], "active")
+
+    def test_baseline_rm08_e_estado_ativo_com_rm08_formal_bloqueada(self):
+        result = verify(self.root)
+        self.assertEqual(result["active_task"], "RM-08-BASELINE")
+        self.assertEqual(result["state"], "active")
+        self.assertEqual(result["next_task"], "RM-08")
 
     def mutate_workflow(self, fn):
         p = self.root / "state/WORKFLOW.json"
@@ -43,7 +49,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
 
     def test_rejeita_documento_com_recibo_stale(self):
         p = self.root / "memory/HANDOFF.md"
-        p.write_text(p.read_text().replace("Último merge comprovado: PR #53", "Último merge comprovado: PR #52", 1), encoding="utf-8")
+        p.write_text(p.read_text().replace("Último merge comprovado: PR #54", "Último merge comprovado: PR #52", 1), encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "último merge|diverge do WORKFLOW"):
             verify(self.root)
 
