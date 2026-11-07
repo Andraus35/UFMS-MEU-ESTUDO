@@ -2,15 +2,15 @@
 
 ## ADR-001 — Repositório como fonte de verdade
 
-Estado: proposto. As sessões são retomadas pelo histórico de eventos, estado derivado e handoff compacto.
+Estado: vigente (adotado na prática desde 04–05/11/2026). As sessões são retomadas pelo histórico de eventos, estado derivado e handoff compacto.
 
 ## ADR-002 — Agente único, pedagogia flexível
 
-Estado: proposto. Regras de integridade são determinísticas; seleção de questões, explicações e recuperação são adaptativas.
+Estado: vigente (adotado na prática desde 04–05/11/2026). Regras de integridade são determinísticas; seleção de questões, explicações e recuperação são adaptativas.
 
 ## ADR-003 — Interação humana com TEC e Qconcursos
 
-Estado: proposto. O estudante usa as plataformas e devolve estatísticas. Não há coleta automatizada presumida.
+Estado: vigente (adotado na prática desde 04–05/11/2026). O estudante usa as plataformas e devolve estatísticas. Não há coleta automatizada presumida.
 
 ## ADR-004 — Privacidade anterior a dados reais
 
@@ -18,7 +18,7 @@ Estado: bloqueio inicial. O registro histórico alegava visibilidade privada em 
 
 ## ADR-005 — Mudanças estruturais por PR
 
-Estado: proposto. Sem merge autônomo; sessões ordinárias podem persistir dados autorizados após validar e proteger a privacidade.
+Estado: vigente (adotado na prática desde 04–05/11/2026). Sem merge autônomo; sessões ordinárias podem persistir dados autorizados após validar e proteger a privacidade.
 
 ## ADR-006 — Simplificação proporcional para uso pessoal (05/11/2026)
 
@@ -26,7 +26,7 @@ Estado: **integrado à main via PR #9 (merge 7942771aea28)**. Governança mínim
 
 ## ADR-007 — Fluxo serial e uma fonte de estado (05/11/2026)
 
-**Decisão vigente, integrada pelo PR #9:** o desenvolvimento pessoal é sequencial: **uma tarefa → uma branch → um PR → um merge**, sem frentes empilhadas, paralelas ou PRs de auditoria separados. Criar próxima tarefa somente depois de concluir e integrar a anterior. O estado operacional `state/WORKFLOW.json` identifica trabalho ativo e registra PRs históricos pausados com SHAs. O `ROADMAP.md` descreve fila/criticidade e `memory/HANDOFF.md` resume retomada; não duplicar estado editável em três locais. O `state/CURRENT.json` continua exclusivamente como projeção de resultados de estudo. O gate local e a CI remota falham com múltiplos PRs; não garantem impossibilidade administrativa de criação. Exceção do PR #9 concluída. A única frente atual é SIM-01/PR #19; próximo ciclo SIM-02 após merge comprovado.
+**Decisão vigente, integrada pelo PR #9:** o desenvolvimento pessoal é sequencial: **uma tarefa → uma branch → um PR → um merge**, sem frentes empilhadas, paralelas ou PRs de auditoria separados. Criar próxima tarefa somente depois de concluir e integrar a anterior. O estado operacional `state/WORKFLOW.json` identifica trabalho ativo e registra PRs históricos pausados com SHAs. O `ROADMAP.md` descreve fila/criticidade e `memory/HANDOFF.md` resume retomada; não duplicar estado editável em três locais. O `state/CURRENT.json` continua exclusivamente como projeção de resultados de estudo. O gate local e a CI remota falham com múltiplos PRs; não garantem impossibilidade administrativa de criação. Exceção do PR #9 concluída. Frente ativa e próxima tarefa: ver `state/WORKFLOW.json`.
 
 ## ADR-008 — Recuperação seletiva de branches legadas (05/11/2026)
 

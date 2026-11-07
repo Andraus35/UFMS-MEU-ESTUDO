@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #55; SHA 937f3c72be8e5812b077b1e5f0cb8115836d1cff
-- Frente ativa: **RM-08 / PR #56**; branch `feat/rm08-gates-20261107`; base main; fase review.
+- Último merge comprovado: PR #56; SHA 6b9ffa1efdca5e8817760b8a530976c7552ff8a5
+- Frente ativa: **RM-08 / PR pendente**; branch `feat/rm08-higiene-20261107`; base main; fase work.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -25,7 +25,7 @@
 - Último merge comprovado: PR #53; SHA 05b00079794fabf97672baf68821893feb730af2.
 - Frente ativa única: **RM-08-PREP / PR #54**; branch `fix/governance-idle-state-20261106`, base main, fase review; escopo limitado à máquina de estados pós-merge, gates e sincronização documental.
 - WORKFLOW é a fonte operacional única; registra tarefa preparada, sem PR criado, e último merge #53.
-- **Próxima tarefa: RM-08** somente após entrega, consenso e nova avaliação dos bloqueadores. RM-08 formal permanece bloqueada; GP-4 real não homologado.
+- Próxima tarefa então prevista (histórico): RM-08, somente após entrega, consenso e nova avaliação dos bloqueadores. RM-08 formal permanece bloqueada; GP-4 real não homologado.
 - Gate valida prepared (branch registrada sem PR), active (um PR coerente) e awaiting_next_task (nenhum PR aberto, último PR comprovadamente integrado).
 - CURRENT: E0, zero eventos e zero resultados; PROGRESS intocado.
 - settings.json: persistência pessoal continua desabilitada (false); política inalterada.
@@ -36,7 +36,7 @@
 
 Concluir a implementação na única branch, abrir um único PR draft, atualizar WORKFLOW com o número real do PR e validar CI, contraprovas e readback no SHA exato.
 
-**Próxima tarefa: RM-08**
+Próxima tarefa então prevista (histórico): RM-08.
 
 ## Registro histórico
 
