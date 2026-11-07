@@ -159,8 +159,8 @@ def validate_remote(data, open_prs, event_name, ref_name, head_ref="", prior_pr=
         raise ValueError("PR anterior não comprovadamente mesclado em main com SHAs válidos")
     if active["phase"] not in ("review", "merge_ready"):
         raise ValueError("PR anterior mesclado sem checkpoint de revisão no estado")
-    if head_sha == merge_sha:
-        raise ValueError("SHA de origem e SHA de merge não podem ser confundidos")
+    if merge_sha != head_sha:
+        raise ValueError("SHA do evento main diverge do merge_commit_sha do PR")
     return {"phase": "idle", "last_merged_pr": active["pr_number"],
             "source_head_sha": head_sha, "merge_commit_sha": merge_sha,
             "next_task": data["next_task_after_merge"]}
