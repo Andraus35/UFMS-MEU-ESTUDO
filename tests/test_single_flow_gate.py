@@ -37,11 +37,11 @@ class SingleFlowTests(unittest.TestCase):
     def test_estado_unico_valido(self):
         self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 54)
         self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
-        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
+        self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)$")
 
-    def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
+    def test_baseline_rm08_e_uma_unica_subtarefa_serial(self):
         state = validate_local(ROOT)
-        self.assertEqual(state["active"]["task_id"], "RM-08-PREP")
+        self.assertEqual(state["active"]["task_id"], "RM-08-BASELINE")
         self.assertEqual(state["next_task_after_merge"], "RM-08")
 
     def test_rejeita_subtarefa_nao_autorizada(self):

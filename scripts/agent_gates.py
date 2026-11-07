@@ -50,6 +50,11 @@ PREPARATION_BASELINE = {
         "ENG-07 / RM-08: preparação offline sintética (sem promover GP-4)",
         "Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado.",
     ),
+    "RM-08-BASELINE": (
+        "P2",
+        "ENG-07 / RM-08: baseline formal e avaliação de bloqueadores",
+        "Baseline documentada no HEAD vigente; status e proveniência de GP-3, GQ-D, GQ-C e GQ-O reconciliados; critérios mínimos do ciclo e bloqueadores explícitos; sem persistência pessoal, integração externa ou promoção de GP-4.",
+    ),
 }
 
 
@@ -76,7 +81,8 @@ def validate_roadmap_text(contents):
             if (code in preparation_seen or priority != expected_priority
                     or front != expected_front or status not in {"planejado", "em_andamento", "implementado_nao_homologado"}
                     or done != expected_done):
-                raise ValueError("Subescopo RM-08-PREP alterado ou duplicado")
+                label = "RM-08-PREP" if code == "RM-08-PREP" else "RM-08-BASELINE"
+                raise ValueError("Subescopo " + label + " alterado ou duplicado")
             preparation_seen.add(code)
             continue
         if code in seen:
@@ -91,7 +97,7 @@ def validate_roadmap_text(contents):
             raise ValueError("Mudança estratégica exige baseline auditada: " + code)
         seen[code] = True
     if preparation_seen != set(PREPARATION_BASELINE):
-        raise ValueError("Subescopo RM-08-PREP ausente, duplicado ou reordenado")
+        raise ValueError("Subescopos preparatórios RM-08 ausentes, duplicados ou reordenados")
     if tuple(seen) != ROADMAP_ITEMS:
         raise ValueError("Fila de roadmap incompleta, reordenada ou adulterada")
     return True

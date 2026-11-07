@@ -4,10 +4,10 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #53; SHA 05b00079794fabf97672baf68821893feb730af2.
-- Frente ativa: **RM-08-PREP / PR #54**; branch `fix/governance-idle-state-20261106`; base main; fase review.
+- Último merge comprovado: PR #54; SHA 33b3b18ed741a53e4d9e22c3573c1154ffc1f5a2
+- Frente ativa: **RM-08-BASELINE / PR pendente**; branch `docs/rm08-baseline-20261107`; base main; fase work.
 - Fonte operacional única: `state/WORKFLOW.json`.
-- **Próxima tarefa: RM-08**; RM-08 formal permanece bloqueada até avaliação formal dos bloqueadores.
+- **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até a baseline e os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
@@ -82,7 +82,7 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 
 ## Fila de execução
 
-**Próxima tarefa: RM-08** após o fechamento documental pós-merge do PR #52. A frente operacional atual é exclusivamente RM-08-PREP / PR #53, limitada à reconciliação de governança e à validação determinística da sincronização documental. A preparação sintética foi integrada pelo PR #52, sem homologar a linha formal RM-08, que permanece bloqueada; GP-4 real exige baseline auditada e gates próprios.
+**Próxima tarefa: RM-08** após a conclusão da subetapa RM-08-BASELINE; a entrega formal RM-08 permanece bloqueada pelos gates documentados. A frente operacional atual é exclusivamente RM-08-PREP / PR #53, limitada à reconciliação de governança e à validação determinística da sincronização documental. A preparação sintética foi integrada pelo PR #52, sem homologar a linha formal RM-08, que permanece bloqueada; GP-4 real exige baseline auditada e gates próprios.
 
 **Estados permitidos:** `planejado`, `em_andamento`, `implementado_nao_homologado`, `bloqueado`, `homologado`. A classificação é rastreável por evidência do HEAD, não percentual arbitrário.
 
@@ -98,8 +98,11 @@ O inventário autenticado lista 20 branches de trabalho além da `main`: oito re
 | RM-07 | P1 | GQ-D/C/O do harness cognitivo | implementado_nao_homologado | 9 NCs: 1 OPEN, 6 PARTIAL_IN_MAIN, 2 PARTIAL candidate; 0/27 end-to-end PASS; GQ-D/C/O não homologados |
 | RM-08 | P2 | ENG-07 / GP-4: ciclo Tutor–Coach | bloqueado | Recomendação → execução humana → resultado → reavaliação, persistência/replay consentidos |
 | RM-08-PREP | P2 | ENG-07 / RM-08: preparação offline sintética (sem promover GP-4) | implementado_nao_homologado | Protótipo determinístico com fixtures sintéticas: recomendação, simulação sem plataforma, validação em memória, reconstrução e nova fila explícita; nenhuma persistência pessoal, replay real ou integração externa; RM-08 permanece bloqueado. |
+| RM-08-BASELINE | P2 | ENG-07 / RM-08: baseline formal e avaliação de bloqueadores | em_andamento | Baseline documentada no HEAD vigente; status e proveniência de GP-3, GQ-D, GQ-C e GQ-O reconciliados; critérios mínimos do ciclo e bloqueadores explícitos; sem persistência pessoal, integração externa ou promoção de GP-4. |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
+
+**RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 

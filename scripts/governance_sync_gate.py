@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUS = "docs/governanca/STATUS_BRANCHES_RECONCILIADO_20261105.md"
-TASK_RE = r"(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)"
+TASK_RE = r"(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)"
 SHA_RE = re.compile(r"[0-9a-f]{40}")
 
 
