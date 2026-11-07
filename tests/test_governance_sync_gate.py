@@ -23,7 +23,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def test_checkpoint_preparado_coerente(self):
         result = verify(self.root)
         self.assertEqual(result["result"], "PASS")
-        self.assertEqual(result["state"], "prepared")
+        self.assertEqual(result["state"], "active")
 
     def mutate_workflow(self, fn):
         p = self.root / "state/WORKFLOW.json"
@@ -43,8 +43,8 @@ class GovernanceSyncGateTests(unittest.TestCase):
 
     def test_rejeita_documento_com_recibo_stale(self):
         p = self.root / "memory/HANDOFF.md"
-        p.write_text(p.read_text().replace("PR #53", "PR #52", 1), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "frente ativa"):
+        p.write_text(p.read_text().replace("Último merge comprovado: PR #53", "Último merge comprovado: PR #52", 1), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "último merge"):
             verify(self.root)
 
     def test_rejeita_proxima_tarefa_divergente(self):
@@ -56,7 +56,7 @@ class GovernanceSyncGateTests(unittest.TestCase):
 
     def test_rejeita_estado_idle_com_documento_ativo(self):
         self.mutate_workflow(lambda d: d.update(active=None))
-        with self.assertRaisesRegex(ValueError, "ausência de frente ativa"):
+        with self.assertRaisesRegex(ValueError, "WORKFLOW.active"):
             verify(self.root)
 
     def test_rejeita_branch_main_como_branch_de_trabalho(self):
