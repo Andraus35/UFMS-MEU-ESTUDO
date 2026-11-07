@@ -25,11 +25,13 @@ class GovernanceSyncGateTests(unittest.TestCase):
         self.assertEqual(result["result"], "PASS")
         self.assertEqual(result["state"], "active")
 
-    def test_baseline_rm08_e_estado_ativo_com_rm08_formal_bloqueada(self):
+    def test_rm08_ativa_com_recibo_do_pr_55(self):
         result = verify(self.root)
-        self.assertEqual(result["active_task"], "RM-08-BASELINE")
+        self.assertEqual(result["active_task"], "RM-08")
+        self.assertEqual(result["active_pr"], 56)
         self.assertEqual(result["state"], "active")
-        self.assertEqual(result["next_task"], "RM-08")
+        self.assertEqual(result["last_merged_pr"], 55)
+        self.assertEqual(result["next_task"], "RM-09")
 
     def mutate_workflow(self, fn):
         p = self.root / "state/WORKFLOW.json"
@@ -49,13 +51,13 @@ class GovernanceSyncGateTests(unittest.TestCase):
 
     def test_rejeita_documento_com_recibo_stale(self):
         p = self.root / "memory/HANDOFF.md"
-        p.write_text(p.read_text().replace("Último merge comprovado: PR #54", "Último merge comprovado: PR #52", 1), encoding="utf-8")
+        p.write_text(p.read_text().replace("Último merge comprovado: PR #55", "Último merge comprovado: PR #52", 1), encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "último merge|diverge do WORKFLOW"):
             verify(self.root)
 
     def test_rejeita_proxima_tarefa_divergente(self):
         p = self.root / "ROADMAP.md"
-        p.write_text(p.read_text().replace("**Próxima tarefa: RM-08**",
+        p.write_text(p.read_text().replace("**Próxima tarefa: RM-09**",
                                            "**Próxima tarefa: RM-99**", 1), encoding="utf-8")
         with self.assertRaisesRegex(ValueError, "Próxima tarefa|diverge do WORKFLOW"):
             verify(self.root)
