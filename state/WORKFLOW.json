@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "integracoes_conector_local_plataformas",
-    "branch": "feat/rm09-conector-plataformas-20261107",
-    "pr_number": 68,
+    "scope": "integracoes_pesquisa_obrigatoria_nas_especificacoes",
+    "branch": "feat/rm09-pesquisa-obrigatoria-spec-20261107",
+    "pr_number": 69,
     "base": "main",
     "phase": "review"
   },
@@ -113,11 +113,11 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #67 integrado em main no merge commit 9afd7f2e896a0d2e6e940574271a3f17f75f4cc7 (CI do HEAD do PR e de main verdes). Frente única ativa: RM-09 (conector local de leitura das plataformas TEC e Qconcursos, D-15), branch feat/rm09-conector-plataformas-20261107, PR #68. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #68 integrado em main no merge commit 9fb61864d463b9ca0dcb30fc47406fe1446a192d (CI do HEAD do PR e de main verdes). Frente única ativa: RM-09 (pesquisa obrigatória nas especificações, D-16), branch feat/rm09-pesquisa-obrigatoria-spec-20261107, PR #69. RM-08 formal continua bloqueada. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 67,
-    "merge_commit_sha": "9afd7f2e896a0d2e6e940574271a3f17f75f4cc7"
+    "pr_number": 68,
+    "merge_commit_sha": "9fb61864d463b9ca0dcb30fc47406fe1446a192d"
   }
 }
