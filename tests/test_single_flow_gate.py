@@ -33,14 +33,15 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 55)
-        self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
+        self.assertIsNone(validate_local(ROOT)["active"]["pr_number"])
+        self.assertEqual(validate_local(ROOT)["active"]["phase"], "work")
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)$")
 
-    def test_baseline_rm08_e_uma_unica_subtarefa_serial(self):
+    def test_rm08_e_a_unica_tarefa_serial_ativa(self):
         state = validate_local(ROOT)
-        self.assertEqual(state["active"]["task_id"], "RM-08-BASELINE")
-        self.assertEqual(state["next_task_after_merge"], "RM-08")
+        self.assertEqual(state["active"]["task_id"], "RM-08")
+        self.assertEqual(state["next_task_after_merge"], "RM-09")
+        self.assertEqual(state["last_merged"]["pr_number"], 55)
 
     def test_rejeita_subtarefa_nao_autorizada(self):
         tmp, root = self.temp_root(lambda d: d["active"].__setitem__("task_id", "RM-08-REAL"))
@@ -280,7 +281,7 @@ class SingleFlowTests(unittest.TestCase):
     def test_aceita_estado_terminal_da_fila(self):
         tmp, root = self.temp_root()
         with tmp:
-            self.assertEqual(validate_local(root)["next_task_after_merge"], "RM-08")
+            self.assertEqual(validate_local(root)["next_task_after_merge"], self.live["next_task_after_merge"])
 
     def test_fila_sim_terminal_pode_avancar_para_rm(self):
         tmp, root = self.temp_root(lambda d: d.__setitem__("next_task_after_merge", "DONE"))
@@ -292,7 +293,7 @@ class SingleFlowTests(unittest.TestCase):
                 marker, "**Fila de simplificação concluída**", 1), encoding="utf-8")
             roadmap = root / "ROADMAP.md"
             roadmap_content = roadmap.read_text(encoding="utf-8")
-            roadmap_marker = "**Próxima tarefa: RM-08**"
+            roadmap_marker = marker
             roadmap.write_text(roadmap_content.replace(
                 roadmap_marker, "**Fila de simplificação concluída**", 1), encoding="utf-8")
             self.assertEqual(validate_local(root)["next_task_after_merge"], "DONE")
