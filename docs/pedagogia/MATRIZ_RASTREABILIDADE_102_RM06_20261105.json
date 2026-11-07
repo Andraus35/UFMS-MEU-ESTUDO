@@ -6,8 +6,8 @@
   "execution_sha": null,
   "policy": "A existência de teste unitário correlato não equivale à execução do cenário pedagógico completo.",
   "status_counts": {
-    "PARTIAL": 42,
-    "NOT_IMPLEMENTED": 60,
+    "PARTIAL": 47,
+    "NOT_IMPLEMENTED": 55,
     "PASS": 0,
     "FAIL": 0,
     "BLOCKED": 0,
@@ -266,31 +266,39 @@
     },
     {
       "scenario_id": "SIM-01",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_score.py::test_sim01_pontuacao_ponderada_63_de_100"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_score.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-02",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_score.py::test_sim02_percentual_global_sem_areas_nao_gera_pontuacao"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_score.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-03",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_score.py::test_sim03_simulado_parcial_nao_e_equivalente_a_100_pontos"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_score.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-04",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_score.py::test_sim04_area_zerada_sinaliza_restricao_sem_declarar_reprovacao"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_score.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "SIM-05",
@@ -329,10 +337,12 @@
     },
     {
       "scenario_id": "SIM-10",
-      "status": "NOT_IMPLEMENTED",
-      "test_refs": [],
+      "status": "PARTIAL",
+      "test_refs": [
+        "tests/test_simulado_score.py::test_sim10_regras_retificadas_invalidam_a_simulacao"
+      ],
       "execution": "NOT_RUN_AS_SCENARIO",
-      "note": "Sem teste canônico associado; implementar antes de marcar PASS."
+      "note": "Existe teste unitário correlato (scripts/simulado_score.py), mas o cenário completo não foi executado nem homologado."
     },
     {
       "scenario_id": "EFA-01",
@@ -812,5 +822,6 @@
       "execution": "NOT_RUN_AS_SCENARIO",
       "note": "Sem teste canônico associado; implementar antes de marcar PASS."
     }
-  ]
+  ],
+  "atualizacao_20261107": "SIM-01, SIM-02, SIM-03, SIM-04 e SIM-10 passaram de NOT_IMPLEMENTED a PARTIAL com scripts/simulado_score.py e tests/test_simulado_score.py; code_sha refere-se à medição original de 05/11/2026."
 }
