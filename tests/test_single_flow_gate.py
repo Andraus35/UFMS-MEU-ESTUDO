@@ -15,7 +15,9 @@ from single_flow_gate import fetch_pr, validate_local, validate_remote
 class SingleFlowTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.live = validate_local(ROOT)
+        cls.live = copy.deepcopy(validate_local(ROOT))
+        cls.live["active"]["pr_number"] = 54
+        cls.live["active"]["phase"] = "review"
 
     def temp_root(self, mutation=None):
         temp = tempfile.TemporaryDirectory()
@@ -33,7 +35,8 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertGreaterEqual(validate_local(ROOT)["active"]["pr_number"], 1)
+        self.assertIsNone(validate_local(ROOT)["active"]["pr_number"])
+        self.assertEqual(validate_local(ROOT)["active"]["phase"], "work")
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-PREP)?)$")
 
     def test_preparacao_rm08_e_uma_unica_subtarefa_serial(self):
