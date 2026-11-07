@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #58; SHA 0a5ba9813d67622ef7bdf4414a705d150b3336ef
-- Frente ativa: **RM-08 / PR #59**; branch `feat/rm08-guard-persistencia-20261107`; base main; fase review.
+- Último merge comprovado: PR #59; SHA 1fae7982d27adb01afad2d164cdc34924eded407
+- Frente ativa: **RM-01 / PR #60**; branch `feat/rm01-evidencia-schedule-20261107`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -101,7 +101,7 @@ Frente ativa e próxima tarefa: ver *Checkpoint vigente* e `state/WORKFLOW.json`
 
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
-**Auditoria RM-01 (05/11/2026):** workflow agendado e contrato read-only verificados; nenhum run autenticado com `event=schedule` foi encontrado. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, e `ALERTA-DOC-01` permanece aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até execução agendada real e evidência documental remota verificável.
+**Auditoria RM-01 (05/11/2026; atualizada em 07/11/2026):** workflow agendado e contrato read-only verificados. Em 05/11 nenhum run `event=schedule` existia; em 07/11 foram observados dois (`42279755785` e `42397876811`, ambos `success`, `no_change_observed_on_single_page`), o que verifica o **agendamento**. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, cobertura de uma página e `ALERTA-DOC-01` aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até evidência documental remota verificável.
 
 **Dependências:** RM-00 e RM-01 podem avançar em paralelo; RM-02 → RM-03 → RM-04 → RM-05, com RM-06 testando cada incremento; RM-07 requer avaliação independente própria; RM-08/09 e RM-10 dependem de gates técnicos, segurança e autorização.
 
@@ -262,7 +262,7 @@ O PR #20 é a única frente ativa; seu código deriva seletivamente da branch hi
 
 ### SIM-03 — monitor FAPEC read-only e prova CLI (PR #21 + PR #29)
 
-O PR #21 já integrou `.github/workflows/monitor-fapec.yml`, `scripts/monitor_fapec.py` e `tests/test_monitor_fapec_schedule.py` à `main`. O workflow tem `schedule` diário (`17 12 * * *` UTC) e `workflow_dispatch`, usa `contents: read`, checkout com `persist-credentials: false`, sem secrets e sem execução em push/PR. O monitor consulta uma única página FAPEC; não verifica exaustivamente boletim UFMS/DOU, não baixa nem aplica retificações e não resolve o alerta cronológico do Anexo II, p. 13. O PR #29 acrescenta teste CLI ponta a ponta com fixtures offline para confirmar os códigos 0 (estabilidade observada somente na página), 2 (revisão humana) e 3 (inconclusivo), além dos metadados `writes=false` e `normative_revision_verified=false`. **A configuração do cron e o teste estático não provam que o GitHub executou um evento `schedule`; até existir run com `event=schedule`, o cron permanece `NOT_VERIFIED`.** O alerta p. 13 e o PDF original permanecem inalterados.
+O PR #21 já integrou `.github/workflows/monitor-fapec.yml`, `scripts/monitor_fapec.py` e `tests/test_monitor_fapec_schedule.py` à `main`. O workflow tem `schedule` diário (`17 12 * * *` UTC) e `workflow_dispatch`, usa `contents: read`, checkout com `persist-credentials: false`, sem secrets e sem execução em push/PR. O monitor consulta uma única página FAPEC; não verifica exaustivamente boletim UFMS/DOU, não baixa nem aplica retificações e não resolve o alerta cronológico do Anexo II, p. 13. O PR #29 acrescenta teste CLI ponta a ponta com fixtures offline para confirmar os códigos 0 (estabilidade observada somente na página), 2 (revisão humana) e 3 (inconclusivo), além dos metadados `writes=false` e `normative_revision_verified=false`. **A configuração do cron e o teste estático não provam execução; o agendamento foi verificado em 07/11/2026 por dois runs `event=schedule` bem-sucedidos (`42279755785`, `42397876811`), o que não prova ausência de retificações.** O alerta p. 13 e o PDF original permanecem inalterados.
 
 
 ## Fechamento pós-merge e saneamento de branches — 06/11/2026

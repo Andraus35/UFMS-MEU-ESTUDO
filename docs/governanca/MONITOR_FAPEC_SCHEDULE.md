@@ -5,8 +5,9 @@
 - O PR #21 integrou o workflow `.github/workflows/monitor-fapec.yml` à `main`.
 - O workflow declara agendamento diário `17 12 * * *` UTC e acionamento manual por `workflow_dispatch`.
 - O workflow usa `contents: read`, checkout com `persist-credentials: false`, não usa secrets e não executa em push/PR.
-- A existência do cron no YAML e os testes estáticos de CI **não provam** que um evento agendado foi executado. Até ser observado um run do GitHub Actions com `event=schedule`, o estado é **NOT_VERIFIED**.
-- O último registro de observação no inventário oficial é de 04/11/2026. Não afirmar que o portal foi consultado hoje sem um run correspondente.
+- A existência do cron no YAML e os testes estáticos de CI **não provam** que um evento agendado foi executado. **Em 07/11/2026 o agendamento foi VERIFICADO:** run `42279755785` (06/11/2026, `main@7df4b8f`) e run `42397876811` (07/11/2026, `main@937f3c7`), ambos `event=schedule`, job `check` `success`; o JSON no log de cada um traz `status=no_change_observed_on_single_page`, `publication_candidate=false`, `writes=false`, `normative_revision_verified=false`. O horário real difere do cron por atraso do GitHub.
+- A verificação cobre **somente** a execução agendada e uma página da FAPEC. Não prova ausência de retificação em outras fontes, não verifica bytes do PDF e não resolve `ALERTA-DOC-01`.
+- Não afirmar que o portal foi consultado em data posterior à do último run `schedule` registrado; consultar os runs para confirmar.
 
 ## Escopo e códigos
 
@@ -40,7 +41,7 @@ Esses testes provam o contrato da execução CLI com fixtures, não a execução
 4. Conferir o SHA do commit, o resultado JSON e o log do job.
 5. Registrar o run ID e o SHA observado no handoff.
 
-Um acionamento manual `workflow_dispatch` comprova somente a execução manual; não substitui um run com `event=schedule`. Até essa evidência existir, manter SIM-03 em andamento.
+Um acionamento manual `workflow_dispatch` comprova somente a execução manual; não substitui um run com `event=schedule`. Essa evidência existe desde 07/11/2026 (runs `42279755785` e `42397876811`).
 
 ## Preservação e segurança
 
