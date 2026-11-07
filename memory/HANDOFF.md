@@ -6,8 +6,8 @@
 - HEAD integrado: main@05b00079794fabf97672baf68821893feb730af2; PR #53 integrado por squash.
 - Último merge comprovado: PR #53
 - SHA do último merge: 05b00079794fabf97672baf68821893feb730af2.
-- Frente ativa: **RM-08-PREP / PR pendente**; branch fix/governance-idle-state-20261106, base main, fase work. Escopo: máquina de estados pós-merge, gates e sincronização documental. Um único PR será aberto nesta branch.
-- Fonte operacional única: state/WORKFLOW.json; PR ainda não criado no checkpoint inicial desta branch.
+- Frente ativa: **RM-08-PREP / PR #54**; branch fix/governance-idle-state-20261106, base main, fase review. Escopo: máquina de estados pós-merge, gates e sincronização documental. Um único PR será aberto nesta branch.
+- Fonte operacional única: state/WORKFLOW.json; PR #54 é o único PR ativo desta tarefa.
 - **Próxima tarefa: RM-08** somente após entrega, consenso e nova avaliação formal de bloqueadores. RM-08 permanece bloqueada; não iniciar nem homologar GP-4.
 - Os gates devem validar estado preparado sem PR, PR ativo e transição pós-merge comprovada.
 - Persistência: settings.json permanece com personal_results_writes_enabled=false; CURRENT E0, zero eventos/resultados; PROGRESS intocado.
