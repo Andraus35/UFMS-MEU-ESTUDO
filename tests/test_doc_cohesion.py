@@ -107,6 +107,34 @@ class DocCohesionTests(unittest.TestCase):
         self._spec("# S9\n\n## Pesquisa\n- https://exemplo.org (confiança B)\n- **Lacunas:** página bloqueada.\n\n## Requisitos\ny\n")
         self.assertEqual(doc_cohesion.validate(self.tmp)["result"], "PASS")
 
+    def _queue(self, mutate):
+        p = self.tmp / "state/WORKFLOW.json"
+        w = json.loads(p.read_text(encoding="utf-8"))
+        mutate(w["work_queue"])
+        p.write_text(json.dumps(w), encoding="utf-8")
+
+    def test_c8_item_sem_campo(self):
+        self._queue(lambda q: q[0].pop("deliverable"))
+        self._fails("C8")
+
+    def test_c8_tarefa_fora_do_roadmap(self):
+        self._queue(lambda q: q[0].update(roadmap_task="RM-77"))
+        self._fails("C8")
+
+    def test_c8_dependencia_inexistente_ou_posterior(self):
+        self._queue(lambda q: q[0].update(depends_on=["S9"]))
+        self._fails("C8")
+        self._queue(lambda q: q[0].update(depends_on=["S2"]))
+        self._fails("C8")
+
+    def test_c8_entrega_fora_de_especificacoes(self):
+        self._queue(lambda q: q[0].update(deliverable="docs/outro/S1.md"))
+        self._fails("C8")
+
+    def test_c8_id_repetido(self):
+        self._queue(lambda q: q[1].update(id=q[0]["id"]))
+        self._fails("C8")
+
     def test_c0_documento_normativo_ausente(self):
         (self.tmp / "docs/PLATFORMS.md").unlink()
         self._fails("C0")

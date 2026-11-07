@@ -8,7 +8,8 @@ Verificações determinísticas (sem LLM, sem rede):
   C4 IDs definidos em PRODUCT.md não se repetem;
   C5 `settings.json` e documentos concordam (intervalos de revisão, flags de agenda fixa, START de engenharia);
   C6 frases superadas (decisões revogadas) não reaparecem nos normativos;
-  C7 toda especificação em docs/especificacoes/S*.md tem a seção "## Pesquisa" com link e linha de lacunas (D-16).
+  C7 toda especificação em docs/especificacoes/S*.md tem a seção "## Pesquisa" com link e linha de lacunas (D-16);
+  C8 a fila work_queue de state/WORKFLOW.json é válida (campos, ids únicos, dependências, tarefa no ROADMAP, entrega em docs/especificacoes).
 
 Uso: python scripts/doc_cohesion.py --check [--root DIR]
 Não prova compreensão semântica: pega divergência mecânica. Estado do ciclo é coberto por governance_sync_gate.
@@ -218,6 +219,37 @@ def check_specs(root: Path) -> list[str]:
     return errs
 
 
+QUEUE_FIELDS = ("id", "title", "roadmap_task", "deliverable", "depends_on", "blocking_inputs", "optional_inputs")
+
+
+def check_queue(root: Path) -> list[str]:
+    errs = []
+    wf = json.loads((root / "state/WORKFLOW.json").read_text(encoding="utf-8"))
+    queue = wf.get("work_queue", [])
+    rm = roadmap_ids(root)
+    ids = [i.get("id") for i in queue if isinstance(i, dict)]
+    if len(ids) != len(set(ids)):
+        errs.append("C8 WORKFLOW.json: work_queue com id repetido")
+    for item in queue:
+        if not isinstance(item, dict):
+            errs.append("C8 WORKFLOW.json: item de work_queue não é objeto")
+            continue
+        iid = item.get("id", "?")
+        for f in QUEUE_FIELDS:
+            if f not in item:
+                errs.append(f"C8 WORKFLOW.json: item {iid} sem o campo {f}")
+        if item.get("roadmap_task") not in rm:
+            errs.append(f"C8 WORKFLOW.json: item {iid} aponta tarefa fora do ROADMAP ({item.get('roadmap_task')})")
+        if not re.fullmatch(r"docs/especificacoes/S[^/]+\.md", str(item.get("deliverable", ""))):
+            errs.append(f"C8 WORKFLOW.json: entrega do item {iid} fora de docs/especificacoes/S*.md")
+        for d in item.get("depends_on", []):
+            if d not in ids:
+                errs.append(f"C8 WORKFLOW.json: item {iid} depende de id inexistente ({d})")
+            elif ids.index(d) >= ids.index(iid):
+                errs.append(f"C8 WORKFLOW.json: item {iid} depende de item posterior ({d})")
+    return errs
+
+
 def validate(root=ROOT) -> dict:
     root = Path(root)
     files = _files(root, NORMATIVE, NORMATIVE_GLOBS)
@@ -230,6 +262,7 @@ def validate(root=ROOT) -> dict:
         errs += check_settings_vs_docs(root)
         errs += check_stale(root, files)
         errs += check_specs(root)
+        errs += check_queue(root)
     if errs:
         raise ValueError("coesão documental: " + str(len(errs)) + " divergência(s)\n  " + "\n  ".join(errs))
     return {"documents": len(files), "result": "PASS"}

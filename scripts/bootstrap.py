@@ -55,6 +55,11 @@ def run(root=ROOT, mode="study"):
         "warning": "Leitura local nao comprova HEAD remoto ou passagem obrigatoria de agentes externos",
     }
     if flow:
+        try:
+            from next_task import compute as next_action
+        except ModuleNotFoundError:
+            from scripts.next_task import compute as next_action
+        result["proxima_acao"] = next_action(root)
         result.update({
             "tarefa_ativa": flow["active"]["task_id"],
             "pr_ativo": flow["active"]["pr_number"],
