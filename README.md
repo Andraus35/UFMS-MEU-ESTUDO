@@ -14,6 +14,8 @@ Persistir o contexto entre sessões, orientar cadernos de questões no TEC Concu
 
 ## Iniciar uma sessão
 
+**Construtores (engenharia):** leiam também [`PRODUCT.md`](PRODUCT.md), o documento do produto (fluxo Zapia, harness e Gemini Notebook, decisões e ordem de construção). Ele é o 3º arquivo do START de engenharia.
+
 1. Ler os quatro arquivos do bootstrap na ordem de `settings.json`, começando por `AGENTS.md` e [`ROADMAP.md`](ROADMAP.md), e identificar o item RM antes de trabalhar.
 2. Executar `python scripts/bootstrap.py --mode engineering` para engenharia (inclui `state/WORKFLOW.json`) ou `python scripts/bootstrap.py --mode study` para sessões pedagógicas e `python scripts/roadmap_gate.py --check` para conferir os arquivos, referências e hashes; os comandos não provam compreensão semântica por LLM.
 3. Recuperar as demais normas, índices, chunks do edital, eventos e documentos pedagógicos sob demanda.

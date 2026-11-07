@@ -37,6 +37,7 @@
 
 ## Governança e leitura obrigatória
 
+0. **`PRODUCT.md`** é leitura obrigatória no START de engenharia (3º arquivo) e define o produto e a ordem de construção; não contém estado. Em conflito: `AGENTS.md` > `PRODUCT.md` > `ROADMAP.md`.
 1. **Antes de qualquer trabalho operacional**, todo agente participante (Tutor, Coach, engenheiro documental, pedagógico, auditor ou integrador) deve recuperar e interpretar `AGENTS.md` e **`ROADMAP.md`** do HEAD atual, nessa ordem, e consultar os outros dois obrigatórios (handoff e CURRENT) em `settings.json`; demais fontes sob demanda.
 2. Em checkout local, executar `python scripts/bootstrap.py` e `python scripts/roadmap_gate.py --check` no START; verificar hash SHA-256 e identificar o item RM e eventuais bloqueadores. Sem checkout, ler os arquivos via GitHub autenticado e registrar HEAD e SHA de cada fonte. Se faltar leitura, integridade ou contexto, **não executar decisões nem mutações**.
 3. Na entrega, atualizar este roadmap se houver alteração relevante de estado, dependência ou prioridade; registrar evidência do commit no `memory/HANDOFF.md`. Nenhum status será promovido apenas porque um documento ou teste de infraestrutura existe.

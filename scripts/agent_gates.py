@@ -16,6 +16,10 @@ except ModuleNotFoundError:
 BOOTSTRAP_FILES = (
     "AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md", "state/CURRENT.json",
 )
+ENGINEERING_FILES = (
+    "AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md",
+    "state/CURRENT.json", "state/WORKFLOW.json",
+)
 ROADMAP_SECTIONS = (
     "# ROADMAP — UFMS MEU ESTUDO",
     "## Governança e leitura obrigatória",
@@ -195,6 +199,30 @@ def check_bootstrap(root=ROOT):
             validate_simplification_queue(raw.decode("utf-8"))
         hashes[name] = hashlib.sha256(raw).hexdigest()
     return hashes
+
+
+def check_engineering_bootstrap(root=ROOT):
+    """START de engenharia: 6 arquivos em ordem fixa; PRODUCT.md validado e com hash."""
+    root = Path(root)
+    settings = load_json(root / "settings.json")
+    if settings.get("bootstrap", {}).get("engineering_mandatory") != list(ENGINEERING_FILES):
+        raise ValueError("Conjunto e ordem do START de engenharia divergentes do contrato")
+    hashes = check_bootstrap(root)
+    try:
+        from product_gate import validate as validate_product
+    except ModuleNotFoundError:
+        from scripts.product_gate import validate as validate_product
+    validate_product(root)
+    ordered = {}
+    for name in ENGINEERING_FILES:
+        if name in hashes:
+            ordered[name] = hashes[name]
+            continue
+        raw = _contained_file(root, name).read_bytes()
+        if not raw.strip():
+            raise ValueError("Arquivo obrigatório vazio: " + name)
+        ordered[name] = hashlib.sha256(raw).hexdigest()
+    return ordered
 
 
 def check_hook_contract(root=ROOT):

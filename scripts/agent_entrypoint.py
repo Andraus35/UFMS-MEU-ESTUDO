@@ -115,7 +115,7 @@ class ReadOnlyAgentBroker:
     def model_context(self):
         """Entregar o texto lido à futura chamada ao modelo; sem afirmar compreensão."""
         current = self._refresh()
-        permitted = ("AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md",
+        permitted = ("AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md",
                      "state/CURRENT.json", "state/WORKFLOW.json")
         context = {}
         for name in current["files"]:
