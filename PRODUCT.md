@@ -62,6 +62,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **D-10 (07/11/2026):** a Zapia é **apenas a interface** entre o proprietário e os agentes Tutor e Coach e a executora das ferramentas. Os agentes decidem com base no harness do repositório e executam por meio da Zapia, que se conecta ao NotebookLM com o prompt vindo do Tutor ou do Coach, e não de si mesma. A Zapia fica **restrita às diretrizes do harness e aos comandos do Tutor e do Coach**. Corrige a descrição anterior deste arquivo, que atribuía à Zapia os papéis de Tutor e Coach (E-10).
 - **D-11 (07/11/2026):** o plano de estudos entregue ao humano segue o Método 4.2 (Prof. Rafael Barbosa) e a revisão espaçada em 7, 15 e 30 dias, como padrão que o Tutor pode ajustar com justificativa. O repositório não tinha essa especificação; ela foi criada em `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e implementada em `scripts/study_plan.py`. Exige emenda do `AGENTS.md` e de `rules/`, que consta do PR que registra esta decisão.
 - **D-12 (07/11/2026):** os agentes são criados agora, com perfis em `agents/`. O **Tutor** cuida do ensino, do aprimoramento do estudo, da revisão, da fixação, da busca na memória e das técnicas de estudo; o **Coach**, da motivação, da organização dos estudos, das estatísticas de desempenho e das sugestões e recomendações. **O conteúdo é produzido apenas pelo Tutor.** O Tutor deve acessar o NotebookLM diretamente; a Zapia só faz a ponte se isso não for possível (prioridade ao acesso direto). O TEC Concursos e o Qconcursos fornecem cadernos e estatísticas que os agentes usam para conduzir revisões e melhorias; o humano exporta o caderno de desempenho e o entrega pela Zapia, que o grava no repositório. O ciclo vai até fechar o edital ou o conteúdo priorizado.
+- **D-13 (07/11/2026):** o produto é um **harness cognitivo de uso pessoal com prova marcada**, não um sistema de software comercial: a prioridade é velocidade, sem burocracia. As especificações seguem a Spec Lean da Tech Leads Club **no que couber** (especificar o necessário, verificar o que é verificável, nada além). A pesquisa web fica para a etapa de especificação de cada uma, não para o planejamento. Há quatro especificações: método de estudo e revisão (S1), Tutor (S2), Coach (S3) e operação, que liga ferramentas, agentes e repositório (S4).
 
 ## 6. Não objetivos e proibições
 
@@ -107,6 +108,17 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 - **B5:** PR-005, PR-012 e PR-016 (dependem de B3; PR-016 depende também de OPEN-11).
 - **B6:** PR-006 (depende de B4 e B5).
 - **B7:** PR-007 e PR-008.
+
+### Plano de trabalho enxuto
+
+Cada especificação cabe em uma página: objetivo, entradas, saídas, regras, critérios de aceite verificáveis e limites. **Não duplicam** o que já existe: apontam para ele. Uma por vez, na ordem abaixo, cada uma como tarefa única do fluxo serial.
+
+- **S1 Método de estudo e revisão:** já existe em `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `scripts/study_plan.py`. Falta só conferir os critérios de aceite e coletar os insumos do humano (início, tempo diário, descanso, cargo, tópicos estudados). Primeiro, porque o Coach depende do plano.
+- **S2 Tutor:** parte de `agents/TUTOR.md`. Acrescenta: como gera o material de revisão a partir do edital e do desempenho, como pede o prompt ao Notebook e como decide ajustes ao plano. Depende de S1 e de OPEN-10.
+- **S3 Coach:** parte de `agents/COACH.md`. Acrescenta: rotina diária, lembretes, leitura de estatísticas, mensagens motivacionais e limites (não produz conteúdo). Depende de S1.
+- **S4 Operação:** parte de PR-013. Define o esquema dos comandos entre Tutor, Coach e Zapia, o caminho do desempenho exportado até o repositório (PR-016) e as proibições de dados pessoais. Depende de OPEN-01, OPEN-02, OPEN-09 e OPEN-11.
+
+Regra de rapidez: o que depender do proprietário (token, repositório privado, exportações reais, data de início) não bloqueia o que é offline; avança-se pelo que já pode ser verificado.
 
 ## 9. Glossário
 
