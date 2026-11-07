@@ -23,12 +23,13 @@ class GovernanceSyncGateTests(unittest.TestCase):
     def test_checkpoint_ativo_coerente(self):
         result = verify(self.root)
         self.assertEqual(result["result"], "PASS")
-        self.assertEqual(result["state"], "prepared")
+        self.assertEqual(result["state"], "active")
 
-    def test_rm08_preparada_com_recibo_do_pr_55(self):
+    def test_rm08_ativa_com_recibo_do_pr_55(self):
         result = verify(self.root)
         self.assertEqual(result["active_task"], "RM-08")
-        self.assertEqual(result["state"], "prepared")
+        self.assertEqual(result["active_pr"], 56)
+        self.assertEqual(result["state"], "active")
         self.assertEqual(result["last_merged_pr"], 55)
         self.assertEqual(result["next_task"], "RM-09")
 

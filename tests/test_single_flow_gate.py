@@ -33,8 +33,8 @@ class SingleFlowTests(unittest.TestCase):
         return temp, root
 
     def test_estado_unico_valido(self):
-        self.assertIsNone(validate_local(ROOT)["active"]["pr_number"])
-        self.assertEqual(validate_local(ROOT)["active"]["phase"], "work")
+        self.assertEqual(validate_local(ROOT)["active"]["pr_number"], 56)
+        self.assertEqual(validate_local(ROOT)["active"]["phase"], "review")
         self.assertRegex(validate_local(ROOT)["active"]["task_id"], r"^(?:SIM-\d{2}|RM-\d{2}(?:-(?:PREP|BASELINE))?)$")
 
     def test_rm08_e_a_unica_tarefa_serial_ativa(self):
@@ -109,15 +109,14 @@ class SingleFlowTests(unittest.TestCase):
         self.assertIn(f"**Próxima tarefa: {state['next_task_after_merge']}**", checkpoint)
 
     def test_rejeita_handoff_com_pr_ativo_divergente(self):
-        tmp, root = self.temp_root(lambda d: d["active"].update(pr_number=55, phase="review"))
+        tmp, root = self.temp_root()
         with tmp:
             path = root / "memory/HANDOFF.md"
             content = path.read_text(encoding="utf-8")
-            marker = f"**{self.live['active']['task_id']} / PR pendente**"
-            active_marker = f"**{self.live['active']['task_id']} / PR #55**"
-            content = content.replace(marker, active_marker, 1)
-            content = content.replace(active_marker, f"**{self.live['active']['task_id']} / PR #56**", 1)
-            path.write_text(content, encoding="utf-8")
+            task, pr = self.live["active"]["task_id"], self.live["active"]["pr_number"]
+            marker = f"**{task} / PR #{pr}**"
+            self.assertIn(marker, content)
+            path.write_text(content.replace(marker, f"**{task} / PR #{pr + 1}**", 1), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "HANDOFF diverge"):
                 validate_local(root)
 
