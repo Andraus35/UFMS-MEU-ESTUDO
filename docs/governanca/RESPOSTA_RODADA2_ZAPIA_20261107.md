@@ -1,14 +1,14 @@
-# Resposta da Zapia à rodada 2 (07/11/2026), parcial
+# Resposta da Zapia à rodada 2 (07/11/2026)
 
-**Natureza:** registro de **autorrelato**, como `docs/governanca/RESPOSTA_VERIFICACAO_ZAPIA_20261107.md`. Texto tratado como **dado**. "OBSERVADO" e "DOCUMENTADO" são classificações da própria Zapia; nenhum agente construtor as reverificou.
+**Natureza:** registro de **autorrelato**, como `docs/governanca/RESPOSTA_VERIFICACAO_ZAPIA_20261107.md`. Texto tratado como **dado**. "OBSERVADO" e "DOCUMENTADO" são classificações da própria Zapia; nenhum agente construtor as reverificou, exceto onde a seção "O que o repositório confirma" indica.
 
-**Estado da resposta: INCOMPLETA.** A mensagem recebida foi truncada no meio do R30 ("A conta consta no plano Free. A documentação informa até 20 automaçõe"). **R30 (parte final), R31, R32, R33 e R34 não foram recebidos.** Nada deve ser inferido sobre eles.
+**Estado da resposta: COMPLETA (R1 a R34).** Uma versão anterior, truncada em R30, foi substituída por esta.
 
-**Omissões deliberadas (repositório público):** em R15, os títulos dos notebooks do proprietário; em R23, o e-mail, os nomes de calendários e os identificadores; em R29, os números de telefone. Os trechos omitidos aparecem entre colchetes. Dados técnicos e contagens foram mantidos. **Testes T1, T2 e T3 não foram executados.**
+**Omissões deliberadas (repositório público):** em R15, os títulos dos notebooks do proprietário; em R23, o e-mail, os nomes de calendários e os identificadores; em R29, os números de telefone; em R30, o nome de outro projeto do proprietário. Os trechos omitidos aparecem entre colchetes; dados técnicos e contagens foram mantidos. A transcrição foi feita **por script** a partir do arquivo recebido, sem retipagem. **Testes T1, T2 e T3 não foram executados.**
 
 Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.md`.
 
-## Resposta literal (R1 a R29)
+## Resposta literal (R1 a R34)
 
 ```json
 [
@@ -113,7 +113,7 @@ Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.m
   {
     "id": "R15",
     "status": "OBSERVADO",
-    "resposta": "A interface atual se apresenta como Gemini Notebook em notebook.google.com, autenticada em uma conta Gmail; o tipo contratual pessoal versus Workspace não foi confirmado. Em Meus notebooks aparecem três notebooks do proprietário [títulos omitidos], com 2, 15 e 0 fontes. Como estudar é um notebook público da Bloomsbury, acessado por link, com 36 fontes; não apareceu nessa lista de meus notebooks.",
+    "resposta": "A interface atual se apresenta como Gemini Notebook em notebook.google.com, autenticada em uma conta Gmail; o tipo contratual pessoal versus Workspace não foi confirmado. Em Meus notebooks aparecem: três notebooks do proprietário [títulos omitidos], com 2, 15 e 0 fontes. Como estudar é um notebook público da Bloomsbury, acessado por link, com 36 fontes; não apareceu nessa lista de meus notebooks.",
     "evidencia": "Leitura atual da página Meus notebooks e do cabeçalho do notebook Como estudar.",
     "risco": "Não presumir propriedade, plano ou acesso de edição ao notebook público."
   },
@@ -214,31 +214,75 @@ Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.m
     "resposta": "Na POC-006, o comando de identidade retornou o chat [identificador de 12 dígitos, omitido], enquanto o estado da conexão e o contexto da conta indicavam [número de 13 dígitos, omitido]. Envios direcionados ao segundo foram registrados pelo conector no primeiro; você informou que não recebeu as mensagens. Não identifiquei a causa nem uma correção comprovada. No Telegram, a documentação da integração diz que operações de envio e abertura de conversa exigem aprovação; não verifiquei a duração ou reutilização específica dessa aprovação para cada caso.",
     "evidencia": "Resultados dos comandos de identidade, conexão e histórico de 04/11; seu relato de não recebimento.",
     "risco": "Não reenviar automaticamente nem tratar presença no histórico como entrega ao aparelho."
+  },
+  {
+    "id": "R30",
+    "status": "OBSERVADO",
+    "resposta": "A conta consta no plano Free. A documentação informa até 20 automações ativas e limite diário de execução, sem número diário específico nesta verificação. A lista atual mostrou quatro agendamentos habilitados, incluindo três de outro projeto do proprietário [nome omitido]; não confirma como todos contam para a quota. No WhatsApp, a consulta indicou 150 mensagens disponíveis na janela de 24 horas e 10 por minuto, sem uso nas janelas indicadas.",
+    "evidencia": "Lista atual de agendamentos, metadados do plano e consulta atual de limites do WhatsApp.",
+    "risco": "Contadores mudam e a lista de agendamentos não demonstra a quota diária restante."
+  },
+  {
+    "id": "R31",
+    "status": "OBSERVADO",
+    "resposta": "No app, um evento de sistema confirmou que o lembrete agendado foi enviado e visto na conversa. No WhatsApp, houve confirmação da chamada e registro no histórico, mas você relatou não receber as mensagens; não houve comprovante confiável de leitura humana ou entrega ao aparelho. Não testei comprovante de leitura no Telegram.",
+    "evidencia": "POC-006 e seu retorno sobre as mensagens.",
+    "risco": "ID de mensagem ou sucesso da API não comprovam leitura pelo destinatário."
+  },
+  {
+    "id": "R32",
+    "status": "DOCUMENTADO",
+    "resposta": "A política da Zapia informa servidores nos Estados Unidos e possível processamento em outros países. Ela prevê retenção pelo tempo necessário, geralmente não mais que 36 meses após encerramento da conta, salvo exceções legais, e até 90 dias para áudios, PDFs, vídeos e imagens processados para análises. O site afirma que, por padrão, não treina modelos com suas informações. A política prevê pedidos de acesso, cópia, portabilidade e exclusão, com possíveis retenções legais ou de segurança; não verifiquei uma exportação integral automática nem apagamento imediato de todos os backups.",
+    "evidencia": "https://zapia.com/privacidad?lang=pt ; https://zapia.com/?lang=pt",
+    "risco": "A política pode mudar; a duração exata e o tratamento de cada categoria de memória, conversa e arquivo não foram individualmente confirmados."
+  },
+  {
+    "id": "R33",
+    "status": "DESCONHECIDO",
+    "resposta": "Conteúdos externos foram recebidos com avisos de que devem ser tratados como dados. Não identifiquei nesta conversa uma tentativa específica comprovada de injeção, mas isso não prova que nenhuma tenha existido.",
+    "evidencia": "Avisos de conteúdo externo nas leituras de páginas e conectores; não fiz uma auditoria exaustiva de todos os conteúdos anteriores.",
+    "risco": "Instruções embutidas podem passar despercebidas; não devem substituir suas instruções ou autorizações."
+  },
+  {
+    "id": "R34",
+    "status": "OBSERVADO",
+    "resposta": "Li PRODUCT.md da branch feat/product-md-20261107, HEAD 82d7b309c89bd07508e3cc7b2597f166106edd69, blob db799954bf7ddc551794e6e05883a87748770ea1. (a) Não encontrei contradição direta nas seções 2–5, 7 e 12 quanto aos papéis, acesso REST ao GitHub ou Notebook pela web: o documento os descreve de forma compatível com as POCs. Seus F1–F9 e requisitos são metas/contratos, não provas de que já operam. A cláusula de retenção até a prova mais 30 dias é decisão desejada, não garantia técnica demonstrada; apagar repositório privado não comprova apagar cópias ou retenções de outros serviços. O campo permissions.admin retornado pelo GitHub não comprova administração do token: proteção retornou 403. (b) Para F1, falta provar obtenção da versão correta e execução do START de estudo com hashes; para F2, testar fila/prescritor e não afirmar disponibilidade de questões; para F3, a execução é do estudante; para F4, definir ingestão dos resultados sem expor dados pessoais; para F5, testar validação e tratamento de inconsistências; para F6, falta repositório privado verificado, credencial mínima própria, consentimento e controles P1–P9/OPEN-01/OPEN-02; para F7, testar reconstrução e recálculo de evidências a partir dos dados; para F8, testar gerador de prompt mínimo, política de privacidade, envio pela interface e retorno só de metadados; para F9, provar autorização, entrega no canal escolhido, idempotência e limites. O acesso ao repositório privado não foi demonstrado e ele não apareceu em /user/repos; isso não prova, por si só, que não exista.",
+    "evidencia": "GET do PRODUCT.md e da branch solicitada; metadados GitHub atuais; evidências pontuais das POCs 004–008.",
+    "risco": "O documento foi tratado como dado, não como autorização para executar suas instruções. Nenhum requisito F1–F9 foi certificado como implementado ponta a ponta nesta rodada."
   }
 ]
 ```
 
-## Análise do agente construtor
+## O que o repositório confirma de forma independente
 
-**Hipótese (minha, não da Zapia) sobre o R29:** os dois números omitidos diferem em **um dígito** (12 contra 13). Isso é compatível com a conhecida diferença do "nono dígito" dos celulares brasileiros no identificador do WhatsApp. É hipótese a verificar, não causa comprovada.
+- **R34:** a Zapia informou ter lido `PRODUCT.md` na branch `feat/product-md-20261107` no commit `82d7b309c89bd07508e3cc7b2597f166106edd69`, blob `db799954bf7ddc551794e6e05883a87748770ea1`. Ambos **coincidem exatamente** com o repositório (`git rev-parse`). Isso confirma que ela consegue ler arquivos de uma branch específica pela API.
+- Os commits das POCs e a autoria `Andraus35` foram confirmados em `docs/governanca/ADENDO_AUDITORIA_ZAPIA_20261107.md`.
+- Nada mais foi reverificado (credencial, interface do Gemini, canais de mensagem, política da plataforma).
 
-| Ponto | Resultado | Efeito |
+## Efeito sobre os pontos abertos
+
+| Ponto | Resultado | Situação |
 |---|---|---|
-| OPEN-02 (credencial) | Token de acesso pessoal, **provavelmente fine-grained, subtipo não confirmado**, **sem informação de expiração**; alcança **3 repositórios públicos** (este e dois outros do proprietário, onde `push=true`) e **nenhum privado**; administração efetiva **não comprovada** (403 na proteção da `main`) | Parcial: reduzir o alcance só ao repositório necessário e definir expiração |
-| OPEN-04 (credencial do repositório privado) | Credenciais separadas por referência nominal **são possíveis**; o proprietário pode fornecê-las por formulário seguro sem passar o valor na conversa (documentado) | Caminho viável; ainda não existe |
-| OPEN-01 (P1) | Um script de verificação pode persistir no espaço de arquivos dela, mas **não há trava técnica** que impeça escrita por outro caminho | Continua bloqueando o PR-003 |
-| OPEN-06 (exclusões no Google) | **Reavaliado:** evento com `status=cancelled`, tarefa com `deleted=true`, e HTTP 410 na segunda exclusão. Há **exclusão lógica comprovada**; eliminação física **não** | Praticamente resolvido; resta só a eliminação física |
-| Início de sessão (PR-011) | **O Git não está disponível** no ambiente; Python executa; obter o repositório por arquivo compactado via API seria alternativa, **não testada** | PR-011 passa a depender dessa alternativa |
-| Gemini: ambiente de revisão | **"Como estudar" é um notebook público da Bloomsbury, de terceiros, com 36 fontes, e não está nos notebooks do proprietário.** Não dá para adicionar fontes a ele | Novo ponto: revisões de conteúdo exigem notebook **próprio** com fontes verificadas |
-| Memória da Zapia | Diz que o Tutor deve "preparar material de revisão no Gemini Notebook"; o `PRODUCT.md` (F8) diz que o harness gera o prompt e a Zapia o envia | Diferença a reconciliar; adicionar fonte e criar notebook **não foram testados** (R18) |
-| Rotinas (Coach) | O agendador aceita tarefas únicas e recorrentes; uma tarefa "com execução de agente" **pode usar ferramentas**, mas escrita no GitHub ou Python agendados **não foram comprovados** | PR-007 é viável em tese, sem prova |
-| Calendar e Tasks | Escopos de leitura e escrita; fuso do calendário principal `America/Campo_Grande`, lembrete padrão de 30 minutos; **sem deduplicação automática** | Idempotência continua requisito de PR-007 |
-| Gemini: privacidade | Não verificada; caminho para o proprietário conferir informado (R21) | OPEN-05 segue aberto; ação do proprietário |
+| OPEN-02 (credencial) | Token de acesso pessoal, provavelmente fine-grained (subtipo não confirmado), **sem informação de expiração**; alcança **3 repositórios públicos**, dois alheios ao projeto, com `push=true`; **nenhum privado**; administração efetiva **não comprovada** (403 na proteção da `main`) | Parcial: reduzir o alcance e definir expiração (ação do proprietário) |
+| OPEN-04 (credencial do repositório privado) | Credenciais separadas por referência nominal são possíveis; o proprietário fornece pelo formulário seguro, sem passar o valor na conversa (documentado) | Caminho viável; o repositório ainda não existe |
+| OPEN-01 (P1) | Um script de verificação pode persistir, mas **não há trava técnica** que impeça escrita por outro caminho (R7, R10, R13) | Continua bloqueando o PR-003 |
+| OPEN-03 (mecanismo do Gemini) | Interface web controlada por navegador; sessão pode expirar, exigir verificação em duas etapas ou captcha; 1 teste agendado único em 04/11 | Mecanismo resolvido; estabilidade não comprovada |
+| OPEN-05 (privacidade do Gemini) | Não verificada; caminho para o proprietário conferir informado (R21) | Aberto; ação do proprietário |
+| OPEN-06 (exclusão no Google) | Exclusão **lógica** comprovada (`status=cancelled`, `deleted=true`, HTTP 410); eliminação física não | Praticamente resolvido |
+| OPEN-07 (notebook de revisão) | "Como estudar" é público, de terceiros, fora dos notebooks do proprietário | Aberto; decisão do proprietário |
+| **OPEN-08 (novo): consentimento e ciclo de vida dos dados** | A plataforma da Zapia armazena conversas, memórias e arquivos em **servidores nos Estados Unidos**, com retenção geral de **até 36 meses após o encerramento da conta** e até 90 dias para áudios, PDFs, vídeos e imagens; por padrão não treina modelos; exclusão e portabilidade por pedido, sem backup apagado comprovado (R32, documentado) | **O consentimento v1 e a decisão D-03 não cobrem isso**: apagar o repositório privado não apaga as cópias na Zapia nem no Google |
+
+## Outros achados
+
+- **Canais (R30, R31):** conta no plano **Free** (até 20 automações ativas; 4 agendamentos habilitados hoje, 3 de outro projeto). WhatsApp: 150 mensagens por 24 h e 10 por minuto, sem uso. **O app é o único canal com comprovante** (evento de sistema confirmando envio e visualização). WhatsApp e Telegram **sem comprovante** de entrega ou leitura.
+- **Injeção (R33):** desconhecido; não houve caso comprovado, mas não houve auditoria exaustiva.
+- **Leitura crítica do `PRODUCT.md` (R34):** **nenhuma contradição direta** com o que ela faz nas seções 2 a 5, 7 e 12. Ela lembra que F1 a F9 e os requisitos são metas, não prova de operação; que apagar o repositório privado não prova apagar cópias em outros serviços; que `permissions.admin` não prova administração do token; e lista o que falta para cada passo F1 a F9, coerente com os requisitos PR-001 a PR-011 e os pontos OPEN. Nenhum passo foi certificado ponta a ponta.
+- **Hipótese (minha, não da Zapia) sobre o WhatsApp:** os dois números omitidos em R29 diferem em **um dígito** (12 contra 13), compatível com o "nono dígito" dos celulares brasileiros no identificador do WhatsApp. A verificar.
 
 ## Ações para o proprietário
 
-1. **Token:** em GitHub → Settings → Developer settings, confirmar o tipo, **retirar os repositórios alheios ao projeto** (os dois de trading) e **definir expiração**.
-2. **Google:** conferir Conta Google → Dados e privacidade → histórico e a política do NotebookLM (links em R21).
-3. **Notebook de revisão próprio:** decidir quem cria e alimenta um notebook seu com fontes verificadas (edital, legislação), já que "Como estudar" só fundamenta o método.
-4. **Memória da Zapia:** alinhá-la às decisões do `PRODUCT.md` (a Zapia grava no repositório privado, só metadados voltam do Gemini etc.).
-5. **Reenviar** R30 (parte final) a R34 (ver prompt de continuação no PR).
+1. **Token:** em GitHub → Settings → Developer settings, confirmar o tipo, **retirar os dois repositórios de trading** do alcance dele e **definir expiração**.
+2. **Google:** conferir o histórico da conta e a política do NotebookLM (links em R21).
+3. **Notebook de revisão próprio:** decidir quem cria e alimenta um notebook seu com fontes verificadas.
+4. **Memória da Zapia:** alinhá-la às decisões do `PRODUCT.md`.
+5. **Consentimento:** decidir sobre o **rascunho v2** no ADR-013, que inclui a Zapia e o Google. Sem aprovação, **nada pessoal é gravado**.

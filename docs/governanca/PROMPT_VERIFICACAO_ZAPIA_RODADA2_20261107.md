@@ -2,6 +2,8 @@
 
 **Natureza:** roteiro de perguntas; **não é evidência**. Só o que a Zapia responder com `OBSERVADO` ou `DOCUMENTADO` pode virar decisão ou requisito no `PRODUCT.md`, por PR. A rodada 1 está em `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md` e a resposta dela em `docs/governanca/RESPOSTA_VERIFICACAO_ZAPIA_20261107.md`.
 
+**Respondida integralmente (R1 a R34) em 07/11/2026:** ver `docs/governanca/RESPOSTA_RODADA2_ZAPIA_20261107.md`. A seção de continuação no fim deste arquivo ficou **obsoleta**.
+
 **Por que existe:** a rodada 1 deixou em aberto o escopo real do token, a retenção no Gemini, o que as rotinas agendadas conseguem executar, os detalhes de Calendar e Tasks e o que a própria plataforma da Zapia faz com os dados. A rodada 2 pede também o que a Zapia **já segue** hoje (memórias e instruções de Aragonê e Carter), para o harness não contradizer o que ela faz.
 
 **Mapa:** R1 a R8 resolvem OPEN-01, OPEN-02 e OPEN-04 (PR-010 e PR-003). R9 a R14 e R34 sustentam PR-011 e o START. R15 a R21 tratam OPEN-03 e OPEN-05 (Gemini). R22 a R27 e R28 a R31 sustentam o Coach (PR-007). R32 e R33 completam privacidade e segurança.
