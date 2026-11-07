@@ -62,6 +62,8 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - Não inventar questões, gabaritos, notas, cadernos, disponibilidade, resultados, citações ou fontes.
 - Não conceder token de escrita pessoal a agente construtor; não gravar credencial em arquivo ou prompt.
 - Não gravar dado pessoal no repositório público, nem com a flag de escrita ativada.
+- Não consultar Google Calendar nem Tasks sem autorização específica para a consulta, e nunca de forma ampla (listar tudo): usar identificadores próprios e consultas mínimas (E-07).
+- Não criar lembrete ou tarefa de uma atividade sem antes conferir, no estado do harness, que ela está pendente (E-07).
 - Não declarar integração (Zapia, Gemini, agenda) sem prova; não confundir CI verde com eficácia pedagógica.
 - Não impor cronograma, meta universal ou intervalo fixo de revisão.
 - Não ser produto multiusuário nem comercial.
@@ -74,7 +76,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **PR-004 Repositório privado criado e verificado:** Aceite: leitura autenticada devolve `private=true`; dono: proprietário. Elo: RM-08.
 - **PR-005 Metadados da revisão:** registro de assunto, data e fonte, sem texto integral. Aceite: esquema validado e teste negativo que recusa texto integral. Elo: RM-09.
 - **PR-006 Ciclo ponta a ponta real:** F1 a F8 com um resultado real e consentido, com readback. Aceite: relatório do ciclo e CI verde no HEAD. Elo: RM-08.
-- **PR-007 Rotina do Coach pela Zapia:** mensagens e lembretes autorizados. Aceite: prova de autorização, idempotência e limites. Elo: RM-09.
+- **PR-007 Rotina do Coach pela Zapia:** mensagens e lembretes autorizados, criados só depois de conferir no estado do harness que a atividade está pendente. Aceite: prova de autorização, idempotência e limites, e recusa de lembrete para atividade já concluída (falha real observada, E-07). Elo: RM-09.
 - **PR-008 Simulados no fluxo:** pontuação e comparação de simulados usadas em F5 e F7. Aceite: `scripts/simulado_score.py` e `scripts/simulado_session.py` acionados nesses passos, com teste. Elo: RM-06.
 - **PR-009 Retomada entre sessões e modelos:** estado reconstruído dos eventos e dos arquivos do START, nunca da conversa. Aceite: `python scripts/rebuild.py --check` passa e nenhum estado existe só em conversa. Elo: RM-00.
 - **PR-010 Credencial mínima da Zapia:** token de escopo único por repositório, sem administração nem workflows e com expiração; o repositório privado usa credencial própria, sem alcance sobre o público. Aceite: o proprietário confirma o escopo nas configurações do GitHub e a Zapia comprova, em teste sintético, que a escrita fora do repositório designado é recusada. Elo: RM-08.
@@ -128,6 +130,8 @@ Fatos datados, não estado. Os itens E-01 a E-06 são **autorrelato da Zapia** (
 - **E-05 Memória e rotina:** memória persistente própria; não lê o repositório sozinha no início da sessão. Um lembrete estático no app foi entregue em 04/11/2026; WhatsApp não está comprovado como recebido pelo aparelho; Telegram exige aprovação; a exclusão de eventos do Calendar não foi confirmada por leitura.
 - **E-06 Privacidade do Gemini:** o prompt e o contexto do notebook vão ao serviço do Google; retenção e política da conta **não verificadas**.
 
+- **E-07 Google Calendar e Tasks (autorrelato, `docs/governanca/ADENDO_AUDITORIA_ZAPIA_20261107.md`):** evento e tarefa foram criados e relidos, e a tarefa mudou de `completed` para `needsAction`; a remoção efetiva **não foi verificada**. Uma tarefa foi criada como pendente para atividade já concluída, sem conciliar o estado. Houve consulta ao calendário antes da autorização específica e uma leitura de Tasks expôs ao contexto da Zapia títulos de tarefas alheias ao teste. Só um disparo único de lembrete no app foi observado; nenhuma rotina recorrente nem ciclo completo sem intervenção humana.
+
 As POCs não provam execução recorrente, acesso às plataformas de questões nem domínio pedagógico.
 
 ## 12. Pontos a confirmar
@@ -139,3 +143,4 @@ Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo
 - **OPEN-03:** estabilidade e regras da automação pela interface web do Gemini Notebook, que depende de sessão, de mudanças de interface e das regras do Google (E-01, E-02).
 - **OPEN-04:** credencial própria e de menor permissão para o repositório privado, ainda inexistente.
 - **OPEN-05:** retenção e política de privacidade da conta do Gemini usada (E-06).
+- **OPEN-06:** remoção efetiva em Google Calendar e Tasks não verificada (E-07); a rodada 2 pede reavaliação com os campos técnicos de status e exclusão.
