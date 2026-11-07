@@ -125,6 +125,8 @@ Fatos datados, não estado:
 
 Cada ponto vira decisão ou requisito por PR; até lá, não afirmar o mecanismo.
 
+Roteiro de perguntas para a Zapia: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md`. Só respostas com status `OBSERVADO` ou `DOCUMENTADO` resolvem um ponto.
+
 - **OPEN-01:** como a Zapia cumpre o controle P1 (visibilidade `private=true` verificada antes de gravar), já que o guard do harness é biblioteca offline e não intercepta o conector dela.
 - **OPEN-02:** onde fica a credencial de escrita da Zapia e se o modelo da Zapia a enxerga.
 - **OPEN-03:** como exatamente a Zapia entrega o prompt ao Gemini Notebook por MCP e recebe a revisão (a prova de conceito só comprova abrir um notebook e ler uma fonte).
