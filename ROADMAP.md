@@ -4,10 +4,10 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #69; SHA 758039a45f5e64a38a5d5b265342e57b1189d01d
-- Frente ativa: **RM-00 / PR #70**; branch `feat/rm00-sequencia-persistida-20261107`; base main; fase review.
+- Último merge comprovado: PR #70; SHA 642d833fe673e2283b0443b3865415fee77dc67e
+- Frente ativa: **RM-08 / PR #71**; branch `ccr-69ece020-2w19at`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
-- **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
+- **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
