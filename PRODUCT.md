@@ -66,6 +66,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **D-14 (07/11/2026):** o acesso direto do agente às plataformas TEC Concursos e Qconcursos é a **primeira opção** para obter cadernos e estatísticas; a exportação manual pelo proprietário é a alternativa. Condições: somente leitura; somente a conta do proprietário; baixo volume, sem gerar carga nem alterar cadernos; nenhuma credencial entregue ao modelo nem gravada no repositório; o proprietário aceita o risco de bloqueio da conta pelos termos da plataforma (E-12); começa pelo TEC Concursos, depois de consulta escrita ao suporte (OPEN-12), e o Qconcursos só entra se o teste no TEC for aceito. O que o agente ler vira dado não confiável, validado pelo contrato de ingestão (PR-016) como qualquer entrada.
 - **D-15 (07/11/2026):** o mecanismo do acesso direto da D-14 **será escolhido na fase de especificação, depois de testar todas as possibilidades** (conector local por navegador com perfil dedicado, navegador do assistente do proprietário, navegador da Zapia, navegador na nuvem, suporte ou API oficial e exportação manual como linha de base), com os critérios de `docs/PLATFORMS.md`. Hipótese de partida, não decisão: conector local de leitura no computador do proprietário, no padrão de ponte local do repositório de referência, porque mantém a sessão fora do modelo e do repositório.
 - **D-16 (07/11/2026):** toda especificação (S1 a S4 e as futuras) é feita pelo modelo enxuto da Spec Lean (D-13) e **começa por uma pesquisa obrigatória** de estado da arte, melhores práticas e benchmarks em repositórios públicos e em sites especializados em técnicas de estudo para concursos públicos, com fontes, data, grau de confiança e lacunas registrados (`docs/especificacoes/README.md`). Palavras do proprietário. Não há requisito sem essa pesquisa.
+- **D-17 (07/11/2026):** o repositório se descreve: **não há prompt de retomada**. Qualquer sessão deve poder executar os trabalhos em sequência persistida, lendo apenas o repositório (estado do ciclo e fila de trabalho em `state/WORKFLOW.json`, procedimento em `docs/especificacoes/README.md`). Palavras do proprietário; o merge continua só por pedido explícito dele.
 
 ## 6. Não objetivos e proibições
 
@@ -101,12 +102,14 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **PR-016 Ingestão da exportação de desempenho:** contrato de ingestão validado contra amostras reais anonimizadas do TEC Concursos e do Qconcursos (OPEN-11). Aceite: amostras reais, testes de contraprova e rejeição de arquivo fora do formato. Elo: RM-02.
 - **PR-017 Leitura direta das plataformas:** acesso somente leitura ao TEC Concursos e ao Qconcursos pelo mecanismo escolhido na especificação (D-15), conforme `docs/PLATFORMS.md`. Aceite: testes com páginas sintéticas, recusa de domínio fora da lista e de operação de escrita, saída sem credencial nem HTML bruto, limite de taxa; nenhuma leitura em conta real antes da aprovação do proprietário (OPEN-12). Elo: RM-09.
 - **PR-018 Pesquisa obrigatória nas especificações:** cada especificação em `docs/especificacoes/` tem a seção `## Pesquisa` com fontes e a linha de lacunas (D-16). Aceite: `python scripts/doc_cohesion.py --check` rejeita especificação sem a seção, sem link ou sem lacunas, com contraprova em teste. Elo: RM-09.
+- **PR-019 Retomada sem prompt:** o estado real do ciclo e o próximo item da fila saem do repositório, sem rede e sem token (D-17). Aceite: `python scripts/next_task.py` informa se o PR registrado já foi mesclado (pelo histórico Git) e qual é o próximo item; `python scripts/record_merge_receipt.py` registra o recibo nos quatro documentos de estado; a checagem C8 de `python scripts/doc_cohesion.py --check` valida a fila; contraprovas em testes. Elo: RM-00.
+- **PR-020 Rotas de sessão:** cada tipo de sessão (estudo, engenharia, escrita, governança e persistência) tem uma rota determinística que lista, em ordem, os documentos a ler (com SHA-256), as consultas sob demanda, as verificações a executar e as condições de parada (D-17). Aceite: `python scripts/session_route.py --intent <tipo> --run` executa a rota; a persistência pessoal resulta em `bloqueada` enquanto `personal_results_writes_enabled` for falso; a governança resulta em `requer_aprovacao_humana`; a checagem C9 de `python scripts/doc_cohesion.py --check` acusa rota que diverge de `settings.json` ou das regras de escrita do `AGENTS.md`; contraprovas em testes. Elo: RM-00.
 
 ## 8. Ordem de construção
 
 Dependências, não status (o status vive no `ROADMAP.md`):
 
-- **B1:** PR-001 e PR-011.
+- **B1:** PR-001, PR-011, PR-019 e PR-020.
 - **B2:** PR-004 (proprietário).
 - **B3:** PR-002, PR-013, PR-014, PR-015, PR-017 e PR-018 (independentes, offline; a leitura em conta real do PR-017 depende de OPEN-12).
 - **B4:** PR-003 (depende de B2, de PR-010 e de OPEN-01 e OPEN-02).
@@ -151,6 +154,8 @@ Apontar, não copiar:
 - Agentes, plano de estudos e pesquisa: `agents/README.md`, `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `docs/pedagogia/ESTADO_DA_ARTE_TUTOR_COACH_20261107.md`.
 - Operação, START e DELIVERY: `docs/OPERACAO.md`.
 - Como escrever uma especificação e a pesquisa obrigatória: `docs/especificacoes/README.md`.
+- Rotas de sessão pelos documentos de governança e persistência: `config/session_routes.json` e `scripts/session_route.py`.
+- Retomada sem prompt e fila de trabalho: `scripts/next_task.py`, `scripts/record_merge_receipt.py` e `state/WORKFLOW.json`.
 - Coesão entre os documentos normativos: `scripts/doc_cohesion.py` (executado no START de engenharia).
 - **Substituído como porta de entrada de construção:** `docs/pedagogia/PROMPT_TRANSFERENCIA_TECNICA_v1.8.md` (histórico).
 

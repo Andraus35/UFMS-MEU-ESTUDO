@@ -30,3 +30,15 @@ Regras:
 - Não se afirma o que a fonte não diz. Opinião de cursinho e blog é prática, não evidência controlada, e deve ser marcada assim.
 - Pesquisa que o ambiente impediu (página bloqueada, termos ilegíveis) entra em `Lacunas`.
 - O gate `python scripts/doc_cohesion.py --check` (C7) rejeita especificação sem a seção `## Pesquisa`, sem ao menos um link ou sem a linha de lacunas. Ele não avalia a qualidade da pesquisa; isso é revisão humana.
+
+## Fluxo de uma sessão (sem prompt)
+
+Qualquer sessão de engenharia segue estes passos, só com o que está no repositório:
+
+1. `python scripts/session_route.py --intent engineering --run` (ou `python scripts/bootstrap.py --mode engineering`). Ele lista os documentos na ordem, executa as verificações e já inclui o resultado de `python scripts/next_task.py`: o estado real do ciclo e o próximo item da fila `work_queue` de `state/WORKFLOW.json`.
+2. Se o ciclo estiver `encerrado_recibo_pendente`, o PR registrado já foi mesclado: registrar o recibo com `python scripts/record_merge_receipt.py` (veja `--help`) no primeiro commit da próxima tarefa. Se estiver `em_andamento`, continuar nesse PR; em dúvida, confirmar no GitHub autenticado.
+3. Executar o item indicado: **pesquisa obrigatória**, escrita da especificação no caminho de `deliverable`, gates (`doc_cohesion`, `product_gate`, `roadmap_gate`, `governance_sync_gate`, `single_flow_gate`), testes, branch única, PR draft, CI verde.
+4. **Parar** no pedido de merge ao proprietário: o merge só ocorre por pedido explícito dele (`AGENTS.md`).
+5. Um item com `blocking_inputs` não vazio não começa: registrar o que falta e parar. `optional_inputs` não bloqueiam; o que faltar entra em `Lacunas`.
+
+Um item da fila está feito quando o arquivo de `deliverable` existe; por isso a fila não guarda status. Para acrescentar itens, editar `work_queue` (ids, `roadmap_task` existente no ROADMAP, `depends_on` válidos).
