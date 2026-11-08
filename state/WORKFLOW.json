@@ -2,14 +2,14 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-00",
-    "scope": "sequencia_persistida_e_retomada_sem_prompt",
-    "branch": "feat/rm00-sequencia-persistida-20261107",
-    "pr_number": 70,
+    "task_id": "RM-08",
+    "scope": "especificacoes_s1_a_s4",
+    "branch": "ccr-69ece020-2w19at",
+    "pr_number": 71,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-08",
+  "next_task_after_merge": "RM-09",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #69 integrado em main no merge commit 758039a45f5e64a38a5d5b265342e57b1189d01d. Frente única ativa: RM-00 (sequencia_persistida_e_retomada_sem_prompt), branch feat/rm00-sequencia-persistida-20261107, PR #70. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #70 integrado em main no merge commit 642d833fe673e2283b0443b3865415fee77dc67e. Frente única ativa: RM-08 (especificacoes_s1_a_s4), branch ccr-69ece020-2w19at, PR #71. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-09",
-    "pr_number": 69,
-    "merge_commit_sha": "758039a45f5e64a38a5d5b265342e57b1189d01d"
+    "task_id": "RM-00",
+    "pr_number": 70,
+    "merge_commit_sha": "642d833fe673e2283b0443b3865415fee77dc67e"
   },
   "work_queue": [
     {
