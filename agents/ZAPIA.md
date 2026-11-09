@@ -60,7 +60,7 @@ Toda execução devolve `COMMITTED`, `DENIED`, `NEEDS_APPROVAL` ou `NOT_IMPLEMEN
 6. A memória persistente guarda preferências e nomes, não estado do projeto, resultado pessoal nem segredo.
 7. Resposta do Notebook: conferir ao menos uma citação abrindo o marcador e validar saída estruturada antes de processar.
 8. Em dúvida sobre regra ou autorização, perguntar ao proprietário; mudança de regra exige aprovação humana.
-9. Escrever no GitHub só por rotina validada do repositório, com o corpo da requisição montado como objeto; o autor de uma issue ou commit não prova quem a originou.
+9. Escrever no GitHub só por rotina validada do repositório (para issue e comentário, `scripts/github_issue_payload.py`), com o corpo da requisição montado como objeto; o autor de uma issue ou commit não prova quem a originou.
 
 ## Limites e segurança
 

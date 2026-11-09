@@ -44,7 +44,8 @@ DENIED = "DENIED"
 
 _CPF_FMT = re.compile(r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)")
 _DIGITS11 = re.compile(r"(?<!\d)\d{11}(?!\d)")
-_EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
+# quantificadores limitados: sem isso a busca é quadrática em textos longos (corpo de issue de 60 000 caracteres)
+_EMAIL = re.compile(r"[\w.+-]{1,64}@[\w-]{1,255}\.[\w.-]{1,255}")
 _SECRET = re.compile(
     r"ghp_[A-Za-z0-9]{10,}|github_pat_[A-Za-z0-9_]{10,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}"
     r"|Bearer\s+[A-Za-z0-9._~+/=-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----", re.I)
@@ -112,6 +113,20 @@ def _parse_time(value):
     return datetime.fromisoformat(value[:-1] + "+00:00").astimezone(timezone.utc)
 
 
+def scan_text(text: str, *, html: bool = False):
+    """Filtro heurístico de segredo, dado pessoal e (opcional) HTML bruto. Devolve o motivo ou None."""
+    if _SECRET.search(text):
+        return "PARAMS_SEGREDO"
+    if html and _HTML.search(text):
+        return "PARAMS_HTML_BRUTO"
+    if _EMAIL.search(text) or _CPF_FMT.search(text):
+        return "PARAMS_DADO_PESSOAL"
+    for match in _DIGITS11.findall(text):
+        if _cpf_valid(match):
+            return "PARAMS_DADO_PESSOAL"
+    return None
+
+
 def _scan_params(value, schema, depth=0):
     """Devolve o motivo de recusa ou None."""
     limits = schema["limits"]
@@ -134,17 +149,7 @@ def _scan_params(value, schema, depth=0):
     elif isinstance(value, str):
         if len(value) > limits["max_param_string_chars"]:
             return "PARAMS_TEXTO_LONGO"
-        if _SECRET.search(value):
-            return "PARAMS_SEGREDO"
-        if _HTML.search(value):
-            return "PARAMS_HTML_BRUTO"
-        if _EMAIL.search(value):
-            return "PARAMS_DADO_PESSOAL"
-        for match in _CPF_FMT.findall(value):
-            return "PARAMS_DADO_PESSOAL"
-        for match in _DIGITS11.findall(value):
-            if _cpf_valid(match):
-                return "PARAMS_DADO_PESSOAL"
+        return scan_text(value, html=True)
     elif value is not None and not isinstance(value, (bool, int, float)):
         return "PARAMS_TIPO_INVALIDO"
     return None
@@ -153,8 +158,8 @@ def _scan_params(value, schema, depth=0):
 class CommandLedger:
     """Registro em memória de nonce e idempotência. Só avança quando o comando é aceito.
 
-    Em produção o registro precisa ser durável e atômico (ver scripts/tool_gateway.py);
-    aqui serve para provar a regra sem rede nem disco."""
+    Em produção use `command_ledger.SqliteLedger` (durável e atômico); esta versão serve para provar a
+    regra sem rede nem disco. Contrato comum: `admit` decide e registra numa só operação."""
 
     def __init__(self):
         self.nonces: set[str] = set()
@@ -164,12 +169,25 @@ class CommandLedger:
         self.nonces.add(nonce)
         self.keys[key] = body_hash
 
+    def admit(self, nonce: str, key: str, body_hash: str) -> str:
+        """Devolve "ok", "duplicate", "nonce_repeated" ou "conflict"; só registra quando admite."""
+        if nonce in self.nonces:
+            return "nonce_repeated"
+        previous = self.keys.get(key)
+        if previous is not None:
+            if previous != body_hash:
+                return "conflict"
+            self.nonces.add(nonce)  # a repetição legítima consome o nonce, mas não executa de novo
+            return "duplicate"
+        self.commit(nonce, key, body_hash)
+        return "ok"
+
 
 def _deny(code, detail=""):
     return {"decision": DENIED, "code": code, "detail": detail}
 
 
-def validate_command(command, *, keys: dict, now: datetime, ledger: CommandLedger, schema: dict | None = None) -> dict:
+def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict | None = None) -> dict:
     """Valida um comando. Nunca levanta exceção para entrada ruim; nada é registrado em recusa."""
     schema = schema or load_schema()
     limits = schema["limits"]
@@ -213,17 +231,17 @@ def validate_command(command, *, keys: dict, now: datetime, ledger: CommandLedge
     reason = _scan_params(params, schema)
     if reason:
         return _deny(reason)
-    if nonce in ledger.nonces:
-        return _deny("NONCE_REPETIDO")
     body_hash = params_hash({"operation": operation, "destination": command["destination"], "params": params})
-    previous = ledger.keys.get(key)
-    if previous is not None:
-        if previous != body_hash:
-            return _deny("CHAVE_REUTILIZADA_COM_OUTRO_CORPO")
-        ledger.nonces.add(nonce)  # a repetição legítima consome o nonce, mas não executa de novo
+    verdict = ledger.admit(nonce, key, body_hash)  # decide e registra de forma atômica
+    if verdict == "nonce_repeated":
+        return _deny("NONCE_REPETIDO")
+    if verdict == "conflict":
+        return _deny("CHAVE_REUTILIZADA_COM_OUTRO_CORPO")
+    if verdict == "duplicate":
         return {"decision": DUPLICATE, "code": "IDEMPOTENTE", "detail": ""}
-    ledger.commit(nonce, key, body_hash)
-    return {"decision": ACCEPTED, "code": "OK", "detail": ""}
+    if verdict == "ok":
+        return {"decision": ACCEPTED, "code": "OK", "detail": ""}
+    return _deny("REGISTRO_INDISPONIVEL")  # fail-closed se o registro devolver algo inesperado
 
 
 def check(root: Path = ROOT) -> list[str]:
