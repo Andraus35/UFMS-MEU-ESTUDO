@@ -167,6 +167,61 @@ class PersonalDataFilterTests(unittest.TestCase):
         self.assertEqual(run(make(params=big))["code"], "COMANDO_GRANDE")
 
 
+ED_SECRET = bytes.fromhex("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60")  # chave de teste do RFC 8032
+ED_PUBLIC = ac.ed25519_pure.public_key(ED_SECRET)
+OTHER_SECRET = bytes(range(32))
+
+
+def make_ed(origin="tutor", secret=ED_SECRET, **over):
+    command = make(origin, **over)
+    command["signature"] = ac.sign_ed25519(command, secret)
+    return command
+
+
+def run_ed(command, ledger=None, entry=("ed25519", ED_PUBLIC)):
+    return ac.validate_command(command, keys={"tutor": entry, "coach": entry}, now=NOW,
+                               ledger=ledger or ac.CommandLedger(), schema=SCHEMA)
+
+
+class Ed25519SignatureTests(unittest.TestCase):
+    def test_assinatura_ed25519_valida_e_aceita(self):
+        self.assertEqual(run_ed(make_ed())["decision"], ac.ACCEPTED)
+
+    def test_comando_adulterado_ou_chave_privada_errada_e_recusado(self):
+        adulterado = make_ed()
+        adulterado["params"]["texto"] = "outro texto"
+        self.assertEqual(run_ed(adulterado)["code"], "ASSINATURA_INVALIDA")
+        self.assertEqual(run_ed(make_ed(secret=OTHER_SECRET))["code"], "ASSINATURA_INVALIDA")
+
+    def test_sem_rebaixamento_hmac_nao_vale_para_origem_ed25519(self):
+        comando = make()  # assinado com HMAC
+        self.assertEqual(run_ed(comando)["code"], "ASSINATURA_INVALIDA")
+
+    def test_sem_rebaixamento_ed25519_nao_vale_para_origem_hmac(self):
+        self.assertEqual(run_ed(make_ed(), entry=("hmac", b"segredo-de-teste"))["code"], "ASSINATURA_INVALIDA")
+
+    def test_assinatura_malformada(self):
+        for ruim in ("", "zz" * 64, "ab" * 63, "ab" * 65, None, 123):
+            comando = make_ed()
+            comando["signature"] = ruim
+            self.assertEqual(run_ed(comando)["code"], "ASSINATURA_INVALIDA", ruim)
+
+    def test_configuracao_de_chave_invalida_falha_fechado(self):
+        for entry in (("ed25519", b"curta"), ("ed25519", "texto"), ("rsa", ED_PUBLIC), ("hmac", b""), (), "x", None,
+                      ("ed25519",)):
+            self.assertEqual(run_ed(make_ed(), entry=entry)["code"], "ASSINATURA_INVALIDA", entry)
+
+    def test_demais_regras_continuam_valendo_com_ed25519(self):
+        self.assertEqual(run_ed(make_ed(params={"cpf": "x"}))["code"], "PARAMS_CAMPO_PROIBIDO")
+        ledger = ac.CommandLedger()
+        self.assertEqual(run_ed(make_ed(), ledger)["decision"], ac.ACCEPTED)
+        self.assertEqual(run_ed(make_ed(key="k-00000002"), ledger)["code"], "NONCE_REPETIDO")
+        self.assertEqual(run_ed(make_ed(issued=NOW - timedelta(seconds=300)))["code"], "FORA_DA_JANELA")
+
+    def test_esquema_recomenda_ed25519(self):
+        self.assertEqual(SCHEMA["signature"]["recommended"], "ed25519")
+
+
 class SchemaConsistencyTests(unittest.TestCase):
     def test_esquema_coerente_com_os_perfis(self):
         self.assertEqual(ac.check(), [])

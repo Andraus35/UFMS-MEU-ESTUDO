@@ -6,9 +6,14 @@ chaves de assinatura por origem e o relógio. Aceitar um comando aqui é condiç
 nunca suficiente: não executa nada, não autoriza gravação de resultado pessoal
 (`personal_results_writes_enabled` segue falso) e não prova que a Zapia usa este validador.
 
+Assinatura, por origem (o algoritmo é fixado pela configuração de chaves, nunca pela mensagem, o que
+impede rebaixamento): `("ed25519", chave_pública_de_32_bytes)` é a recomendada, pois a Zapia só guarda
+chave pública; `("hmac", segredo)` e a forma antiga `bytes` (HMAC) continuam aceitas.
+
 Limites declarados:
-- A assinatura HMAC só impede forja por quem NÃO tem a chave; se a chave estiver ao alcance do
-  modelo, a restrição volta a ser protocolo (E-04, OPEN-09). Gestão de chaves está fora daqui.
+- A assinatura só impede forja por quem NÃO tem a chave que assina (a privada, no Ed25519; o segredo, no
+  HMAC); se ela estiver ao alcance do modelo, a restrição volta a ser protocolo (E-04, OPEN-09).
+  Gestão de chaves está fora daqui.
 - O filtro de dados pessoais é heurístico (CPF, e-mail, segredos, HTML, nomes de campo e tamanho);
   não detecta texto integral de questão escrito em prosa curta nem todo dado pessoal.
 """
@@ -23,8 +28,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import ed25519_pure
     from agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 except ModuleNotFoundError:  # pragma: no cover - uso como pacote
+    from scripts import ed25519_pure
     from scripts.agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -66,6 +73,32 @@ def canonical_bytes(command: dict) -> bytes:
 
 def sign(command: dict, key: bytes) -> str:
     return hmac.new(key, canonical_bytes(command), hashlib.sha256).hexdigest()
+
+
+def sign_ed25519(command: dict, secret: bytes) -> str:
+    """Assinatura Ed25519 em hexadecimal (128 caracteres). Para testes e para o código local do agente."""
+    return ed25519_pure.sign(secret, canonical_bytes(command)).hex()
+
+
+def _signature_ok(command: dict, entry) -> bool:
+    """Confere a assinatura com o algoritmo FIXADO pela configuração da origem. Fail-closed."""
+    signature = command.get("signature")
+    if not isinstance(signature, str):
+        return False
+    if isinstance(entry, (bytes, bytearray)):
+        entry = ("hmac", bytes(entry))
+    if not (isinstance(entry, tuple) and len(entry) == 2):
+        return False
+    algorithm, key = entry
+    if algorithm == "hmac" and isinstance(key, (bytes, bytearray)) and key:
+        return hmac.compare_digest(signature, sign(command, bytes(key)))
+    if algorithm == "ed25519" and isinstance(key, (bytes, bytearray)):
+        try:
+            raw = bytes.fromhex(signature)
+        except ValueError:
+            return False
+        return ed25519_pure.verify(bytes(key), canonical_bytes(command), raw)
+    return False
 
 
 def params_hash(params) -> str:
@@ -156,8 +189,7 @@ def validate_command(command, *, keys: dict, now: datetime, ledger: CommandLedge
     origin = command["origin"]
     if origin not in schema["origins"] or origin not in keys:
         return _deny("ORIGEM_DESCONHECIDA")
-    signature = command["signature"]
-    if not isinstance(signature, str) or not hmac.compare_digest(signature, sign(command, keys[origin])):
+    if not _signature_ok(command, keys[origin]):
         return _deny("ASSINATURA_INVALIDA")
     try:
         issued = _parse_time(command["issued_at"])
@@ -204,6 +236,8 @@ def check(root: Path = ROOT) -> list[str]:
         errs.append(f"destinos divergem das operações dos perfis: {sorted(declared ^ allowed)}")
     if set(schema["origins"]) != set(OPERATIONS):
         errs.append("origens do esquema divergem dos perfis")
+    if schema.get("signature", {}).get("recommended") != "ed25519":
+        errs.append("esquema sem a assinatura recomendada (ed25519)")
     for field in ("signature", "nonce", "idempotency_key", "issued_at", "destination", "origin"):
         if field not in schema["required_fields"]:
             errs.append(f"campo obrigatório ausente no esquema: {field}")
