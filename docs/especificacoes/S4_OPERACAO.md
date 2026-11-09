@@ -60,6 +60,19 @@ Comparação **documental**, pelos critérios de `docs/PLATFORMS.md` (credencial
 
 **Recomendação provisória, não decisão** (a escolha é do proprietário, que decide depois do teste): **F como linha de base imediata**; **E em paralelo** (consulta escrita, que também destrava OPEN-12); **A** como candidata à leitura direta, **só** se E não vetar e o proprietário aceitar o risco (E-12), começando pelo TEC e com as regras de `docs/PLATFORMS.md` (somente leitura, domínios fixos, no máximo 1 página a cada 10 segundos e 30 por sessão). B, C e D só entram se A falhar, por maior exposição da sessão.
 
+## Canal Tutor → Zapia
+
+O esquema acima diz **o que** o comando contém, não **por onde** ele chega. Pelo autorrelato da Zapia (rodada 2 e adendo de 09/11/2026, não versionado), ela só trabalha quando acionada por uma mensagem, um horário agendado ou um evento de fonte suportada (WhatsApp e Gmail; o GitHub não é fonte de hook), e não há monitor do repositório instalado. Nenhum dos canais abaixo foi testado para este projeto.
+
+| Canal | Como o comando chega | Observação |
+|---|---|---|
+| Proprietário como ponte | O Tutor ou o Coach gera o comando assinado e o proprietário o cola na conversa da Zapia. | Funciona sem integração nova; tem um passo manual. **Linha de base.** |
+| Agendamento `subagent` | Um job recorrente da Zapia consulta uma fila (arquivo do repositório) e executa só os comandos válidos. | Atraso até o próximo disparo; exige estado anterior e regra contra repetição. Não testado. |
+| Hook de WhatsApp ou Gmail | O comando chega como mensagem em um canal que a Zapia recebe. | A origem do remetente precisa ser provada; texto livre nunca vale como comando. A entrega no WhatsApp já falhou sem aviso (E-05). Não testado. |
+| Chamada direta à Zapia | O Tutor chama uma API. | Nenhuma evidência de que exista. |
+
+Em qualquer canal: a assinatura é gerada por **código local fora do modelo**, a Zapia verifica com Python e uma chave guardada no gerenciador dela, e a resposta volta pelo mesmo canal com *readback*. Para o Notebook (PR-012), a Zapia opera a interface web com a sessão do proprietário (observado em pontos isolados, sem confiabilidade recorrente); **o prompt é do Tutor** e a Zapia não gera conteúdo (D-10).
+
 ## Requisitos
 
 | ID | Requisito | Critério de aceite |
@@ -72,6 +85,7 @@ Comparação **documental**, pelos critérios de `docs/PLATFORMS.md` (credencial
 | S4-R6 | A saída de qualquer leitura (arquivo, página, Notebook) é **dado não confiável** e passa pelo contrato de ingestão antes de uso. | `scripts/gp1_ingestion.py` e seus testes; contraprova de instrução embutida em arquivo pertence ao RM-06. |
 | S4-R7 | Acesso às plataformas (A a E) só **depois** da escolha do proprietário, do teste com páginas sintéticas (PR-017) e, para conta real, da resposta do suporte do TEC e da aprovação expressa. Antes disso vale a opção F. | Aceite de PR-017 por testes sintéticos: domínio fora da lista recusado, escrita recusada, saída sem cookie nem HTML bruto, limite de taxa. |
 | S4-R8 | O START de estudo dos agentes é explícito: `python scripts/bootstrap.py --mode study` com os 4 hashes (PR-011), pois a Zapia não lê o repositório sozinha. | Relatório com hashes iguais aos do repositório; é procedimento, não trava. |
+| S4-R9 | O canal entre agente e Zapia é escolhido e provado antes de qualquer automação: começa pelo proprietário como ponte e só depois testa agendamento ou hook, com prova de que a Zapia executa comando assinado válido e recusa o adulterado. | Teste sintético com autorização literal do proprietário (T1 a T3 e PR-012), fora do aceite desta especificação. |
 
 ## Aceite
 

@@ -4,10 +4,10 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #70; SHA 642d833fe673e2283b0443b3865415fee77dc67e
-- Frente ativa: **RM-08 / PR #71**; branch `ccr-69ece020-2w19at`; base main; fase review.
+- Último merge comprovado: PR #71; SHA 2440a82cd4d0c66abf7170c32ad4470a8ff4effa
+- Frente ativa: **RM-09 / PR #72**; branch `ccr-69ece020-2w19at`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
-- **Próxima tarefa: RM-09**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
+- **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
@@ -101,6 +101,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 | RM-08-BASELINE | P2 | ENG-07 / RM-08: baseline formal e avaliação de bloqueadores | implementado_nao_homologado | Baseline documentada no HEAD vigente; status e proveniência de GP-3, GQ-D, GQ-C e GQ-O reconciliados; critérios mínimos do ciclo e bloqueadores explícitos; sem persistência pessoal, integração externa ou promoção de GP-4. |
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
+
+**RM-09 — subescopo offline:** contrato de comandos dos agentes à Zapia (PR-013: `config/agent_command_schema.json`, `scripts/agent_commands.py`) e especificações S4 e S5 em `docs/especificacoes/`. Não há prova de autorização, de fluxo com Gemini Notebook, Zapia ou GitHub Projects; **RM-09 permanece `planejado`** e nenhum teste usou conta real.
 
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 
