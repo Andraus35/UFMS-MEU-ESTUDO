@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "perfil_zapia_start",
+    "scope": "perfil_zapia_agents_gate",
     "branch": "ccr-69ece020-2w19at",
-    "pr_number": 73,
+    "pr_number": 74,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #72 integrado em main no merge commit 738947924e465d56744dbf27b5acda90d0eeb23e. Frente única ativa: RM-09 (perfil_zapia_start), branch ccr-69ece020-2w19at, PR #73. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #73 integrado em main no merge commit e7519c7ca808bf33c7087317921bb7be4846e09d. Frente única ativa: RM-09 (perfil_zapia_agents_gate), branch ccr-69ece020-2w19at, PR #74. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 72,
-    "merge_commit_sha": "738947924e465d56744dbf27b5acda90d0eeb23e"
+    "pr_number": 73,
+    "merge_commit_sha": "e7519c7ca808bf33c7087317921bb7be4846e09d"
   },
   "work_queue": [
     {
