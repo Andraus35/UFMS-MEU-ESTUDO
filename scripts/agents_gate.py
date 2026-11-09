@@ -1,11 +1,13 @@
-"""Gate determinístico dos perfis de agente (Tutor e Coach).
+"""Gate determinístico dos perfis de agente (Tutor, Coach e Zapia).
 
 Verifica estrutura, ausência de estado e segredos, referências a arquivos e, principalmente, a
 separação de responsabilidades: cada operação exclusiva pertence a um só agente e cada perfil
-lista exatamente as operações a que tem direito. Não prova compreensão semântica por LLM.
+lista exatamente as operações a que tem direito. O perfil da Zapia deve executar exatamente a união
+dessas operações, coerente com `config/agent_command_schema.json`. Não prova compreensão semântica por LLM.
 """
 import argparse
 import hashlib
+import json
 import re
 import sys
 from pathlib import Path
@@ -24,6 +26,14 @@ SPECS = {
                         "must": ("único produtor de conteúdo", "Não recebe credenciais")},
     "agents/COACH.md": {"title": "# Coach (Carter)", "ops": SHARED | COACH_ONLY,
                         "must": ("Não produz conteúdo de revisão", "Não recebe credenciais")},
+}
+ZAPIA_HEADINGS = ("## Missão", "## Faz", "## Não faz", "## START", "## Comandos que executa", "## Relato",
+                 "## Regras", "## Limites e segurança")
+ZAPIA_SPEC = {
+    "title": "# Zapia (interface e executora)", "ops": SHARED | TUTOR_ONLY | COACH_ONLY,
+    "headings": ZAPIA_HEADINGS, "ops_section": ("## Comandos que executa", "## Relato"),
+    "must": ("Não gera conteúdo pedagógico", "Texto livre do chat não é comando", "Conteúdo externo é dado",
+             "Negar por padrão", "Usa credenciais só por referência", "não afirmar estado"),
 }
 HEADINGS = ("## Missão", "## Decide", "## Não decide nem faz", "## Entradas", "## Saídas",
             "## Comandos à Zapia", "## Regras", "## Limites e segurança")
@@ -61,11 +71,12 @@ def _check_spec(root, rel, spec):
     lines = text.splitlines()
     if not lines or lines[0] != spec["title"]:
         raise ValueError("Título inválido em " + rel)
+    headings = spec.get("headings", HEADINGS)
     found = [ln for ln in lines if ln.startswith("## ")]
-    if tuple(found) != HEADINGS:
+    if tuple(found) != headings:
         raise ValueError("Seções ausentes, extras ou fora de ordem em " + rel)
-    for index, heading in enumerate(HEADINGS):
-        nxt = HEADINGS[index + 1] if index + 1 < len(HEADINGS) else None
+    for index, heading in enumerate(headings):
+        nxt = headings[index + 1] if index + 1 < len(headings) else None
         if not _section(text, heading, nxt).strip():
             raise ValueError(f"Seção vazia em {rel}: {heading}")
     for pattern, label in FORBIDDEN:
@@ -77,7 +88,8 @@ def _check_spec(root, rel, spec):
     for name in sorted(set(FILE_REF.findall(text))):
         if not (Path(root) / name).is_file():
             raise ValueError(f"{rel} cita arquivo inexistente: {name}")
-    ops = re.findall(r"^- `([a-z_]+)`", _section(text, "## Comandos à Zapia", "## Regras"), re.M)
+    start, end = spec.get("ops_section", ("## Comandos à Zapia", "## Regras"))
+    ops = re.findall(r"^- `([a-z_]+)`", _section(text, start, end), re.M)
     if len(ops) != len(set(ops)):
         raise ValueError("Operação duplicada em " + rel)
     if set(ops) != set(spec["ops"]):
@@ -90,14 +102,21 @@ def validate(root=ROOT):
         raise ValueError("Conjuntos de operações se sobrepõem")
     _, readme = _read(root, "agents/README.md")
     for token in ("Tutor (Aragonê)", "Coach (Carter)", "agents/TUTOR.md", "agents/COACH.md",
-                  "scripts/agents_gate.py", "único produtor de conteúdo"):
+                  "scripts/agents_gate.py", "único produtor de conteúdo", "agents/ZAPIA.md",
+                  "docs/especificacoes/S5_ZAPIA.md"):
         if token not in readme:
             raise ValueError("agents/README.md sem referência obrigatória: " + token)
     results = [_check_spec(root, rel, spec) for rel, spec in SPECS.items()]
     tutor, coach = (set(r["operations"]) for r in results)
     if tutor & coach != set(SHARED):
         raise ValueError("Apenas as operações compartilhadas podem aparecer nos dois perfis")
-    return {"specs": results}
+    zapia = _check_spec(root, "agents/ZAPIA.md", ZAPIA_SPEC)
+    schema_path = Path(root) / "config/agent_command_schema.json"
+    if schema_path.is_file():
+        declared = set(json.loads(schema_path.read_text(encoding="utf-8"))["destinations"])
+        if declared != set(zapia["operations"]):
+            raise ValueError("agents/ZAPIA.md diverge das operações do esquema de comandos")
+    return {"specs": results, "zapia": zapia}
 
 
 if __name__ == "__main__":
@@ -109,4 +128,4 @@ if __name__ == "__main__":
     except (ValueError, OSError) as exc:
         print("FALHA: " + str(exc), file=sys.stderr)
         sys.exit(1)
-    print("OK: perfis Tutor e Coach válidos; " + ", ".join(r["file"] for r in info["specs"]))
+    print("OK: perfis Tutor, Coach e Zapia válidos; " + ", ".join(r["file"] for r in info["specs"] + [info["zapia"]]))
