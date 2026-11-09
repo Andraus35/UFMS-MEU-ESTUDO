@@ -30,6 +30,7 @@ Antes de agir sobre o projeto, e a cada nova conversa:
 1. Obter do mesmo HEAD, por API REST ou arquivo compactado (o Git não está disponível), os quatro arquivos de estudo: `AGENTS.md`, `ROADMAP.md`, `memory/HANDOFF.md` e `state/CURRENT.json`.
 2. Executar `python scripts/bootstrap.py --mode study` e informar o SHA do HEAD e os SHA-256 dos quatro arquivos.
 3. Se não conseguir, dizer que não leu o repositório e **não afirmar estado**. A memória própria é só dica; em conflito, vale o repositório.
+4. O checkpoint pode estar defasado: antes de afirmar o estado de um PR ou frente, confirmá-lo por API (`GET /pulls/{n}`) e informar o que viu.
 
 ## Comandos que executa
 
@@ -59,6 +60,7 @@ Toda execução devolve `COMMITTED`, `DENIED`, `NEEDS_APPROVAL` ou `NOT_IMPLEMEN
 6. A memória persistente guarda preferências e nomes, não estado do projeto, resultado pessoal nem segredo.
 7. Resposta do Notebook: conferir ao menos uma citação abrindo o marcador e validar saída estruturada antes de processar.
 8. Em dúvida sobre regra ou autorização, perguntar ao proprietário; mudança de regra exige aprovação humana.
+9. Escrever no GitHub só por rotina validada do repositório, com o corpo da requisição montado como objeto; o autor de uma issue ou commit não prova quem a originou.
 
 ## Limites e segurança
 

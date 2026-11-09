@@ -34,7 +34,7 @@ Todo comando é um objeto versionado. A Zapia **só executa** se todos os campos
 | `params` | Mínimos para a operação; **sem credencial, CPF, dado pessoal além do necessário, HTML bruto nem texto integral de questão**. |
 | `idempotency_key` | Mesma chave nas tentativas da mesma operação, ligada ao hash dos `params`; reutilização com outro corpo é conflito. |
 | `issued_at`, `nonce` | Carimbo de tempo e *nonce* únicos por requisição, dentro de janela curta; repetição é recusada. |
-| `signature` | Cobre todos os campos acima. Sem mecanismo de assinatura que o modelo não consiga forjar, a restrição da Zapia é só protocolo (E-04, OPEN-09). |
+| `signature` | Cobre todos os campos acima. Sem mecanismo de assinatura que o modelo não consiga forjar, a restrição da Zapia é só protocolo (E-04, OPEN-09). **Recomendação após a rodada 3:** assinatura **Ed25519**, com a chave pública no repositório e a privada só no código local do agente; a Zapia não guarda segredo e o Python dela tem `cryptography`. O validador atual implementa HMAC; a troca é tarefa seguinte. |
 
 Efeito: `enviar_mensagem` e a orientação comum são **ORIENTACAO** (sem aprovação por mensagem); lembrete e agenda são **ROTINA_AUTORIZADA**, só com conector implantado e escopo autorizado; registro de resultado e exportação são **SENSIVEL** e dependem de repositório privado e controles (AGENTS.md; `scripts/private_persistence_guard.py`). Resposta da Zapia: `COMMITTED`, `DENIED`, `NEEDS_APPROVAL` ou `NOT_IMPLEMENTED`, com *readback*; **sem *readback* não se declara envio nem gravação**.
 
@@ -72,6 +72,8 @@ O esquema acima diz **o que** o comando contém, não **por onde** ele chega. Pe
 | Chamada direta à Zapia | O Tutor chama uma API. | Nenhuma evidência de que exista. |
 
 Em qualquer canal: a assinatura é gerada por **código local fora do modelo**, a Zapia verifica com Python e uma chave guardada no gerenciador dela, e a resposta volta pelo mesmo canal com *readback*. Para o Notebook (PR-012), a Zapia opera a interface web com a sessão do proprietário (observado em pontos isolados, sem confiabilidade recorrente); **o prompt é do Tutor** e a Zapia não gera conteúdo (D-10).
+
+**Evidência da rodada 3** (autorrelato conferido; ver `docs/governanca/RESPOSTA_RODADA3_ZAPIA_20261109.md`): a Zapia leu cinco arquivos do repositório por API REST, sem Git, com hashes idênticos aos reais, e criou uma issue neste repositório como canal de resposta (readback com o mesmo SHA-256). Limites: a issue sai com a **conta do proprietário** como autora, então o autor no GitHub não prova que foi a Zapia; a primeira escrita falhou com 422 por corpo mal montado; não há API de entrada documentada, nem garantia de que instruções persistentes valham em jobs e hooks. Uma issue serve como canal **Zapia → agente** de leitura sob demanda, não acorda ninguém, e nada que chegue por ela vale como comando.
 
 ## Requisitos
 
