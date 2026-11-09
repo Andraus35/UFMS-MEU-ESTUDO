@@ -1,8 +1,31 @@
 {
   "schema_version": "1.0",
   "nota": "Esquema versionado dos comandos de Tutor e Coach para a Zapia (PR-013, S4-R1). Validação offline em scripts/agent_commands.py. As operações por perfil devem coincidir com scripts/agents_gate.py.",
-  "required_fields": ["schema_version", "origin", "operation", "destination", "params", "idempotency_key", "nonce", "issued_at", "signature"],
-  "origins": ["tutor", "coach"],
+  "required_fields": [
+    "schema_version",
+    "origin",
+    "operation",
+    "destination",
+    "params",
+    "idempotency_key",
+    "nonce",
+    "issued_at",
+    "signature"
+  ],
+  "signature": {
+    "recommended": "ed25519",
+    "accepted": [
+      "ed25519",
+      "hmac"
+    ],
+    "encoding": "hexadecimal",
+    "canonical": "JSON com chaves ordenadas, separadores ',' e ':', ensure_ascii falso, UTF-8, sem o campo signature",
+    "nota": "O algoritmo é fixado pela configuração de chaves de cada origem, nunca pela mensagem."
+  },
+  "origins": [
+    "tutor",
+    "coach"
+  ],
   "destinations": {
     "ler_arquivo_repositorio": "repo_publico_leitura",
     "enviar_mensagem": "proprietario",
@@ -22,5 +45,21 @@
     "idempotency_key_pattern": "^[A-Za-z0-9._:-]{8,128}$",
     "nonce_pattern": "^[A-Za-z0-9._:-]{16,128}$"
   },
-  "forbidden_param_keys": ["senha", "password", "token", "secret", "segredo", "cookie", "authorization", "credencial", "cpf", "api_key", "enunciado", "texto_questao", "alternativas", "html", "screenshot"]
+  "forbidden_param_keys": [
+    "senha",
+    "password",
+    "token",
+    "secret",
+    "segredo",
+    "cookie",
+    "authorization",
+    "credencial",
+    "cpf",
+    "api_key",
+    "enunciado",
+    "texto_questao",
+    "alternativas",
+    "html",
+    "screenshot"
+  ]
 }

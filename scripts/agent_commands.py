@@ -6,9 +6,14 @@ chaves de assinatura por origem e o relógio. Aceitar um comando aqui é condiç
 nunca suficiente: não executa nada, não autoriza gravação de resultado pessoal
 (`personal_results_writes_enabled` segue falso) e não prova que a Zapia usa este validador.
 
+Assinatura, por origem (o algoritmo é fixado pela configuração de chaves, nunca pela mensagem, o que
+impede rebaixamento): `("ed25519", chave_pública_de_32_bytes)` é a recomendada, pois a Zapia só guarda
+chave pública; `("hmac", segredo)` e a forma antiga `bytes` (HMAC) continuam aceitas.
+
 Limites declarados:
-- A assinatura HMAC só impede forja por quem NÃO tem a chave; se a chave estiver ao alcance do
-  modelo, a restrição volta a ser protocolo (E-04, OPEN-09). Gestão de chaves está fora daqui.
+- A assinatura só impede forja por quem NÃO tem a chave que assina (a privada, no Ed25519; o segredo, no
+  HMAC); se ela estiver ao alcance do modelo, a restrição volta a ser protocolo (E-04, OPEN-09).
+  Gestão de chaves está fora daqui.
 - O filtro de dados pessoais é heurístico (CPF, e-mail, segredos, HTML, nomes de campo e tamanho);
   não detecta texto integral de questão escrito em prosa curta nem todo dado pessoal.
 """
@@ -23,8 +28,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import ed25519_pure
     from agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 except ModuleNotFoundError:  # pragma: no cover - uso como pacote
+    from scripts import ed25519_pure
     from scripts.agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,7 +44,8 @@ DENIED = "DENIED"
 
 _CPF_FMT = re.compile(r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)")
 _DIGITS11 = re.compile(r"(?<!\d)\d{11}(?!\d)")
-_EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
+# quantificadores limitados: sem isso a busca é quadrática em textos longos (corpo de issue de 60 000 caracteres)
+_EMAIL = re.compile(r"[\w.+-]{1,64}@[\w-]{1,255}\.[\w.-]{1,255}")
 _SECRET = re.compile(
     r"ghp_[A-Za-z0-9]{10,}|github_pat_[A-Za-z0-9_]{10,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}"
     r"|Bearer\s+[A-Za-z0-9._~+/=-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----", re.I)
@@ -68,6 +76,32 @@ def sign(command: dict, key: bytes) -> str:
     return hmac.new(key, canonical_bytes(command), hashlib.sha256).hexdigest()
 
 
+def sign_ed25519(command: dict, secret: bytes) -> str:
+    """Assinatura Ed25519 em hexadecimal (128 caracteres). Para testes e para o código local do agente."""
+    return ed25519_pure.sign(secret, canonical_bytes(command)).hex()
+
+
+def _signature_ok(command: dict, entry) -> bool:
+    """Confere a assinatura com o algoritmo FIXADO pela configuração da origem. Fail-closed."""
+    signature = command.get("signature")
+    if not isinstance(signature, str):
+        return False
+    if isinstance(entry, (bytes, bytearray)):
+        entry = ("hmac", bytes(entry))
+    if not (isinstance(entry, tuple) and len(entry) == 2):
+        return False
+    algorithm, key = entry
+    if algorithm == "hmac" and isinstance(key, (bytes, bytearray)) and key:
+        return hmac.compare_digest(signature, sign(command, bytes(key)))
+    if algorithm == "ed25519" and isinstance(key, (bytes, bytearray)):
+        try:
+            raw = bytes.fromhex(signature)
+        except ValueError:
+            return False
+        return ed25519_pure.verify(bytes(key), canonical_bytes(command), raw)
+    return False
+
+
 def params_hash(params) -> str:
     raw = json.dumps(params, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
@@ -77,6 +111,20 @@ def _parse_time(value):
     if not isinstance(value, str) or not value.endswith("Z"):
         raise ValueError("issued_at deve ser ISO 8601 UTC terminado em Z")
     return datetime.fromisoformat(value[:-1] + "+00:00").astimezone(timezone.utc)
+
+
+def scan_text(text: str, *, html: bool = False):
+    """Filtro heurístico de segredo, dado pessoal e (opcional) HTML bruto. Devolve o motivo ou None."""
+    if _SECRET.search(text):
+        return "PARAMS_SEGREDO"
+    if html and _HTML.search(text):
+        return "PARAMS_HTML_BRUTO"
+    if _EMAIL.search(text) or _CPF_FMT.search(text):
+        return "PARAMS_DADO_PESSOAL"
+    for match in _DIGITS11.findall(text):
+        if _cpf_valid(match):
+            return "PARAMS_DADO_PESSOAL"
+    return None
 
 
 def _scan_params(value, schema, depth=0):
@@ -101,17 +149,7 @@ def _scan_params(value, schema, depth=0):
     elif isinstance(value, str):
         if len(value) > limits["max_param_string_chars"]:
             return "PARAMS_TEXTO_LONGO"
-        if _SECRET.search(value):
-            return "PARAMS_SEGREDO"
-        if _HTML.search(value):
-            return "PARAMS_HTML_BRUTO"
-        if _EMAIL.search(value):
-            return "PARAMS_DADO_PESSOAL"
-        for match in _CPF_FMT.findall(value):
-            return "PARAMS_DADO_PESSOAL"
-        for match in _DIGITS11.findall(value):
-            if _cpf_valid(match):
-                return "PARAMS_DADO_PESSOAL"
+        return scan_text(value, html=True)
     elif value is not None and not isinstance(value, (bool, int, float)):
         return "PARAMS_TIPO_INVALIDO"
     return None
@@ -120,8 +158,8 @@ def _scan_params(value, schema, depth=0):
 class CommandLedger:
     """Registro em memória de nonce e idempotência. Só avança quando o comando é aceito.
 
-    Em produção o registro precisa ser durável e atômico (ver scripts/tool_gateway.py);
-    aqui serve para provar a regra sem rede nem disco."""
+    Em produção use `command_ledger.SqliteLedger` (durável e atômico); esta versão serve para provar a
+    regra sem rede nem disco. Contrato comum: `admit` decide e registra numa só operação."""
 
     def __init__(self):
         self.nonces: set[str] = set()
@@ -131,12 +169,25 @@ class CommandLedger:
         self.nonces.add(nonce)
         self.keys[key] = body_hash
 
+    def admit(self, nonce: str, key: str, body_hash: str) -> str:
+        """Devolve "ok", "duplicate", "nonce_repeated" ou "conflict"; só registra quando admite."""
+        if nonce in self.nonces:
+            return "nonce_repeated"
+        previous = self.keys.get(key)
+        if previous is not None:
+            if previous != body_hash:
+                return "conflict"
+            self.nonces.add(nonce)  # a repetição legítima consome o nonce, mas não executa de novo
+            return "duplicate"
+        self.commit(nonce, key, body_hash)
+        return "ok"
+
 
 def _deny(code, detail=""):
     return {"decision": DENIED, "code": code, "detail": detail}
 
 
-def validate_command(command, *, keys: dict, now: datetime, ledger: CommandLedger, schema: dict | None = None) -> dict:
+def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict | None = None) -> dict:
     """Valida um comando. Nunca levanta exceção para entrada ruim; nada é registrado em recusa."""
     schema = schema or load_schema()
     limits = schema["limits"]
@@ -156,8 +207,7 @@ def validate_command(command, *, keys: dict, now: datetime, ledger: CommandLedge
     origin = command["origin"]
     if origin not in schema["origins"] or origin not in keys:
         return _deny("ORIGEM_DESCONHECIDA")
-    signature = command["signature"]
-    if not isinstance(signature, str) or not hmac.compare_digest(signature, sign(command, keys[origin])):
+    if not _signature_ok(command, keys[origin]):
         return _deny("ASSINATURA_INVALIDA")
     try:
         issued = _parse_time(command["issued_at"])
@@ -181,17 +231,17 @@ def validate_command(command, *, keys: dict, now: datetime, ledger: CommandLedge
     reason = _scan_params(params, schema)
     if reason:
         return _deny(reason)
-    if nonce in ledger.nonces:
-        return _deny("NONCE_REPETIDO")
     body_hash = params_hash({"operation": operation, "destination": command["destination"], "params": params})
-    previous = ledger.keys.get(key)
-    if previous is not None:
-        if previous != body_hash:
-            return _deny("CHAVE_REUTILIZADA_COM_OUTRO_CORPO")
-        ledger.nonces.add(nonce)  # a repetição legítima consome o nonce, mas não executa de novo
+    verdict = ledger.admit(nonce, key, body_hash)  # decide e registra de forma atômica
+    if verdict == "nonce_repeated":
+        return _deny("NONCE_REPETIDO")
+    if verdict == "conflict":
+        return _deny("CHAVE_REUTILIZADA_COM_OUTRO_CORPO")
+    if verdict == "duplicate":
         return {"decision": DUPLICATE, "code": "IDEMPOTENTE", "detail": ""}
-    ledger.commit(nonce, key, body_hash)
-    return {"decision": ACCEPTED, "code": "OK", "detail": ""}
+    if verdict == "ok":
+        return {"decision": ACCEPTED, "code": "OK", "detail": ""}
+    return _deny("REGISTRO_INDISPONIVEL")  # fail-closed se o registro devolver algo inesperado
 
 
 def check(root: Path = ROOT) -> list[str]:
@@ -204,6 +254,8 @@ def check(root: Path = ROOT) -> list[str]:
         errs.append(f"destinos divergem das operações dos perfis: {sorted(declared ^ allowed)}")
     if set(schema["origins"]) != set(OPERATIONS):
         errs.append("origens do esquema divergem dos perfis")
+    if schema.get("signature", {}).get("recommended") != "ed25519":
+        errs.append("esquema sem a assinatura recomendada (ed25519)")
     for field in ("signature", "nonce", "idempotency_key", "issued_at", "destination", "origin"):
         if field not in schema["required_fields"]:
             errs.append(f"campo obrigatório ausente no esquema: {field}")
