@@ -102,6 +102,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 | RM-09 | P2 | Integrações gratuitas necessárias | planejado | Provas de autorização e fluxo com Gemini Notebook, Zapia e GitHub Projects; sem reabrir PR #3 |
 | RM-10 | P2 | ENG-08 / GP-5: piloto | bloqueado | Privacidade, autorização, observações reais e avaliação prudente de utilidade |
 
+**RM-09 — subescopo offline:** contrato de comandos dos agentes à Zapia (PR-013: `config/agent_command_schema.json`, `scripts/agent_commands.py`) e especificações S4 e S5 em `docs/especificacoes/`. Não há prova de autorização, de fluxo com Gemini Notebook, Zapia ou GitHub Projects; **RM-09 permanece `planejado`** e nenhum teste usou conta real.
+
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.

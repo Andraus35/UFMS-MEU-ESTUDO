@@ -4,7 +4,7 @@
 
 ## Onde ficam
 
-Uma página por especificação, em `docs/especificacoes/`, com nome `S<n>_<assunto>.md` (S1 método de estudo e revisão, S2 Tutor, S3 Coach, S4 operação). Uma especificação **aponta** para o que já existe (`agents/`, `docs/pedagogia/`, `docs/PLATFORMS.md`); não copia.
+Uma página por especificação, em `docs/especificacoes/`, com nome `S<n>_<assunto>.md` (S1 método de estudo e revisão, S2 Tutor, S3 Coach, S4 operação, S5 harness da Zapia). Uma especificação **aponta** para o que já existe (`agents/`, `docs/pedagogia/`, `docs/PLATFORMS.md`); não copia.
 
 ## Modelo (seções, nesta ordem)
 
