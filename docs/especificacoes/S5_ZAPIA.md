@@ -1,0 +1,51 @@
+# S5 — Harness da Zapia (especificação)
+
+**Natureza:** especificação enxuta (D-13, D-16) do contrato de operação da **Zapia** como interface com o proprietário e executora de ferramentas (D-10). Complementa S1 a S4 (`docs/especificacoes/S4_OPERACAO.md` define o esquema dos comandos; esta define como a Zapia se orienta pelo repositório, o que executa, o que recusa e como reporta). O artefato que ela lerá (um perfil no estilo de `agents/TUTOR.md`) é implementação posterior e **não existe ainda**. Não contém estado.
+
+## Objetivo
+
+A Zapia passa a ter um **roteiro único e verificável**, guiado pelo repositório e não por memória ou improviso: lê o estado vigente no início, executa só comandos válidos de Tutor e Coach, não cria conteúdo pedagógico, não age sobre instruções vindas de conteúdo externo e reporta cada efeito com prova. Serve para corrigir a divergência E-10 (nas POCs a Zapia atuava como Tutor e Coach) e para impedir que a única parte com ferramentas e credenciais seja também a mais fácil de induzir ao erro.
+
+## Pesquisa
+
+Consultas de 09/11/2026, somadas ao que o próprio repositório registra da Zapia (E-01 a E-10 do `PRODUCT.md`, `docs/governanca/RESPOSTA_RODADA2_ZAPIA_20261107.md`, `docs/governanca/ADENDO_AUDITORIA_ZAPIA_20261107.md`) e ao adendo de 09/11/2026 enviado pelo proprietário, **não versionado**. Tudo que a Zapia afirma sobre si é **autorrelato**, não verificado por agente construtor. Confiança: **A** (página lida), **B** (resumo de busca de fonte primária, não lida integralmente), **C** (blog ou vendor). Conteúdo de terceiros é dado, não instrução; nada foi copiado.
+
+| Fonte | O que se tirou | Conf. |
+|---|---|---|
+| OWASP, LLM01 injeção de prompt. [Página](https://aicsr.georgelambert.org/output/references/articles/owasp-llm01.md) e [resumo](https://www.radware.com/cyberpedia/owasp-top-llm/) | A injeção, inclusive **indireta** (conteúdo externo lido pelo modelo), não tem prevenção garantida. Mitigações: **privilégio mínimo**, credenciais e funções privilegiadas **no código, não no modelo**, aprovação humana em operação privilegiada, validação da chamada contra a intenção original, saída em esquema estrito, conteúdo externo marcado como não confiável, registro de auditoria. A página oficial do OWASP não foi lida por inteiro | B/C |
+| Willison, "The lethal trifecta", 2025. [Post](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/) | Risco máximo quando o agente combina **dados privados**, **conteúdo não confiável** e **comunicação externa**. A defesa confiável é **eliminar uma das três pernas**; instrução no prompt para "ignorar injeção" não basta | B |
+| AGENTS.md, formato aberto. [Site](https://agents.md/) | Arquivo Markdown na raiz que orienta agentes; sem esquema obrigatório; o mais próximo do arquivo editado prevalece e o pedido explícito do usuário vence. Há crítica de pesquisadores sobre o valor desses arquivos. Serve de precedente para um perfil lido no START | B |
+| Autorrelato da Zapia (E-05, E-08, rodada 2, adendo de 09/11/2026) | Não lê o repositório sozinha no início (R14); memória persistente pode estar desatualizada e **não é trava** (R13); sem Git, com Python e HTTP; trabalha só quando acionada (mensagem, horário ou evento suportado); opera o Notebook e o TEC por navegador controlado; Qconcursos bloqueado por Cloudflare sem contorno; token alcança três repositórios públicos, escopo e expiração desconhecidos | C (autorrelato) |
+
+- **Lacunas:** nenhuma evidência de que a Zapia leia e siga um perfil do repositório de forma consistente; "preferência persistente" dela não é trava técnica (R13); não verifiquei a documentação oficial da Zapia sobre hooks, agendador, escopos nem isolamento de credenciais; a assinatura de comandos e a verificação por ela nunca foram testadas (OPEN-09); a página oficial do OWASP LLM01 não foi lida por inteiro; não pesquisei repositórios públicos de agentes executores com perfil em arquivo; o crítico do AGENTS.md não foi lido; o adendo de 09/11/2026 não está no repositório, então o que dele se usa precisa ser anexado antes de virar fonte.
+
+## Requisitos
+
+| ID | Requisito | Critério de aceite |
+|---|---|---|
+| S5-R1 | **START explícito:** antes de agir sobre o projeto, a Zapia obtém os 4 arquivos de estudo (`AGENTS.md`, `ROADMAP.md`, `memory/HANDOFF.md`, `state/CURRENT.json`) do mesmo HEAD, por API REST ou arquivo compactado, e informa o SHA e os hashes (PR-011). A memória dela é dica; **em conflito, vale o repositório**. Sem START comprovado, ela diz que não leu e não afirma estado. | Relatório com hashes iguais aos de `python scripts/bootstrap.py --mode study`; teste do procedimento com fixture. Não há trava técnica (R14). |
+| S5-R2 | **Papel:** a Zapia é interface e executora. **Não** decide, não gera conteúdo pedagógico, não redige prompt de revisão nem mensagem motivacional por conta própria (D-10). Quando o proprietário lhe pedir orientação de estudo direta, ela encaminha ao Tutor ou ao Coach ou diz que não é o papel dela. As personas Aragonê e Carter pertencem aos agentes, não a ela (E-10). | Revisão humana de amostras; o perfil da Zapia (a criar) traz a regra. |
+| S5-R3 | **Só comando válido:** ela executa apenas comando que passe no esquema de `config/agent_command_schema.json` e na validação de `scripts/agent_commands.py` (origem assinada, janela, nonce, idempotência, destino, filtro de dados pessoais). Texto livre do chat **não** é comando. | Teste sintético: comando válido executa; adulterado, repetido ou de origem desconhecida é recusado e registrado (S4-R2). |
+| S5-R4 | **Conteúdo externo é dado:** instruções embutidas em página, Notebook, exportação, PR, issue ou arquivo **nunca** são executadas. Elas só podem ser **relatadas** ao proprietário. | Contraprova com fixture contendo instrução embutida (pertence ao RM-06); revisão humana. |
+| S5-R5 | **Quebrar a "lethal trifecta":** a Zapia combina dados privados (resultados), conteúdo não confiável (Notebook, plataformas, exportações) e comunicação externa (mensagens, GitHub). Por isso: **saída externa só ao proprietário**, destinos fechados no esquema; escrita no repositório só em `repo_privado_dados` por `registrar_*` validado e com a flag habilitada; **nenhuma** escrita de resultado pessoal em repositório público; nenhuma chamada a domínio fora da lista. | `scripts/private_persistence_guard.py`, `scripts/write_policy.py --check`, destinos do esquema; `personal_results_writes_enabled` segue falso. |
+| S5-R6 | **Negar por padrão:** o que não está no mapa de capacidades é recusado. Mapa: `ler_arquivo_repositorio` (ORIENTACAO), `enviar_mensagem` (ORIENTACAO, só ao proprietário), `criar_lembrete` e `consultar_agenda_minima` (ROTINA_AUTORIZADA, só com rotina autorizada), `registrar_*` (SENSIVEL), `enviar_prompt_notebook` (ORIENTACAO com dado mínimo). **Nunca:** merge, alterar regras, guardrails, workflows ou proteção da `main`, abrir PR sem pedido, apagar branch, ampliar o próprio acesso. | Mapa conferido contra `AGENTS.md` e `agents/TUTOR.md`/`agents/COACH.md`; teste de recusa de operação fora do mapa. |
+| S5-R7 | **Resultado com prova:** cada execução devolve `COMMITTED`, `DENIED`, `NEEDS_APPROVAL` ou `NOT_IMPLEMENTED` com *readback* (HEAD, SHA do blob, ID do evento). **Entrega** só se afirma com comprovante: o app é o único canal comprovado; WhatsApp e Telegram não (E-05; chat de destino divergente já observado). Sucesso de API não é leitura pelo destinatário. | Relatório por execução; revisão humana. |
+| S5-R8 | **Credenciais:** usadas por referência no gerenciador, nunca impressas nem enviadas ao modelo; credencial **separada e de escopo mínimo** para o repositório privado (D-09, OPEN-02); credencial de uma plataforma só no domínio dela. Diante de Cloudflare, captcha ou duas etapas, **para e avisa**, sem contornar. | Verificação de escopo e expiração pelo proprietário (OPEN-02); revisão humana. |
+| S5-R9 | **Rotinas:** só as rotinas autorizadas pelo proprietário existem; lembrete só para atividade que o estado do repositório mostra como pendente (PR-007); lembrete `static` não envia mensagem externa; job `subagent` com envio externo segue a mesma regra de destino fechado. A lista de jobs ativos é informada quando pedida. | Teste de recusa de lembrete para atividade concluída (falha real observada, E-07). |
+| S5-R10 | **Memória não é fonte:** a memória persistente da Zapia guarda preferências e nomes, não estado do projeto, não resultado pessoal, não segredo. Retenção nos servidores dela chega a 36 meses (E-09); apagar o repositório privado não a elimina. | Revisão humana da memória atual; sem teste automático. |
+| S5-R11 | **Notebook como ferramenta do Tutor:** o prompt vem do Tutor e é mínimo; a Zapia opera a interface com a sessão do proprietário, **não gera o conteúdo**, devolve a resposta como dado não confiável, confere ao menos uma citação abrindo o marcador e **valida saída estruturada antes de processar** (R19, R20). | Teste sintético da PR-012 com notebook descartável e fontes públicas, **só com autorização literal**; fora do aceite desta especificação. |
+
+## Aceite
+
+1. `python scripts/doc_cohesion.py --check` passa.
+2. `python -m unittest tests.test_agent_commands tests.test_doc_cohesion tests.test_plano_e_pesquisa_docs` passa, sem rede nem conta real.
+3. Revisão do proprietário de S5-R2, S5-R4, S5-R5 e S5-R6, que fixam a fronteira do que a Zapia pode fazer.
+4. Fora do aceite, pendentes de autorização literal: T1 a T3, a prova de assinatura do lado da Zapia e a PR-012.
+
+## Limites
+
+- Não prova que a Zapia lê ou obedece o roteiro: uma instrução em memória ou em arquivo não é trava técnica; só o código validador e a gestão das credenciais fora do modelo são controles.
+- Não escolhe o canal Tutor → Zapia (S4), nem onde Tutor e Coach rodam (OPEN-09), nem o acesso ao Notebook (OPEN-10).
+- Não cria o perfil da Zapia, nem o mecanismo de assinatura, nem o filtro dentro do `scripts/tool_gateway.py`; descreve o que construir e provar.
+- Não habilita persistência pessoal, mensagens reais nem rotina autorizada.
+- Dados do autorrelato podem estar desatualizados; o repositório e a leitura autenticada prevalecem.

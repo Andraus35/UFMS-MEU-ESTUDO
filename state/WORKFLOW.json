@@ -172,6 +172,22 @@
         "resposta do suporte do TEC (OPEN-12)",
         "onde Tutor e Coach rodam (OPEN-09)"
       ]
+    },
+    {
+      "id": "S5",
+      "title": "Especificação do harness da Zapia: START pelo repositório, papel, comandos válidos, negar por padrão e relato com prova",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S5_ZAPIA.md",
+      "depends_on": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "onde Tutor e Coach rodam (OPEN-09)",
+        "escopo e expiração do token da Zapia (OPEN-02)"
+      ]
     }
   ]
 }
