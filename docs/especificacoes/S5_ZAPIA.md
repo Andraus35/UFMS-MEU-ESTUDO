@@ -47,7 +47,7 @@ Consultas de 09/11/2026, somadas ao que o próprio repositório registra da Zapi
 ## Limites
 
 - Não prova que a Zapia lê ou obedece o roteiro: uma instrução em memória ou em arquivo não é trava técnica; só o código validador e a gestão das credenciais fora do modelo são controles.
-- Não escolhe o canal Tutor → Zapia (S4), nem onde Tutor e Coach rodam (OPEN-09), nem o acesso ao Notebook (OPEN-10).
+- Não escolhe o canal Tutor → Zapia (S4), nem o canal e a verificação de origem em produção (OPEN-09; o ambiente dos agentes está em D-18), nem o acesso ao Notebook (OPEN-10).
 - Não cria o perfil da Zapia, nem o mecanismo de assinatura, nem o filtro dentro do `scripts/tool_gateway.py`; descreve o que construir e provar.
 - Não habilita persistência pessoal, mensagens reais nem rotina autorizada.
 - Dados do autorrelato podem estar desatualizados; o repositório e a leitura autenticada prevalecem.

@@ -19,7 +19,7 @@ Este diretório define o **perfil** dos dois agentes que decidem no produto (`PR
 
 ## Pontos em aberto
 
-- **Onde rodam** os agentes e como emitem comandos à Zapia: `PRODUCT.md`, OPEN-09. Os perfis não dependem de um modelo específico.
+- **Onde rodam** os agentes: no computador do proprietário (D-18). Como emitem comandos à Zapia e como ela verifica a origem: `PRODUCT.md`, OPEN-09. Os perfis não dependem de um modelo específico.
 - **Perfil da Zapia:** `agents/ZAPIA.md` é o texto de instrução da interface e executora; contrato e justificativas em `docs/especificacoes/S5_ZAPIA.md`; formato dos comandos: `config/agent_command_schema.json` e `scripts/agent_commands.py`.
 - **Acesso ao NotebookLM:** o caminho direto do Tutor tem prioridade; a Zapia é a alternativa (D-12, PR-012).
 
