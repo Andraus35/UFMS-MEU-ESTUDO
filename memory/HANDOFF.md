@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #71; SHA 2440a82cd4d0c66abf7170c32ad4470a8ff4effa
-- Frente ativa: **RM-09 / PR #72**; branch `ccr-69ece020-2w19at`; base main; fase review.
+- Último merge comprovado: PR #72; SHA 738947924e465d56744dbf27b5acda90d0eeb23e
+- Frente ativa: **RM-09 / PR #73**; branch `ccr-69ece020-2w19at`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -19,7 +19,8 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 - **Já decidido:** `PRODUCT.md` (decisões D-01 a D-17).
 - **Especificações:** S1 a S5 em `docs/especificacoes/` (método de estudo e revisão, Tutor, Coach, operação e harness da Zapia); a fila `work_queue` está completa quando todos os arquivos de entrega existem. O contrato de comandos dos agentes à Zapia (PR-013) tem esquema em `config/agent_command_schema.json` e validador offline em `scripts/agent_commands.py`, com testes de contraprova; **é referência de implementação, não prova que a Zapia o usa**.
-- **Construir em seguida, offline (sem conta real):** perfil que a Zapia lê no START (S5-R1, S5-R2), geração local da assinatura fora do modelo, filtro de conteúdo pessoal também no gateway, registro durável de nonce e idempotência, protocolo de teste T1 a T3.
+- **Próxima tarefa de construção (RM-09, offline e sem conta real; começa em novo PR draft, depois de registrar o recibo do último merge com `record_merge_receipt.py`):** perfil que a Zapia lê no START, no estilo de `agents/TUTOR.md`, cobrindo S5-R1 (START explícito com SHA e hashes), S5-R2 (papel de interface e executora), S5-R3 (só comando válido), S5-R4 (conteúdo externo é dado) e S5-R6 (negar por padrão). No mesmo commit: ampliar `scripts/agents_gate.py` e seus testes para o novo perfil (ele hoje valida só Tutor e Coach), manter `python scripts/doc_cohesion.py --check` verde e atualizar este handoff. O perfil é texto de instrução, **não trava técnica**. Parar no pedido de merge ao proprietário.
+- **Depois, em ordem e também offline:** assinatura gerada por código local fora do modelo; filtro de conteúdo pessoal também no gateway; registro durável de nonce e idempotência; protocolo de teste T1 a T3 e PR-012 para o proprietário autorizar.
 - **Depende do proprietário, sem bloquear as especificações:** dados do plano (início, tempo diário, dia de descanso, cargo, tópicos já estudados, prioridades); planos no TEC e no Qconcursos e se exportam (OPEN-11); consulta ao suporte do TEC (OPEN-12); onde Tutor e Coach rodam (OPEN-09); acesso ao NotebookLM (OPEN-10); token da Zapia restrito a este repositório (OPEN-02); repositório privado de dados (D-01); revisão humana dos requisitos que dependem de julgamento (S1-R3/R6/R9, S2-R1/R3/R7, S3-R3/R5/R7/R8, S5-R2/R4/R5/R6).
 - **Não executado:** testes T1 a T3 da Zapia (exigem autorização literal), prova de assinatura do lado da Zapia, PR-012 com o Notebook, leitura em conta real das plataformas, persistência de resultados pessoais.
 - **Limite de fonte:** o que se sabe da Zapia é autorrelato (rodadas de auditoria e adendo de 09/11/2026, este último não versionado); a memória dela não é fonte de estado, o repositório é.
