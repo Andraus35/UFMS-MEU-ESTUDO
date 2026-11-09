@@ -1,0 +1,148 @@
+{
+ "public_key_ed25519_hex": "c416378d3d49d35f5e40a36394af4113603a372086d02f1f267fa68ee0cb1804",
+ "commands": {
+  "C1": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0001",
+   "nonce": "n-v1-000000000001",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "a3589fc3a1104ad8de4226eab4443abd258635f4d09ec97361ceabb5c4f1186a35c533af61eebf3b20e3e4c80e512d0e0fcec0241a61dc6c54f9c79afd35220d"
+  },
+  "C2": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Texto alterado depois de assinar."
+   },
+   "idempotency_key": "k-v1-0001",
+   "nonce": "n-v1-000000000002",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "a3589fc3a1104ad8de4226eab4443abd258635f4d09ec97361ceabb5c4f1186a35c533af61eebf3b20e3e4c80e512d0e0fcec0241a61dc6c54f9c79afd35220d"
+  },
+  "C3": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "criar_lembrete",
+   "destination": "agenda_proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0003",
+   "nonce": "n-v1-000000000003",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "d196bb9ceb8252ca573696f86c34eecb6caabb4393bf6fc150636d642be959e3037faa237b52f6254d290c329b6f692516b372d8c96c679d3fa99f7006508e0d"
+  },
+  "C4": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0004",
+   "nonce": "n-v1-000000000004",
+   "issued_at": "2026-11-09T11:50:00Z",
+   "signature": "f333543311f22722b5634f2b8d5edb9209fb1635922d4337d9639bced143aec111ac96ca2dbccfc7e4082baba1cc9b260e3e0611b01290570134d592e6acd304"
+  },
+  "C5": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0001",
+   "nonce": "n-v1-000000000001",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "a3589fc3a1104ad8de4226eab4443abd258635f4d09ec97361ceabb5c4f1186a35c533af61eebf3b20e3e4c80e512d0e0fcec0241a61dc6c54f9c79afd35220d"
+  },
+  "C6": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0001",
+   "nonce": "n-v1-000000000006",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "d89cbe54859d796430287d76ed6746b1a9f1db2e6a8dd3423150be5673b72c0d89705016d8a16dc67dcd5e0a72199aa6ca356ea1cc0490f7c374e7b6eb53da05"
+  },
+  "C7": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Outro corpo, mesma chave de idempotência."
+   },
+   "idempotency_key": "k-v1-0001",
+   "nonce": "n-v1-000000000007",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "689b8bf9fcd6284d14cbaabbc224f8dadd380e3d6584f853a38b2e635c869b58ac7d30ae70c8dea53a9a5cac79394841bb249ccf0e87c1eb28ae81ceb6c60a0b"
+  },
+  "C8": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Meu cpf é 529.982.247-25 (fictício)."
+   },
+   "idempotency_key": "k-v1-0008",
+   "nonce": "n-v1-000000000008",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "77deddc5d05eeff5809dccbbf740807bc1dc52204d39c3a1a9cd03d8582e231c822b9751344f3c35892138ba2c2a66685da5c604c4b6a7ee47dc5d85684f9f04"
+  },
+  "C9": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0009",
+   "nonce": "n-v1-000000000009",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "55bac188c1dcb98d44ee43bf63bb767c164c45c554fd45c4bc68d745eb559c14c6cd25f5fb0200a1825a4926aa62d970d5baf6b1482afc87475bd6f74ce69d05"
+  },
+  "C10": {
+   "schema_version": "1.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "qualquer_pessoa",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0010",
+   "nonce": "n-v1-000000000010",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "44f6e504b06d644e0de48581b24e29854e5ca3daf24bbb491fa007c6eb7734e155e91dc5deb8fc3075bc6748b2205a104be65ea8a8f80242a2bd8a52f9a0c60b"
+  },
+  "C11": {
+   "schema_version": "2.0",
+   "origin": "tutor",
+   "operation": "enviar_mensagem",
+   "destination": "proprietario",
+   "params": {
+    "texto": "Revisar GER-LEG com 10 questões."
+   },
+   "idempotency_key": "k-v1-0011",
+   "nonce": "n-v1-000000000011",
+   "issued_at": "2026-11-09T12:00:00Z",
+   "signature": "cb090c1f1fa432ba1c5d92b48db971315df3f141016142cd1b99aa87d74ff60a228689dce98392aaff404a1c9ae1845d2285f3f82155446269d32990f61b060c"
+  }
+ }
+}

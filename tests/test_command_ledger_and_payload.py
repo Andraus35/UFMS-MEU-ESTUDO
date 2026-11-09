@@ -70,6 +70,27 @@ class SqliteLedgerTests(unittest.TestCase):
         self.assertEqual(resultados.count(ac.ACCEPTED), 1, resultados)
         self.assertEqual(resultados.count(ac.DENIED), 11, resultados)
 
+    def test_abrir_o_mesmo_arquivo_em_paralelo_nao_levanta_erro_de_bloqueio(self):
+        """Regressão: PRAGMA journal_mode concorrente dava 'database is locked' em cerca de 18% das rodadas."""
+        for rodada in range(8):
+            caminho = Path(self.tmp.name) / f"paralelo-{rodada}.sqlite"
+            erros, aceitos = [], []
+
+            def tentar():
+                try:
+                    aceitos.append(run(command(), SqliteLedger(caminho))["decision"])
+                except Exception as exc:  # noqa: BLE001 - o teste existe para pegar qualquer erro
+                    erros.append(repr(exc))
+
+            threads = [threading.Thread(target=tentar) for _ in range(12)]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join()
+            self.assertEqual(erros, [], rodada)
+            self.assertEqual(aceitos.count(ac.ACCEPTED), 1, (rodada, aceitos))
+            self.assertEqual(len(aceitos), 12)
+
     def test_registro_inesperado_falha_fechado(self):
         class Quebrado:
             def admit(self, *a):

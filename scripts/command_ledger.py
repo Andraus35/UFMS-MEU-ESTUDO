@@ -7,6 +7,7 @@ idempotência e hash do corpo). Limites: não faz expiração automática (use `
 controle de acesso ao arquivo e não prova que a Zapia use este registro.
 """
 import sqlite3
+import time
 from datetime import datetime, timezone
 
 SCHEMA = """
@@ -23,13 +24,26 @@ class SqliteLedger:
     def __init__(self, path, *, timeout=10.0):
         self.path = str(path)
         self.timeout = timeout
-        with self._connect() as conn:
-            conn.executescript(SCHEMA)
+        self._initialize()
 
     def _connect(self):
-        conn = sqlite3.connect(self.path, timeout=self.timeout, isolation_level=None)
-        conn.execute("PRAGMA journal_mode=WAL")
-        return conn
+        return sqlite3.connect(self.path, timeout=self.timeout, isolation_level=None)
+
+    def _initialize(self):
+        """Cria o esquema e liga o modo WAL. A troca de modo não respeita o tempo de espera do SQLite quando
+        outra instância abre o mesmo arquivo ao mesmo tempo, então tenta de novo em caso de bloqueio."""
+        for attempt in range(100):
+            conn = self._connect()
+            try:
+                conn.execute("PRAGMA journal_mode=WAL")
+                conn.executescript(SCHEMA)
+                return
+            except sqlite3.OperationalError as exc:
+                if "locked" not in str(exc) or attempt == 99:
+                    raise
+                time.sleep(0.05)
+            finally:
+                conn.close()
 
     def admit(self, nonce: str, key: str, body_hash: str) -> str:
         """Devolve "ok", "duplicate", "nonce_repeated" ou "conflict"; só registra quando admite."""
