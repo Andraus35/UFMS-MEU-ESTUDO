@@ -107,3 +107,8 @@
   }
 ]
 ```
+
+## Lista de automações (resumo; a lista item a item não foi versionada por conter uso pessoal alheio ao projeto)
+
+Em 09/11/2026, por consulta somente de leitura da Zapia (autorrelato): **33 jobs cron cadastrados**, dos quais **4 ativos** (3 execuções diárias do Radar e 1 briefing matinal) e 29 desabilitados ou concluídos (26 de abril, alheios ao projeto, e 3 testes do projeto de 04/11/2026: Notebook, lembrete de revisão e app). **Nenhum job ativo é do projeto.** Há **1 hook ativo**, alheio ao projeto, disparado por mensagens de um grupo monitorado. A listagem não informa o tipo dos jobs únicos concluídos, nem se hooks entram na mesma cota do plano. Nada foi alterado. Risco a verificar no V5: uma tarefa de hook disparada por mensagens de terceiros pode ter acesso às ferramentas e credenciais da conta (Q2 segue sem resposta).
+
