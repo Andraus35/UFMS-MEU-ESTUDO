@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #76; SHA 8cde73a801cf2d5f70ea2d06949b422264549e03
-- Frente ativa: **RM-09 / PR #77**; branch `ccr-69ece020-2w19at`; base main; fase review.
+- Último merge comprovado: PR #77; SHA a1ecb554db90ff436ade763f45737d709975ba0a
+- Frente ativa: **RM-09 / PR #78**; branch `ccr-69ece020-2w19at`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -14,6 +14,8 @@
 <!-- GOVERNANCE-CHECKPOINT:END -->
 
 ## Ponto de retomada da próxima sessão
+
+> **Aviso de defasagem do checkpoint.** O bloco "Checkpoint vigente" acima registra a frente ativa e o PR **no momento do último commit de estado**. Depois que esse PR é mesclado, o bloco fica **defasado** até o recibo do merge, que só entra no primeiro commit da próxima tarefa (`record_merge_receipt.py`). Por isso, antes de afirmar o estado de um PR ou frente, **confirme**: rode `python scripts/next_task.py` (ele lê o histórico Git e diz se o PR registrado já foi mesclado) ou consulte o PR por API. Se o HEAD for o commit de merge do PR registrado como "em revisão", o PR **já foi mesclado** e o recibo está pendente.
 
 Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/session_route.py --intent engineering --run` (rotas de estudo, escrita, governança e persistência: `--intent study|write|governance|persistence`, definidas em `config/session_routes.json`) e seguir o procedimento de `docs/especificacoes/README.md`, que diz o estado real do ciclo, o próximo item da fila `work_queue` de `state/WORKFLOW.json` e quando parar.
 
