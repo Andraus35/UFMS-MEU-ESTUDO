@@ -144,5 +144,92 @@ class AgentKeysTests(unittest.TestCase):
         self.assertEqual(set(dados["keys"]), {"tutor", "coach"})
 
 
+class GuardaDaChavePrivadaTests(unittest.TestCase):
+    """D-18: a privada só é usada se estiver fora do repositório, sem symlink, do dono, 0600, em diretório fechado."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.key = self.dir / "tutor.key"
+        self.public = ak.generate(self.key, repo_root=ROOT)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_guarda_aceita_chave_correta(self):
+        self.assertEqual(ak.check_key_guard(self.key, repo_root=ROOT), self.key.resolve())
+
+    def test_symlink_para_chave_valida_e_recusado(self):
+        link = self.dir / "link.key"
+        link.symlink_to(self.key)
+        with self.assertRaisesRegex(ValueError, "simbólico"):
+            ak.sign_command(BASE, link)
+
+    def test_chave_dentro_do_repositorio_e_recusada_para_assinar(self):
+        repo = self.dir / "repo"
+        repo.mkdir()
+        dentro = repo / "tutor.key"
+        dentro.write_text(self.key.read_text(encoding="utf-8"), encoding="utf-8")
+        os.chmod(dentro, 0o600)
+        with self.assertRaisesRegex(ValueError, "repositório"):
+            ak.sign_command(BASE, dentro, repo_root=repo)
+        # symlink de fora apontando para dentro do repositório também cai (symlink ou caminho real dentro)
+        fora = self.dir / "fora.key"
+        fora.symlink_to(dentro)
+        with self.assertRaises(ValueError):
+            ak.sign_command(BASE, fora, repo_root=repo)
+
+    def test_diretorio_gravavel_por_terceiros_e_recusado(self):
+        os.chmod(self.dir, 0o777)
+        try:
+            with self.assertRaisesRegex(ValueError, "diretório"):
+                ak.sign_command(BASE, self.key)
+            with self.assertRaisesRegex(ValueError, "diretório"):
+                ak.generate(self.dir / "outra.key", repo_root=ROOT)
+        finally:
+            os.chmod(self.dir, 0o700)
+
+    def test_ausente_ou_diretorio_e_recusado(self):
+        with self.assertRaisesRegex(ValueError, "não encontrado"):
+            ak.sign_command(BASE, self.dir / "nao_existe.key")
+        with self.assertRaisesRegex(ValueError, "regular"):
+            ak.sign_command(BASE, self.dir)
+
+    @unittest.skipUnless(hasattr(os, "getuid") and os.getuid() == 0, "troca de dono exige root")
+    def test_dono_diferente_e_recusado(self):
+        os.chown(self.key, 12345, 12345)
+        with self.assertRaisesRegex(ValueError, "outro usuário"):
+            ak.sign_command(BASE, self.key)
+
+    def test_verify_key_sem_segredo_e_comparacao_com_registro(self):
+        registro = self.dir / "chaves.json"
+        registro.write_text(json.dumps({"keys": {"tutor": self.public, "coach": None}}), encoding="utf-8")
+        code, out, err = run_cli(["verify-key", "--key", str(self.key), "--role", "tutor"], public_keys_path=registro)
+        self.assertEqual(code, 0, err)
+        relatorio = json.loads(out)
+        self.assertEqual((relatorio["guard"], relatorio["matches_registered"]), ("ok", True))
+        self.assertNotIn(self.key.read_text(encoding="utf-8").strip(), out + err)
+        # chave de outra origem ou diferente da registrada: não coincide, código de saída 1
+        code, out, _ = run_cli(["verify-key", "--key", str(self.key), "--role", "coach"], public_keys_path=registro)
+        self.assertEqual((code, json.loads(out)["registered"]), (1, False))
+        outra = self.dir / "outra.key"
+        ak.generate(outra, repo_root=ROOT)
+        code, out, _ = run_cli(["verify-key", "--key", str(outra), "--role", "tutor"], public_keys_path=registro)
+        self.assertEqual((code, json.loads(out)["matches_registered"]), (1, False))
+
+    def test_verify_key_falha_com_permissao_aberta_sem_imprimir_segredo(self):
+        os.chmod(self.key, 0o644)
+        code, out, err = run_cli(["verify-key", "--key", str(self.key)])
+        self.assertEqual(code, 1)
+        self.assertNotIn(self.key.read_text(encoding="utf-8").strip(), out + err)
+        self.assertIn("permissões", err)
+
+    def test_mensagem_de_malformada_nao_vaza_o_conteudo(self):
+        self.key.write_text("segredo-zz\n", encoding="utf-8")
+        code, out, err = run_cli(["verify-key", "--key", str(self.key)])
+        self.assertEqual(code, 1)
+        self.assertNotIn("segredo-zz", out + err)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -90,4 +90,4 @@ Agradeço uma resposta por escrito, para eu seguir as regras da plataforma.
 
 ## 5. Chaves de assinatura (no computador do proprietário, D-18)
 
-`python scripts/agent_keys.py generate --private-out <caminho fora do repositório>` para o Tutor e outra vez para o Coach; enviar ao agente construtor **só as chaves públicas**, que ele registra em `config/agent_public_keys.json` por PR. A chave privada nunca sai do computador.
+`python scripts/agent_keys.py generate --private-out <caminho fora do repositório>` para o Tutor e outra vez para o Coach; enviar ao agente construtor **só as chaves públicas**, que ele registra em `config/agent_public_keys.json` por PR. A chave privada nunca sai do computador. Use um diretório só seu (modo 0700); o arquivo fica em modo 0600. Depois de gerar, confira a guarda com `python scripts/agent_keys.py verify-key --key <caminho> --role tutor` (ou `coach`): ele recusa caminho dentro do repositório, link simbólico, dono diferente, permissões abertas e diretório gravável por terceiros, e nunca imprime a privada. É verificação do sistema de arquivos local, não prova onde o agente roda (OPEN-09).
