@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #77; SHA a1ecb554db90ff436ade763f45737d709975ba0a
-- Frente ativa: **RM-09 / PR #78**; branch `ccr-69ece020-2w19at`; base main; fase review.
+- Último merge comprovado: PR #78; SHA e1abd28f510c5fa4ce9c18bb6efd3f033beec852
+- Frente ativa: **RM-09 / PR #79**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -29,7 +29,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 3. Resposta do suporte do TEC: atualizar OPEN-11, OPEN-12 e a comparação das opções A a F da S4; só então considerar o V10.
 4. Relatórios de V11, V4 e V6; depois V8, V9 e, se o WhatsApp voltar, V3 e V5.
 5. Dados do plano de estudo (tópicos já estudados, prioridades): gerar o plano real com `scripts/study_plan.py` e o caderno diagnóstico (estudo segue em E0).
-6. Pendências de engenharia sem insumo: guarda das chaves privadas (D-18), decisão sobre re-pinar o gateway do GQ-D, rotina validada de escrita para `registrar_*` (bloqueada pela política de dados pessoais).
+6. Pendências de engenharia sem insumo: decisão sobre re-pinar o gateway do GQ-D, rotina validada de escrita para `registrar_*` (bloqueada pela política de dados pessoais). A guarda local das chaves privadas (D-18) está em `scripts/agent_keys.py` (`check_key_guard`, `verify-key`) com contraprovas em `tests/test_agent_keys.py`; é verificação do sistema de arquivos, não prova de onde o agente roda (OPEN-09).
 
 **Cuidados desta fase:** o que se sabe da Zapia é autorrelato; a conta antiga não vale como evidência da nova; ao testar scripts de token neste ambiente, o proxy substitui credenciais (use só o computador do proprietário); o merge só ocorre por pedido explícito dele.
 
