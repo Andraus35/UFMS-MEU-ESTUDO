@@ -33,11 +33,11 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 ### Retomada da persistência (próxima sessão)
 
-**Ponto de partida:** o script `scripts/termux/cria_repo_privado.sh` (PR #86) existe e foi testado com `gh` falso; **não foi executado no repositório real**. A escrita de resultados está **desabilitada** (`personal_results_writes_enabled=false`). Confirme o estado do PR #86 com `python scripts/next_task.py`; se ele já foi mesclado, o recibo entra no primeiro commit da próxima tarefa.
+**Ponto de partida:** o proprietário **executou** `scripts/termux/cria_repo_privado.sh` em 15/11/2026: repositório privado criado, `private=true` (P1) e consentimento v2 gravado com readback (P3), **por relato com capturas**, registrado em `docs/governanca/RESULTADO_PERSISTENCIA_P1_P3_20261115.md`; a sessão não tem acesso ao repositório privado. A escrita de resultados está **desabilitada** (`personal_results_writes_enabled=false`). Confirme o estado do PR #86 com `python scripts/next_task.py`; se ele já foi mesclado, o recibo entra no primeiro commit da próxima tarefa.
 
 **Em ordem (cada passo em PR próprio, em série):**
-1. **Proprietário:** rodar o script no Termux e trazer a saída, sem tokens. Se ele já criou o repositório, basta `gh api repos/Andraus35/ufms-meu-estudo-dados --jq .private` (esperado `true`).
-2. **Sessão:** confirmar P1 e P3 por leitura autenticada, **sem escrever** (se o repositório privado não estiver acessível à sessão, `add_repo` com acesso de leitura; sem acesso, usar a saída que o proprietário colar). Registrar um resumo em `docs/governanca/`, sem dado pessoal. Fechar a parte pendente do ADR-013, passo 1.
+1. **Proprietário:** feito (15/11/2026, relato): rodou o script e trouxe a saída. Se for preciso reconferir, `gh api repos/Andraus35/ufms-meu-estudo-dados --jq .private` (esperado `true`).
+2. **Sessão:** registrado como relato; uma confirmação independente exigiria leitura autenticada, **sem escrever** (se o repositório privado não estiver acessível à sessão, `add_repo` com acesso de leitura; sem acesso, usar a saída que o proprietário colar). Registrar um resumo em `docs/governanca/`, sem dado pessoal. Fechar a parte pendente do ADR-013, passo 1.
 3. **Credencial (PR-010, D-09):** token fine-grained **só do repositório privado**, separado do token do projeto e com expiração. Atenção: o `verifica_token.sh` hoje espera "gravar arquivo NÃO" (é do repositório público); para o privado é preciso adaptar a expectativa. Valor do token só pelo formulário seguro da Zapia.
 4. **Escritor (P4), OPEN-01 e OPEN-02:** reaproveitar `scripts/api_write_transaction.py` e `scripts/api_write_guard.py`; a Zapia grava só por comando assinado do Tutor.
 5. **Faltam provas:** P4 (escritor), P7 (reconstrução a partir dos eventos privados reais), P8 (revogação: só texto, apagar o repositório inteiro) e P9. Ver a tabela do ADR-013.
