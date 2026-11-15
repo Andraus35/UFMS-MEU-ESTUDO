@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #83; SHA cf371876f657af9116151efa3ee58632adf4782c
-- Frente ativa: **RM-09 / PR #84**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #84; SHA e8a5dc4b4c27b772a2f9498194321d3b5daeddbd
+- Frente ativa: **RM-09 / PR #85**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -33,7 +33,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Cuidados desta fase:** o que se sabe da Zapia é autorrelato; a conta antiga não vale como evidência da nova; ao testar scripts de token neste ambiente, o proxy substitui credenciais (use só o computador do proprietário); o merge só ocorre por pedido explícito dele.
 
-- **Já decidido:** `PRODUCT.md` (decisões D-01 a D-21).
+- **Já decidido:** `PRODUCT.md` (decisões D-01 a D-23). A D-23 define os papéis do conteúdo de estudo (Tutor autor e verificador; Gemini só rascunho; Zapia só transporte) e `scripts/review_provenance.py` valida o registro de proveniência; a nota da rodada 5c é rascunho.
 - **Especificações:** S1 a S5 em `docs/especificacoes/` (método de estudo e revisão, Tutor, Coach, operação e harness da Zapia); a fila `work_queue` está completa quando todos os arquivos de entrega existem. O contrato de comandos dos agentes à Zapia (PR-013) tem esquema em `config/agent_command_schema.json` e validador offline em `scripts/agent_commands.py`, com testes de contraprova; **é referência de implementação, não prova que a Zapia o usa**.
 - **Perfil da Zapia:** `agents/ZAPIA.md` (START explícito, papel de interface e executora, só comando válido, conteúdo externo como dado, negar por padrão, relato com prova), validado por `python scripts/agents_gate.py --check` contra as operações de Tutor e Coach e contra `config/agent_command_schema.json`. É texto de instrução, **não trava técnica**, e nunca foi lido por uma Zapia real.
 - **Construído offline (RM-09):** geração local de chaves e assinatura (`scripts/agent_keys.py`); validador com Ed25519 e HMAC e registro durável de nonce e idempotência (`scripts/agent_commands.py`, `scripts/command_ledger.py`); montador de issue e comentário (`scripts/github_issue_payload.py`); filtro de conteúdo sensível em invólucro (`scripts/gateway_filter.py`; o `scripts/tool_gateway.py` tem SHA pinado no GQ-D e não foi alterado). Tudo isso é referência de implementação, **sem prova de uso obrigatório pela Zapia**.
