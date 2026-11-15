@@ -188,6 +188,21 @@
         "onde Tutor e Coach rodam (OPEN-09)",
         "escopo e expiração do token da Zapia (OPEN-02)"
       ]
+    },
+    {
+      "id": "S8",
+      "title": "Especificação da rotina diária do Coach e dos lembretes (PR-007): uma mensagem por dia, lembrete só de atividade pendente, Radar só no GitHub e limites do plano da Zapia",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S8_ROTINA_COACH.md",
+      "depends_on": [
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "segundo lembrete e uso de Calendar e Tasks (pontos a confirmar na S8)"
+      ]
     }
   ]
 }

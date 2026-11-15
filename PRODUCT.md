@@ -127,11 +127,12 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 
 Cada especificação cabe em uma página: objetivo, entradas, saídas, regras, critérios de aceite verificáveis e limites. **Não duplicam** o que já existe: apontam para ele. Uma por vez, na ordem abaixo, cada uma como tarefa única do fluxo serial.
 
-- **S1 Método de estudo e revisão:** `docs/especificacoes/S1_METODO_ESTUDO_REVISAO.md`; parte de `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `scripts/study_plan.py`. Primeiro, porque o Coach depende do plano. Os insumos do humano (início, tempo diário, descanso, cargo, tópicos estudados) não bloqueiam a especificação.
-- **S2 Tutor:** `docs/especificacoes/S2_TUTOR.md`; parte de `agents/TUTOR.md`. Acrescenta: como gera o material de revisão a partir do edital e do desempenho, como pede o prompt ao Notebook e como decide ajustes ao plano. Depende de S1; OPEN-10 melhora, mas não bloqueia.
-- **S3 Coach:** `docs/especificacoes/S3_COACH.md`; parte de `agents/COACH.md`. Acrescenta: rotina diária, lembretes, leitura de estatísticas, mensagens motivacionais e limites (não produz conteúdo). Depende de S1.
-- **S4 Operação:** `docs/especificacoes/S4_OPERACAO.md`; parte de PR-013 e da leitura direta das plataformas (PR-017, `docs/PLATFORMS.md`). Define o esquema dos comandos entre Tutor, Coach e Zapia, o canal entre eles, o caminho do desempenho exportado até o repositório (PR-016), a comparação das opções A a F e as proibições de dados pessoais. Depende de S1 a S3; OPEN-01, OPEN-02, OPEN-09 e OPEN-11 melhoram, mas não bloqueiam a especificação.
-- **S5 Harness da Zapia:** `docs/especificacoes/S5_ZAPIA.md`; parte de D-10, E-04, E-05 e E-10. Define como a Zapia se orienta pelo repositório: START explícito, papel de interface e executora, só comando válido, conteúdo externo como dado, negar por padrão e relato com prova. Depende de S2 a S4.
+- **S1 Método de estudo e revisão:** `docs/especificacoes/S1_METODO_ESTUDO_REVISAO.md`; parte de `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `scripts/study_plan.py`. Primeiro, porque o Coach depende do plano. Os insumos do humano não bloqueiam a especificação.
+- **S2 Tutor:** `docs/especificacoes/S2_TUTOR.md`; parte de `agents/TUTOR.md`. Material de revisão, prompt ao Notebook e ajustes ao plano. Depende de S1.
+- **S3 Coach:** `docs/especificacoes/S3_COACH.md`; parte de `agents/COACH.md`. Rotina diária, lembretes, estatísticas, mensagens e limites (não produz conteúdo). Depende de S1.
+- **S4 Operação:** `docs/especificacoes/S4_OPERACAO.md`; parte de PR-013 e PR-017 (`docs/PLATFORMS.md`). Esquema de comandos, canal, caminho do desempenho até o repositório (PR-016), opções A a F e proibições de dados pessoais. Depende de S1 a S3.
+- **S5 Harness da Zapia:** `docs/especificacoes/S5_ZAPIA.md`; parte de D-10, E-04, E-05 e E-10. START explícito, interface e executora, só comando válido, negar por padrão e relato com prova. Depende de S2 a S4.
+- **S8 Rotina diária do Coach:** `docs/especificacoes/S8_ROTINA_COACH.md` (PR-007). Uma mensagem por dia, lembrete só de atividade pendente, Radar só no GitHub e limites da Zapia. Depende de S3 a S5. A numeração S6 e S7 fica reservada às próximas, na ordem que o proprietário escolher.
 
 Regra de rapidez: o que depender do proprietário (token, repositório privado, exportações reais, data de início) não bloqueia o que é offline; avança-se pelo que já pode ser verificado.
 
