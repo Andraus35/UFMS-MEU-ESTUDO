@@ -203,6 +203,85 @@
       "optional_inputs": [
         "segundo lembrete e uso de Calendar e Tasks (pontos a confirmar na S8)"
       ]
+    },
+    {
+      "id": "S7",
+      "title": "Especificação da persistência privada e do escritor (P4 a P9, PR-003, PR-010): como a Zapia grava por comando assinado, reconstrução, revogação e testes adversariais",
+      "roadmap_task": "RM-08",
+      "deliverable": "docs/especificacoes/S7_PERSISTENCIA_ESCRITOR.md",
+      "depends_on": [
+        "S4",
+        "S5",
+        "S8"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "token da Zapia do repositório privado criado e conferido (`PERFIL=privado bash scripts/termux/verifica_token.sh`)",
+        "OPEN-01 e OPEN-02"
+      ]
+    },
+    {
+      "id": "S6",
+      "title": "Especificação da execução e do canal de comandos do Tutor e do Coach (OPEN-09): onde rodam, como leem o harness e como emitem comando assinado à Zapia",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S6_EXECUCAO_CANAL.md",
+      "depends_on": [
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "Tutor em sessão de estudo com o START de 4 arquivos (D-23)"
+      ]
+    },
+    {
+      "id": "S9",
+      "title": "Especificação da leitura direta das plataformas (PR-017, PR-016, D-14, D-15, D-22): candidato escolhido pelo proprietário, a Zapia lê com a sessão dele, a provar sem credencial ao modelo",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S9_LEITURA_PLATAFORMAS.md",
+      "depends_on": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "amostras reais anonimizadas da exportação do TEC e do Qconcursos (OPEN-11)"
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "Especificação do Notebook como ferramenta do Tutor (PR-012, OPEN-03, OPEN-05, OPEN-07, OPEN-10): prompt do Tutor, rascunho do Gemini, citação aberta e verificação",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S10_NOTEBOOK_TUTOR.md",
+      "depends_on": [
+        "S2",
+        "S5",
+        "S6"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "notebook privado com a Lei 8.112 como fonte e o título escolhido pelo proprietário"
+      ]
+    },
+    {
+      "id": "S11",
+      "title": "Especificação do ciclo ponta a ponta e do piloto (PR-006, PR-008; GP-4, GP-5): recomendação, execução humana, resultado, reavaliação, com dado real consentido",
+      "roadmap_task": "RM-08",
+      "deliverable": "docs/especificacoes/S11_CICLO_PILOTO.md",
+      "depends_on": [
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10"
+      ],
+      "blocking_inputs": [
+        "resultado real consentido e persistência habilitada por PR próprio (P1 a P9 provados)"
+      ],
+      "optional_inputs": []
     }
   ]
 }
