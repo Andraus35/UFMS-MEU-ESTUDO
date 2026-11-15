@@ -103,7 +103,7 @@ Agradeço uma resposta por escrito, para eu seguir as regras da plataforma.
 
 ## 4d. Ferramenta única do Termux
 
-`bash scripts/termux/ufms.sh ajuda` lista tudo. `preparar` instala e clona; `atualizar` põe o clone em `main` só por fast-forward; `diagnostico` imprime um relatório **sem segredos** (START de estudo, ciclo, flag de escrita, repositório privado e consentimento) para você colar no chat; `token privado` chama o verificador da seção 4c; `plano` gera **localmente** o plano padrão em `~/ufms-plano` (modo 0600, fora do repositório). Nenhum subcomando lê, imprime ou guarda token, e nenhum grava no GitHub.
+`bash scripts/termux/ufms.sh ajuda` lista tudo. `preparar` instala e clona; `atualizar` põe o clone em `main` só por fast-forward; `diagnostico` imprime um relatório **sem segredos** (START de estudo, ciclo, flag de escrita, repositório privado e consentimento) para você colar no chat; `token privado` chama o verificador da seção 4c; `plano` gera **localmente** o plano padrão em `~/ufms-plano` (modo 0600, fora do repositório). Nenhum subcomando lê, imprime ou guarda token. **Só dois gravam, e só no seu repositório privado, por ato seu:** `consentir-v3` (registra o consentimento v3, com a frase `CONSINTO v3`, só depois de você aprovar o texto no ADR-013) e `guardar-plano` (copia o plano para `planos/`, só com `private=true` e consentimento v3 válido, de forma idempotente e com readback). Nenhum grava no repositório público.
 
 ## 5. Chaves de assinatura (no computador do proprietário, D-18)
 
