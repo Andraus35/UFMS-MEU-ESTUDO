@@ -75,6 +75,8 @@ Os demais testes ficam NAO_EXECUTADO. Nunca imprima token, chave ou cabeçalho d
 
 ## 4. Mensagem ao suporte do TEC (OPEN-11, OPEN-12), enviada pelo proprietário
 
+> **Dispensada pelo proprietário em 15/11/2026 (D-22).** Mantida só como referência, caso ele queira enviá-la depois.
+
 ```text
 Olá. Sou assinante do TEC Concursos e gostaria de esclarecer dois pontos sobre a minha própria conta:
 
