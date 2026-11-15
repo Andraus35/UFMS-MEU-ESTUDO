@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #86; SHA 74a681d6499591cbff76e172caf8f6ae71141b35
-- Frente ativa: **RM-09 / PR #87**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #87; SHA 3a193b033087dc7b5a1c953bdf8294246ef208c7
+- Frente ativa: **RM-09 / PR #88**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -38,7 +38,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 **Em ordem (cada passo em PR próprio, em série):**
 1. **Proprietário:** feito (15/11/2026, relato): rodou o script e trouxe a saída. Se for preciso reconferir, `gh api repos/Andraus35/ufms-meu-estudo-dados --jq .private` (esperado `true`).
 2. **Sessão:** registrado como relato; uma confirmação independente exigiria leitura autenticada, **sem escrever** (se o repositório privado não estiver acessível à sessão, `add_repo` com acesso de leitura; sem acesso, usar a saída que o proprietário colar). Registrar um resumo em `docs/governanca/`, sem dado pessoal. Fechar a parte pendente do ADR-013, passo 1.
-3. **Credencial (PR-010, D-09):** token fine-grained **só do repositório privado**, separado do token do projeto e com expiração. Atenção: o `verifica_token.sh` hoje espera "gravar arquivo NÃO" (é do repositório público); para o privado é preciso adaptar a expectativa. Valor do token só pelo formulário seguro da Zapia.
+3. **Credencial (PR-010, D-09):** token fine-grained **só do repositório privado**, separado do token do projeto e **com expiração** (o proprietário respondeu "indefinido" em 15/11/2026, o que o PR-010 não admite, e então **escolheu 30 dias**; token de nome sugerido `zapia-dados-30d`). O verificador já tem o perfil privado: `PERFIL=privado bash scripts/termux/verifica_token.sh` (ver seção 4c do roteiro de prompts). Valor do token só pelo formulário seguro da Zapia.
 4. **Escritor (P4), OPEN-01 e OPEN-02:** reaproveitar `scripts/api_write_transaction.py` e `scripts/api_write_guard.py`; a Zapia grava só por comando assinado do Tutor.
 5. **Faltam provas:** P4 (escritor), P7 (reconstrução a partir dos eventos privados reais), P8 (revogação: só texto, apagar o repositório inteiro) e P9. Ver a tabela do ADR-013.
 6. **Habilitar a flag** é PR próprio, com aprovação humana expressa, só depois de P1 a P9 provados. Nunca antes.
