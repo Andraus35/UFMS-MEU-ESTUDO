@@ -31,6 +31,20 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 5. Dados do plano de estudo (tópicos já estudados, prioridades): gerar o plano real com `scripts/study_plan.py` e o caderno diagnóstico (estudo segue em E0).
 6. **Persistência privada:** o proprietário roda `bash scripts/termux/cria_repo_privado.sh` no Termux (cria o repositório privado, confere `private=true` e registra o consentimento v2) e me traz o resultado; a escrita de resultados continua desabilitada. Pendências de engenharia sem insumo: decisão sobre re-pinar o gateway do GQ-D, rotina validada de escrita para `registrar_*` (bloqueada pela política de dados pessoais). A guarda local das chaves privadas (D-18) está em `scripts/agent_keys.py` (`check_key_guard`, `verify-key`) com contraprovas em `tests/test_agent_keys.py`; é verificação do sistema de arquivos, não prova de onde o agente roda (OPEN-09).
 
+### Retomada da persistência (próxima sessão)
+
+**Ponto de partida:** o script `scripts/termux/cria_repo_privado.sh` (PR #86) existe e foi testado com `gh` falso; **não foi executado no repositório real**. A escrita de resultados está **desabilitada** (`personal_results_writes_enabled=false`). Confirme o estado do PR #86 com `python scripts/next_task.py`; se ele já foi mesclado, o recibo entra no primeiro commit da próxima tarefa.
+
+**Em ordem (cada passo em PR próprio, em série):**
+1. **Proprietário:** rodar o script no Termux e trazer a saída, sem tokens. Se ele já criou o repositório, basta `gh api repos/Andraus35/ufms-meu-estudo-dados --jq .private` (esperado `true`).
+2. **Sessão:** confirmar P1 e P3 por leitura autenticada, **sem escrever** (se o repositório privado não estiver acessível à sessão, `add_repo` com acesso de leitura; sem acesso, usar a saída que o proprietário colar). Registrar um resumo em `docs/governanca/`, sem dado pessoal. Fechar a parte pendente do ADR-013, passo 1.
+3. **Credencial (PR-010, D-09):** token fine-grained **só do repositório privado**, separado do token do projeto e com expiração. Atenção: o `verifica_token.sh` hoje espera "gravar arquivo NÃO" (é do repositório público); para o privado é preciso adaptar a expectativa. Valor do token só pelo formulário seguro da Zapia.
+4. **Escritor (P4), OPEN-01 e OPEN-02:** reaproveitar `scripts/api_write_transaction.py` e `scripts/api_write_guard.py`; a Zapia grava só por comando assinado do Tutor.
+5. **Faltam provas:** P4 (escritor), P7 (reconstrução a partir dos eventos privados reais), P8 (revogação: só texto, apagar o repositório inteiro) e P9. Ver a tabela do ADR-013.
+6. **Habilitar a flag** é PR próprio, com aprovação humana expressa, só depois de P1 a P9 provados. Nunca antes.
+
+**Enquanto isso:** o plano e o desempenho do estudante **não** vão ao repositório público. O plano vive na sessão do Tutor e o proprietário guarda uma cópia. Não pedir token ao proprietário no chat; nenhum agente construtor recebe credencial de escrita pessoal.
+
 **Cuidados desta fase:** o que se sabe da Zapia é autorrelato; a conta antiga não vale como evidência da nova; ao testar scripts de token neste ambiente, o proxy substitui credenciais (use só o computador do proprietário); o merge só ocorre por pedido explícito dele.
 
 - **Já decidido:** `PRODUCT.md` (decisões D-01 a D-23). A D-23 define os papéis do conteúdo de estudo (Tutor autor e verificador; Gemini só rascunho; Zapia só transporte) e `scripts/review_provenance.py` valida o registro de proveniência; a nota da rodada 5c é rascunho.
