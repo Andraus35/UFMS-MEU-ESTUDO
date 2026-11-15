@@ -22,7 +22,7 @@
 
 ## Divergência com D-19 e D-20 (aberta)
 
-A Zapia listou, além do GitHub e do app, os conectores **Google Calendar, Google Drive e Outlook (e-mail)**, e três jobs Radar. A D-20 previa só o app como canal, nenhum outro conector e conta Google só de estudos, sem e-mail nem Drive. **Não se sabe a qual conta cada conector está ligado.** **Decisão do proprietário (15/11/2026, D-21):** manter **Google Drive e Google Calendar** e excluir o Outlook. Falta confirmar que os dois estão ligados à conta Google só de estudos e revisar os três jobs Radar. Até a confirmação, **não autorizar V8 (Calendar e Tasks) nem V9 (Notebook)**.
+A Zapia listou, além do GitHub e do app, os conectores **Google Calendar, Google Drive e Outlook (e-mail)**, e três jobs Radar. A D-20 previa só o app como canal, nenhum outro conector e conta Google só de estudos, sem e-mail nem Drive. **Não se sabe a qual conta cada conector está ligado.** **Decisão do proprietário (15/11/2026, D-21):** manter **Google Drive e Google Calendar** e excluir o Outlook. O proprietário confirmou, por relato (não verificado), que os dois estão ligados à conta Google só de estudos. Falta desativar ou revisar os três jobs Radar, que o proprietário decidiu desativar quando não forem do projeto. V8 (Calendar e Tasks) e V9 (Notebook) só com a frase `AUTORIZO` própria. O V2 segue **sem comprovante** (o proprietário não conferiu a chegada da mensagem).
 
 ## Falha de procedimento
 
