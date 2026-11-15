@@ -91,6 +91,10 @@ Olá. Sou assinante do TEC Concursos e gostaria de esclarecer dois pontos sobre 
 Agradeço uma resposta por escrito, para eu seguir as regras da plataforma.
 ```
 
+## 4b. Repositório privado de dados (proprietário, Termux)
+
+`bash scripts/termux/cria_repo_privado.sh` dentro do clone: cria `ufms-meu-estudo-dados` como privado (digite `CRIAR`), confere `private=true` e registra o consentimento v2 só se você digitar `CONSINTO v2`. Usa o `gh` com a sua credencial; nada passa pelo modelo nem pela Zapia. Não habilita a gravação de resultados.
+
 ## 5. Chaves de assinatura (no computador do proprietário, D-18)
 
 **Atalho no Termux:** dentro do clone, `bash scripts/termux/gera_chaves.sh` faz tudo abaixo de uma vez para o Tutor e o Coach (`KEYDIR`, padrão `~/.ufms`, modo 0700): gera as chaves sem sobrescrever as existentes, confere a guarda e imprime **só as públicas**. Registrar as públicas em `config/agent_public_keys.json` continua sendo PR próprio.
