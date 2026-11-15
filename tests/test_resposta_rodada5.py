@@ -33,6 +33,13 @@ class Rodada5Tests(unittest.TestCase):
         self.assertIn("NÃO publique o relatório completo na issue", PROMPTS)
         self.assertNotIn("Publique o relatório como comentário(s)", PROMPTS)
 
+    def test_decisao_d21_mantem_drive_e_calendar_com_condicao_aberta(self):
+        produto = (ROOT / "PRODUCT.md").read_text(encoding="utf-8")
+        d21 = next(l for l in produto.splitlines() if l.startswith("- **D-21"))
+        for trecho in ("Drive", "Calendar", "Outlook", "Condição ainda não confirmada", "V8 e V9 não são autorizados"):
+            self.assertIn(trecho, d21)
+        self.assertIn("D-21", DOC)
+
 
 if __name__ == "__main__":
     unittest.main()
