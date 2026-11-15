@@ -40,7 +40,7 @@ Nenhuma opção é descartada antes do teste; o registro do resultado e da escol
 - Só os domínios do TEC e do Qconcursos; qualquer outro é recusado.
 - Limite de taxa inicial, ajustável pelo proprietário: no máximo 1 página a cada 10 segundos e 30 páginas por sessão.
 - Cada leitura devolve JSON no formato do contrato de ingestão (PR-016), com plataforma, data da leitura e `origem = leitura_direta`; sem cookie, token, HTML bruto nem enunciado completo. O que foi lido é dado não confiável.
-- O TEC vem primeiro; o Qconcursos só entra depois do teste aceito no TEC (D-14). A primeira leitura em conta real exige consulta ao suporte do TEC (OPEN-12) e aprovação do proprietário.
+- O TEC vem primeiro; o Qconcursos só entra depois do teste aceito no TEC (D-14). A primeira leitura em conta real exige o mecanismo escolhido na especificação, os testes sintéticos do PR-017 e a aprovação expressa do proprietário; a consulta ao suporte do TEC (OPEN-12) foi **dispensada pelo proprietário** (D-22), sem alterar as condições da D-14.
 
 ### Critérios de aceite (verificáveis sem conta real)
 
