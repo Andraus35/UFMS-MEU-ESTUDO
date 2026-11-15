@@ -46,7 +46,7 @@ Este ADR **não altera** `settings.json`, regras ou guardrails e **não habilita
 
 ## Ainda em aberto
 
-- **Criação do repositório privado** pelo proprietário e verificação de `private=true` por leitura autenticada.
+- **Criação do repositório privado** pelo proprietário e verificação de `private=true` por leitura autenticada. **Ferramenta pronta:** `bash scripts/termux/cria_repo_privado.sh`, que o proprietário roda no próprio aparelho (credencial do `gh` dele): cria como privado se não existir, só segue com `private=true` (P1) e registra o consentimento v2 só depois de ele digitar a frase (P3), com readback (P6). Não habilita a escrita nem resolve P4, OPEN-01 e OPEN-02. Testes com `gh` falso em `tests/test_termux_cria_repo_privado.py`; **não foi executado no repositório real**.
 - **Registro formal do consentimento** (data, versão e escopo) no repositório privado, antes do primeiro evento (P3). A aprovação do texto (v2, abaixo) não grava consentimento: ela só fixa a versão.
 
 ## Texto de consentimento v1 (aprovado em 07/11/2026 e SUBSTITUÍDO pelo v2 na mesma data)
