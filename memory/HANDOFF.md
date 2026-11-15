@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #87; SHA 3a193b033087dc7b5a1c953bdf8294246ef208c7
-- Frente ativa: **RM-09 / PR #88**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #88; SHA 5271cc1ff16183c21f4ffb6604fa75d2ae6fedc7
+- Frente ativa: **RM-09 / PR #89**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -21,7 +21,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Em uma frase:** as especificações S1 a S5, o validador de comandos (Ed25519 e HMAC, registro durável, filtro, montador de issue), o perfil `agents/ZAPIA.md` e o roteiro de validação da Zapia existem; **falta o proprietário montar a conta exclusiva da Zapia (D-19, D-20) e trazer os relatórios**, e provar na prática o que hoje é só autorrelato.
 
-**Material pronto para o proprietário encaminhar** (tudo em `docs/governanca/PROMPTS_PRONTOS_ZAPIA_CONTA_NOVA_20261109.md`, conferido por `tests/test_zapia_prompts.py`): passos para montar a conta nova e o token, texto da instrução persistente, prompt de validação (V0, V1, V2, V7, V12), prompts de V11 e de V4 e V6, mensagem ao suporte do TEC e o comando de geração das chaves. O script `scripts/termux/verifica_token.sh` confere um token sem imprimi-lo.
+**Material pronto para o proprietário encaminhar** (tudo em `docs/governanca/PROMPTS_PRONTOS_ZAPIA_CONTA_NOVA_20261109.md`, conferido por `tests/test_zapia_prompts.py`): passos para montar a conta nova e o token, texto da instrução persistente, prompt de validação (V0, V1, V2, V7, V12), prompts de V11 e de V4 e V6, mensagem ao suporte do TEC e o comando de geração das chaves. O script `scripts/termux/verifica_token.sh` confere um token sem imprimi-lo. **Ferramenta única do proprietário no Termux:** `bash scripts/termux/ufms.sh {preparar|atualizar|diagnostico|token|plano}` (o `diagnostico` gera um relatório sem segredos para colar no chat; o `plano` gera o plano padrão localmente, fora do repositório).
 
 **Ordem do que acontece a seguir (quando o insumo chegar):**
 1. Validação da conta nova: **rodada 5 registrada como PARCIAL** em `docs/governanca/RESPOSTA_RODADA5_ZAPIA_20261115.md` (V7 verificado; a autoria não distingue a Zapia do proprietário). **Aberto, depende do proprietário:** conectores: o proprietário decidiu manter **Drive e Calendar** e excluir o Outlook (D-21), o proprietário relatou que estão na conta Google só de estudos (não verificado); jobs Radar na conta exclusiva a desativar pelo proprietário; comprovante do V2 e escopo do token (OPEN-02). Depois, V11 e V4 e V6; V8 e V9 só com a frase `AUTORIZO` própria e depois dos jobs Radar revistos.

@@ -101,6 +101,10 @@ Agradeço uma resposta por escrito, para eu seguir as regras da plataforma.
 2. Conferir no Termux, dentro do clone: `PERFIL=privado bash scripts/termux/verifica_token.sh` (cole o token quando pedir). Esperado: `RESULTADO: CONFERE com o perfil privado`, com gravar arquivo **PODE**; issue, comentário, pull request e escrita no repositório **público** **NÃO**; 1 repositório alcançado; validade presente.
 3. Se aparecer `DIVERGE`, **não entregue o token**. O valor só entra pelo formulário seguro da Zapia; nunca vai no chat. A flag de escrita de resultados continua `false`.
 
+## 4d. Ferramenta única do Termux
+
+`bash scripts/termux/ufms.sh ajuda` lista tudo. `preparar` instala e clona; `atualizar` põe o clone em `main` só por fast-forward; `diagnostico` imprime um relatório **sem segredos** (START de estudo, ciclo, flag de escrita, repositório privado e consentimento) para você colar no chat; `token privado` chama o verificador da seção 4c; `plano` gera **localmente** o plano padrão em `~/ufms-plano` (modo 0600, fora do repositório). Nenhum subcomando lê, imprime ou guarda token, e nenhum grava no GitHub.
+
 ## 5. Chaves de assinatura (no computador do proprietário, D-18)
 
 **Atalho no Termux:** dentro do clone, `bash scripts/termux/gera_chaves.sh` faz tudo abaixo de uma vez para o Tutor e o Coach (`KEYDIR`, padrão `~/.ufms`, modo 0700): gera as chaves sem sobrescrever as existentes, confere a guarda e imprime **só as públicas**. Registrar as públicas em `config/agent_public_keys.json` continua sendo PR próprio.
