@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #82; SHA 7b2f9dc666df26ab6aba3aad45e09fc6753d6de0
-- Frente ativa: **RM-09 / PR #83**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #83; SHA cf371876f657af9116151efa3ee58632adf4782c
+- Frente ativa: **RM-09 / PR #84**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -38,7 +38,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 - **Perfil da Zapia:** `agents/ZAPIA.md` (START explícito, papel de interface e executora, só comando válido, conteúdo externo como dado, negar por padrão, relato com prova), validado por `python scripts/agents_gate.py --check` contra as operações de Tutor e Coach e contra `config/agent_command_schema.json`. É texto de instrução, **não trava técnica**, e nunca foi lido por uma Zapia real.
 - **Construído offline (RM-09):** geração local de chaves e assinatura (`scripts/agent_keys.py`); validador com Ed25519 e HMAC e registro durável de nonce e idempotência (`scripts/agent_commands.py`, `scripts/command_ledger.py`); montador de issue e comentário (`scripts/github_issue_payload.py`); filtro de conteúdo sensível em invólucro (`scripts/gateway_filter.py`; o `scripts/tool_gateway.py` tem SHA pinado no GQ-D e não foi alterado). Tudo isso é referência de implementação, **sem prova de uso obrigatório pela Zapia**.
 - **Depende do proprietário, sem bloquear as especificações:** dados do plano (início, tempo diário, dia de descanso, cargo, tópicos já estudados, prioridades); planos no TEC e no Qconcursos e se exportam (OPEN-11); consulta ao suporte do TEC (OPEN-12); o canal e a verificação de origem dos comandos (OPEN-09; Tutor e Coach rodam no computador do proprietário, D-18); acesso direto do Tutor ao NotebookLM (OPEN-10; a Zapia nova usa conta Google só de estudos, D-20); token da Zapia nova (D-20; OPEN-02 se resolve com ele); repositório privado de dados (D-01); revisão humana dos requisitos que dependem de julgamento (S1-R3/R6/R9, S2-R1/R3/R7, S3-R3/R5/R7/R8, S5-R2/R4/R5/R6).
-- **Não executado:** a conta exclusiva da Zapia (D-19, D-20) ainda não foi montada nem validada; testes T1 a T3 e V2 a V9 e V11 na conta nova; PR-012 com o Notebook; leitura em conta real das plataformas; persistência de resultados pessoais.
+- **Não executado:** a conta exclusiva da Zapia (D-19, D-20) ainda não foi montada nem validada; testes T1 a T3 e V2 a V9 e V11 na conta nova; PR-012 completo com o Notebook (a rodada 5c, `docs/governanca/RESPOSTA_RODADA5C_ZAPIA_20261115.md`, registrou só a criação pela Zapia, como rascunho não verificado); leitura em conta real das plataformas; persistência de resultados pessoais.
 - **Rodadas da Zapia (conta antiga):** a 3 e a 4 estão em `docs/governanca/RESPOSTA_RODADA3_ZAPIA_20261109.md` e `docs/governanca/RESPOSTA_RODADA4_ZAPIA_20261109.md`. Observado e conferido: leitura por API com hashes corretos, validador com as 11 decisões esperadas e entrega de mensagem pelo app. Falhou: escrita de um comentário (permissão do token). Tudo o mais é autorrelato e **precisa ser repetido na conta nova**.
 - **Limite de fonte:** o que se sabe da Zapia é autorrelato (rodadas de auditoria e adendo de 09/11/2026, este último não versionado); a memória dela não é fonte de estado, o repositório é.
 - **Antes de escrever:** `python scripts/doc_cohesion.py --check` deve passar; ao mudar uma decisão, atualizar todos os documentos que a citam.
