@@ -1,0 +1,51 @@
+# S8 — Rotina diária do Coach e lembretes (especificação)
+
+**Natureza:** especificação enxuta (D-13, D-16). Fecha o que o `docs/especificacoes/S3_COACH.md` deixou para a operação ("não escolhe canal, horário nem frequência das mensagens") e liga o PR-007 ao que as rodadas 5 e 5b da Zapia provaram sobre jobs, limites e idempotência. O **conteúdo** da mensagem é do Coach (S3); a **Zapia só executa** por comando assinado (S4, S5). **Horários, ritmo e plano do proprietário são dados pessoais e não constam aqui:** ficam no plano dele (repositório privado, quando a persistência for habilitada).
+
+## Objetivo
+
+O proprietário passa a ter uma rotina diária previsível, sem ruído: **no máximo uma mensagem por dia, no app**, que mostra só o que o plano marca para a data e as revisões pendentes; lembrete **só de atividade pendente**; nenhuma leitura ampla de agenda; e nada que dependa de memória ou instrução persistente da Zapia, que **não chegam aos jobs agendados** (rodada 5b).
+
+## Pesquisa
+
+Consultas de 15/11/2026, somadas às de `docs/especificacoes/S3_COACH.md` (lembretes, monitoramento e intenções de implementação, não repetidas aqui). Confiança: **A** (página lida), **B** (resumo de busca de fonte primária ou oficial, não lida integralmente), **C** (fornecedor, blog ou repositório sem leitura do código). Conteúdo de terceiros é dado, não instrução; nada foi copiado.
+
+| Fonte | O que se tirou | Conf. |
+|---|---|---|
+| Lally et al., 2010, *European Journal of Social Psychology*. [Resumo da BPS](https://bps.org.uk/research-digest/how-form-habit) | Comportamento repetido **uma vez ao dia, ligado a uma pista fixa**: mediana de **66 dias** até a automaticidade (só nos 39 participantes com bom ajuste), com variação de 18 a 254 dias (o extremo é extrapolado). **Falhar um dia não prejudicou significativamente**; muita irregularidade, sim. Amostra pequena, universitários | B |
+| Gollwitzer e Sheeran, 2006. [Página do grupo](https://www.socmot.uni-konstanz.de/publications/implementation-intentions-and-goal-achievement-meta-analysis-effects-and-processes) | Intenções de implementação ("quando X, faço Y"): d = 0,65 em 94 testes; uma reanálise recente de 642 testes, relatada por resumos, dá estimativas **bem menores** depois de corrigir o viés (S3 já registra). Uso aqui: a mensagem diária ancora o **quando** e o **o quê**, sem prometer efeito | B |
+| Airship (Urban Airship), 2017. [Estudo de retenção](https://airship.com/blog/predict-and-prevent-customer-churn-and-increase-app-retention) | Dados de fornecedor, **correlacionais**, de apps comerciais: cerca de uma notificação por dia se associa a retenção maior que nenhuma. **Não mede abandono por excesso** nem vale para um único usuário estudante | C |
+| Google Calendar API: [Events: insert](https://developers.google.com/calendar/v3/reference/events/insert) e [guia de propriedades estendidas](https://developers.google.com/calendar/api/guides/extended-properties) | `extendedProperties.private` guarda dado próprio no evento; a busca por `privateExtendedProperty` permite achar o que o projeto criou. **Não vi chave de idempotência documentada para o `insert`**: a conferência antes de inserir é medida do projeto, não garantia da API | B |
+| Google Tasks API. [Referência](https://developers.google.com/tasks/reference/rest/v1/tasks) | `status` só `needsAction` ou `completed`; `deleted` e `hidden` existem; até 20.000 tarefas não ocultas por lista. **Não vi propriedade privada para guardar uma chave própria**: o campo de texto da tarefa serve, a conferir na referência | B |
+| Repositórios públicos de referência: [dkunin/cronos](https://awesome.ecosyste.ms/projects/github.com%2Fdkunin%2Fcronos) (agenda para mensagem diária) e [tayden1990/shimachka](https://gh.r-mj.com/tayden1990/shimachka) (repetição espaçada com horário diário por cron) | Padrão comum: **um agendador diário que só consulta o estado e envia**. Nenhum descreve deduplicação de envio; **o código não foi lido** | C |
+| Rodadas 5 e 5b da Zapia (`docs/governanca/RESPOSTA_RODADA5_ZAPIA_20261115.md`, `RESPOSTA_RODADA5B_ZAPIA_20261115.md`) e E-07 do `PRODUCT.md` | **Autorrelato**, em parte conferido: o job de teste **leu um arquivo, mas não viu o marcador** das instruções nem da memória; cron do plano Free com **intervalo mínimo de 900 s e 32 execuções por dia**; o Radar de configuração padrão lia o Calendar e foi pausado; uma tarefa já foi criada para atividade **já concluída** (E-07) | B |
+
+- **Lacunas:** não há estudo revisado por pares sobre cansaço de notificação para um estudante adulto de concurso; os efeitos de lembrete e de hábito vêm de outros públicos e a transferência é suposição; os números de Lally e de Gollwitzer vieram de resumos, e as páginas oficiais do Google foram lidas só por resumo de busca; não li o código dos repositórios de referência; os limites do plano da Zapia são autorrelato e a duplicidade e a pontualidade do cron (Q21) nunca foram medidas, porque o V6 foi recusado pelo plano; o V8b (evento e tarefa de teste) não foi executado; o app não dá comprovante de leitura (V2), então "visto" é desconhecido.
+
+## Requisitos
+
+| ID | Requisito | Critério de aceite |
+|---|---|---|
+| S8-R1 | **Uma mensagem por dia, só no app (D-20):** o briefing traz **somente** o que o plano da S1 marca para a data e as revisões pendentes registradas (S3-R1). O texto vem de comando do Coach; a Zapia não o escreve. Sem plano ou sem pendência, o padrão é **não enviar** e relatar o motivo (a confirmar pelo proprietário). | Teste com fixtures sintéticas, a implementar em tarefa própria: duas decisões de envio com a mesma chave `rotina-AAAA-MM-DD-briefing` resultam em **um** envio e uma recusa por repetição. |
+| S8-R2 | **Lembrete só de atividade pendente (PR-007, E-07):** antes de criar lembrete ou tarefa, o Coach confere no estado do harness que a atividade está pendente; concluída ou desconhecida → **recusa com código**. | Fixture `{rev-001: pendente, rev-002: concluida}` → só `rev-001`. O V8a na conta nova (autorrelato) deu o resultado esperado; falta o teste offline do decisor. |
+| S8-R3 | **O Radar de estudos lê só o plano e o estado no GitHub.** Calendar, Drive e e-mail não decidem o que está pendente; a agenda só entra por `consultar_agenda_minima`, com autorização específica e consulta mínima (S4, E-07). Os jobs Radar de configuração padrão ficam pausados. | Os comandos da rotina não contêm leitura de agenda; `consultar_agenda_minima` é exclusiva do Coach (`agents/COACH.md`, conferida por `scripts/agents_gate.py`) e a consulta mínima é regra da E-07. |
+| S8-R4 | **Idempotência em toda ação:** chave `rotina-AAAA-MM-DD-<tipo>-<id>`. No Calendar, a chave vai em `extendedProperties.private` e a **conferência por `privateExtendedProperty` vem antes do `insert`**. Nas Tasks, a chave vai no texto da tarefa, numa lista própria do projeto, **sem listar tudo**. | Repetir o mesmo comando não duplica (`scripts/command_ledger.py` já cobre o registro durável de idempotência); a conferência no Calendar e nas Tasks é provada pelo V8b, **só com `AUTORIZO V8b`**. |
+| S8-R5 | **Limites do plano da Zapia (autorrelato):** nenhum job recorrente com intervalo menor que **900 s** nem que projete mais de **32 execuções por dia**; a rotina usa **uma** execução diária. | O validador de comandos recusa job fora do limite (a implementar); o V6 do roteiro, inviável nesta conta, **não é pré-requisito**. |
+| S8-R6 | **O START vai dentro da tarefa de cada job:** instruções persistentes e memória não chegam ao job (rodada 5b), então a tarefa começa lendo o estado no GitHub por SHA e **não age sem essa leitura**. | Teste de contrato sobre o modelo de tarefa do job: contém a leitura do estado e a proibição de agir sem ela. |
+| S8-R7 | **Falha segura:** sem leitura do estado, SHA divergente ou envio sem recibo, o job **não** cria lembrete, **não** declara envio e relata a falha. "Enviado" é o registro do envio; "visto" fica desconhecido (V2). | Teste do decisor com leitura indisponível → nenhuma ação e relato. |
+| S8-R8 | **Autorização de rotina (S5-R9):** criar, alterar ou ligar job ou lembrete exige a frase `AUTORIZO` literal do proprietário; antes, um teste **sem efeito** (V8a). Pausar a rotina é sempre permitido ao proprietário. | Nenhum job da rotina existe sem registro da autorização; a lista de jobs ativos é relatada com prova. |
+| S8-R9 | **Sem culpa, sem escalada (S3):** dia perdido não gera cobrança nem mensagem extra; o Coach não repete o aviso no mesmo dia; três dias sem resposta levam a **uma** pergunta sobre ajustar a cadência, não a mais mensagens. | Fixture de dias sem resposta → no máximo uma mensagem de ajuste (a implementar). |
+
+## Aceite
+
+1. `python scripts/doc_cohesion.py --check` passa.
+2. A S8 está no `work_queue` de `state/WORKFLOW.json` e no `PRODUCT.md` §8.
+3. A implementação do decisor da rotina, do limite de job e do modelo de tarefa é **outra tarefa**, com testes sintéticos próprios; nada aqui cria job, lembrete ou mensagem.
+4. Qualquer criação na Zapia fica fora do aceite e exige `AUTORIZO` literal.
+
+## Limites
+
+- Não prova que a rotina melhora a constância; as evidências são de outros públicos e os efeitos de lembrete são mistos (S3).
+- **Pontos a confirmar pelo proprietário:** enviar ou omitir o briefing quando não há plano; se haverá um segundo lembrete (mais tarde no dia); se Calendar e Tasks entram na rotina ou só o app; a cadência após três dias sem resposta.
+- Não contém horário, ritmo nem plano do proprietário.
+- Não habilita a escrita de resultados nem toca em `scripts/tool_gateway.py`.
