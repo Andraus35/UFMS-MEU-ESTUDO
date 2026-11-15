@@ -128,7 +128,11 @@ class AgentKeysTests(unittest.TestCase):
         self.assertEqual((code, json.loads(out)["code"]), (1, "ORIGEM_DESCONHECIDA"))  # coach sem chave registrada
 
     def test_registro_de_chaves_publicas_do_repositorio_e_fail_closed(self):
-        self.assertEqual(ak.load_public_keys(), {})  # sem chave real registrada, nada é aceito
+        registradas = ak.load_public_keys()  # só origens com chave registrada são aceitas
+        self.assertEqual(set(registradas), {"tutor", "coach"})
+        self.assertNotEqual(registradas["tutor"], registradas["coach"])
+        for algoritmo, chave in registradas.values():
+            self.assertEqual((algoritmo, len(chave)), ("ed25519", 32))
         for ruim in ('{"keys": []}', '{"keys": {"zapia": "ab"}}', '{"keys": {"tutor": "zz"}}',
                      '{"keys": {"tutor": "' + "ab" * 31 + '"}}', "não é json"):
             arq = self.dir / "r.json"
@@ -141,6 +145,37 @@ class AgentKeysTests(unittest.TestCase):
             texto = caminho.read_text(encoding="utf-8")
             self.assertNotIn("BEGIN PRIVATE KEY", texto)
         dados = json.loads((ROOT / "config/agent_public_keys.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(dados["keys"]), {"tutor", "coach"})
+
+
+class ChavesRegistradasTests(unittest.TestCase):
+    """As chaves públicas do repositório são pontos Ed25519 válidos, sem material privado nem reaproveitadas."""
+
+    def test_chaves_registradas_sao_pontos_validos_e_verificam_assinatura(self):
+        registradas = ak.load_public_keys()
+        with tempfile.TemporaryDirectory() as tmp:
+            key = Path(tmp) / "t.key"
+            ak.generate(key, repo_root=ROOT)
+            assinado = ak.sign_command(BASE, key)
+        agora = datetime(2026, 11, 9, 12, 0, 30, tzinfo=timezone.utc)
+        # a chave de teste não é a registrada: a assinatura precisa ser recusada com a pública real do Tutor
+        r = ac.validate_command(assinado, keys=registradas, now=agora, ledger=ac.CommandLedger())
+        self.assertEqual(r["code"], "ASSINATURA_INVALIDA")
+        for algoritmo, chave in registradas.values():
+            self.assertEqual(algoritmo, "ed25519")
+            self.assertEqual(len(chave), 32)
+
+    def test_publica_registrada_nao_e_um_segredo_conhecido(self):
+        registradas = {o: v[1] for o, v in ak.load_public_keys().items()}
+        for chave in registradas.values():
+            for exemplo in (b"\x00" * 32, b"\x01" * 32, bytes(range(32))):
+                self.assertNotEqual(ac.ed25519_pure.public_key(exemplo), chave)
+
+    def test_arquivo_de_registro_nao_contem_chave_privada_nem_pem(self):
+        texto = (ROOT / "config" / "agent_public_keys.json").read_text(encoding="utf-8")
+        self.assertNotIn("PRIVATE", texto.upper())
+        dados = json.loads(texto)
+        self.assertEqual(set(dados), {"nota", "keys"})
         self.assertEqual(set(dados["keys"]), {"tutor", "coach"})
 
 

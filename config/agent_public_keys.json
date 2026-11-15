@@ -1,7 +1,7 @@
 {
-  "nota": "Chaves PÚBLICAS Ed25519 (hexadecimal, 32 bytes) dos agentes. Vazio de propósito: o proprietário gera as chaves com `python scripts/agent_keys.py generate` e registra aqui só a pública, por PR. Sem chave registrada, nenhum comando daquela origem é aceito.",
+  "nota": "Chaves PÚBLICAS Ed25519 (hexadecimal, 32 bytes) dos agentes, geradas pelo proprietário no próprio aparelho com `bash scripts/termux/gera_chaves.sh` (D-18) e registradas por PR. As privadas nunca entram no repositório. Origem das chaves é relato do proprietário. Origem sem chave registrada não tem comando aceito.",
   "keys": {
-    "tutor": null,
-    "coach": null
+    "tutor": "a20d4e22fc3caaa9819b72aca41050985ccdc388d126ea0d7d9027faa0ebe2d2",
+    "coach": "21d3da12397410a4a01bfa9837e7458302a1e19eb34c09e4b0053fab1fdd400b"
   }
 }

@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #79; SHA fd875ba1d162ceffc319395c0c17d7752fb74e37
-- Frente ativa: **RM-09 / PR #80**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #80; SHA d34afea936426649c318f647ee640084c209bcdb
+- Frente ativa: **RM-09 / PR #81**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -25,7 +25,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Ordem do que acontece a seguir (quando o insumo chegar):**
 1. Relatório da validação da conta nova: conferir hashes e a autoria da escrita; registrar a rodada em `docs/governanca/` (resumo, sem dados pessoais), atualizar S4, S5 e este handoff em um PR novo.
-2. Chaves públicas do Tutor e do Coach: registrar em `config/agent_public_keys.json` por PR.
+2. Chaves públicas do Tutor e do Coach: **registradas** em `config/agent_public_keys.json` (geradas pelo proprietário no Termux com `scripts/termux/gera_chaves.sh`; origem é relato dele). Falta provar que a Zapia verifica a assinatura (OPEN-09); rotação ou perda da chave exige novo PR.
 3. Resposta do suporte do TEC: atualizar OPEN-11, OPEN-12 e a comparação das opções A a F da S4; só então considerar o V10.
 4. Relatórios de V11, V4 e V6; depois V8, V9 e, se o WhatsApp voltar, V3 e V5.
 5. Dados do plano de estudo (tópicos já estudados, prioridades): gerar o plano real com `scripts/study_plan.py` e o caderno diagnóstico (estudo segue em E0).
