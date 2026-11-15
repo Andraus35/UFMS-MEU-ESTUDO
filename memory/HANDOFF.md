@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #89; SHA 0a662e3f2759a20e9d0cbf3cf80bae34c2dd412f
-- Frente ativa: **RM-09 / PR #90**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #90; SHA ed4610e5a915867baef8659070d30766f35ccb5f
+- Frente ativa: **RM-09 / PR #91**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -19,9 +19,21 @@
 
 Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/session_route.py --intent engineering --run` (rotas de estudo, escrita, governança e persistência: `--intent study|write|governance|persistence`, definidas em `config/session_routes.json`) e seguir o procedimento de `docs/especificacoes/README.md`, que diz o estado real do ciclo, o próximo item da fila `work_queue` de `state/WORKFLOW.json` e quando parar.
 
-**Em uma frase:** as especificações S1 a S5, o validador de comandos (Ed25519 e HMAC, registro durável, filtro, montador de issue), o perfil `agents/ZAPIA.md` e o roteiro de validação da Zapia existem; **falta o proprietário montar a conta exclusiva da Zapia (D-19, D-20) e trazer os relatórios**, e provar na prática o que hoje é só autorrelato.
+**Em uma frase:** as especificações S1 a S5 e S8, o validador de comandos (Ed25519 e HMAC, registro durável, filtro, montador de issue), o perfil `agents/ZAPIA.md`, o roteiro de validação da Zapia e as ferramentas do Termux existem; a conta exclusiva da Zapia já foi validada **em parte, por autorrelato** (rodadas 5, 5b e 5c), e o repositório privado de dados existe com o consentimento v2 **por relato do proprietário**; a escrita de resultados está **desabilitada**. O que falta provar está nas listas abaixo.
 
 **Material pronto para o proprietário encaminhar** (tudo em `docs/governanca/PROMPTS_PRONTOS_ZAPIA_CONTA_NOVA_20261109.md`, conferido por `tests/test_zapia_prompts.py`): passos para montar a conta nova e o token, texto da instrução persistente, prompt de validação (V0, V1, V2, V7, V12), prompts de V11 e de V4 e V6, mensagem ao suporte do TEC e o comando de geração das chaves. O script `scripts/termux/verifica_token.sh` confere um token sem imprimi-lo. **Ferramenta única do proprietário no Termux:** `bash scripts/termux/ufms.sh {preparar|atualizar|diagnostico|token|plano}` (o `diagnostico` gera um relatório sem segredos para colar no chat; o `plano` gera o plano padrão localmente, fora do repositório).
+
+### Estado de saída (15/11/2026) e como retomar
+
+**Como retomar, sem prompt:** `python scripts/bootstrap.py --mode engineering`, depois `python scripts/next_task.py` (diz o estado real do ciclo e o próximo item da fila; hoje o próximo é a **S7**, persistência privada e escritor) e, se o ciclo estiver `encerrado_recibo_pendente`, abrir o PR draft da próxima tarefa com `python scripts/record_merge_receipt.py` no primeiro commit. Uma tarefa, uma branch, um PR draft; **o merge só sai por pedido explícito do proprietário**.
+
+**Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; validador de proveniência do conteúdo de estudo.
+
+**O que a fila (`work_queue`) ainda tem, na ordem proposta:** S7, S6, S9, S10, S11. Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
+
+**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); criar o token `zapia-dados-30d` do repositório privado e conferi-lo (`bash ~/ufms.sh token privado`); confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
+
+**O que NÃO persiste, e por quê:** o **plano** vive só em `~/ufms-plano`, no aparelho do proprietário (modo 0600), e a cópia é dele; **resultados e desempenho** não são gravados em lugar nenhum, porque `personal_results_writes_enabled=false` e o repositório é público. O consentimento v2 do repositório privado cobre resultados de cadernos e simulados, **não o plano**. A continuidade de **engenharia** é garantida pelo repositório (estado em `state/WORKFLOW.json`, fila, ROADMAP e este HANDOFF), não pela conversa.
 
 **Ordem do que acontece a seguir (quando o insumo chegar):**
 1. Validação da conta nova: **rodada 5 registrada como PARCIAL** em `docs/governanca/RESPOSTA_RODADA5_ZAPIA_20261115.md` (V7 verificado; a autoria não distingue a Zapia do proprietário). **Aberto, depende do proprietário:** conectores: o proprietário decidiu manter **Drive e Calendar** e excluir o Outlook (D-21), o proprietário relatou que estão na conta Google só de estudos (não verificado); jobs Radar na conta exclusiva a desativar pelo proprietário; comprovante do V2 e escopo do token (OPEN-02). Depois, V11 e V4 e V6; V8 e V9 só com a frase `AUTORIZO` própria e depois dos jobs Radar revistos.
@@ -33,7 +45,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 ### Retomada da persistência (próxima sessão)
 
-**Ponto de partida:** o proprietário **executou** `scripts/termux/cria_repo_privado.sh` em 15/11/2026: repositório privado criado, `private=true` (P1) e consentimento v2 gravado com readback (P3), **por relato com capturas**, registrado em `docs/governanca/RESULTADO_PERSISTENCIA_P1_P3_20261115.md`; a sessão não tem acesso ao repositório privado. A escrita de resultados está **desabilitada** (`personal_results_writes_enabled=false`). Confirme o estado do PR #86 com `python scripts/next_task.py`; se ele já foi mesclado, o recibo entra no primeiro commit da próxima tarefa.
+**Ponto de partida:** o proprietário **executou** `scripts/termux/cria_repo_privado.sh` em 15/11/2026: repositório privado criado, `private=true` (P1) e consentimento v2 gravado com readback (P3), **por relato com capturas**, registrado em `docs/governanca/RESULTADO_PERSISTENCIA_P1_P3_20261115.md`; a sessão não tem acesso ao repositório privado. A escrita de resultados está **desabilitada** (`personal_results_writes_enabled=false`). Confirme o estado do ciclo com `python scripts/next_task.py`; o recibo do último PR mesclado entra no primeiro commit da próxima tarefa.
 
 **Em ordem (cada passo em PR próprio, em série):**
 1. **Proprietário:** feito (15/11/2026, relato): rodou o script e trouxe a saída. Se for preciso reconferir, `gh api repos/Andraus35/ufms-meu-estudo-dados --jq .private` (esperado `true`).
