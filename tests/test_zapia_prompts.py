@@ -72,7 +72,8 @@ class ZapiaPromptsTests(unittest.TestCase):
 
     def test_sondas_do_script_nao_enviam_dados_reais(self):
         texto = SCRIPT.read_text(encoding="utf-8")
-        self.assertEqual(texto.count("'{}'"), 4)  # as quatro sondas de escrita usam corpo vazio
+        self.assertEqual(texto.count("'{}'"), 1)       # o corpo vazio é definido uma vez (VAZIO)
+        self.assertEqual(texto.count('"$VAZIO"'), 5)  # quatro sondas de escrita e a do repositório público
 
 
 if __name__ == "__main__":
