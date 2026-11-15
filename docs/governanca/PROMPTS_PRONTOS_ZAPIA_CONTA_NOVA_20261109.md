@@ -39,10 +39,11 @@ Se não bater, pare e me diga o valor calculado. Se bater, siga somente os teste
 AUTORIZO V1, V2, V7
 Execute também V0 e V12 (não precisam de autorização). No V0, diga ainda: esta conta tem memória
 pessoal, jobs, hooks ou conectores além do GitHub e do app? Liste só nomes e tipos, sem valores. Informe
-o plano da conta e as automações ativas. No V7, comente na issue 75 com o texto do roteiro e informe a
-autoria que o GitHub mostrar. O resto fica NAO_EXECUTADO. Publique o relatório como comentário(s) na issue
-75 pelo V7 e responda no chat só com número, URL e SHA-256; se o V7 falhar, responda no chat. Nunca
-imprima token, chave ou cabeçalho de autorização.
+o plano da conta e as automações ativas. No V7, publique UM comentário curto na issue 75 com o texto do roteiro e informe a
+autoria que o GitHub mostrar. NÃO publique o relatório completo na issue: entregue o relatório no chat. O resto
+fica NAO_EXECUTADO. Responda no chat com o relatório e, do V7, o código HTTP, a URL e o SHA-256 do corpo. Se o
+validador recusar algo, informe só o código de recusa, sem repetir o conteúdo. Nunca imprima token, chave ou
+cabeçalho de autorização.
 ```
 
 ## 3. Depois da validação, na conta nova
