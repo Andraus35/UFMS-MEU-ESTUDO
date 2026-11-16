@@ -28,7 +28,7 @@ class ResultadoV3PlanoTests(unittest.TestCase):
         self.assertIn("omite de propósito", TEXTO)
 
     def test_registra_o_resultado_do_verificador_de_token_sem_nomes_de_outros_repositorios(self):
-        for trecho in ("diverge (3 pontos)", "sem expiração", "4", "403", "não entregar à zapia", "open-02", "30 dias"):
+        for trecho in ("resultado: diverge", "read-only", "falso positivo", "403", "não entregar à zapia", "16/12/2026", "30 dias", "estava errada"):
             self.assertIn(trecho, TEXTO)
         for alheio in ("inteligencia", "trading", "sot"):
             self.assertNotIn(alheio, TEXTO)

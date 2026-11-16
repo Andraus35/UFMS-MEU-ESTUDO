@@ -35,7 +35,8 @@ headers += "x-ratelimit-remaining: 4999\r\nx-ratelimit-limit: 5000\r\n"
 body = "{}"
 if path == "/user": body = json.dumps({"login": "dono-teste"})
 if path.startswith("/user/repos"):
-    body = json.dumps([{"full_name": r} for r in os.environ.get("FAKE_REPOS", "").split(",") if r])
+    privados = os.environ.get("FAKE_PRIVADOS", "").split(",")
+    body = json.dumps([{"full_name": r, "private": r in privados} for r in os.environ.get("FAKE_REPOS", "").split(",") if r])
 if hfile: open(hfile, "w").write(headers)
 if ofile: open(ofile, "w").write(body)
 sys.stdout.write(code)
@@ -64,8 +65,8 @@ class VerificaTokenPrivadoTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def rodar(self, codigos, repos, expira="2026-12-15 12:00:00 -0400", perfil="privado", token=TOKEN):
-        env = dict(os.environ, FAKE_LOG=str(self.log), FAKE_CODES=json.dumps(codigos), FAKE_REPOS=repos,
+    def rodar(self, codigos, repos, expira="2026-12-15 12:00:00 -0400", perfil="privado", token=TOKEN, privados=PRIVADO):
+        env = dict(os.environ, FAKE_LOG=str(self.log), FAKE_CODES=json.dumps(codigos), FAKE_REPOS=repos, FAKE_PRIVADOS=privados,
                    FAKE_EXPIRY=expira or "", PATH=f"{self.bin}:{os.environ['PATH']}")
         if perfil:
             env["PERFIL"] = perfil
@@ -86,10 +87,41 @@ class VerificaTokenPrivadoTests(unittest.TestCase):
         self.assertIn("SEM expiração", r.stdout)
         self.assertIn("RESULTADO: DIVERGE", r.stdout)
 
-    def test_token_que_alcanca_mais_de_um_repositorio_diverge(self):
-        r = self.rodar(CODIGOS_PRIVADO, f"{PRIVADO},{PUBLICO}")
+    def test_repositorios_publicos_listados_nao_contam_como_alcance(self):
+        # caso real do proprietário: o token é só do repositório de dados, mas a lista inclui os públicos dele
+        r = self.rodar(CODIGOS_PRIVADO, f"outro/publico-a,{PRIVADO},{PUBLICO},outro/publico-b")
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("RESULTADO: CONFERE com o perfil privado", r.stdout)
+        self.assertIn("Repositórios públicos listados: 3", r.stdout)
+        self.assertIn("qualquer token lê os públicos", r.stdout)
+        self.assertRegex(r.stdout, r"Gravar em outro/publico-a: NÃO .*\[OK\]")
+        self.assertRegex(r.stdout, r"Gravar em outro/publico-b: NÃO .*\[OK\]")
+
+    def test_outro_repositorio_privado_alcancado_diverge(self):
+        r = self.rodar(CODIGOS_PRIVADO, f"{PRIVADO},outro/privado", privados=f"{PRIVADO},outro/privado")
         self.assertEqual(r.returncode, 1)
-        self.assertIn("exatamente 1 repositório", r.stdout)
+        self.assertIn("alcança o repositório PRIVADO outro/privado, que não é o designado", r.stdout)
+
+    def test_escrita_em_outro_repositorio_listado_diverge(self):
+        r = self.rodar(dict(CODIGOS_PRIVADO, **{"PUT /repos/outro/publico/contents/sonda-nao-existe.txt": 422}),
+                       f"{PRIVADO},outro/publico")
+        self.assertEqual(r.returncode, 1)
+        self.assertRegex(r.stdout, r"Gravar em outro/publico: .*DIVERGE \(esperado NAO\)")
+
+    def test_repositorio_designado_ausente_da_lista_diverge(self):
+        r = self.rodar(CODIGOS_PRIVADO, PUBLICO, privados="")
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("não alcança o repositório designado", r.stdout)
+
+    def test_lista_ilegivel_nao_passa_em_silencio(self):
+        r = self.rodar(dict(CODIGOS_PRIVADO, **{"GET /user/repos?per_page=100": 403}), PRIVADO)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("não consegui classificar", r.stdout)
+
+    def test_perfil_publico_nao_pode_alcancar_repositorio_privado(self):
+        r = self.rodar(CODIGOS_PUBLICO, f"{PUBLICO},{PRIVADO}", perfil="publico", privados=PRIVADO)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn(f"alcança o repositório PRIVADO {PRIVADO}, que não é o designado", r.stdout)
 
     def test_escrita_aceita_no_repositorio_publico_diverge(self):
         r = self.rodar(dict(CODIGOS_PRIVADO, **{f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 422}), PRIVADO)
