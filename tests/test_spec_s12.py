@@ -20,12 +20,23 @@ class SpecS12Tests(unittest.TestCase):
         pesquisa = DOC.split("## Pesquisa", 1)[1].split("## Ciclo completo", 1)[0]
         self.assertGreaterEqual(len(re.findall(r"https?://", pesquisa)), 15)
         self.assertIn("- **Lacunas:**", pesquisa)
-        for trecho in ("não li o artigo original", "hipóteses", "regra de penalidade", "E0, zero eventos"):
-            self.assertIn(trecho, pesquisa.replace("**", ""))
+        for trecho in ("não li o artigo original", "hipóteses", "retificações não foram verificadas", "e0, zero eventos"):
+            self.assertIn(trecho, pesquisa.replace("**", "").lower())
 
-    def test_a_regra_de_chute_fica_suspensa_ate_conferir_o_edital(self):
-        self.assertIn("a confirmar no edital", TEXTO)
-        self.assertIn("suspensa", TEXTO)
+    def test_regra_de_pontuacao_vem_do_edital_com_itens_e_ressalva_de_retificacao(self):
+        for trecho in ("a confirmar no edital", "9.18", "9.21", "sem desconto por erro", "retificações não verificadas"):
+            self.assertIn(trecho, TEXTO)
+        for caminho in ("edital/chunks/p09-c01.md", "edital/chunks/p10-c01.md"):
+            self.assertTrue((ROOT / caminho).exists(), caminho)
+        edital = (ROOT / "edital/chunks/p09-c01.md").read_text(encoding="utf-8")
+        self.assertIn("9.18. Cada questão objetiva apresentará 5 (cinco) alternativas", edital)
+        self.assertIn("9.21. Será anulada a questão", edital)
+
+    def test_decisoes_do_proprietario_registradas_sem_aplicar_a_fase_final(self):
+        for trecho in ("cada cerca de duas semanas", "7 dias como proposta ajustável", "por bloco de questões", "repositório privado"):
+            self.assertIn(trecho, TEXTO.replace("**", ""))
+        settings = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
+        self.assertNotIn("final_phase_days", settings["study"]["owner_default_plan"])
 
     def test_portas_sem_volta_e_flag_de_resultados(self):
         porta = DOC.split("## Portas sem volta", 1)[1].split("## Aceite", 1)[0]
