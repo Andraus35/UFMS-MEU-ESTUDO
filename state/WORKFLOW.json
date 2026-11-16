@@ -205,6 +205,21 @@
       ]
     },
     {
+      "id": "S12",
+      "title": "Especificação do ciclo de retenção e recuperação na prova: aprender, fixar, revisar, corrigir, calibrar, simular, fase final e dia da prova (pensar pelo agente, provar pelos gates)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S12_CICLO_RETENCAO_RECUPERACAO_PROVA.md",
+      "depends_on": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "cadência de simulados, fase final, confiança por questão e regra de penalidade da FAPEC (pontos a confirmar na S12)"
+      ]
+    },
+    {
       "id": "S7",
       "title": "Especificação da persistência privada e do escritor (P4 a P9, PR-003, PR-010): como a Zapia grava por comando assinado, reconstrução, revogação e testes adversariais",
       "roadmap_task": "RM-08",

@@ -25,11 +25,11 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 ### Estado de saída (15/11/2026) e como retomar
 
-**Como retomar, sem prompt:** `python scripts/bootstrap.py --mode engineering`, depois `python scripts/next_task.py` (diz o estado real do ciclo e o próximo item da fila; hoje o próximo é a **S7**, persistência privada e escritor) e, se o ciclo estiver `encerrado_recibo_pendente`, abrir o PR draft da próxima tarefa com `python scripts/record_merge_receipt.py` no primeiro commit. Uma tarefa, uma branch, um PR draft; **o merge só sai por pedido explícito do proprietário**.
+**Como retomar, sem prompt:** `python scripts/bootstrap.py --mode engineering`, depois `python scripts/next_task.py` (diz o estado real do ciclo e o próximo item da fila; hoje o próximo é a **S7** (a **S12**, ciclo de retenção e recuperação na prova, está neste PR), persistência privada e escritor) e, se o ciclo estiver `encerrado_recibo_pendente`, abrir o PR draft da próxima tarefa com `python scripts/record_merge_receipt.py` no primeiro commit. Uma tarefa, uma branch, um PR draft; **o merge só sai por pedido explícito do proprietário**.
 
 **Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; consentimento v3 e `guardar-plano` (resultado por relato); validador de proveniência do conteúdo de estudo.
 
-**O que a fila (`work_queue`) ainda tem, na ordem proposta:** S7, S6, S9, S10, S11. Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
+**O que a fila (`work_queue`) ainda tem, na ordem proposta:** S12 (PR #95, em revisão), S7, S6, S9, S10, S11. A S12 traz as tarefas derivadas D1 a D6 (validador do prompt de revisão, desvio do padrão, confiança por questão, caderno de erros, roteiro do dia da prova, condições do simulado). Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
 
 **Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); **ajustar o token `zapia_dados` (expira 16/12/2026, 1 repositório): falta só Contents em Read and write**; depois do merge do PR #93 rodar `bash ~/ufms.sh atualizar` e conferi-lo (`bash ~/ufms.sh token privado`) antes de cadastrá-lo só no formulário seguro da Zapia; confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
 
