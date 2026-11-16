@@ -46,6 +46,12 @@ if metodo == "PUT":
     p = caminho.split("/contents/", 1)[1]
     chave(p).write_text(corpo["content"], encoding="utf-8")
     sys.exit(0)
+if caminho.endswith("/contents/planos"):
+    itens = [q for q in arquivos.glob("planos__*")]
+    if not itens:
+        nao_achou()
+    print(len(itens) if "length" in " ".join(resto) else "\n".join(q.name for q in itens))
+    sys.exit(0)
 if "/contents/" in caminho:
     p = caminho.split("/contents/", 1)[1]
     if not chave(p).exists():
@@ -276,6 +282,31 @@ class ConsentirEGuardarTests(unittest.TestCase):
         r = self.rodar("guardar-plano", str(self.plano()), FAKE_READBACK_BAD="planos/")
         self.assertEqual(r.returncode, 1)
         self.assertIn("PENDENTE (P6)", r.stderr)
+
+    # diagnóstico ---------------------------------------------------------------------------------------------
+    def test_diagnostico_mostra_v3_planos_e_so_o_id_do_proximo_item(self):
+        self.semear("consent.json", "V2")
+        self.semear("consent-v3.json", json.dumps(consentimento_v3()))
+        self.semear("planos/plano-2026-11-16-abcdef12.json", "{}")
+        r = self.rodar("diagnostico")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        for trecho in ("consentimento v2 (consent.json): presente", "consentimento v3 (consent-v3.json): presente",
+                       "planos guardados no repositório privado: 1 arquivo(s)", "escrita de resultados pessoais: DESABILITADA"):
+            self.assertIn(trecho, r.stdout)
+        proximo = [l for l in r.stdout.splitlines() if l.startswith("fila: proximo")]
+        self.assertEqual(len(proximo), 1)
+        self.assertNotIn("{", proximo[0])
+        self.assertNotIn("titulo", proximo[0])
+        self.assertNotIn("abcdef12", r.stdout)             # nomes de plano (data e hash) não são impressos
+        self.assertNotIn("2026-11-16", r.stdout.split("planos guardados")[1])
+
+    def test_diagnostico_sinaliza_v3_ausente_e_nenhum_plano(self):
+        self.semear("consent.json", "V2")
+        r = self.rodar("diagnostico")
+        self.assertIn("consentimento v3 (consent-v3.json): AUSENTE", r.stdout)
+        self.assertIn("consentir-v3", r.stdout)
+        self.assertIn("planos guardados no repositório privado: nenhum", r.stdout)
+        self.assertIn("guardar-plano", r.stdout.split("planos guardados")[1])
 
     def test_documentos_e_texto_do_v3(self):
         adr = ADR.read_text(encoding="utf-8")
