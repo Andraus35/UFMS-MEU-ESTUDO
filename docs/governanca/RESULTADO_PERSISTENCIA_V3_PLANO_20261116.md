@@ -18,7 +18,23 @@
 | **P3**, consentimento v3 | `gh api .../contents/consent-v3.json --jq '.sha'` devolveu o blob `d1a72470ebccdc82859557d4b1e5ba16d743d25f`: o arquivo **existe**. | presente, por relato |
 | Plano | `gh api .../contents/planos --jq '.[].name'` listou **um** arquivo de plano. | guardado, por relato |
 | Escrita automática de resultados | `settings.json: false`. | desabilitada |
-| Token da Zapia (passo 6 do script) | "token DIVERGE ou não conferido: não o entregue à Zapia". **A causa não foi vista**: pode ter sido o token ainda não criado ou colado, ou uma divergência real do perfil privado. | **pendente** |
+| Token (passo 6 do script e depois `ufms.sh token privado`) | O verificador **reprovou** o token colado: **`RESULTADO: DIVERGE (3 pontos) no perfil privado`**. Ver a seção abaixo. | **reprovado: não entregar à Zapia** |
+
+## Resultado do verificador de token (segunda captura, relato)
+
+O proprietário rodou `ufms.sh token privado` e colou um token no prompt oculto (o valor não aparece na captura). Saída relatada:
+
+| Ponto | Observado | Esperado no perfil privado |
+|---|---|---|
+| Tipo | fine-grained (`github_pat_`) | fine-grained |
+| Validade | **vazia: token sem expiração** | com expiração (PR-010, D-09; escolhida: 30 dias) |
+| Repositórios que alcança | **4**: o público do projeto, o de dados e **dois outros repositórios do proprietário, alheios ao projeto** (nomes omitidos aqui) | exatamente 1: o de dados |
+| Gravar arquivo no repositório de dados | **recusado (403)** | permitido (Contents: Read and write) |
+| Criar issue, comentar, abrir PR, gravar no público | recusados | recusados |
+
+**Leitura do agente construtor:** não é o token mínimo do repositório de dados. Parece um token **mais amplo** (talvez o que a Zapia já usa, que o relato anterior E-03 dizia alcançar repositórios alheios), com acesso de leitura ao repositório de dados e sem permissão de escrita nele. **Não se sabe qual token foi colado**; o proprietário deve dizer. O verificador reprovou exatamente os três pontos que devia, e **nada foi entregue à Zapia**.
+
+**O que fazer:** criar um token novo, só do repositório de dados, com **Contents: Read and write**, nenhuma outra permissão e validade de 30 dias, conferi-lo com `ufms.sh token privado` até dar `CONFERE` e só então cadastrá-lo no formulário seguro da Zapia. Se o token colado é o que a Zapia usa hoje, ele alcança repositórios alheios ao projeto e deve ser **revogado ou reduzido** (OPEN-02).
 
 ## O que esta captura não mostra
 

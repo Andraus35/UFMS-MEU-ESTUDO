@@ -24,8 +24,15 @@ class ResultadoV3PlanoTests(unittest.TestCase):
         for proibido in ("2026-11-20", "cb10ea15", "plano-2026"):
             self.assertNotIn(proibido, DOC)
         self.assertIsNone(re.search(r"[\w.+-]+@[\w-]+\.[\w.]+", DOC))
-        self.assertNotRegex(DOC, r"github_pat_|ghp_")
+        self.assertNotRegex(DOC, r"github_pat_[A-Za-z0-9_]{10,}|ghp_[A-Za-z0-9]{10,}")  # valor de token, não o prefixo
         self.assertIn("omite de propósito", TEXTO)
+
+    def test_registra_o_resultado_do_verificador_de_token_sem_nomes_de_outros_repositorios(self):
+        for trecho in ("diverge (3 pontos)", "sem expiração", "4", "403", "não entregar à zapia", "open-02", "30 dias"):
+            self.assertIn(trecho, TEXTO)
+        for alheio in ("inteligencia", "trading", "sot"):
+            self.assertNotIn(alheio, TEXTO)
+        self.assertNotIn("causa não foi vista", TEXTO)
 
     def test_hashes_do_start_batem_com_o_repositorio(self):
         import subprocess, sys
