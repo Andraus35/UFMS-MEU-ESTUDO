@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #90; SHA ed4610e5a915867baef8659070d30766f35ccb5f
-- Frente ativa: **RM-09 / PR #91**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #91; SHA 26337793b57a614694702814cb2a1a95fa47f03f
+- Frente ativa: **RM-09 / PR #92**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -21,7 +21,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Em uma frase:** as especificações S1 a S5 e S8, o validador de comandos (Ed25519 e HMAC, registro durável, filtro, montador de issue), o perfil `agents/ZAPIA.md`, o roteiro de validação da Zapia e as ferramentas do Termux existem; a conta exclusiva da Zapia já foi validada **em parte, por autorrelato** (rodadas 5, 5b e 5c), e o repositório privado de dados existe com o consentimento v2 **por relato do proprietário**; a escrita de resultados está **desabilitada**. O que falta provar está nas listas abaixo.
 
-**Material pronto para o proprietário encaminhar** (tudo em `docs/governanca/PROMPTS_PRONTOS_ZAPIA_CONTA_NOVA_20261109.md`, conferido por `tests/test_zapia_prompts.py`): passos para montar a conta nova e o token, texto da instrução persistente, prompt de validação (V0, V1, V2, V7, V12), prompts de V11 e de V4 e V6, mensagem ao suporte do TEC e o comando de geração das chaves. O script `scripts/termux/verifica_token.sh` confere um token sem imprimi-lo. **Ferramenta única do proprietário no Termux:** `bash scripts/termux/ufms.sh {preparar|atualizar|diagnostico|token|plano}` (o `diagnostico` gera um relatório sem segredos para colar no chat; o `plano` gera o plano padrão localmente, fora do repositório).
+**Material pronto para o proprietário encaminhar** (tudo em `docs/governanca/PROMPTS_PRONTOS_ZAPIA_CONTA_NOVA_20261109.md`, conferido por `tests/test_zapia_prompts.py`): passos para montar a conta nova e o token, texto da instrução persistente, prompt de validação (V0, V1, V2, V7, V12), prompts de V11 e de V4 e V6, mensagem ao suporte do TEC e o comando de geração das chaves. O script `scripts/termux/verifica_token.sh` confere um token sem imprimi-lo. **Ferramenta única do proprietário no Termux:** `bash scripts/termux/ufms.sh {preparar|atualizar|diagnostico|token|plano|consentir-v3|guardar-plano}` (o `diagnostico` gera um relatório sem segredos para colar no chat; o `plano` gera o plano padrão localmente; `consentir-v3` e `guardar-plano` levam o plano ao repositório **privado**, por ato do proprietário).
 
 ### Estado de saída (15/11/2026) e como retomar
 
@@ -31,9 +31,9 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **O que a fila (`work_queue`) ainda tem, na ordem proposta:** S7, S6, S9, S10, S11. Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
 
-**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); criar o token `zapia-dados-30d` do repositório privado e conferi-lo (`bash ~/ufms.sh token privado`); confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
+**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); **aprovar o texto do consentimento v3 no ADR-013 (PR #92), registrá-lo com `bash ~/ufms.sh consentir-v3` e guardar o plano com `bash ~/ufms.sh guardar-plano`**; criar o token `zapia-dados-30d` do repositório privado e conferi-lo (`bash ~/ufms.sh token privado`); confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
 
-**O que NÃO persiste, e por quê:** o **plano** vive só em `~/ufms-plano`, no aparelho do proprietário (modo 0600), e a cópia é dele; **resultados e desempenho** não são gravados em lugar nenhum, porque `personal_results_writes_enabled=false` e o repositório é público. O consentimento v2 do repositório privado cobre resultados de cadernos e simulados, **não o plano**. A continuidade de **engenharia** é garantida pelo repositório (estado em `state/WORKFLOW.json`, fila, ROADMAP e este HANDOFF), não pela conversa.
+**O que NÃO persiste, e por quê:** o lugar definitivo de plano e resultados é o **repositório privado** `ufms-meu-estudo-dados` (D-24); o público nunca recebe dado pessoal. **Enquanto o consentimento v3 não for aprovado e registrado e o `guardar-plano` não for rodado**, o **plano** vive só em `~/ufms-plano`, no aparelho do proprietário (modo 0600), e a cópia é dele; **resultados e desempenho** não são gravados em lugar nenhum, porque `personal_results_writes_enabled=false` (a escrita automática por Tutor e Zapia depende de P4, S7 e PR próprio). O consentimento v2 cobre só resultados de cadernos e simulados; o v3, **proposto**, cobre também o plano. A continuidade de **engenharia** é garantida pelo repositório (estado em `state/WORKFLOW.json`, fila, ROADMAP e este HANDOFF), não pela conversa.
 
 **Ordem do que acontece a seguir (quando o insumo chegar):**
 1. Validação da conta nova: **rodada 5 registrada como PARCIAL** em `docs/governanca/RESPOSTA_RODADA5_ZAPIA_20261115.md` (V7 verificado; a autoria não distingue a Zapia do proprietário). **Aberto, depende do proprietário:** conectores: o proprietário decidiu manter **Drive e Calendar** e excluir o Outlook (D-21), o proprietário relatou que estão na conta Google só de estudos (não verificado); jobs Radar na conta exclusiva a desativar pelo proprietário; comprovante do V2 e escopo do token (OPEN-02). Depois, V11 e V4 e V6; V8 e V9 só com a frase `AUTORIZO` própria e depois dos jobs Radar revistos.
@@ -55,7 +55,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 5. **Faltam provas:** P4 (escritor), P7 (reconstrução a partir dos eventos privados reais), P8 (revogação: só texto, apagar o repositório inteiro) e P9. Ver a tabela do ADR-013.
 6. **Habilitar a flag** é PR próprio, com aprovação humana expressa, só depois de P1 a P9 provados. Nunca antes.
 
-**Enquanto isso:** o plano e o desempenho do estudante **não** vão ao repositório público. O plano vive na sessão do Tutor e o proprietário guarda uma cópia. Não pedir token ao proprietário no chat; nenhum agente construtor recebe credencial de escrita pessoal.
+**Enquanto isso:** o plano e o desempenho do estudante **não** vão ao repositório público. O plano vai ao repositório **privado** por ato do próprio proprietário (`consentir-v3` e `guardar-plano`) e, até lá, vive em `~/ufms-plano`. Não pedir token ao proprietário no chat; nenhum agente construtor recebe credencial de escrita pessoal.
 
 **Cuidados desta fase:** o que se sabe da Zapia é autorrelato; a conta antiga não vale como evidência da nova; ao testar scripts de token neste ambiente, o proxy substitui credenciais (use só o computador do proprietário); o merge só ocorre por pedido explícito dele.
 

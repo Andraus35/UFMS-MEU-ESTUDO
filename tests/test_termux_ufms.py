@@ -67,9 +67,15 @@ class UfmsTermuxTests(unittest.TestCase):
         subprocess.run(["bash", "-n", str(SCRIPT)], check=True)
         self.assertTrue(SCRIPT.stat().st_mode & stat.S_IXUSR)
         texto = SCRIPT.read_text(encoding="utf-8")
-        for proibido in ("GH_TOKEN", "github_pat_", "git push", "--force", "-X PUT", "-X POST", "gh repo create",
-                         "personal_results_writes_enabled=true", "read -rs"):
+        for proibido in ("GH_TOKEN", "github_pat_", "git push", "--force", "-X POST", "-X PATCH", "-X DELETE",
+                         "gh repo create", "personal_results_writes_enabled=true", "read -rs"):
             self.assertNotIn(proibido, texto)
+        # só duas gravações remotas existem, ambas no repositório PRIVADO, por ato do proprietário
+        gravacoes = [l for l in texto.splitlines() if "-X PUT" in l and not l.lstrip().startswith("#")]
+        self.assertEqual(len(gravacoes), 2, gravacoes)
+        for linha in gravacoes:
+            self.assertIn('repos/$PRIVADO/contents/', linha)
+        self.assertNotIn("UFMS-MEU-ESTUDO/contents", texto)
 
     def test_ajuda_lista_os_subcomandos_e_comando_desconhecido_falha(self):
         r = self.rodar("ajuda")

@@ -45,7 +45,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         bloco = self.bloco()
         for trecho in ("bootstrap.py --mode engineering", "next_task.py", "record_merge_receipt.py", "S7",
                        "pedido explícito do proprietário", "O que NÃO persiste", "~/ufms-plano", "personal_results_writes_enabled=false",
-                       "não o plano", "não pela conversa"):
+                       "consentimento v3", "(D-24)", "não pela conversa"):
             self.assertIn(trecho, bloco)
 
     def test_handoff_nao_tem_horario_ritmo_nem_credencial(self):

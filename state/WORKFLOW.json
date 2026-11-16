@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "preparar_retomada_proxima_sessao",
+    "scope": "consentimento_v3_guardar_plano",
     "branch": "ccr-75ee6cfe-ihyu4e",
-    "pr_number": 91,
+    "pr_number": 92,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #90 integrado em main no merge commit ed4610e5a915867baef8659070d30766f35ccb5f. Frente única ativa: RM-09 (preparar_retomada_proxima_sessao), branch ccr-75ee6cfe-ihyu4e, PR #91. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #91 integrado em main no merge commit 26337793b57a614694702814cb2a1a95fa47f03f. Frente única ativa: RM-09 (consentimento_v3_guardar_plano), branch ccr-75ee6cfe-ihyu4e, PR #92. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 90,
-    "merge_commit_sha": "ed4610e5a915867baef8659070d30766f35ccb5f"
+    "pr_number": 91,
+    "merge_commit_sha": "26337793b57a614694702814cb2a1a95fa47f03f"
   },
   "work_queue": [
     {

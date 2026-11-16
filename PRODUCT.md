@@ -73,6 +73,7 @@ Assistente de estudos por questões, de uso pessoal e de um único usuário (o p
 - **D-21 (15/11/2026):** na conta exclusiva da Zapia, o proprietário **mantém Google Drive e Google Calendar** e exclui o Outlook; o app segue como único canal ("Mantenho drive e calendar apenas"). Emenda a D-20. Valem as proibições da seção 6. **Condição confirmada pelo proprietário em 15/11/2026 (relato, não verificado):** ambos estão na conta Google só de estudos. V8 e V9 exigem a frase `AUTORIZO` própria.
 - **D-22 (15/11/2026):** o proprietário **dispensa a consulta ao suporte do TEC** da D-14 ("Não vou enviar. Dispensar pois o Zapia acessa meu TEC normalmente"); que a Zapia acessa a conta dele é relato, não verificado. Não implementa nem autoriza leitura: valem as demais condições da D-14, e a primeira leitura em conta real exige o mecanismo da D-15, os testes do PR-017 e aprovação expressa em PR.
 - **D-23 (15/11/2026):** papéis do conteúdo de estudo. O **Tutor** (Claude em sessão de estudo) é o autor editorial: escreve o prompt e verifica o rascunho contra o edital e as normas. O **Gemini Notebook** gera só **rascunho** sob o prompt do Tutor. A **Zapia** só transporta, por comando assinado do Tutor. O Claude de engenharia não produz conteúdo de estudo. Só conteúdo `verificado` pelo Tutor, com fonte e trecho, chega ao estudante; a nota de 15/11 é rascunho.
+- **D-24 (15/11/2026):** plano e resultados moram em **repositório privado**, o `ufms-meu-estudo-dados` (D-01); o público nunca recebe dado pessoal. Consentimento **v3** (plano e resultados) proposto no ADR-013, válido só aprovado em PR e registrado por ele (`ufms.sh consentir-v3`). O plano é gravado por ele (`ufms.sh guardar-plano`); a escrita automática de resultados segue desabilitada (P4, S7).
 
 ## 6. Não objetivos e proibições
 
@@ -127,12 +128,12 @@ Dependências, não status (o status vive no `ROADMAP.md`):
 
 Cada especificação cabe em uma página: objetivo, entradas, saídas, regras, critérios de aceite verificáveis e limites. **Não duplicam** o que já existe: apontam para ele. Uma por vez, na ordem abaixo, cada uma como tarefa única do fluxo serial.
 
-- **S1 Método de estudo e revisão:** `docs/especificacoes/S1_METODO_ESTUDO_REVISAO.md`; parte de `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `scripts/study_plan.py`. Primeiro, porque o Coach depende do plano. Os insumos do humano não bloqueiam a especificação.
+- **S1 Método de estudo e revisão:** `docs/especificacoes/S1_METODO_ESTUDO_REVISAO.md`; parte de `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e `scripts/study_plan.py`. Primeiro, porque o Coach depende do plano.
 - **S2 Tutor:** `docs/especificacoes/S2_TUTOR.md`; parte de `agents/TUTOR.md`. Material de revisão, prompt ao Notebook e ajustes ao plano. Depende de S1.
 - **S3 Coach:** `docs/especificacoes/S3_COACH.md`; parte de `agents/COACH.md`. Rotina diária, lembretes, estatísticas, mensagens e limites (não produz conteúdo). Depende de S1.
 - **S4 Operação:** `docs/especificacoes/S4_OPERACAO.md`; parte de PR-013 e PR-017 (`docs/PLATFORMS.md`). Esquema de comandos, canal, caminho do desempenho até o repositório (PR-016), opções A a F e proibições de dados pessoais. Depende de S1 a S3.
 - **S5 Harness da Zapia:** `docs/especificacoes/S5_ZAPIA.md`; parte de D-10, E-04, E-05 e E-10. START explícito, interface e executora, só comando válido, negar por padrão e relato com prova. Depende de S2 a S4.
-- **S8 Rotina diária do Coach:** `docs/especificacoes/S8_ROTINA_COACH.md` (PR-007). Uma mensagem por dia, lembrete só de atividade pendente, Radar só no GitHub e limites da Zapia. Depende de S3 a S5. A numeração S6 e S7 fica reservada às próximas, na ordem que o proprietário escolher.
+- **S8 Rotina diária do Coach:** `docs/especificacoes/S8_ROTINA_COACH.md` (PR-007). Uma mensagem por dia, lembrete só de pendência, Radar só no GitHub e limites da Zapia. Depende de S3 a S5.
 
 Regra de rapidez: o que depender do proprietário (token, repositório privado, exportações reais, data de início) não bloqueia o que é offline; avança-se pelo que já pode ser verificado.
 
