@@ -5,7 +5,7 @@
 # Requer: curl (pkg install curl). Opcional: REPO=dono/repo ISSUE=numero bash verifica_token.sh
 # Perfis (variável PERFIL): "publico" (padrão, token do projeto: criar issue PODE, comentar PODE, gravar arquivo NÃO,
 # abrir PR NÃO) e "privado" (token da Zapia para o repositório de dados: gravar arquivo PODE, issue/comentário/PR NÃO,
-# escrita no repositório público NÃO). Nos dois: token fine-grained, COM expiração e alcançando 1 repositório (PR-010).
+# escrita no repositório público NÃO). Nos dois: token fine-grained, COM expiração e sem alcançar outros repositórios PRIVADOS nem escrever em outros (PR-010; os públicos qualquer token lê).
 # Cada sonda é comparada com o esperado; o fim imprime RESULTADO e sai com código 1 se algo divergir.
 set -u
 PERFIL="${PERFIL:-publico}"
@@ -85,11 +85,42 @@ echo
 echo "== Acesso de leitura =="
 C=$(call GET "/repos/$REPO"); echo "GET /repos/$REPO: HTTP $C"
 C=$(call GET "/user/repos?per_page=100")
-echo "Repositórios que o token alcança (HTTP $C):"
-grep -o '"full_name": *"[^"]*"' "$TMP/b" | cut -d'"' -f4 | sort -u | sed 's/^/  - /'
-TOTAL="$(grep -o '"full_name": *"[^"]*"' "$TMP/b" | cut -d'"' -f4 | sort -u | wc -l | tr -d ' ')"
-echo "Total listado: $TOTAL"
-if [ "$TOTAL" != "1" ]; then echo "DIVERGE: o token deve alcançar exatamente 1 repositório (alcança $TOTAL)."; DIVERGENCIAS=$((DIVERGENCIAS+1)); fi
+# Qualquer token lê TODOS os repositórios públicos (o GitHub avisa isso na página do token), então os públicos
+# aparecem nesta lista sem serem alcance. O que conta é: (1) repositórios PRIVADOS alcançados e (2) onde dá para ESCREVER.
+LISTA="$(python - "$TMP/b" 2>/dev/null <<'PY'
+import json, sys
+try:
+    dados = json.load(open(sys.argv[1], encoding="utf-8"))
+    for r in dados:
+        print("privado" if r.get("private") else "publico", r["full_name"])
+except Exception:
+    sys.exit(1)
+PY
+)"; LISTA_RC=$?
+PRIVADOS=""; PUBLICOS=""; NPUB=0; REPO_MINUSC="$(printf '%s' "$REPO" | tr 'A-Z' 'a-z')"
+if [ "$C" != "200" ] || [ "$LISTA_RC" -ne 0 ]; then
+  echo "Repositórios que o token alcança: não consegui ler a lista (HTTP $C; precisa do python)."
+  echo "DIVERGE: não consegui classificar os repositórios alcançados."; DIVERGENCIAS=$((DIVERGENCIAS+1))
+else
+  while read -r tipo nome; do
+    [ -n "$nome" ] || continue
+    if [ "$tipo" = "privado" ]; then PRIVADOS="$PRIVADOS $nome"; else PUBLICOS="$PUBLICOS $nome"; NPUB=$((NPUB+1)); fi
+  done <<EOF_LISTA
+$LISTA
+EOF_LISTA
+  echo "Repositórios PRIVADOS que o token alcança (HTTP $C):"
+  if [ -z "$PRIVADOS" ]; then echo "  (nenhum)"; else for n in $PRIVADOS; do echo "  - $n"; done; fi
+  echo "Repositórios públicos listados: $NPUB (qualquer token lê os públicos; não contam como alcance)"
+  # privados permitidos: só o designado, se ele for privado (perfil privado); nenhum no perfil público
+  for n in $PRIVADOS; do
+    if [ "$PERFIL" = "privado" ] && [ "$(printf '%s' "$n" | tr 'A-Z' 'a-z')" = "$REPO_MINUSC" ]; then continue; fi
+    echo "DIVERGE: o token alcança o repositório PRIVADO $n, que não é o designado."; DIVERGENCIAS=$((DIVERGENCIAS+1))
+  done
+  if [ "$PERFIL" = "privado" ]; then
+    case " $(printf '%s' "$PRIVADOS" | tr 'A-Z' 'a-z') " in *" $REPO_MINUSC "*) ;;
+      *) echo "DIVERGE: o token não alcança o repositório designado $REPO."; DIVERGENCIAS=$((DIVERGENCIAS+1));; esac
+  fi
+fi
 
 echo
 echo "== Sondas de escrita (corpo vazio: não criam nada) =="
@@ -101,6 +132,16 @@ if [ "$PERFIL" = "privado" ]; then
   C=$(call PUT "/repos/$PUBLICO/contents/sonda-nao-existe.txt" "$VAZIO"); confere NAO "$C"
   echo "Gravar no repositório PÚBLICO: $(veredito "$C") [$CONF]"
 fi
+# escrita em QUALQUER outro repositório listado (a lista de públicos inclui os seus outros projetos)
+OUTROS=0
+for n in $PUBLICOS $PRIVADOS; do
+  nl="$(printf '%s' "$n" | tr 'A-Z' 'a-z')"
+  [ "$nl" = "$REPO_MINUSC" ] && continue
+  [ "$PERFIL" = "privado" ] && [ "$nl" = "$(printf '%s' "$PUBLICO" | tr 'A-Z' 'a-z')" ] && continue   # já sondado acima
+  OUTROS=$((OUTROS+1)); [ "$OUTROS" -le 20 ] || break
+  C=$(call PUT "/repos/$n/contents/sonda-nao-existe.txt" "$VAZIO"); confere NAO "$C"
+  echo "Gravar em $n: $(veredito "$C") [$CONF]"
+done
 echo
 if [ "$DIVERGENCIAS" -eq 0 ]; then echo "RESULTADO: CONFERE com o perfil $PERFIL."
 else echo "RESULTADO: DIVERGE ($DIVERGENCIAS ponto(s)) no perfil $PERFIL. NÃO entregue este token à Zapia."; fi

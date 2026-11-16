@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #91; SHA 26337793b57a614694702814cb2a1a95fa47f03f
-- Frente ativa: **RM-09 / PR #92**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #92; SHA 85dbf66ade955fa6fd9dfad8c48be533d11f5b68
+- Frente ativa: **RM-09 / PR #93**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -27,13 +27,13 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Como retomar, sem prompt:** `python scripts/bootstrap.py --mode engineering`, depois `python scripts/next_task.py` (diz o estado real do ciclo e o próximo item da fila; hoje o próximo é a **S7**, persistência privada e escritor) e, se o ciclo estiver `encerrado_recibo_pendente`, abrir o PR draft da próxima tarefa com `python scripts/record_merge_receipt.py` no primeiro commit. Uma tarefa, uma branch, um PR draft; **o merge só sai por pedido explícito do proprietário**.
 
-**Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; validador de proveniência do conteúdo de estudo.
+**Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; consentimento v3 e `guardar-plano` (resultado por relato); validador de proveniência do conteúdo de estudo.
 
 **O que a fila (`work_queue`) ainda tem, na ordem proposta:** S7, S6, S9, S10, S11. Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
 
-**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); **aprovar o texto do consentimento v3 no ADR-013 (PR #92), registrá-lo com `bash ~/ufms.sh consentir-v3` e guardar o plano com `bash ~/ufms.sh guardar-plano`**; criar o token `zapia-dados-30d` do repositório privado e conferi-lo (`bash ~/ufms.sh token privado`); confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
+**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); **ajustar o token `zapia_dados` (expira 16/12/2026, 1 repositório): falta só Contents em Read and write**; depois do merge do PR #93 rodar `bash ~/ufms.sh atualizar` e conferi-lo (`bash ~/ufms.sh token privado`) antes de cadastrá-lo só no formulário seguro da Zapia; confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
 
-**O que NÃO persiste, e por quê:** o lugar definitivo de plano e resultados é o **repositório privado** `ufms-meu-estudo-dados` (D-24); o público nunca recebe dado pessoal. **Enquanto o consentimento v3 não for aprovado e registrado e o `guardar-plano` não for rodado**, o **plano** vive só em `~/ufms-plano`, no aparelho do proprietário (modo 0600), e a cópia é dele; **resultados e desempenho** não são gravados em lugar nenhum, porque `personal_results_writes_enabled=false` (a escrita automática por Tutor e Zapia depende de P4, S7 e PR próprio). O consentimento v2 cobre só resultados de cadernos e simulados; o v3, **proposto**, cobre também o plano. A continuidade de **engenharia** é garantida pelo repositório (estado em `state/WORKFLOW.json`, fila, ROADMAP e este HANDOFF), não pela conversa.
+**O que NÃO persiste, e por quê:** o lugar definitivo de plano e resultados é o **repositório privado** `ufms-meu-estudo-dados` (D-24); o público nunca recebe dado pessoal. O consentimento v3 foi registrado e um plano foi guardado no repositório privado em 16/11/2026 (**relato**, `docs/governanca/RESULTADO_PERSISTENCIA_V3_PLANO_20261116.md`); a cópia local em `~/ufms-plano` (modo 0600) continua sendo dele; **resultados e desempenho** não são gravados em lugar nenhum, porque `personal_results_writes_enabled=false` (a escrita automática por Tutor e Zapia depende de P4, S7 e PR próprio). O consentimento v2 cobre só resultados de cadernos e simulados; o v3 cobre também o plano. A continuidade de **engenharia** é garantida pelo repositório (estado em `state/WORKFLOW.json`, fila, ROADMAP e este HANDOFF), não pela conversa.
 
 **Ordem do que acontece a seguir (quando o insumo chegar):**
 1. Validação da conta nova: **rodada 5 registrada como PARCIAL** em `docs/governanca/RESPOSTA_RODADA5_ZAPIA_20261115.md` (V7 verificado; a autoria não distingue a Zapia do proprietário). **Aberto, depende do proprietário:** conectores: o proprietário decidiu manter **Drive e Calendar** e excluir o Outlook (D-21), o proprietário relatou que estão na conta Google só de estudos (não verificado); jobs Radar na conta exclusiva a desativar pelo proprietário; comprovante do V2 e escopo do token (OPEN-02). Depois, V11 e V4 e V6; V8 e V9 só com a frase `AUTORIZO` própria e depois dos jobs Radar revistos.
@@ -55,7 +55,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 5. **Faltam provas:** P4 (escritor), P7 (reconstrução a partir dos eventos privados reais), P8 (revogação: só texto, apagar o repositório inteiro) e P9. Ver a tabela do ADR-013.
 6. **Habilitar a flag** é PR próprio, com aprovação humana expressa, só depois de P1 a P9 provados. Nunca antes.
 
-**Enquanto isso:** o plano e o desempenho do estudante **não** vão ao repositório público. O plano vai ao repositório **privado** por ato do próprio proprietário (`consentir-v3` e `guardar-plano`) e, até lá, vive em `~/ufms-plano`. Não pedir token ao proprietário no chat; nenhum agente construtor recebe credencial de escrita pessoal.
+**Enquanto isso:** o plano e o desempenho do estudante **não** vão ao repositório público. O plano vai ao repositório **privado** por ato do próprio proprietário (`consentir-v3` e `guardar-plano`), já feito em 16/11/2026 (relato); a cópia local vive em `~/ufms-plano`. Não pedir token ao proprietário no chat; nenhum agente construtor recebe credencial de escrita pessoal.
 
 **Cuidados desta fase:** o que se sabe da Zapia é autorrelato; a conta antiga não vale como evidência da nova; ao testar scripts de token neste ambiente, o proxy substitui credenciais (use só o computador do proprietário); o merge só ocorre por pedido explícito dele.
 

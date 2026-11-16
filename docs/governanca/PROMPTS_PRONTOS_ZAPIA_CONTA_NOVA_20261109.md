@@ -98,7 +98,7 @@ Agradeço uma resposta por escrito, para eu seguir as regras da plataforma.
 ## 4c. Token da Zapia para o repositório privado de dados (PR-010, D-09)
 
 1. No GitHub (navegador): Settings, Developer settings, Fine-grained tokens, novo token `zapia-dados-30d`. **Validade obrigatória** (recomendado 30 dias; "indefinido" é reprovado pelo verificador e contraria o PR-010). *Only select repositories*: só `Andraus35/ufms-meu-estudo-dados`. Permissões de repositório: **Contents: Read and write** (Metadata read-only vem automático) e **nenhuma outra** (sem Issues, Pull requests, Actions, Workflows nem Administration).
-2. Conferir no Termux, dentro do clone: `PERFIL=privado bash scripts/termux/verifica_token.sh` (cole o token quando pedir). Esperado: `RESULTADO: CONFERE com o perfil privado`, com gravar arquivo **PODE**; issue, comentário, pull request e escrita no repositório **público** **NÃO**; 1 repositório alcançado; validade presente.
+2. Conferir no Termux, dentro do clone: `PERFIL=privado bash scripts/termux/verifica_token.sh` (cole o token quando pedir). Esperado: `RESULTADO: CONFERE com o perfil privado`, com gravar arquivo **PODE**; issue, comentário, pull request e escrita no repositório **público** **NÃO**; nenhum outro repositório privado alcançado (os públicos qualquer token lê); validade presente.
 3. Se aparecer `DIVERGE`, **não entregue o token**. O valor só entra pelo formulário seguro da Zapia; nunca vai no chat. A flag de escrita de resultados continua `false`.
 
 ## 4d. Ferramenta única do Termux

@@ -174,7 +174,8 @@ class UfmsTermuxTests(unittest.TestCase):
     # token ---------------------------------------------------------------------------------------------------
     def test_token_delega_ao_verificador_no_perfil_privado(self):
         r = self.rodar("token", entrada=TOKEN + "\n", FAKE_LOG=str(self.dir / "curl.log"),
-                       FAKE_CODES=json.dumps(CODIGOS_PRIVADO), FAKE_REPOS=PRIVADO, FAKE_EXPIRY="2026-12-15 12:00:00 -0400")
+                       FAKE_CODES=json.dumps(CODIGOS_PRIVADO), FAKE_REPOS=PRIVADO, FAKE_PRIVADOS=PRIVADO,
+                       FAKE_EXPIRY="2026-12-15 12:00:00 -0400")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("RESULTADO: CONFERE com o perfil privado", r.stdout)
         self.assertNotIn("SENTINELA", r.stdout + r.stderr)

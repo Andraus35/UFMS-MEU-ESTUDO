@@ -108,7 +108,8 @@ try:
     d = json.load(sys.stdin)
     c = d["ciclo"]
     print("ciclo: PR #%s, tarefa %s, estado %s" % (c.get("pr"), c.get("tarefa"), c.get("estado")))
-    print("fila: proximo =", d["fila"].get("proximo"))
+    proximo = d["fila"].get("proximo")
+    print("fila: proximo =", proximo.get("id") if isinstance(proximo, dict) else proximo)
 except Exception:
     print("ciclo: não consegui ler (next_task.py)")
 '
@@ -150,6 +151,15 @@ PY
       if [ "$rc" -eq 0 ]; then echo "consentimento v2 (consent.json): presente, blob $(curto "$sha")"
       elif [ "$rc" -eq 2 ]; then echo "consentimento v2 (consent.json): AUSENTE"
       else echo "consentimento v2: não consegui verificar"; fi
+      sha="$(ler "repos/$PRIVADO/contents/consent-v3.json" --jq '.sha')"; rc=$?
+      if [ "$rc" -eq 0 ]; then echo "consentimento v3 (consent-v3.json): presente, blob $(curto "$sha")"
+      elif [ "$rc" -eq 2 ]; then echo "consentimento v3 (consent-v3.json): AUSENTE (rode: bash ufms.sh consentir-v3)"
+      else echo "consentimento v3: não consegui verificar"; fi
+      local qtd
+      qtd="$(ler "repos/$PRIVADO/contents/planos" --jq 'length')"; rc=$?
+      if [ "$rc" -eq 0 ]; then echo "planos guardados no repositório privado: $qtd arquivo(s)"
+      elif [ "$rc" -eq 2 ]; then echo "planos guardados no repositório privado: nenhum (rode: bash ufms.sh guardar-plano)"
+      else echo "planos guardados: não consegui verificar"; fi
     elif [ "$rc" -eq 2 ]; then echo "repositório privado de dados: não existe"
     else echo "repositório privado de dados: não consegui verificar"; fi
   else
