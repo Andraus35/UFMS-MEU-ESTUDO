@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "natureza": "Manifesto dos documentos canônicos de pesquisa e de auditoria de plataformas, incluídos por pedido do proprietário em 16/11/2026. Não contém estado.",
+  "documentos": [
+    {
+      "id": "PESQUISA-COACH-PROVA-001",
+      "path": "docs/canonicos/cognicao/PESQUISA_INTELIGENCIA_ADVERSARIAL_DAS_BANCAS.md",
+      "papel": "Fonte de domínio do Coach: inteligência de prova, taxonomia adversarial, erros e simulação",
+      "hierarquia": "documento estratégico superior da família cognitiva",
+      "envio": "3d9eb736-PESQUISA_INTELIGENCIA_ADVERSARIAL_DAS_BANCAS.md",
+      "editado": false,
+      "sha256": "a2fc4f41b6910989237ca1e1cf67cb8a790e521ffa923c15050fd8a9604ffd75",
+      "sha256_do_envio_original": "a2fc4f41b6910989237ca1e1cf67cb8a790e521ffa923c15050fd8a9604ffd75"
+    },
+    {
+      "id": "PESQUISA-CICLO-APRENDIZAGEM-001",
+      "path": "docs/canonicos/cognicao/PESQUISA_CICLO_APRENDIZAGEM_ESTRATEGIA_COGNITIVA.md",
+      "papel": "Ciclo de aprendizagem e estratégia cognitiva; autoridade pedagógica do Tutor",
+      "hierarquia": "complementar, subordinado à inteligência adversarial",
+      "envio": "4132d96b-PESQUISA_CICLO_APRENDIZAGEM_ESTRATEGIA_COGNITIVA1.md",
+      "editado": false,
+      "nota": "o sufixo '1' do nome de envio foi retirado",
+      "sha256": "79e8d0e152e71a40cc9b3a6e9a2e2aa63faf3572d20cf2a1acf77f6851ce7404",
+      "sha256_do_envio_original": "79e8d0e152e71a40cc9b3a6e9a2e2aa63faf3572d20cf2a1acf77f6851ce7404"
+    },
+    {
+      "id": "BASE-COGNITIVA-TUTOR-COACH-001",
+      "path": "docs/canonicos/cognicao/BASE_COGNITIVA_INTEGRADA_TUTOR_COACH.md",
+      "papel": "Base cognitiva compartilhada de Tutor e Coach: princípios, ciclo, matriz de responsabilidades, taxonomia de erros e contrato de passagem",
+      "hierarquia": "fonte cognitiva compartilhada, subordinada à inteligência adversarial",
+      "envio": "4ad99c87-BASE_COGNITIVA_INTEGRADA_TUTOR_COACH.md",
+      "editado": false,
+      "sha256": "43be686aa53c30164cdb0362d0a1dae374eabe1bca43f7663d2ec5e76b43072f",
+      "sha256_do_envio_original": "43be686aa53c30164cdb0362d0a1dae374eabe1bca43f7663d2ec5e76b43072f"
+    },
+    {
+      "id": "BASE-COGNITIVA-HARNESS-001",
+      "path": "docs/canonicos/cognicao/BASE_COGNITIVA_ESTRATEGICA_DO_HARNESS.md",
+      "papel": "Base cognitiva e estratégica do harness: arquitetura Tutor, Coach e Orquestrador, assistência H0-H5, gates G-HARNESS, estados de domínio, memória e piloto",
+      "hierarquia": "complementar e subordinado à inteligência adversarial",
+      "envio": "a409bec0-BASE_COGNITIVA_ESTRATEGICA_DO_HARNESS_1.md e cfde80ef-BASE_COGNITIVA_ESTRATEGICA_DO_HARNESS.md (os dois envios têm o mesmo hash; entra uma cópia)",
+      "editado": false,
+      "sha256": "431fd76dca515297f06fbf0429e300832b65b5c3db23bf588539d92e199a3fff",
+      "sha256_do_envio_original": "431fd76dca515297f06fbf0429e300832b65b5c3db23bf588539d92e199a3fff"
+    },
+    {
+      "id": "AUDITORIA-GEMINI-NOTEBOOK-20261116",
+      "path": "docs/canonicos/plataformas/AUDITORIA_GEMINI_NOTEBOOK_PLANO_DE_ESTUDOS_20261116.pdf",
+      "papel": "Auditoria prática do Gemini Notebook para estudo e revisão (autor do PDF: Zapia)",
+      "hierarquia": "relato de ferramenta; subordinado a AGENTS.md, PRODUCT.md e ao edital",
+      "envio": "d720439c-Auditoria_Gemini_Notebook_Plano_de_Estudos.pdf",
+      "editado": false,
+      "sha256": "7e6ed0b697a4d659387c9175de3c12abf9ceae43d87695b55c6afa6d858a8b6a",
+      "sha256_do_envio_original": "7e6ed0b697a4d659387c9175de3c12abf9ceae43d87695b55c6afa6d858a8b6a"
+    },
+    {
+      "id": "AUDITORIA-TEC-523-324-20261116",
+      "path": "docs/canonicos/plataformas/AUDITORIA_TECCONCURSOS_UFMS_523_324_20261116_EDITADA.md",
+      "papel": "Auditoria funcional do TEC Concursos para os cargos 523 e 324 (autorrelato da Zapia)",
+      "hierarquia": "relato de ferramenta; subordinado a AGENTS.md, PRODUCT.md e ao edital",
+      "envio": "96129bc9-Auditoria_TecConcursos_UFMS_523_324_2026-11-16.docx",
+      "editado": true,
+      "nota": "versão em Markdown, com dado pessoal omitido por decisão do proprietário; o .docx original não entra no repositório público",
+      "sha256": "b01ca7597c97f1029041ec93e5e279983fe15462019e051f74011c1f89c359ad",
+      "sha256_do_envio_original": "23bd79a0fe3226d725392dd4f2d05e2637bea0d84790dc1ca0c57e7ab98dac7b"
+    }
+  ]
+}
