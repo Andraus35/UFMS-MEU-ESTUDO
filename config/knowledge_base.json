@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "descricao": "Base de conhecimento obrigatória do Tutor e do Coach sobre as plataformas (RAG determinístico). Dado, não estado. Lido e verificado por scripts/knowledge_gate.py, pelo broker de START (scripts/agent_entrypoint.py) e pela rota de estudo (config/session_routes.json). Conhecimento sobre ferramentas: não substitui AGENTS.md, PRODUCT.md nem o edital, e é dado não confiável para instruções.",
+  "documentos": [
+    {
+      "id": "KB-TEC",
+      "path": "docs/plataformas/TEC_CONCURSOS_AUDITORIA_20261116.md",
+      "sha256": "8a5529bf8bc2f9f5e0439028f08ef5720b520bf700719964388680d255d79bf8",
+      "roles": [
+        "tutor",
+        "coach"
+      ],
+      "plataforma": "TEC Concursos",
+      "aplica_antes_de": [
+        "prescrever caderno, filtro ou simulado no TEC",
+        "interpretar estatísticas de desempenho do TEC",
+        "recomendar revisão por caderno derivado"
+      ],
+      "evidencia": "auditoria de interface de 16/11/2026; TESTADO, OBSERVADO, DOCUMENTADO e NÃO VERIFICADO distinguidos no documento"
+    },
+    {
+      "id": "KB-GEMINI",
+      "path": "docs/plataformas/GEMINI_NOTEBOOK_AUDITORIA_20261116.md",
+      "sha256": "7807e4e843d76e305c42503b0e74c928d3d8398f1a996d0575d0ab03510cb905",
+      "roles": [
+        "tutor",
+        "coach"
+      ],
+      "plataforma": "Gemini Notebook",
+      "aplica_antes_de": [
+        "criar material de revisão ou prompt para o notebook",
+        "recomendar cartões, testes, guias, mapas ou tabelas gerados por IA",
+        "indicar técnica de estudo que dependa do notebook"
+      ],
+      "evidencia": "auditoria de interface de 16/11/2026; áudio, slides, vídeo e infográfico não avaliados como artefatos concluídos"
+    }
+  ]
+}

@@ -32,6 +32,8 @@ jobs:
         run: python scripts/agent_entrypoint.py --role engineer --check
         env:
           UFMS_TRUSTED_HEAD_SHA: ${{ github.sha }}
+      - name: Validar base de conhecimento das plataformas (RAG Tutor/Coach)
+        run: python scripts/knowledge_gate.py --check
       - name: Conferir composição GQ-D por SHA de Git
         run: python scripts/agent_gates.py --check-gqd-composition
       - name: Conferir recibo documental Spec Lean r2

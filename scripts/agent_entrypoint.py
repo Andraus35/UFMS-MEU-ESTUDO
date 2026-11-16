@@ -15,8 +15,10 @@ from pathlib import Path
 
 try:
     from bootstrap import run as bootstrap_run
+    from knowledge_gate import KnowledgeError, load_for_role
 except ModuleNotFoundError:
     from scripts.bootstrap import run as bootstrap_run
+    from scripts.knowledge_gate import KnowledgeError, load_for_role
 
 ROLES = frozenset({"tutor", "coach", "engineer", "auditor"})
 ROLE_MODE = {"tutor": "study", "coach": "study",
@@ -98,7 +100,7 @@ class ReadOnlyAgentBroker:
         if action not in READ_ACTIONS:
             raise StartBlocked("Operações externas não habilitadas neste broker")
         current = self._refresh()
-        return {
+        receipt = {
             "status": "start_verified",
             "scope": "local_read_only",
             "role": self._role,
@@ -111,6 +113,12 @@ class ReadOnlyAgentBroker:
             "pr": current["pr"],
             "external_effects_enabled": False,
         }
+        if self._mode == "study":
+            try:
+                receipt["knowledge_sha256"] = {d["path"]: d["sha256"] for d in load_for_role(self._root, self._role)}
+            except KnowledgeError as exc:
+                raise StartBlocked("Base de conhecimento não aprovada: " + str(exc)) from exc
+        return receipt
 
     def model_context(self):
         """Entregar o texto lido à futura chamada ao modelo; sem afirmar compreensão."""
@@ -130,9 +138,17 @@ class ReadOnlyAgentBroker:
             if hashlib.sha256(raw).hexdigest() != current["hashes"][name]:
                 raise StartBlocked("Documento mudou entre validação e entrega")
             context[name] = raw.decode("utf-8")
-        return {"head": self._trusted_head, "role": self._role,
-                "mode": self._mode, "documents": context,
-                "sha256": dict(current["hashes"])}
+        result = {"head": self._trusted_head, "role": self._role,
+                  "mode": self._mode, "documents": context,
+                  "sha256": dict(current["hashes"])}
+        if self._mode == "study":  # RAG obrigatório do Tutor e do Coach (config/knowledge_base.json)
+            try:
+                kb = load_for_role(self._root, self._role)
+            except KnowledgeError as exc:
+                raise StartBlocked("Base de conhecimento não aprovada: " + str(exc)) from exc
+            result["knowledge"] = {d["path"]: d["text"] for d in kb}
+            result["knowledge_sha256"] = {d["path"]: d["sha256"] for d in kb}
+        return result
 
 
 def main():

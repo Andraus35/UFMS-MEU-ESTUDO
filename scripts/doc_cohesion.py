@@ -276,7 +276,7 @@ def check_routes(root: Path) -> list[str]:
             seen.add(sid)
             if kind not in TYPES:
                 errs.append(f"C9 session_routes.json: etapa {sid} com tipo inválido ({kind})")
-            if kind in ("ler", "consultar_se") and not (root / st.get("arquivo", "")).is_file():
+            if kind in ("ler", "consultar_se", "base_conhecimento") and not (root / st.get("arquivo", "")).is_file():
                 errs.append(f"C9 session_routes.json: etapa {sid} aponta arquivo inexistente ({st.get('arquivo')})")
             if kind == "executar":
                 cmd = st.get("comando", "")

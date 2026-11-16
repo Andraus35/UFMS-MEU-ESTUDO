@@ -16,6 +16,8 @@ COPIES = (
     "AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md", "state/CURRENT.json",
     "state/WORKFLOW.json", "settings.json", "config/concursos.json",
     "hooks/before_write.py", "hooks/after_write.py", "hooks/checkpoint.py",
+    "config/knowledge_base.json", "docs/plataformas/TEC_CONCURSOS_AUDITORIA_20261116.md",
+    "docs/plataformas/GEMINI_NOTEBOOK_AUDITORIA_20261116.md",
 )
 
 

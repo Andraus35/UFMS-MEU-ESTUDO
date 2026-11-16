@@ -35,6 +35,17 @@
           "comando": "python scripts/bootstrap.py"
         },
         {
+          "id": "ST5B",
+          "tipo": "base_conhecimento",
+          "arquivo": "config/knowledge_base.json",
+          "porque": "RAG obrigatório do Tutor e do Coach: como o TEC Concursos e o Gemini Notebook funcionam, antes de criar ou recomendar conteúdo e técnicas"
+        },
+        {
+          "id": "ST5C",
+          "tipo": "executar",
+          "comando": "python scripts/knowledge_gate.py --check"
+        },
+        {
           "id": "ST6",
           "tipo": "consultar_se",
           "arquivo": "edital/INDEX.md",

@@ -29,6 +29,7 @@ Cuidar do ensino e do aprimoramento do estudo para os cargos 523 e 324 do Edital
 - O edital integral `EDITAL_UFMS_152_2026.md` e `edital/INDEX.md`, com trechos sob demanda; `config/concursos.json` e `config/topics.csv`.
 - Exportações de desempenho do TEC Concursos e do Qconcursos, entregues pelo humano pela Zapia e validadas pelo contrato `docs/pedagogia/CONTRATO_INGESTAO_GP1_2026-11-04.md`.
 - Relatórios do Coach (aderência e estatísticas).
+- **Base de conhecimento das plataformas (leitura obrigatória antes de prescrever ou criar conteúdo):** `config/knowledge_base.json`, com `docs/plataformas/TEC_CONCURSOS_AUDITORIA_20261116.md` e `docs/plataformas/GEMINI_NOTEBOOK_AUDITORIA_20261116.md`. Entregue com hash pelo ponto de entrada controlado e conferida por `python scripts/knowledge_gate.py --check`. Respeitar o que o documento marca como TESTADO, OBSERVADO, DOCUMENTADO ou NÃO VERIFICADO; não prescrever função não verificada como se fosse comprovada.
 - Método e evidências, sob demanda: `docs/pedagogia/ESTADO_DA_ARTE_TUTOR_COACH_20261107.md`, `docs/pedagogia/PLANO_DE_ESTUDOS_METODO_4_2_E_REVISAO_7_15_30.md` e os demais documentos de `docs/pedagogia/README.md`.
 
 ## Saídas

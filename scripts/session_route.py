@@ -20,12 +20,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES_FILE = "config/session_routes.json"
 INTENTS = ("study", "engineering", "write", "governance", "persistence")
 # Só scripts do próprio repositório, com flags simples; nenhum shell.
 COMMAND_RE = re.compile(r"^python (?:scripts|hooks)/[a-z_0-9]+\.py(?: --[a-z-]+(?: [A-Za-z0-9_.-]+)?)*$")
-TYPES = {"ler", "consultar_se", "executar", "parar_se", "aviso_se", "manual"}
+TYPES = {"ler", "base_conhecimento", "consultar_se", "executar", "parar_se", "aviso_se", "manual"}
 SITUACOES = {"bloqueada", "requer_aprovacao_humana"}
 CONDITIONS = {"gravacao_pessoal_bloqueada", "sempre"}
 
@@ -60,6 +62,11 @@ def build(root: Path, intent: str) -> dict:
         if kind in ("ler", "consultar_se"):
             item.update(arquivo=st["arquivo"], sha256=_sha(root, st["arquivo"]))
             item["porque" if kind == "ler" else "quando"] = st.get("porque") or st.get("quando")
+        elif kind == "base_conhecimento":
+            from knowledge_gate import load_manifest
+            item.update(arquivo=st["arquivo"], sha256=_sha(root, st["arquivo"]), porque=st["porque"],
+                        documentos=[{"id": e["id"], "arquivo": e["path"], "sha256": _sha(root, e["path"])}
+                                    for e in load_manifest(root)])
         elif kind == "executar":
             if not COMMAND_RE.fullmatch(st["comando"]):
                 raise ValueError(f"etapa {st['id']}: comando fora da lista permitida")

@@ -8,6 +8,10 @@ A IA prescreve **filtros configuráveis**, não inventa um caderno publicado ou 
 - Acesso à conta do proprietário só pelo conector local descrito abaixo (decisões D-14 e D-15 do `PRODUCT.md`); nenhum outro robô, nenhum scraping em escala e nenhum acesso a contas de terceiros. Não armazenar comentários ou enunciados completos de terceiros sem autorização.
 - Estudante pode fornecer relatórios por tabela, captura legível ou arquivo exportado. **A estrutura exata do CSV do TEC permanece por validar.**
 
+## Conhecimento obrigatório sobre as plataformas
+
+Auditorias de 16/11/2026 do TEC Concursos e do Gemini Notebook estão em `docs/plataformas/`, listadas em `config/knowledge_base.json` e entregues ao Tutor e ao Coach com hash (`scripts/knowledge_gate.py`). Ler antes de prescrever caderno ou criar material.
+
 ## Leitura direta das plataformas (especificação S4, PR-017)
 
 **Objetivo:** ler cadernos e estatísticas da conta do proprietário no TEC Concursos e no Qconcursos, **somente leitura**, sem entregar credencial ao modelo (D-14). O mecanismo é escolhido na fase de especificação, **depois de testar todas as possibilidades** (D-15).
