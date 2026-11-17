@@ -1,0 +1,12 @@
+# CODEOWNERS dos arquivos de CONTRATO do projeto (tarefa CODEOWNERS; decisão do proprietário de 17/11/2026).
+# Só estes caminhos têm dono: nenhum padrão geral (`*`), para não exigir revisão de código em todo PR.
+# Último padrão que casa vence. Este arquivo só passa a valer como exigência quando o proprietário ligar, na branch
+# protection da `main`, "Require review from Code Owners" (ato dele no GitHub). Ver o limite da autoria no HANDOFF.
+/AGENTS.md                      @Andraus35
+/PRODUCT.md                     @Andraus35
+/settings.json                  @Andraus35
+/agents/                        @Andraus35
+/scripts/tool_gateway.py        @Andraus35
+/tests/test_tool_gateway.py     @Andraus35
+/.github/                       @Andraus35
+/.claude/                       @Andraus35

@@ -20,20 +20,20 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "S9", "S10", "S11"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "S9", "S10", "S11"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        self.assertEqual(fila["proximo"]["id"], "S9")  # C4, runner, hook e COMANDOS já têm a entrega
+        self.assertEqual(fila["proximo"]["id"], "S9")  # C4, runner, hook, COMANDOS e CODEOWNERS já têm a entrega
         self.assertEqual(fila["pendentes"], ["S9", "S10", "S11"])
 
     def test_cada_item_novo_tem_entrega_dependencia_valida_e_tarefa_do_roadmap(self):
         ids = {i["id"] for i in WORKFLOW["work_queue"]}
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         for item in WORKFLOW["work_queue"]:
-            if item["id"].startswith("S"):  # especificações; as tarefas de código (C4, RUNNER, HOOK) têm entrega própria
+            if item["id"].startswith("S"):  # especificações; as tarefas de código (C4, RUNNER, HOOK, COMANDOS, CODEOWNERS) têm entrega própria
                 self.assertRegex(item["deliverable"], r"^docs/especificacoes/S[^/]+\.md$")
             else:
-                self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json)$")
+                self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
         for novo in ("S9", "S10", "S11"):
