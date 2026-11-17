@@ -71,8 +71,12 @@ def queue_status(root: Path, workflow: dict) -> dict:
         "insumos_que_melhoram": nxt.get("optional_inputs", []),
         "procedimento": PROCEDURE,
     }
-    out["acao"] = (f"Executar o item {nxt['id']} pelo procedimento de `{PROCEDURE}` "
-                   "(pesquisa obrigatória, especificação, gates, PR draft, CI) e parar no pedido de merge ao proprietário.")
+    if nxt["deliverable"].startswith("docs/especificacoes/"):
+        out["acao"] = (f"Executar o item {nxt['id']} pelo procedimento de `{PROCEDURE}` "
+                       "(pesquisa obrigatória, especificação, gates, PR draft, CI) e parar no pedido de merge ao proprietário.")
+    else:  # tarefa de código: sem pesquisa de especificação
+        out["acao"] = (f"Implementar o item {nxt['id']} (código em `{nxt['deliverable']}`, testes com contraprovas, gates, "
+                       "PR draft, CI) e parar no pedido de merge ao proprietário.")
     return out
 
 

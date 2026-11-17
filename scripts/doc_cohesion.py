@@ -220,6 +220,8 @@ def check_specs(root: Path) -> list[str]:
     return errs
 
 
+# Entrega de item da fila: especificação (S*), código de scripts/ (tarefas C*) ou o registro do hook do projeto.
+QUEUE_DELIVERABLE_RE = r"docs/especificacoes/S[^/]+\.md|scripts/[a-z0-9_]+\.py|\.claude/settings\.json"
 QUEUE_FIELDS = ("id", "title", "roadmap_task", "deliverable", "depends_on", "blocking_inputs", "optional_inputs")
 
 
@@ -241,8 +243,8 @@ def check_queue(root: Path) -> list[str]:
                 errs.append(f"C8 WORKFLOW.json: item {iid} sem o campo {f}")
         if item.get("roadmap_task") not in rm:
             errs.append(f"C8 WORKFLOW.json: item {iid} aponta tarefa fora do ROADMAP ({item.get('roadmap_task')})")
-        if not re.fullmatch(r"docs/especificacoes/S[^/]+\.md", str(item.get("deliverable", ""))):
-            errs.append(f"C8 WORKFLOW.json: entrega do item {iid} fora de docs/especificacoes/S*.md")
+        if not re.fullmatch(QUEUE_DELIVERABLE_RE, str(item.get("deliverable", ""))):
+            errs.append(f"C8 WORKFLOW.json: entrega do item {iid} fora de docs/especificacoes/S*.md, scripts/*.py ou .claude/settings.json")
         for d in item.get("depends_on", []):
             if d not in ids:
                 errs.append(f"C8 WORKFLOW.json: item {iid} depende de id inexistente ({d})")
