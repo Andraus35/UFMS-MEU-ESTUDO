@@ -16,14 +16,14 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         inicio = HANDOFF.index("### Estado de saída")
         return HANDOFF[inicio:HANDOFF.index("**Ordem do que acontece a seguir", inicio)]
 
-    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_s7(self):
+    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_s6(self):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "S9", "S10", "S11"])  # S12 e S13 já têm a entrega
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "S9", "S10", "S11"])  # S12, S13 e S7 já têm a entrega
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        self.assertEqual(fila["proximo"]["id"], "S7")
-        self.assertEqual(fila["pendentes"], ["S7", "S6", "S9", "S10", "S11"])
+        self.assertEqual(fila["proximo"]["id"], "S6")
+        self.assertEqual(fila["pendentes"], ["S6", "S9", "S10", "S11"])
 
     def test_cada_item_novo_tem_entrega_dependencia_valida_e_tarefa_do_roadmap(self):
         ids = {i["id"] for i in WORKFLOW["work_queue"]}
@@ -32,7 +32,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
             self.assertRegex(item["deliverable"], r"^docs/especificacoes/S[^/]+\.md$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("S6", "S7", "S9", "S10", "S11"):
+        for novo in ("S6", "S9", "S10", "S11"):
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 
