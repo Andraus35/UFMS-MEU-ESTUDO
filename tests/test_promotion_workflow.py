@@ -88,8 +88,8 @@ class ContraprovasTest(unittest.TestCase):
 
     def test_segredo_so_no_env_da_etapa_de_promocao(self):
         self.assertViola(muta("          DADOS_TOKEN: ${{ secrets.DADOS_TOKEN }}\n", ""), "SEGREDO_FORA_DO_ENV_DA_ETAPA")
-        dobrado = muta("          GH_TOKEN: ${{ github.token }}\n",
-                       "          GH_TOKEN: ${{ github.token }}\n          OUTRO: ${{ secrets.DADOS_TOKEN }}\n")
+        dobrado = muta("          EXECUCAO: ${{ github.run_id }}\n",
+                       "          EXECUCAO: ${{ github.run_id }}\n          OUTRO: ${{ secrets.DADOS_TOKEN }}\n")
         self.assertViola(dobrado, "SEGREDO_FORA_DO_ENV_DA_ETAPA")
 
     def test_segredo_impresso_recusado(self):

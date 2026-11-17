@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #103; SHA 9dc4c902761526a2c08215921adfc5abab88690b
-- Frente ativa: **RM-09 / PR #104**; branch `ccr-c4-caixa-de-comandos`; base main; fase review.
+- Último merge comprovado: PR #104; SHA 093cb38017fd85e1c78c4c6707903b9faa6c35ea
+- Frente ativa: **RM-09 / PR #105**; branch `ccr-runner-promocao`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
