@@ -57,12 +57,20 @@ def queue_status(root: Path, workflow: dict) -> dict:
     ids = [i["id"] for i in queue]
     done = {i["id"] for i in queue if (root / i["deliverable"]).is_file()}
     pending = [i for i in queue if i["id"] not in done]
-    nxt = next((i for i in pending if all(d in done for d in i.get("depends_on", []))), None)
-    out = {"feitos": [i for i in ids if i in done], "pendentes": [i["id"] for i in pending]}
+    liberados = [i for i in pending if all(d in done for d in i.get("depends_on", []))]
+    # Um item com `blocking_inputs` não começa (docs/especificacoes/README.md): fica em "bloqueados" até o insumo chegar.
+    nxt = next((i for i in liberados if not i.get("blocking_inputs")), None)
+    out = {"feitos": [i for i in ids if i in done], "pendentes": [i["id"] for i in pending],
+           "bloqueados": [{"id": i["id"], "aguarda": i["blocking_inputs"]} for i in liberados if i.get("blocking_inputs")]}
     if nxt is None:
         out["proximo"] = None
-        out["acao"] = ("Fila concluída: definir com o proprietário o próximo item." if not pending
-                       else "Itens pendentes com dependências não atendidas: verificar `depends_on`.")
+        if not pending:
+            out["acao"] = "Fila concluída: definir com o proprietário o próximo item."
+        elif out["bloqueados"]:
+            out["acao"] = ("Os itens liberados aguardam insumo do proprietário (`bloqueados`): registrar o que falta e parar; "
+                           "não começar o item sem o insumo.")
+        else:
+            out["acao"] = "Itens pendentes com dependências não atendidas: verificar `depends_on`."
         return out
     out["proximo"] = {
         "id": nxt["id"], "titulo": nxt["title"], "tarefa_roadmap": nxt["roadmap_task"],
