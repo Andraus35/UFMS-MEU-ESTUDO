@@ -212,8 +212,12 @@ def main(argv=None):
     p.add_argument("--check", action="store_true")
     p.add_argument("--root", default=str(ROOT))
     p.add_argument("--instanciado", action="store_true", help="exige SHA e hash reais no lugar dos marcadores")
+    p.add_argument("--arquivo", help="confere este arquivo (o fluxo gerado para instalar) em vez do modelo do repositório")
     a = p.parse_args(argv)
-    violacoes = verificar_arquivo(a.root, a.instanciado)
+    if a.arquivo:
+        violacoes = verificar(Path(a.arquivo).read_text(encoding="utf-8"), instanciado=a.instanciado)
+    else:
+        violacoes = verificar_arquivo(a.root, a.instanciado)
     if violacoes:
         print("FALHA: " + ", ".join(violacoes))
         return 1

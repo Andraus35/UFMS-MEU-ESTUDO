@@ -132,10 +132,10 @@ class DocCohesionTests(unittest.TestCase):
         self._fails("C8")
 
     def test_c8_entrega_de_codigo_aceita_so_nos_caminhos_previstos(self):
-        for ok in ("scripts/command_box.py", ".claude/settings.json", ".github/CODEOWNERS"):
+        for ok in ("scripts/command_box.py", ".claude/settings.json", ".github/CODEOWNERS", "scripts/termux/prepara_entrada.sh"):
             self._queue(lambda q, ok=ok: q[0].update(deliverable=ok))
             self.assertEqual(doc_cohesion.validate(self.tmp)["result"], "PASS", ok)
-        for ruim in ("scripts/../x.py", "scripts/sub/x.py", "config/x.py", ".claude/outro.json", "scripts/X.py", ".github/OUTRO", "CODEOWNERS"):
+        for ruim in ("scripts/../x.py", "scripts/sub/x.py", "config/x.py", ".claude/outro.json", "scripts/X.py", ".github/OUTRO", "CODEOWNERS", "scripts/termux/sub/x.sh", "scripts/termux/X.sh", "scripts/termux/x.py"):
             self._queue(lambda q, ruim=ruim: q[0].update(deliverable=ruim))
             self._fails("C8")
 
