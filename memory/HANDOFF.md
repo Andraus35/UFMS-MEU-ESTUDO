@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #93; SHA 8cc8085959a39629f5a214241b0e47f03f1e8573
-- Frente ativa: **RM-09 / PR #95**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #95; SHA 0cff24a6dd17b270840c176e7bbe2bc8eec88d5f
+- Frente ativa: **RM-09 / PR #96**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -28,6 +28,8 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 **Como retomar, sem prompt:** `python scripts/bootstrap.py --mode engineering`, depois `python scripts/next_task.py` (diz o estado real do ciclo e o próximo item da fila; hoje o próximo é a **S7** (a **S12**, ciclo de retenção e recuperação na prova, está neste PR), persistência privada e escritor) e, se o ciclo estiver `encerrado_recibo_pendente`, abrir o PR draft da próxima tarefa com `python scripts/record_merge_receipt.py` no primeiro commit. Uma tarefa, uma branch, um PR draft; **o merge só sai por pedido explícito do proprietário**.
 
 **Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; consentimento v3 e `guardar-plano` (resultado por relato); validador de proveniência do conteúdo de estudo.
+
+**Documentos canônicos (PR #96):** `docs/canonicos/` guarda, com hash, os cinco textos de pesquisa cognitiva e o PDF do Gemini Notebook, e o relatório do TEC em versão **editada** (sem números pessoais). São fonte de referência, **não regra**: ligá-los ao START, aos perfis de `agents/` ou a gates exige tarefa própria e aprovação; o `README.md` da pasta lista os pontos a reconciliar (papel do Coach, taxonomias de erro, intervalos).
 
 **O que a fila (`work_queue`) ainda tem, na ordem proposta:** S12 (PR #95, em revisão), S7, S6, S9, S10, S11. A S12 traz as tarefas derivadas D1 a D6 (validador do prompt de revisão, desvio do padrão, confiança por questão, caderno de erros, roteiro do dia da prova, condições do simulado). Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
 
