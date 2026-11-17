@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #98; SHA 7bfe08aabc7c624739b1ede4d29423473e130f94
-- Frente ativa: **RM-09 / PR #99**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #99; SHA 48b252b27bb59a43a08245e86a690a1b8f000b7f
+- Frente ativa: **RM-09 / PR #100**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -29,7 +29,9 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; consentimento v3 e `guardar-plano` (resultado por relato); validador de proveniência do conteúdo de estudo.
 
-**S7 (PR #98, em revisão):** fluxo único de escrita (Tutor assina, Zapia executa por rotina versionada, readback), um arquivo por evento, ordem fixa de controles P1 a P6, token mínimo, reconstrução, revogação (retenção até 16/02/2027) e contraprovas P9; tarefas derivadas W1 a W7 (W5 e W7 dependem do proprietário). **Token `zapia_dados` conferido pelo proprietário em 17/11/2026 (relato, `CONFERE` no perfil privado; validade até 17/12/2026):** só alcança o repositório de dados e grava nele (sonda com corpo vazio, nada criado); **ainda sem prova de escrita real (W5)**. A flag continua falsa.
+**S6 (PR #100, em revisão):** onde Tutor e Coach rodam (sessões do app Claude na nuvem, sem custódia de chave), três fronteiras de repositório (público, `ufms-meu-estudo-entrada` para a Zapia e `ufms-meu-estudo-dados` só para o fluxo), portão de promoção por GitHub Actions com o validador fixado por SHA no repositório público, caixa de comandos, **origem do comando não provada** (dano limitado), consentimento v4 para o app Claude e o token `zapia_dados` passando a ser a credencial do fluxo; tarefas C1 a C6 e E1 (emenda do PRODUCT.md). **O simulado diagnóstico espera a automação.**
+
+**S7 (PR #98, mesclado):** fluxo único de escrita (Tutor assina, Zapia executa por rotina versionada, readback), um arquivo por evento, ordem fixa de controles P1 a P6, token mínimo, reconstrução, revogação (retenção até 16/02/2027) e contraprovas P9; tarefas derivadas W1 a W7 (W5 e W7 dependem do proprietário). **Token `zapia_dados` conferido pelo proprietário em 17/11/2026 (relato, `CONFERE` no perfil privado; validade até 17/12/2026):** só alcança o repositório de dados e grava nele (sonda com corpo vazio, nada criado); **ainda sem prova de escrita real (W5)**. A flag continua falsa.
 
 **S13 (PR #97, mesclado):** reconcilia os canônicos com S2, S3 e S12: Coach com módulo de prova (sem agente novo), orquestração como função, códigos de erro L-, P- e M-, assistência H0 a H5 e retenção entre sessões distintas; tarefas derivadas T1 a T6 (T4 e T5 exigem aprovação).
 
