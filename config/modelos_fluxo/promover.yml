@@ -1,0 +1,66 @@
+# MODELO do fluxo de promoção (S6-R4, R5, R6; tarefa C2). NÃO é um fluxo ativo: mora fora de .github/workflows de propósito.
+# Destino futuro: .github/workflows/promover.yml do repositório privado `ufms-meu-estudo-entrada`, instalado pelo proprietário (C3).
+# Os dois marcadores __...__ só são trocados pelo proprietário, depois de revisar o PR no público (S6-R5, passo 4).
+# Pendência declarada: `scripts/promotion_runner.py` (adaptador HTTP que liga o portão `promotion_gate.promover` ao GitHub e lê a
+# flag do settings.json do SHA fixado) ainda NÃO existe; sem ele este fluxo não promove nada. O teste estático prova só o texto.
+name: Promover entradas da fila
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fila/entradas/**'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ufms-promocao
+  cancel-in-progress: false
+env:
+  VALIDADOR_REPO: Andraus35/UFMS-MEU-ESTUDO
+  VALIDADOR_SHA: __VALIDADOR_SHA__
+  VALIDADOR_GATE_SHA256: __VALIDADOR_GATE_SHA256__
+jobs:
+  promover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Obter a fila no SHA do evento
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENTO_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init -q fila_repo
+          cd fila_repo
+          auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c "http.extraheader=AUTHORIZATION: basic $auth" fetch -q --depth 1 "https://github.com/$REPO.git" "$EVENTO_SHA"
+          git checkout -q FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$EVENTO_SHA"
+      - name: Conferir o hash do próprio fluxo
+        env:
+          FLUXO_SHA256_ESPERADO: ${{ vars.FLUXO_SHA256 }}
+        run: |
+          set -euo pipefail
+          test -n "$FLUXO_SHA256_ESPERADO"
+          atual="$(sha256sum fila_repo/.github/workflows/promover.yml | cut -d' ' -f1)"
+          test "$atual" = "$FLUXO_SHA256_ESPERADO"
+      - name: Obter o validador do público fixado por SHA
+        run: |
+          set -euo pipefail
+          git init -q "$RUNNER_TEMP/validador"
+          cd "$RUNNER_TEMP/validador"
+          git fetch -q --depth 1 "https://github.com/$VALIDADOR_REPO.git" "$VALIDADOR_SHA"
+          git checkout -q FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$VALIDADOR_SHA"
+          atual="$(sha256sum scripts/promotion_gate.py | cut -d' ' -f1)"
+          test "$atual" = "$VALIDADOR_GATE_SHA256"
+      - name: Promover com o portão (única etapa com o segredo do histórico)
+        env:
+          DADOS_TOKEN: ${{ secrets.DADOS_TOKEN }}
+          EXECUCAO: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python "$RUNNER_TEMP/validador/scripts/promotion_runner.py" --fila fila_repo/fila/entradas --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA"
