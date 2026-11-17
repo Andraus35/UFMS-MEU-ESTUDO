@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #97; SHA 087a866c3cfbd99abf5621d347791a68b70f3722
-- Frente ativa: **RM-09 / PR #98**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
+- Último merge comprovado: PR #98; SHA 7bfe08aabc7c624739b1ede4d29423473e130f94
+- Frente ativa: **RM-09 / PR #99**; branch `ccr-75ee6cfe-ihyu4e`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -37,7 +37,7 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **O que a fila (`work_queue`) ainda tem, na ordem proposta:** S12 (PR #95, em revisão), S7, S6, S9, S10, S11. A S12 traz as tarefas derivadas D1 a D6 (validador do prompt de revisão, desvio do padrão, confiança por questão, caderno de erros, roteiro do dia da prova, condições do simulado). Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
 
-**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); **renovar o token `zapia_dados` antes de 17/12/2026** (hoje conferido, `CONFERE`, relato); cadastrá-lo só no formulário seguro da Zapia e só quando a rotina de escrita (W2) existir; confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos a confirmar da S8; abrir uma sessão de estudo do Tutor.
+**Pendente do proprietário (nada disto a sessão resolve sozinha):** gerar o plano local (`bash ~/ufms.sh plano`); **renovar o token `zapia_dados` antes de 17/12/2026** (hoje conferido, `CONFERE`, relato); cadastrá-lo só no formulário seguro da Zapia e só quando a rotina de escrita (W2) existir; confirmar que o notebook está privado e incluir a Lei 8.112; os testes da Zapia (marcador, V2, V11); os quatro pontos da S8 já estão decididos (17/11/2026: mensagem curta sem atividade, segundo lembrete, só o app, uma pergunta após três dias); falta só a Zapia criar a rotina, com a frase AUTORIZO; abrir uma sessão de estudo do Tutor.
 
 **O que NÃO persiste, e por quê:** o lugar definitivo de plano e resultados é o **repositório privado** `ufms-meu-estudo-dados` (D-24); o público nunca recebe dado pessoal. O consentimento v3 foi registrado e um plano foi guardado no repositório privado em 16/11/2026 (**relato**, `docs/governanca/RESULTADO_PERSISTENCIA_V3_PLANO_20261116.md`); a cópia local em `~/ufms-plano` (modo 0600) continua sendo dele; **resultados e desempenho** não são gravados em lugar nenhum, porque `personal_results_writes_enabled=false` (a escrita automática por Tutor e Zapia depende de P4, S7 e PR próprio). O consentimento v2 cobre só resultados de cadernos e simulados; o v3 cobre também o plano. A continuidade de **engenharia** é garantida pelo repositório (estado em `state/WORKFLOW.json`, fila, ROADMAP e este HANDOFF), não pela conversa.
 
