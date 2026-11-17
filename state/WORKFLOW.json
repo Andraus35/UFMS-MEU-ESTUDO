@@ -220,6 +220,21 @@
       ]
     },
     {
+      "id": "S13",
+      "title": "Especificação da integração dos conceitos cognitivos: Coach com módulo de prova, taxonomia de erros em três prefixos, assistência H0 a H5 e retenção entre sessões distintas",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S13_INTEGRACAO_CONCEITOS_COGNITIVOS.md",
+      "depends_on": [
+        "S2",
+        "S3",
+        "S12"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "confirmação da fronteira de independência (só H0), do mínimo de duas recuperações em dias diferentes e de H1 (pontos a confirmar na S13)"
+      ]
+    },
+    {
       "id": "S7",
       "title": "Especificação da persistência privada e do escritor (P4 a P9, PR-003, PR-010): como a Zapia grava por comando assinado, reconstrução, revogação e testes adversariais",
       "roadmap_task": "RM-08",

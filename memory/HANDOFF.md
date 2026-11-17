@@ -29,7 +29,9 @@ Não há prompt de retomada: o repositório se descreve. Rodar `python scripts/s
 
 **Integrado na `main` até aqui:** especificações S1 a S5 e S8; D-21 a D-23; verificador de token com perfil privado; ferramenta `scripts/termux/ufms.sh`; guarda das chaves e chaves públicas do Tutor e do Coach; registro de P1 e P3; consentimento v3 e `guardar-plano` (resultado por relato); validador de proveniência do conteúdo de estudo.
 
-**Documentos canônicos (PR #96):** `docs/canonicos/` guarda, com hash, os cinco textos de pesquisa cognitiva e o PDF do Gemini Notebook, e o relatório do TEC em versão **editada** (sem números pessoais). São fonte de referência, **não regra**: ligá-los ao START, aos perfis de `agents/` ou a gates exige tarefa própria e aprovação; o `README.md` da pasta lista os pontos a reconciliar (papel do Coach, taxonomias de erro, intervalos).
+**S13 (PR #97, em revisão):** reconcilia os canônicos com S2, S3 e S12: Coach com módulo de prova (sem agente novo), orquestração como função, códigos de erro L-, P- e M-, assistência H0 a H5 e retenção entre sessões distintas; tarefas derivadas T1 a T6 (T4 e T5 exigem aprovação).
+
+**Documentos canônicos (PR #96, mesclado):** `docs/canonicos/` guarda, com hash, os cinco textos de pesquisa cognitiva e o PDF do Gemini Notebook, e o relatório do TEC em versão **editada** (sem números pessoais). São fonte de referência, **não regra**: ligá-los ao START, aos perfis de `agents/` ou a gates exige tarefa própria e aprovação; o `README.md` da pasta lista os pontos a reconciliar (papel do Coach, taxonomias de erro, intervalos).
 
 **O que a fila (`work_queue`) ainda tem, na ordem proposta:** S12 (PR #95, em revisão), S7, S6, S9, S10, S11. A S12 traz as tarefas derivadas D1 a D6 (validador do prompt de revisão, desvio do padrão, confiança por questão, caderno de erros, roteiro do dia da prova, condições do simulado). Implementações sem especificação nova: validador do prompt de revisão (PR-002), simulados no fluxo (PR-008) e tópicos estudados e prioridades no gerador de plano (PR-015).
 
