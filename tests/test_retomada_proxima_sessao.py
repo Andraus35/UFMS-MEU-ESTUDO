@@ -16,15 +16,15 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         inicio = HANDOFF.index("### Estado de saída")
         return HANDOFF[inicio:HANDOFF.index("**Ordem do que acontece a seguir", inicio)]
 
-    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_c4(self):
+    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_o_runner(self):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
         self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "S9", "S10", "S11"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        self.assertEqual(fila["proximo"]["id"], "C4")
-        self.assertEqual(fila["pendentes"], ["C4", "RUNNER", "HOOK", "S9", "S10", "S11"])
+        self.assertEqual(fila["proximo"]["id"], "RUNNER")  # a C4 já tem a entrega (scripts/command_box.py)
+        self.assertEqual(fila["pendentes"], ["RUNNER", "HOOK", "S9", "S10", "S11"])
 
     def test_cada_item_novo_tem_entrega_dependencia_valida_e_tarefa_do_roadmap(self):
         ids = {i["id"] for i in WORKFLOW["work_queue"]}
