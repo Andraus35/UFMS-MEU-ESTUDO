@@ -220,8 +220,8 @@ def check_specs(root: Path) -> list[str]:
     return errs
 
 
-# Entrega de item da fila: especificação (S*), código de scripts/ (tarefas C*) ou o registro do hook do projeto.
-QUEUE_DELIVERABLE_RE = r"docs/especificacoes/S[^/]+\.md|scripts/[a-z0-9_]+\.py|\.claude/settings\.json"
+# Entrega de item da fila: especificação (S*), código de scripts/ (tarefas C*), o registro do hook ou o CODEOWNERS do projeto.
+QUEUE_DELIVERABLE_RE = r"docs/especificacoes/S[^/]+\.md|scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS"
 QUEUE_FIELDS = ("id", "title", "roadmap_task", "deliverable", "depends_on", "blocking_inputs", "optional_inputs")
 
 
