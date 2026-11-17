@@ -49,7 +49,7 @@ class SpecS13Tests(unittest.TestCase):
     def test_assistencia_h0_a_h5_e_so_h0_e_independente(self):
         for h in ("H0", "H1", "H2", "H3", "H4", "H5"):
             self.assertIn(h, DOC)
-        for trecho in ("só h0 conta como recuperação independente", "não registrada é \"desconhecido\"", "nunca h0", "a confirmar pelo proprietário"):
+        for trecho in ("só h0 conta como recuperação independente", "não registrada é \"desconhecido\"", "nunca h0", "confirmada pelo proprietário", "h1 e h2 contam como guiadas"):
             self.assertIn(trecho, TEXTO)
 
     def test_retencao_exige_dias_diferentes_e_transferencia_item_novo(self):

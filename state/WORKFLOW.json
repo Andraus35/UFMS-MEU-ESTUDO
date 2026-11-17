@@ -230,9 +230,7 @@
         "S12"
       ],
       "blocking_inputs": [],
-      "optional_inputs": [
-        "confirmação da fronteira de independência (só H0), do mínimo de duas recuperações em dias diferentes e de H1 (pontos a confirmar na S13)"
-      ]
+      "optional_inputs": []
     },
     {
       "id": "S7",
