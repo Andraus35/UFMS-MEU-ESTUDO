@@ -72,6 +72,23 @@ class NextTaskTests(unittest.TestCase):
         f = next_task.compute(self.root)["fila"]
         self.assertEqual(f["proximo"]["id"], "S1")
 
+    def test_item_de_codigo_pede_implementacao_e_item_de_especificacao_pede_pesquisa(self):
+        self.assertIn("pesquisa obrigatória", next_task.compute(self.root)["fila"]["acao"])
+        wf = json.loads((self.root / "state/WORKFLOW.json").read_text())
+        wf["work_queue"] = [{"id": "C4", "title": "codigo", "roadmap_task": "RM-08", "deliverable": "scripts/command_box.py",
+                             "depends_on": [], "blocking_inputs": [], "optional_inputs": []}]
+        (self.root / "state/WORKFLOW.json").write_text(json.dumps(wf))
+        acao = next_task.compute(self.root)["fila"]["acao"]
+        self.assertIn("Implementar o item C4", acao)
+        self.assertNotIn("pesquisa obrigatória", acao)
+
+    def test_repositorio_real_ordena_c4_runner_hook_antes_de_s9(self):
+        ids = [i["id"] for i in json.loads((ROOT / "state/WORKFLOW.json").read_text())["work_queue"]]
+        self.assertLess(ids.index("S6"), ids.index("C4"))
+        self.assertLess(ids.index("C4"), ids.index("RUNNER"))
+        self.assertLess(ids.index("RUNNER"), ids.index("HOOK"))
+        self.assertLess(ids.index("HOOK"), ids.index("S9"))
+
     def test_fila_concluida(self):
         for i in QUEUE:
             (self.root / i["deliverable"]).write_text("x")

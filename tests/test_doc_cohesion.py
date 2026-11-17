@@ -131,6 +131,14 @@ class DocCohesionTests(unittest.TestCase):
         self._queue(lambda q: q[0].update(deliverable="docs/outro/S1.md"))
         self._fails("C8")
 
+    def test_c8_entrega_de_codigo_aceita_so_nos_caminhos_previstos(self):
+        for ok in ("scripts/command_box.py", ".claude/settings.json"):
+            self._queue(lambda q, ok=ok: q[0].update(deliverable=ok))
+            self.assertEqual(doc_cohesion.validate(self.tmp)["result"], "PASS", ok)
+        for ruim in ("scripts/../x.py", "scripts/sub/x.py", "config/x.py", ".claude/outro.json", "scripts/X.py"):
+            self._queue(lambda q, ruim=ruim: q[0].update(deliverable=ruim))
+            self._fails("C8")
+
     def test_c8_id_repetido(self):
         self._queue(lambda q: q[1].update(id=q[0]["id"]))
         self._fails("C8")

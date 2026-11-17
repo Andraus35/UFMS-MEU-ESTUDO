@@ -265,6 +265,39 @@
       ]
     },
     {
+      "id": "C4",
+      "title": "Validador da caixa de comandos e tabela de operações por origem (S6-R7, R8, R12), derivada de agents/ e do esquema de comandos",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/command_box.py",
+      "depends_on": [
+        "S6"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "RUNNER",
+      "title": "Adaptador HTTP do portão de promoção (promotion_runner.py), com cliente injetado e testes offline, que o fluxo da C2 chama",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/promotion_runner.py",
+      "depends_on": [
+        "C4"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "HOOK",
+      "title": "Hook Stop de perguntas de fim de rodada versionado em .claude/settings.json, com script e teste de contrato",
+      "roadmap_task": "RM-09",
+      "deliverable": ".claude/settings.json",
+      "depends_on": [
+        "RUNNER"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "S9",
       "title": "Especificação da leitura direta das plataformas (PR-017, PR-016, D-14, D-15, D-22): candidato escolhido pelo proprietário, a Zapia lê com a sessão dele, a provar sem credencial ao modelo",
       "roadmap_task": "RM-09",
