@@ -29,7 +29,7 @@
 
 ## Pontos que pedem reconciliação antes de virar requisito
 
-Nenhum item abaixo foi aplicado. Cada um é uma decisão futura, em tarefa própria e com aprovação humana.
+Nenhum item abaixo foi aplicado. Cada um é uma decisão futura, em tarefa própria e com aprovação humana. A **proposta de reconciliação** está na S13 (`docs/especificacoes/S13_INTEGRACAO_CONCEITOS_COGNITIVOS.md`); ela também só vale depois de aprovada.
 
 1. **Papel do Coach.** Os documentos definem o Coach como **Coach de Prova** (estratégia, simulação, diagnóstico de desempenho) e acrescentam um Orquestrador e um Verificador. A S3 (`docs/especificacoes/S3_COACH.md`) define o Coach como **rotina diária e acompanhamento**, e o D-23 define o Tutor como autor editorial, o Gemini como rascunho e a Zapia como transporte. É preciso decidir como a "inteligência de prova" se encaixa sem mudar o D-23.
 2. **Intervalos de revisão.** Os documentos citam D0, D1, D3, D7, D14 e D30 como **hipótese de piloto**, não regra. O padrão do proprietário continua D+7, D+15 e D+30 (D-11, S1).
