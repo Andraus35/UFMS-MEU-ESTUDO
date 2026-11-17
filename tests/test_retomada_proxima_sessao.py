@@ -20,11 +20,11 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "S9", "S10", "S11"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "S9", "S10", "S11"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         self.assertEqual(fila["proximo"]["id"], "HOOK")  # C4 e runner já têm a entrega (command_box.py, promotion_runner.py)
-        self.assertEqual(fila["pendentes"], ["HOOK", "S9", "S10", "S11"])
+        self.assertEqual(fila["pendentes"], ["HOOK", "COMANDOS", "S9", "S10", "S11"])
 
     def test_cada_item_novo_tem_entrega_dependencia_valida_e_tarefa_do_roadmap(self):
         ids = {i["id"] for i in WORKFLOW["work_queue"]}
