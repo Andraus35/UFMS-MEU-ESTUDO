@@ -398,6 +398,9 @@ class ApiETransporteTest(Base):
         pr.GitHubApi(TOKEN_DADOS, espiao).chamar("GET", "/repos/a/b")
         self.assertEqual(vistos, ["Bearer " + TOKEN_DADOS])
 
+    def test_pasta_ausente_e_fila_vazia_em_vez_de_erro(self):
+        self.assertEqual(pr.ler_fila(self.tmp / "nao-existe"), [])  # push que só tocou a outra fila
+
     def test_ler_fila_ignora_link_diretorio_e_limita_quantidade(self):
         d = self.tmp / "fila"
         d.mkdir()

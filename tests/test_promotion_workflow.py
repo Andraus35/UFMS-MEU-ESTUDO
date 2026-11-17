@@ -20,6 +20,20 @@ def muta(antigo, novo, base=MODELO):
     return base.replace(antigo, novo)
 
 
+PASSO_PROMOCAO = "      - name: Promover com o portão"
+PASSO_CAIXA = "      - name: Promover comandos da caixa"
+
+
+def muta_passo(marcador, antigo, novo, base=MODELO):
+    """Muta SÓ dentro de um passo (os passos de promoção e da caixa têm linhas parecidas)."""
+    inicio = base.index(marcador)
+    fim = base.find("\n      - name:", inicio + 1)
+    fim = len(base) if fim == -1 else fim
+    segmento = base[inicio:fim]
+    assert segmento.count(antigo) == 1, antigo
+    return base[:inicio] + segmento.replace(antigo, novo) + base[fim:]
+
+
 class ModeloTest(unittest.TestCase):
     def test_modelo_cumpre_o_contrato(self):
         self.assertEqual(chk.verificar(MODELO), [])
@@ -88,12 +102,12 @@ class ContraprovasTest(unittest.TestCase):
 
     def test_segredo_so_no_env_da_etapa_de_promocao(self):
         self.assertViola(muta("          DADOS_TOKEN: ${{ secrets.DADOS_TOKEN }}\n", ""), "SEGREDO_FORA_DO_ENV_DA_ETAPA")
-        dobrado = muta("          EXECUCAO: ${{ github.run_id }}\n",
-                       "          EXECUCAO: ${{ github.run_id }}\n          OUTRO: ${{ secrets.DADOS_TOKEN }}\n")
+        dobrado = muta_passo(PASSO_PROMOCAO, "          EXECUCAO: ${{ github.run_id }}\n",
+                             "          EXECUCAO: ${{ github.run_id }}\n          OUTRO: ${{ secrets.DADOS_TOKEN }}\n")
         self.assertViola(dobrado, "SEGREDO_FORA_DO_ENV_DA_ETAPA")
 
     def test_segredo_impresso_recusado(self):
-        t = muta('set -euo pipefail\n          python "$RUNNER_TEMP', 'set -euo pipefail\n          echo "$DADOS_TOKEN"\n          python "$RUNNER_TEMP')
+        t = muta_passo(PASSO_PROMOCAO, 'set -euo pipefail\n          python "$RUNNER_TEMP', 'set -euo pipefail\n          echo "$DADOS_TOKEN"\n          python "$RUNNER_TEMP')
         self.assertViola(t, "SEGREDO_IMPRESSO_OU_GRAVADO")
 
     # S6-R5: ações e validador fixados
@@ -140,8 +154,24 @@ class ContraprovasTest(unittest.TestCase):
         self.assertViola(trocado, "ETAPAS_FORA_DE_ORDEM_OU_AUSENTES")
 
     def test_promocao_sem_o_sha_fixado_recusada(self):
-        t = muta(' --validador-sha "$VALIDADOR_SHA"', "")
+        t = muta_passo(PASSO_PROMOCAO, ' --validador-sha "$VALIDADOR_SHA"', "")
         self.assertViola(t, "PROMOCAO_SEM_SHA_FIXADO")
+
+    # a caixa de comandos: SHA fixado e sem o segredo do histórico
+    def test_caixa_sem_o_sha_fixado_recusada(self):
+        self.assertViola(muta_passo(PASSO_CAIXA, ' --validador-sha "$VALIDADOR_SHA"', ""), "CAIXA_SEM_SHA_FIXADO")
+        self.assertViola(muta_passo(PASSO_CAIXA, "command_box_runner.py", "outro_script.py"), "CAIXA_SEM_SHA_FIXADO")
+
+    def test_caixa_com_o_segredo_do_historico_recusada(self):
+        t = muta_passo(PASSO_CAIXA, "          EXECUCAO: ${{ github.run_id }}\n",
+                       "          EXECUCAO: ${{ github.run_id }}\n          DADOS_TOKEN: ${{ secrets.DADOS_TOKEN }}\n")
+        achados = chk.verificar(t)
+        self.assertIn("CAIXA_COM_SEGREDO_DO_HISTORICO", achados)
+        self.assertIn("SEGREDO_FORA_DO_ENV_DA_ETAPA", achados)  # e o segredo aparece mais de uma vez
+
+    def test_passo_da_caixa_removido_ou_fora_de_ordem_recusado(self):
+        sem = MODELO[:MODELO.index(PASSO_CAIXA)]
+        self.assertViola(sem, "ETAPAS_FORA_DE_ORDEM_OU_AUSENTES")
 
     # execução serial e sem bypass
     def test_concorrencia_e_timeout_exigidos(self):
@@ -159,7 +189,8 @@ class ContraprovasTest(unittest.TestCase):
             "printenv": "DESPEJO_DE_AMBIENTE",
         }
         for linha, codigo in casos.items():
-            t = muta('          set -euo pipefail\n          python "$RUNNER_TEMP', '          set -euo pipefail\n          %s\n          python "$RUNNER_TEMP' % linha)
+            t = muta_passo(PASSO_PROMOCAO, '          set -euo pipefail\n          python "$RUNNER_TEMP',
+                           '          set -euo pipefail\n          %s\n          python "$RUNNER_TEMP' % linha)
             self.assertViola(t, codigo)
 
     def test_texto_vazio_ou_invalido_falha_fechado(self):

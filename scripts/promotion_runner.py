@@ -257,6 +257,8 @@ def executar(entradas, contexto, fila):
 def ler_fila(diretorio):
     """Entradas da fila no checkout: só arquivos comuns (sem link simbólico), nome seguro, com teto de quantidade."""
     saida = []
+    if not Path(diretorio).is_dir():  # um push que só tocou a outra fila: pasta ausente é fila vazia
+        return saida
     for caminho in sorted(Path(diretorio).iterdir()):
         if caminho.is_symlink() or not caminho.is_file():
             continue

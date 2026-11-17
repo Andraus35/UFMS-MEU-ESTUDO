@@ -28,7 +28,8 @@ EXPRESSOES_PERMITIDAS = frozenset({"github.token", "github.sha", "github.run_id"
                                    "secrets.DADOS_TOKEN", "vars.FLUXO_SHA256"})
 ETAPAS_EM_ORDEM = ("Obter a fila no SHA do evento", "Conferir o hash do próprio fluxo",
                    "Obter o validador do público fixado por SHA",
-                   "Promover com o portão (única etapa com o segredo do histórico)")
+                   "Promover com o portão (única etapa com o segredo do histórico)",
+                   "Promover comandos da caixa (sem o segredo do histórico)")
 _EXPR = re.compile(r"\$\{\{\s*(.*?)\s*\}\}")
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -164,6 +165,12 @@ def verificar(texto, instanciado=False):
     promover = por_nome.get(ETAPAS_EM_ORDEM[3], "")
     if "promotion_runner.py" not in promover or '--validador-sha "$VALIDADOR_SHA"' not in promover:
         v.append("PROMOCAO_SEM_SHA_FIXADO")
+    # a caixa de comandos roda com o SHA fixado e SEM o segredo do histórico (S6-R6, R8)
+    caixa = por_nome.get(ETAPAS_EM_ORDEM[4], "")
+    if "command_box_runner.py" not in caixa or '--validador-sha "$VALIDADOR_SHA"' not in caixa:
+        v.append("CAIXA_SEM_SHA_FIXADO")
+    if "DADOS_TOKEN" in caixa or "secrets." in caixa:
+        v.append("CAIXA_COM_SEGREDO_DO_HISTORICO")
     # execução serial e idempotente
     if not re.search(r"(?m)^concurrency:\s*\n\s+group:\s*\S+\s*\n\s+cancel-in-progress:\s*false\s*$", texto):
         v.append("CONCORRENCIA_NAO_SERIAL")

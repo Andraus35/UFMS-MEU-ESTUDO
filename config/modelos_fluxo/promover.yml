@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - 'fila/entradas/**'
+      - 'comandos/*.json'
   workflow_dispatch:
 permissions: {}
 concurrency:
@@ -66,3 +67,11 @@ jobs:
         run: |
           set -euo pipefail
           python "$RUNNER_TEMP/validador/scripts/promotion_runner.py" --fila fila_repo/fila/entradas --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA" --entrada-repo "$REPO" --validador-dir "$RUNNER_TEMP/validador"
+      - name: Promover comandos da caixa (sem o segredo do histórico)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EXECUCAO: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python "$RUNNER_TEMP/validador/scripts/command_box_runner.py" --comandos fila_repo/comandos --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA" --entrada-repo "$REPO" --validador-dir "$RUNNER_TEMP/validador"
