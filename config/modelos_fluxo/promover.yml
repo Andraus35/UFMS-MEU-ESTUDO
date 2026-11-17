@@ -1,8 +1,8 @@
 # MODELO do fluxo de promoção (S6-R4, R5, R6; tarefa C2). NÃO é um fluxo ativo: mora fora de .github/workflows de propósito.
 # Destino futuro: .github/workflows/promover.yml do repositório privado `ufms-meu-estudo-entrada`, instalado pelo proprietário (C3).
 # Os dois marcadores __...__ só são trocados pelo proprietário, depois de revisar o PR no público (S6-R5, passo 4).
-# Pendência declarada: `scripts/promotion_runner.py` (adaptador HTTP que liga o portão `promotion_gate.promover` ao GitHub e lê a
-# flag do settings.json do SHA fixado) ainda NÃO existe; sem ele este fluxo não promove nada. O teste estático prova só o texto.
+# O runner (`scripts/promotion_runner.py`, no SHA fixado) liga o portão ao GitHub e lê a flag do settings.json desse SHA: com a flag
+# falsa (hoje) não faz rede nem lê token, e a fila fica intacta. O teste estático prova só o texto deste modelo, não a execução real (C5).
 name: Promover entradas da fila
 on:
   push:
@@ -60,7 +60,9 @@ jobs:
       - name: Promover com o portão (única etapa com o segredo do histórico)
         env:
           DADOS_TOKEN: ${{ secrets.DADOS_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
           EXECUCAO: ${{ github.run_id }}
         run: |
           set -euo pipefail
-          python "$RUNNER_TEMP/validador/scripts/promotion_runner.py" --fila fila_repo/fila/entradas --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA"
+          python "$RUNNER_TEMP/validador/scripts/promotion_runner.py" --fila fila_repo/fila/entradas --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA" --entrada-repo "$REPO" --validador-dir "$RUNNER_TEMP/validador"
