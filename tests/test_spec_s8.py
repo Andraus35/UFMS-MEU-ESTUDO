@@ -34,6 +34,14 @@ class SpecS8Tests(unittest.TestCase):
                        "não chegam aos jobs", "pesquisa", "Não habilita a escrita de resultados"):
             self.assertIn(trecho.lower(), S8.lower(), trecho)
 
+    def test_decisoes_do_proprietario_de_17_11_2026_estao_registradas(self):
+        low = S8.lower().replace("**", "")
+        for trecho in ("curta e diz que não há atividade", "no máximo um segundo lembrete", "teto: duas mensagens de rotina por dia",
+                       "rotina-aaaa-mm-dd-lembrete2", "só o app", "uma única pergunta", "decisões do proprietário (17/11/2026)",
+                       "nenhum job foi criado"):
+            self.assertIn(trecho, low, trecho)
+        self.assertNotIn("pontos a confirmar pelo proprietário", low)
+
     def test_nao_contem_horario_nem_ritmo_do_proprietario(self):
         self.assertIsNone(re.search(r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b", S8))
         self.assertIsNone(re.search(r"\b\d{1,2}\s?h\b", S8))
