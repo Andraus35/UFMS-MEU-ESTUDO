@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c3_roteiro_termux_preparacao",
-    "branch": "ccr-c3-termux",
-    "pr_number": 109,
+    "scope": "s9_leitura_direta_das_plataformas",
+    "branch": "ccr-s9-plataformas",
+    "pr_number": 110,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #108 integrado em main no merge commit 5bb723b51c4a07cefd1c2b31227d2330fff03c36. Frente única ativa: RM-09 (c3_roteiro_termux_preparacao), branch ccr-c3-termux, PR #109. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #109 integrado em main no merge commit d4b97cc6f072092fe838e7768875821f368fa2ff. Frente única ativa: RM-09 (s9_leitura_direta_das_plataformas), branch ccr-s9-plataformas, PR #110. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 108,
-    "merge_commit_sha": "5bb723b51c4a07cefd1c2b31227d2330fff03c36"
+    "pr_number": 109,
+    "merge_commit_sha": "d4b97cc6f072092fe838e7768875821f368fa2ff"
   },
   "work_queue": [
     {
