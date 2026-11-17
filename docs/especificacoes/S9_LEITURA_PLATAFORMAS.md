@@ -58,6 +58,10 @@ Cada uma em PR próprio, em série, com testes sintéticos e contraprovas (nenhu
 | L3 | **Registro dos termos:** o proprietário lê os termos do TEC (e, se quiser, do Qconcursos) e registra em PR a conclusão, sem copiar o texto; configuração que recusa o Qconcursos por padrão | ato do proprietário | R8, R9 |
 | E1 | Emenda do `PRODUCT.md` com a decisão desta especificação (se aprovada), junto das emendas já previstas | aprovação | R1, R8 |
 
+## Adendo — rodada 6 da Zapia (17/11/2026) e a L1
+
+A **rodada 6** (`docs/governanca/RESPOSTA_RODADA6_ZAPIA_20261117.md`, autorrelato, não verificado) traz o que faltava sobre os termos do TEC: a Zapia relata, com trechos literais, que o **item 8.1** proíbe "robôs, scripts, crawlers, spiders, scrapers, agentes autônomos" e o compartilhamento de contas, com suspensão ou bloqueio. **Efeito:** a lacuna do R8(b) deixa de ser "termos não lidos" e vira **"termos relatados como contrários; falta o proprietário ler e registrar"**; a leitura direta do TEC fica **adiada** e a **exportação** (R1) e a **entrada manual** (R7) são o caminho até L3. Isto **não** muda os requisitos: R8 e R9 já fecham por padrão. A **L1** (`scripts/platform_read_guard.py`, `tests/test_platform_read_guard.py`) cumpre R2 a R5 offline e **recusa tudo por padrão** (nenhuma plataforma habilitada; TEC só com termos registrados; Qconcursos só com decisão expressa e termos lidos); não há parser de página nem conversor (R6).
+
 ## Aceite
 
 Esta especificação está **aceita pelo contrato** quando `python scripts/doc_cohesion.py --check` passa e `tests/test_spec_s9.py` confere: os requisitos S9-R1 a S9-R10 cada um com critério, a pesquisa com links, confiança e lacunas, a ordem dos caminhos, o Qconcursos fora da leitura automatizada, a ausência de conversor e de dado pessoal ou credencial, e a flag `false`. A **decisão final** dos caminhos é do proprietário, por PR; **nenhuma leitura real** acontece por causa deste documento.

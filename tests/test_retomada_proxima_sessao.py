@@ -16,17 +16,20 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         inicio = HANDOFF.index("### Estado de saída")
         return HANDOFF[inicio:HANDOFF.index("**Ordem do que acontece a seguir", inicio)]
 
-    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_l1_porque_a_s10_espera_a_zapia(self):
+    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_s10_depois_da_l1_e_da_rodada_6(self):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
         self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        self.assertEqual(fila["proximo"]["id"], "L1")  # a S10 está liberada mas aguarda insumo do proprietário
-        self.assertEqual(fila["pendentes"], ["S10", "L1", "S11"])
-        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S10"])
-        self.assertIn("resposta da Zapia", " ".join(fila["bloqueados"][0]["aguarda"]))
+        # a L1 tem a entrega (scripts/platform_read_guard.py) e a rodada 6 da Zapia chegou: a S10 não tem mais insumo bloqueante
+        self.assertEqual(fila["proximo"]["id"], "S10")
+        self.assertEqual(fila["pendentes"], ["S10", "S11"])
+        self.assertEqual(fila["bloqueados"], [])
+        s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
+        self.assertEqual(s10["blocking_inputs"], [])
+        self.assertTrue((ROOT / "docs" / "governanca" / "RESPOSTA_RODADA6_ZAPIA_20261117.md").is_file())
 
     def test_cada_item_novo_tem_entrega_dependencia_valida_e_tarefa_do_roadmap(self):
         ids = {i["id"] for i in WORKFLOW["work_queue"]}

@@ -357,9 +357,7 @@
         "S5",
         "S6"
       ],
-      "blocking_inputs": [
-        "resposta da Zapia ao levantamento (prompt em docs/governanca/PROMPT_LEVANTAMENTO_PLATAFORMAS_ZAPIA_20261117.md): produto exato, notebook de teste compartilhado ou não, envio de prompt e citação aberta"
-      ],
+      "blocking_inputs": [],
       "optional_inputs": [
         "notebook privado com a Lei 8.112 como fonte e o título escolhido pelo proprietário"
       ]
