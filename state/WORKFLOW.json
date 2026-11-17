@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "runner_adaptador_http_do_portao",
-    "branch": "ccr-runner-promocao",
-    "pr_number": 105,
+    "scope": "hook_stop_versionado",
+    "branch": "ccr-hook-versionado",
+    "pr_number": 106,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #104 integrado em main no merge commit 093cb38017fd85e1c78c4c6707903b9faa6c35ea. Frente única ativa: RM-09 (runner_adaptador_http_do_portao), branch ccr-runner-promocao, PR #105. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #105 integrado em main no merge commit 3c98cb94c7f5840e1978a4975e14371cdbb0d1e4. Frente única ativa: RM-09 (hook_stop_versionado), branch ccr-hook-versionado, PR #106. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 104,
-    "merge_commit_sha": "093cb38017fd85e1c78c4c6707903b9faa6c35ea"
+    "pr_number": 105,
+    "merge_commit_sha": "3c98cb94c7f5840e1978a4975e14371cdbb0d1e4"
   },
   "work_queue": [
     {
@@ -291,6 +291,17 @@
       "title": "Hook Stop de perguntas de fim de rodada versionado em .claude/settings.json, com script e teste de contrato",
       "roadmap_task": "RM-09",
       "deliverable": ".claude/settings.json",
+      "depends_on": [
+        "RUNNER"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "COMANDOS",
+      "title": "Liga a caixa de comandos (command_box) ao runner: validar comandos/ e promover para validados, com testes offline e mutações; fecha a lacuna do runner antes da C5",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/command_box_runner.py",
       "depends_on": [
         "RUNNER"
       ],
