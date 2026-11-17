@@ -54,6 +54,20 @@ class ModeloTest(unittest.TestCase):
         curto = INSTANCIADO.replace(SHA, "abc123", 1)
         self.assertIn("VALIDADOR_SHA_INVALIDO", chk.verificar(curto, instanciado=True))
 
+    def test_cli_arquivo_confere_o_fluxo_gerado_e_exige_valores_reais(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            gerado = Path(d) / "promover.yml"
+            gerado.write_text(INSTANCIADO, encoding="utf-8")
+            exe = [sys.executable, str(ROOT / "scripts/promotion_workflow_check.py"), "--check"]
+            ok = subprocess.run(exe + ["--arquivo", str(gerado), "--instanciado"], capture_output=True, text=True)
+            self.assertEqual(ok.returncode, 0, ok.stdout)
+            modelo = Path(d) / "modelo.yml"
+            modelo.write_text(MODELO, encoding="utf-8")  # ainda com os marcadores
+            ruim = subprocess.run(exe + ["--arquivo", str(modelo), "--instanciado"], capture_output=True, text=True)
+            self.assertEqual(ruim.returncode, 1)
+            self.assertIn("VALIDADOR_SHA_INVALIDO", ruim.stdout)
+
     def test_cli_check_passa_no_modelo(self):
         r = subprocess.run([sys.executable, str(ROOT / "scripts/promotion_workflow_check.py"), "--check"],
                            capture_output=True, text=True)

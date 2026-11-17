@@ -89,7 +89,8 @@ class NextTaskTests(unittest.TestCase):
         self.assertLess(ids.index("RUNNER"), ids.index("HOOK"))
         self.assertLess(ids.index("HOOK"), ids.index("COMANDOS"))
         self.assertLess(ids.index("COMANDOS"), ids.index("CODEOWNERS"))
-        self.assertLess(ids.index("CODEOWNERS"), ids.index("S9"))
+        self.assertLess(ids.index("CODEOWNERS"), ids.index("C3"))
+        self.assertLess(ids.index("C3"), ids.index("S9"))
 
     def test_fila_concluida(self):
         for i in QUEUE:
