@@ -92,6 +92,41 @@ class NextTaskTests(unittest.TestCase):
         self.assertLess(ids.index("CODEOWNERS"), ids.index("C3"))
         self.assertLess(ids.index("C3"), ids.index("S9"))
 
+    def test_item_com_insumo_bloqueante_nao_e_o_proximo_e_o_seguinte_liberado_assume(self):
+        wf = json.loads((self.root / "state/WORKFLOW.json").read_text())
+        wf["work_queue"] = [
+            {"id": "S1", "title": "espera", "roadmap_task": "RM-08", "deliverable": "docs/especificacoes/S1_a.md",
+             "depends_on": [], "blocking_inputs": ["resposta da Zapia"], "optional_inputs": []},
+            {"id": "L1", "title": "codigo", "roadmap_task": "RM-08", "deliverable": "scripts/x.py",
+             "depends_on": [], "blocking_inputs": [], "optional_inputs": []}]
+        (self.root / "state/WORKFLOW.json").write_text(json.dumps(wf))
+        f = next_task.compute(self.root)["fila"]
+        self.assertEqual(f["proximo"]["id"], "L1")
+        self.assertEqual(f["bloqueados"], [{"id": "S1", "aguarda": ["resposta da Zapia"]}])
+        self.assertEqual(f["pendentes"], ["S1", "L1"])
+
+    def test_so_ha_itens_bloqueados_pede_o_insumo_e_nao_manda_comecar(self):
+        wf = json.loads((self.root / "state/WORKFLOW.json").read_text())
+        wf["work_queue"] = [{"id": "S1", "title": "espera", "roadmap_task": "RM-08", "deliverable": "docs/especificacoes/S1_a.md",
+                             "depends_on": [], "blocking_inputs": ["insumo"], "optional_inputs": []}]
+        (self.root / "state/WORKFLOW.json").write_text(json.dumps(wf))
+        f = next_task.compute(self.root)["fila"]
+        self.assertIsNone(f["proximo"])
+        self.assertIn("aguardam insumo do proprietário", f["acao"])
+        self.assertNotIn("Executar o item", f["acao"])
+
+    def test_insumo_entregue_libera_o_item(self):
+        wf = json.loads((self.root / "state/WORKFLOW.json").read_text())
+        wf["work_queue"][0]["blocking_inputs"] = ["algo"]  # S1 bloqueado; S2 depende de S1
+        (self.root / "state/WORKFLOW.json").write_text(json.dumps(wf))
+        f = next_task.compute(self.root)["fila"]
+        self.assertIsNone(f["proximo"])
+        self.assertEqual([b["id"] for b in f["bloqueados"]], ["S1"])
+        wf["work_queue"][0]["blocking_inputs"] = []  # o insumo chegou
+        (self.root / "state/WORKFLOW.json").write_text(json.dumps(wf))
+        f = next_task.compute(self.root)["fila"]
+        self.assertEqual((f["proximo"]["id"], f["bloqueados"]), ("S1", []))
+
     def test_fila_concluida(self):
         for i in QUEUE:
             (self.root / i["deliverable"]).write_text("x")

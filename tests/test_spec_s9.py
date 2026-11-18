@@ -78,7 +78,11 @@ class SpecS9Tests(unittest.TestCase):
         for padrao in ("*conversor*", "*converte*", "*export_tec*", "*exportacao_tec*", "*leitura_direta*", "*platform_reader*"):
             self.assertEqual(list((ROOT / "scripts").glob(padrao)), [], padrao)
         ids = {i["id"] for i in FILA}
-        self.assertFalse({"L1", "L2", "L3"} & ids)  # as tarefas derivadas não foram criadas por esta especificação
+        self.assertFalse({"L2", "L3"} & ids)  # o conversor e o registro dos termos seguem fora da fila (dependem do proprietário)
+        l1 = next((i for i in FILA if i["id"] == "L1"), None)  # a L1 entrou na fila por decisão do proprietário (17/11/2026)
+        self.assertIsNotNone(l1)
+        self.assertEqual(l1["deliverable"], "scripts/platform_read_guard.py")
+        self.assertEqual(l1["depends_on"], ["S9"])
 
     def test_nao_habilita_escrita_nao_tem_dado_pessoal_nem_credencial(self):
         self.assertRegex((ROOT / "settings.json").read_text(encoding="utf-8"), r'"personal_results_writes_enabled":\s*false')

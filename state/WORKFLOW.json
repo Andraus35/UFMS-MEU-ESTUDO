@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "s10_notebook_como_ferramenta_do_tutor",
-    "branch": "ccr-s10-notebook",
-    "pr_number": 111,
+    "scope": "l1_modulo_offline_de_leitura",
+    "branch": "ccr-l1-leitura-offline",
+    "pr_number": 112,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #110 integrado em main no merge commit 731a661ad927756e505ddf2274d474d81fb74061. Frente única ativa: RM-09 (s10_notebook_como_ferramenta_do_tutor), branch ccr-s10-notebook, PR #111. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #111 integrado em main no merge commit dbccf84a54d92128b771ffa356eb161c671cbfd0. Frente única ativa: RM-09 (l1_modulo_offline_de_leitura), branch ccr-l1-leitura-offline, PR #112. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 110,
-    "merge_commit_sha": "731a661ad927756e505ddf2274d474d81fb74061"
+    "pr_number": 111,
+    "merge_commit_sha": "dbccf84a54d92128b771ffa356eb161c671cbfd0"
   },
   "work_queue": [
     {
@@ -361,6 +361,17 @@
       "optional_inputs": [
         "notebook privado com a Lei 8.112 como fonte e o título escolhido pelo proprietário"
       ]
+    },
+    {
+      "id": "L1",
+      "title": "Módulo offline de leitura somente leitura (S9-R2 a R5): lista de domínios, recusa de escrita, limite de taxa com relógio injetado, saída sem cookie, token nem HTML e filtro de instrução embutida; sem rede e sem navegador, com páginas sintéticas",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/platform_read_guard.py",
+      "depends_on": [
+        "S9"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     },
     {
       "id": "S11",
