@@ -88,10 +88,21 @@ def queue_status(root: Path, workflow: dict) -> dict:
     return out
 
 
+def owner_priorities(workflow: dict) -> list:
+    """Atos e decisões do proprietário que mais destravam trabalho, em ordem de prioridade (só os pendentes).
+
+    Lista persistente em `state/WORKFLOW.json` (`owner_priorities`); não é fila de engenharia e não cria branch nem PR."""
+    itens = workflow.get("owner_priorities") or []
+    pendentes = [i for i in itens if isinstance(i, dict) and i.get("estado") == "pendente"]
+    return [{"rank": i.get("rank"), "id": i.get("id"), "ato": i.get("ato"), "destrava": i.get("destrava"),
+             "depende_de": i.get("depende_de", []), "esforco": i.get("esforco")} for i in sorted(pendentes, key=lambda x: x.get("rank", 0))]
+
+
 def compute(root=ROOT) -> dict:
     root = Path(root)
     workflow = json.loads((root / "state/WORKFLOW.json").read_text(encoding="utf-8"))
     return {"ciclo": cycle_status(root, workflow), "fila": queue_status(root, workflow),
+            "desbloqueios_do_proprietario": owner_priorities(workflow),
             "limite": "Leitura local; confirmar no GitHub autenticado em caso de dúvida (AGENTS.md, regra pós-merge)."}
 
 
