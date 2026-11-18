@@ -27,13 +27,21 @@ class OrcamentoDoHandoffTests(unittest.TestCase):
 
     def test_arquivo_guarda_as_rodadas_antigas_inteiras(self):
         paragrafos = [p for p in ARQUIVO.split("\n\n") if p.startswith("**Perguntas de fim de rodada")]
-        self.assertEqual(len(paragrafos), 12)
+        self.assertGreaterEqual(len(paragrafos), 14)
         for p in paragrafos:
             self.assertGreater(len(p), 200)
         for trecho in ("reconfirmou o merge só da C3", "reconfirmou o merge só do runner", "hook Stop de perguntas",
                        "décima terceira", "décima sexta", "aceita a recomendação"):
             self.assertIn(trecho, ARQUIVO, trecho)
         self.assertIn("sem alteração", ARQUIVO.lower())
+
+    def test_arquivo_de_blocos_guarda_os_tres_blocos_movidos_sem_alteracao(self):
+        blocos = (ROOT / "docs" / "governanca" / "ARQUIVO_HANDOFF_BLOCOS_20261118.md").read_text(encoding="utf-8")
+        for inicio in ("**Rodada 6 da Zapia (levantamento somente leitura", "**Prompt de levantamento da Zapia (PR #111",
+                       "**L1, guarda offline da leitura das plataformas (PR #112"):
+            self.assertEqual(blocos.count(inicio), 1, inicio)
+        self.assertIn("41 de 41 mutações mortas", blocos)
+        self.assertIn("ARQUIVO_HANDOFF_BLOCOS_20261118.md", HANDOFF)
 
 
 if __name__ == "__main__":

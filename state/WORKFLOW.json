@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "n2_validador_offline_do_prompt_do_notebook",
-    "branch": "ccr-n2-validador-prompt",
-    "pr_number": 115,
+    "scope": "z1_prompt_do_teste_da_exportacao_do_tec_pela_zapia",
+    "branch": "ccr-l2-conversor-tec",
+    "pr_number": 116,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #114 integrado em main no merge commit 41271642dd82b6e82a4add32bf695153fb31450a. Frente única ativa: RM-09 (n2_validador_offline_do_prompt_do_notebook), branch ccr-n2-validador-prompt, PR #115. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #115 integrado em main no merge commit 29068b2a316ba269cc19648adc1ae7512db8086e. Frente única ativa: RM-09 (l2_conversor_offline_da_exportacao_do_tec), branch ccr-l2-conversor-tec, PR #116. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 114,
-    "merge_commit_sha": "41271642dd82b6e82a4add32bf695153fb31450a"
+    "pr_number": 115,
+    "merge_commit_sha": "29068b2a316ba269cc19648adc1ae7512db8086e"
   },
   "work_queue": [
     {
@@ -413,28 +413,51 @@
       "optional_inputs": []
     },
     {
+      "id": "Z1",
+      "title": "Prompt do teste da exportação do TEC pela Zapia (S9-R1, R8, R9): um passo só, com a frase AUTORIZO TEC-EXPORT-1 do proprietário; a Zapia relata como a exportação chega, o formato real e o que ela traz, só com cabeçalhos; arquivo bruto nunca no repositório",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/PROMPT_TESTE_EXPORTACAO_TEC_ZAPIA_20261118.md",
+      "depends_on": [
+        "N2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "E2",
+      "title": "Emenda da S5, da S4-R2, da S9-R1 e da S4 ao que o proprietário decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia; 18/11/2026: o desempenho do TEC vem pela Zapia, pedido pelo Tutor ou pelo Coach, no lugar da exportação manual); o PRODUCT.md não muda aqui; exige pedido de merge explícito do proprietário; a Zapia não interpreta o conteúdo e relata o procedimento de extração",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E2_EMENDA_S5_S4R2_20261118.md",
+      "depends_on": [
+        "Z1"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "E3",
+      "title": "Operação nova, compartilhada pelo Tutor e pelo Coach (como enviar_mensagem), para pedir à Zapia o relatório de desempenho (nome, parâmetros, destino e limites no esquema de comandos e nos perfis de agents/ e de ZAPIA), em PR dedicado com texto para o proprietário aprovar; exige aprovação explícita dele para mexer em agents/; limite do pedido: no máximo 1 por dia e só com atividade concluída (decisão de 18/11/2026)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md",
+      "depends_on": [
+        "E2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "L2",
-      "title": "Conversor offline da exportação do TEC em eventos mínimos (S9-R6, R7), a partir da amostra real de 18/11/2026 (uma disciplina, um dia; lacuna do formato real em outras exportações declarada); arquivo bruto nunca no repositório, sem dado pessoal e sem convenção de contagem presumida",
+      "title": "Conversor offline da tabela estruturada de desempenho entregue pela Zapia (S9-R6, R7): contrato de entrega com as colunas do apêndice do relatório (código, profundidade, título, questões, acertos, erros, peso) mais recorte, pontuação declarada pelo Tutor e data; recusa o que fugir do contrato; recalcula o derivado; arquivo bruto e valores reais nunca no repositório; sem convenção de contagem presumida; o contrato inclui o bloco `procedimento` (relato descritivo de como a Zapia extraiu o relatório: telas, passos, filtros, hora, avisos, conferências), que é autorrelato: o harness confere a forma e não o prova",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/tec_export_converter.py",
       "depends_on": [
-        "N2"
+        "N2",
+        "Z1"
       ],
       "blocking_inputs": [],
       "optional_inputs": [
         "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
       ]
-    },
-    {
-      "id": "E2",
-      "title": "Emenda da S5 e da S4-R2 ao que a E1 decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia), prevista na S6 e deixada de fora da E1; exige pedido de merge explícito do proprietário",
-      "roadmap_task": "RM-09",
-      "deliverable": "docs/governanca/E2_EMENDA_S5_S4R2_20261118.md",
-      "depends_on": [
-        "L2"
-      ],
-      "blocking_inputs": [],
-      "optional_inputs": []
     }
   ]
 }
