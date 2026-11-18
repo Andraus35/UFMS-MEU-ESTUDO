@@ -140,7 +140,7 @@ class Base(unittest.TestCase):
         self.fila = pr.FilaEntrada(pr.GitHubApi(TOKEN_ENTRADA, self.gh.transporte), ENTRADA)
 
     def escrever_settings(self, flag):
-        (self.validador / "settings.json").write_text(json.dumps({"storage": {"personal_results_writes_enabled": flag}}))
+        (self.validador / "settings.json").write_text(json.dumps({"storage": {"private_flow_promotion_enabled": flag}}))
 
     def contexto(self, **sobre):
         ctx = pr.montar_contexto(dados=self.dados, agora=tg.AGORA, alvo=DADOS, validador_dir=self.validador,
@@ -161,16 +161,23 @@ class Base(unittest.TestCase):
 
 class FlagDesligadaTest(Base):
     def test_ler_flag_so_aceita_o_booleano_true(self):
-        casos = {'{"storage":{"personal_results_writes_enabled":true}}': True,
-                 '{"storage":{"personal_results_writes_enabled":false}}': False,
-                 '{"storage":{"personal_results_writes_enabled":"true"}}': False,
-                 '{"storage":{"personal_results_writes_enabled":1}}': False,
+        casos = {'{"storage":{"private_flow_promotion_enabled":true}}': True,
+                 '{"storage":{"private_flow_promotion_enabled":false}}': False,
+                 '{"storage":{"private_flow_promotion_enabled":"true"}}': False,
+                 '{"storage":{"private_flow_promotion_enabled":1}}': False,
+                 # a flag do repositório PÚBLICO não liga o fluxo (nem sozinha, nem junto de uma flag do fluxo falsa)
+                 '{"storage":{"personal_results_writes_enabled":true}}': False,
+                 '{"storage":{"personal_results_writes_enabled":true,"private_flow_promotion_enabled":false}}': False,
+                 '{"storage":{"personal_results_writes_enabled":false,"private_flow_promotion_enabled":true}}': True,
                  '{"storage":{}}': False, '{}': False, 'lixo': False, '': False, '[]': False, 'null': False}
         for texto, esperado in casos.items():
             self.assertIs(pr.ler_flag(texto), esperado, texto)
 
     def test_settings_real_do_repositorio_esta_com_flag_falsa(self):
         self.assertFalse(pr.ler_flag((ROOT / "settings.json").read_text(encoding="utf-8")))
+        cfg = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))["storage"]
+        self.assertIs(cfg["private_flow_promotion_enabled"], False)
+        self.assertIs(cfg["personal_results_writes_enabled"], False)  # a do público nunca liga
 
     def test_flag_falsa_nao_faz_nenhuma_chamada_nem_le_nem_grava(self):
         self.escrever_settings(False)
@@ -507,7 +514,11 @@ class FronteirasTest(unittest.TestCase):
             self.assertNotIn(proibido, fonte)
         self.assertIsNone(re.search(r"(?<![.\w])open\(", fonte))  # nenhum open() embutido (abridor.open do urllib não conta)
         self.assertEqual(fonte.count("print("), 4)  # só o resumo e os códigos do CLI
-        self.assertIn('personal_results_writes_enabled"] is True', fonte)
+        self.assertIn('[FLAG_FLUXO] is True', fonte)
+        self.assertIn('FLAG_FLUXO = "private_flow_promotion_enabled"', fonte)
+        # a flag do repositório público não é consultada em código executável (só aparece em docstring e comentário)
+        codigo = "\n".join(l for l in fonte.splitlines() if not l.lstrip().startswith(("#", '"""')) and "personal_results_writes_enabled" not in l)
+        self.assertNotIn('["personal_results_writes_enabled"]', codigo)
 
     def test_destino_do_historico_e_fixo_no_codigo_e_privado_por_nome(self):
         self.assertEqual(pr.DADOS_REPO, "Andraus35/ufms-meu-estudo-dados")
