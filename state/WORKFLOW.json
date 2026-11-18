@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "registro_rodadas_7_8_zapia_z1_e_decisoes",
+    "scope": "e4_emenda_d21_outlook_conectado",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 120,
+    "pr_number": 121,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #119 integrado em main no merge commit d6904cf3da7df18a5ecf228715abb15fe8ecd15e. Frente única ativa: RM-09 (registro_rodadas_7_8_zapia_z1_e_decisoes), branch ccr-59d8ec9a-y3l4xj, PR #120. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #120 integrado em main no merge commit 2797b49811d110ea40dabb77c265314479801a02. Frente única ativa: RM-09 (e4_emenda_d21_outlook_conectado), branch ccr-59d8ec9a-y3l4xj, PR #121. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 119,
-    "merge_commit_sha": "d6904cf3da7df18a5ecf228715abb15fe8ecd15e"
+    "pr_number": 120,
+    "merge_commit_sha": "2797b49811d110ea40dabb77c265314479801a02"
   },
   "work_queue": [
     {
@@ -472,6 +472,17 @@
         "decisão do proprietário sobre aceitar o risco do TEC para pedidos diários (a aceitação registrada cobre só o teste da Z1), a tomar depois do resultado da Z1 (rodada 7 de autorrelato); mais a aprovação explícita dele para mexer em agents/"
       ],
       "optional_inputs": []
+    },
+    {
+      "id": "E4",
+      "title": "Emenda do D-21 (Outlook conectado por necessidade do proprietário): D-28 no PRODUCT.md, sem autorizar leitura de e-mail; exige pedido de merge explícito do proprietário",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E4_EMENDA_D21_OUTLOOK_20261118.md",
+      "depends_on": [],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "finalidade do Outlook declarada pelo proprietário"
+      ]
     }
   ],
   "owner_priorities": [
