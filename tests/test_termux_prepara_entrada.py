@@ -48,7 +48,7 @@ def repo_arg():
 
 if args[0] == "secret":
     if args[1] == "list":
-        print("\n".join(S["secrets"].get(repo_arg(), {}).keys())); sys.exit(0)
+        erro("unknown flag: --jq")  # gh antigo do Termux: `secret list` sem --jq; o script usa a API
     if args[1] == "set":
         S["secrets"].setdefault(repo_arg(), {})[args[2]] = sys.stdin.read(); save(); sys.exit(0)
 if args[0] == "variable":
@@ -94,6 +94,8 @@ if tail == "":
         r["allow_forking"] = False; save(); sys.exit(0)
     saida({"private": r["private"], "fork": r["fork"], "forks_count": r["forks_count"], "allow_forking": r["allow_forking"],
            "full_name": nome})
+if tail == "actions/secrets":
+    saida({"secrets": [{"name": n} for n in S["secrets"].get(nome, {})]}) if jq is None else (print("\n".join(S["secrets"].get(nome, {}).keys())), sys.exit(0))
 if tail == "collaborators": saida([0] * r["collaborators"])
 if tail == "invitations": saida([0] * r["invitations"])
 ac = S["actions"].setdefault(nome, {"allowed_actions": "all", "default_workflow_permissions": "write"})
@@ -318,6 +320,7 @@ class P1EConfiguracaoTest(Base):
         chamadas = (self.fake / "calls.log").read_text()
         self.assertNotIn("selected-actions", chamadas)
         self.assertIn("allowed_actions=local_only", chamadas)
+        self.assertNotIn("secret list", chamadas)  # gh antigo do Termux não aceita --jq nele: a listagem vai pela API
 
     def test_sem_a_frase_configurar_fica_pendente_e_nao_aplica(self):
         self.com_entrada()
@@ -367,7 +370,7 @@ class SegredoTest(Base):
         self.assertEqual(set_chamada, [f"secret set DADOS_TOKEN --repo {ENTRADA}"])  # sem --body: o valor veio por stdin
 
     def test_falha_ao_listar_segredos_bloqueia(self):
-        self.estado["fail"] = ["secret list"]
+        self.estado["fail"] = ["actions/secrets"]
         self.salvar()
         self.assertEqual(self.rodar(["CONFIGURAR", TOKEN, "INSTALAR"]).returncode, 1)
 

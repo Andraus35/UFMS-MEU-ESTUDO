@@ -155,8 +155,8 @@ else
 fi
 
 echo "== 3. Segredo do fluxo (DADOS_TOKEN em $ENTRADA) =="
-set +e; NOMES="$(gh secret list --repo "$ENTRADA" --jq '.[].name' 2>/dev/null)"; SRC=$?; set -e
-[ "$SRC" -eq 0 ] || falha "não consegui listar os segredos de $ENTRADA. Nada foi gravado."
+set +e; NOMES="$(gh api "repos/$ENTRADA/actions/secrets" --jq '.secrets[].name' 2>"$TMP/err_segredos")"; SRC=$?; set -e
+[ "$SRC" -eq 0 ] || falha "não consegui listar os segredos de $ENTRADA ($(head -c 200 "$TMP/err_segredos" | tr '\n' ' ')). Nada foi gravado."
 TEM=0; printf '%s\n' "$NOMES" | grep -qx 'DADOS_TOKEN' && TEM=1
 if [ "$TEM" -eq 1 ] && [ "${SUBSTITUIR_SEGREDO:-}" != "1" ]; then
   echo "[segredo] DADOS_TOKEN já existe; mantido (para trocar: SUBSTITUIR_SEGREDO=1 bash $0)."
@@ -173,7 +173,7 @@ else
     esac
     printf '%s' "$TOKEN" | gh secret set DADOS_TOKEN --repo "$ENTRADA" >/dev/null
     unset TOKEN
-    set +e; NOMES="$(gh secret list --repo "$ENTRADA" --jq '.[].name' 2>/dev/null)"; set -e
+    set +e; NOMES="$(gh api "repos/$ENTRADA/actions/secrets" --jq '.secrets[].name' 2>"$TMP/err_segredos")"; set -e
     printf '%s\n' "$NOMES" | grep -qx 'DADOS_TOKEN' || falha "o segredo não aparece na leitura de volta."
     echo "[segredo] DADOS_TOKEN guardado e visível na lista (o valor não é legível, por desenho)."
   fi
