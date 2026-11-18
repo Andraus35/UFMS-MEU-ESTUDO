@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #113; SHA d77ce2be53d64c4fe89377817b4c3913953053ac
-- Frente ativa: **RM-09 / PR #114**; branch `ccr-e1-emenda-product`; base main; fase review.
+- Último merge comprovado: PR #114; SHA 41271642dd82b6e82a4add32bf695153fb31450a
+- Frente ativa: **RM-09 / PR #115**; branch `ccr-n2-validador-prompt`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -107,6 +107,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 **RM-09 — L1 (S9):** `scripts/platform_read_guard.py` é a guarda **offline** da leitura direta das plataformas (lista fechada, somente leitura, taxa, bloqueio, saída mínima), testada com páginas sintéticas e mutações; **fecha por padrão e não lê conta alguma**. **RM-09 permanece `planejado`.**
 
 **RM-09 — S10:** `docs/especificacoes/S10_NOTEBOOK_TUTOR.md` especifica o Notebook como ferramenta do Tutor (ponte pela Zapia, rascunho verificado por citação aberta, falha que fecha o efeito); **nada foi testado no Notebook** e **RM-09 permanece `planejado`**.
+
+**RM-09 — N2:** `scripts/notebook_prompt_validator.py` valida offline, **falhando fechado**, o prompt do Tutor ao Notebook (S10-R3; fecha o PR-002); **nada foi enviado ao Google nem à Zapia** e **RM-09 permanece `planejado`**.
 
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 

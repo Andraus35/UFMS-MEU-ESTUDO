@@ -44,7 +44,12 @@ class CaminhoFelizTest(unittest.TestCase):
         self.assertNotIn("Revisão pendente", json.dumps(r, ensure_ascii=False))
 
     def test_cada_origem_aceita_a_sua_operacao_exclusiva(self):
-        casos = [("tutor", "enviar_prompt_notebook", "notebook_estudo", {"prompt": "assunto fictício"}),
+        import notebook_prompt_validator as npv
+        _, params_prompt = npv.preparar({
+            "topico": "Tópico fictício do edital", "lacuna": "Lacuna fictícia sobre prazos",
+            "metodo": "Gere perguntas de recuperação curtas.", "exigencia_fonte": "Cite o trecho; se faltar, diga: não consta nas fontes.",
+            "formato_saida": "Lista numerada com a citação."})
+        casos = [("tutor", "enviar_prompt_notebook", "notebook_estudo", params_prompt),
                  ("coach", "criar_lembrete", "agenda_proprietario", {"titulo": "revisar tópico fictício"})]
         for origem, op, destino, params in casos:
             r = cb.validar("c.json", raw(comando(origin=origem, operation=op, destination=destino, params=params)), ctx())

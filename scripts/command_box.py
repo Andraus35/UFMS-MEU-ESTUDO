@@ -14,7 +14,8 @@ promoção, C1).
 
 Etapas, em ordem fixa; a primeira que falhar PARA e devolve só um CÓDIGO e o id da entrada (nunca o conteúdo):
   nome · forma e tamanho · campos e versão · origem · operação (lista fechada, fora `registrar_*`, tabela da origem) ·
-  destino · chave, nonce e janela · parâmetros (filtro de dado pessoal e segredo) · dia de descanso · idempotência.
+  destino · chave, nonce e janela · parâmetros (filtro de dado pessoal e segredo; para `enviar_prompt_notebook`, também o
+  validador do prompt da N2 e o hash do texto) · dia de descanso · idempotência.
 
 Limites: não prova que a Zapia leia só de `validados` (autorrelato; a defesa é o escopo do token e o recibo, S5-R7); o filtro é
 heurístico e não detecta instrução embutida em prosa (o texto de um comando é DADO, S5-R4); a regra de duas mensagens por dia
@@ -32,9 +33,10 @@ from pathlib import Path
 
 try:
     import agent_commands
+    import notebook_prompt_validator
     from core import ROOT
 except ModuleNotFoundError:  # uso como pacote
-    from scripts import agent_commands
+    from scripts import agent_commands, notebook_prompt_validator
     from scripts.core import ROOT
 
 PROMOVER = "PROMOVER"
@@ -43,6 +45,7 @@ DENIED = "DENIED"
 BOX_DIR = "comandos/"
 VALIDATED_DIR = "comandos/validados/"
 LEMBRETE = "criar_lembrete"
+PROMPT_NOTEBOOK = "enviar_prompt_notebook"
 _NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}\.json$")
 _VALIDATED_PATH = re.compile(r"^comandos/validados/([A-Za-z0-9][A-Za-z0-9._-]{0,63}\.json)$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -168,6 +171,10 @@ def _validar(nome, raw, ctx, schema, entrada_id):
     motivo = agent_commands._scan_params(params, schema)
     if motivo:
         raise _Parar(motivo, "parametros")
+    if operacao == PROMPT_NOTEBOOK:  # S10-R3 (N2): só prompt que o validador do Tutor aceitou, com o hash do texto validado
+        veredito = notebook_prompt_validator.conferir_parametros(params)
+        if not veredito.ok:
+            raise _Parar("PROMPT_" + veredito.codigo, "parametros")
     if operacao == LEMBRETE:  # S3-R2 e S8-R1: sem lembrete em dia de descanso; desconhecido também recusa (E-07)
         descanso = ctx.get("dia_de_descanso")
         if descanso is True:
