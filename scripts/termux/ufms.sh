@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ufms.sh: ferramenta única do PROPRIETÁRIO no Termux para o projeto UFMS MEU ESTUDO.
-# Uso:  bash ufms.sh {preparar|atualizar|diagnostico|token [privado|publico]|plano|consentir-v3|guardar-plano [arquivo]|ajuda}
+# Uso:  bash ufms.sh {preparar|atualizar|diagnostico|token [privado|publico]|plano|consentir-v3|consentir-v4|guardar-plano [arquivo]|ajuda}
 #   preparar     instala git, python, gh, curl e coreutils e clona (ou atualiza) o repositório PÚBLICO do projeto
 #   atualizar    põe o clone em main, só por fast-forward e só se não houver alteração local
 #   diagnostico  relatório SEM segredos para colar no chat: START de estudo, ciclo, flag de escrita pessoal,
@@ -9,9 +9,10 @@
 #   plano        gera LOCALMENTE o plano padrão (Método 4.2 e revisões em 7, 15 e 30 dias) com study_plan.py,
 #                salvo FORA do repositório, em modo 0600. O Tutor decide os ajustes (D-23); nada vai ao GitHub
 #   consentir-v3   registra, no repositório PRIVADO, o consentimento v3 (plano e resultados), só com a sua frase
+#   consentir-v4   registra, no repositório PRIVADO, o consentimento v4 (inclui o app Claude, leitura só de projeções), só com a sua frase
 #   guardar-plano  copia o plano local para o repositório PRIVADO (só com private=true e consentimento v3 válido)
 # Garantias: nenhum subcomando lê, imprime ou guarda token (o `gh` usa a credencial do seu aparelho); nada é
-# gravado no repositório público; só consentir-v3 e guardar-plano gravam no PRIVADO, por ato seu, e a escrita
+# gravado no repositório público; só consentir-v3, consentir-v4 e guardar-plano gravam no PRIVADO, por ato seu, e a escrita
 # automática de resultados continua desabilitada.
 set -u
 
@@ -302,6 +303,55 @@ PY
   echo "A escrita automática de resultados continua DESABILITADA; habilitar é PR próprio, com a sua aprovação."
 }
 
+cmd_consentir_v4() {
+  exigir_clone
+  exigir_privado
+  local rc tmp
+  ler "repos/$PRIVADO/contents/consent-v4.json" --jq '.sha' >/dev/null; rc=$?
+  if [ "$rc" -eq 0 ]; then echo "[P3] consent-v4.json já existe; mantido (não sobrescrevo)."; return 0
+  elif [ "$rc" -ne 2 ]; then erro "Não consegui verificar o consentimento v4; nada foi gravado."; fi
+  tmp="$(mktemp -d)"; chmod 700 "$tmp"
+  python - "$RAIZ/docs/governanca/E5_CONSENTIMENTO_V4_PROPOSTA_20261118.md" \
+      "$(date -u +%Y-%m-%dT%H:%M:%S+00:00)" "$tmp/consent-v4.json" "$tmp/texto.txt" <<'PY' || { rm -rf "$tmp"; exit 1; }
+import hashlib, json, sys
+doc, now, out_json, out_text = sys.argv[1:5]
+texto = open(doc, encoding="utf-8").read()
+if "## Texto proposto" not in texto:
+    sys.exit("O texto do consentimento v4 não está neste clone (rode: bash ufms.sh atualizar).")
+secao = texto.split("## Texto proposto", 1)[1].split("\n## ", 1)[0]
+citacoes = [l[2:].strip() for l in secao.splitlines() if l.startswith("> ")]
+if len(citacoes) != 1 or not citacoes[0].endswith("Versão: v4."):
+    sys.exit("O texto do consentimento v4 não foi encontrado de forma única.")
+registro = {"version": "v4", "scope": "resultados_estudo",
+            "inclui": ["resultados_estudo", "plano_estudo", "leitura_projecoes_sessoes_app_claude"],
+            "granted_at": now, "revoked_at": None, "text": citacoes[0],
+            "text_sha256": hashlib.sha256(citacoes[0].encode("utf-8")).hexdigest()}
+open(out_json, "w", encoding="utf-8").write(json.dumps(registro, ensure_ascii=False, indent=2) + "\n")
+open(out_text, "w", encoding="utf-8").write(citacoes[0] + "\n")
+PY
+  echo
+  echo "Texto do consentimento v4 (E5_CONSENTIMENTO_V4_PROPOSTA):"
+  cat "$tmp/texto.txt"
+  echo
+  printf 'Para REGISTRAR este consentimento agora, digite CONSINTO v4 (Enter para pular): '
+  local resp; read -r resp || resp=""
+  if [ "$resp" != "CONSINTO v4" ]; then
+    echo "[P3] consentimento v4 NÃO registrado. Sem ele, nenhuma sessão do app Claude pode ler projeção."
+    rm -rf "$tmp"; return 0
+  fi
+  printf '{"message":"Consentimento v4 registrado pelo proprietario","content":"%s"}' \
+      "$(base64 < "$tmp/consent-v4.json" | tr -d '\n')" >"$tmp/corpo.json"
+  gh api -X PUT "repos/$PRIVADO/contents/consent-v4.json" --input "$tmp/corpo.json" >/dev/null \
+    || { rm -rf "$tmp"; erro "A gravação do consentimento v4 falhou; nada foi registrado."; }
+  local local_h remoto_h
+  local_h="$(sha256sum "$tmp/consent-v4.json" | cut -d' ' -f1)"
+  remoto_h="$(ler "repos/$PRIVADO/contents/consent-v4.json" --jq '.content' | base64 -d 2>/dev/null | sha256sum | cut -d' ' -f1)"
+  rm -rf "$tmp"
+  [ "$local_h" = "$remoto_h" ] || erro "PENDENTE (P6): o readback do consentimento v4 divergiu; não considere registrado."
+  echo "[P3] consentimento v4 registrado e confirmado por readback (sha256 ${local_h:0:12}...)."
+  echo "A escrita automática de resultados e a leitura por sessões continuam DESABILITADAS; habilitar é a C6, PR próprio, com a sua aprovação."
+}
+
 cmd_guardar_plano() {
   exigir_clone
   local arquivo="${1:-}" pasta="${UFMS_PLANO_DIR:-$HOME/ufms-plano}"
@@ -372,7 +422,8 @@ case "${1:-ajuda}" in
   token)       shift; cmd_token "${1:-privado}";;
   plano)       cmd_plano;;
   consentir-v3)  cmd_consentir_v3;;
+  consentir-v4)  cmd_consentir_v4;;
   guardar-plano) shift; cmd_guardar_plano "${1:-}";;
-  ajuda|-h|--help) sed -n '2,15p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//';;
+  ajuda|-h|--help) sed -n '2,17p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//';;
   *) echo "Comando desconhecido: $1" >&2; echo "Use: bash ufms.sh ajuda" >&2; exit 2;;
 esac

@@ -16,6 +16,7 @@ import private_persistence_guard as guard  # noqa: E402
 
 SCRIPT = ROOT / "scripts" / "termux" / "ufms.sh"
 ADR = ROOT / "docs" / "governanca" / "ADR013_PERSISTENCIA_PRIVADA_DESENHO_20261107.md"
+V4 = ROOT / "docs" / "governanca" / "E5_CONSENTIMENTO_V4_PROPOSTA_20261118.md"
 
 FAKE_GH = r'''#!/usr/bin/env python3
 import base64, hashlib, json, os, pathlib, sys
@@ -186,6 +187,77 @@ class ConsentirEGuardarTests(unittest.TestCase):
         r = self.rodar("consentir-v3", entrada="CONSINTO v3\n")
         self.assertEqual(r.returncode, 1)
         self.assertIsNone(self.arquivo_remoto("consent-v3.json"))
+
+    # consentir-v4 --------------------------------------------------------------------------------------------
+    def test_consentir_v4_registra_arquivo_valido_sem_tocar_no_v2_nem_no_v3(self):
+        self.semear("consent.json", "ORIGINAL-V2")
+        self.semear("consent-v3.json", "ORIGINAL-V3")
+        r = self.rodar("consentir-v4", entrada="CONSINTO v4\n")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        c = json.loads(self.guardado("consent-v4.json"))
+        self.assertEqual(guard.check_consent(c), "v4")
+        self.assertIn("leitura_projecoes_sessoes_app_claude", c["inclui"])
+        self.assertIsNone(c["revoked_at"])
+        self.assertEqual(c["text_sha256"], hashlib.sha256(c["text"].encode("utf-8")).hexdigest())
+        self.assertIn("> " + c["text"], V4.read_text(encoding="utf-8"))
+        for trecho in ("app Claude", "somente leitura", "nunca o histórico bruto", "16/02/2027", "Versão: v4"):
+            self.assertIn(trecho, c["text"])
+        self.assertEqual(self.guardado("consent.json"), b"ORIGINAL-V2")
+        self.assertEqual(self.guardado("consent-v3.json"), b"ORIGINAL-V3")
+        self.assertIn("readback", r.stdout)
+        self.assertIn("DESABILITADAS", r.stdout)
+
+    def test_consentir_v4_so_com_a_frase_exata(self):
+        for resposta in ("\n", "sim\n", "CONSINTO v3\n", "consinto v4\n", "CONSINTO\n", ""):
+            r = self.rodar("consentir-v4", entrada=resposta)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("NÃO registrado", r.stdout)
+            self.assertIsNone(self.arquivo_remoto("consent-v4.json"), resposta)
+
+    def test_consentir_v4_bloqueia_repositorio_publico_inexistente_ou_erro(self):
+        self.repo_existe(False)
+        r = self.rodar("consentir-v4", entrada="CONSINTO v4\n")
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("NÃO é privado", r.stderr)
+        self.assertIsNone(self.arquivo_remoto("consent-v4.json"))
+        (self.estado / "existe").unlink()
+        self.assertEqual(self.rodar("consentir-v4", entrada="CONSINTO v4\n").returncode, 1)
+        (self.estado / "error500").touch()
+        self.assertEqual(self.rodar("consentir-v4", entrada="CONSINTO v4\n").returncode, 1)
+        self.assertIsNone(self.arquivo_remoto("consent-v4.json"))
+
+    def test_consentir_v4_nao_sobrescreve_e_trata_readback_e_falha_de_gravacao(self):
+        self.semear("consent-v4.json", "ORIGINAL-V4")
+        r = self.rodar("consentir-v4", entrada="CONSINTO v4\n")
+        self.assertEqual(r.returncode, 0)
+        self.assertIn("mantido", r.stdout)
+        self.assertEqual(self.guardado("consent-v4.json"), b"ORIGINAL-V4")
+        (self.estado / "arquivos" / "consent-v4.json").unlink()
+        r = self.rodar("consentir-v4", entrada="CONSINTO v4\n", FAKE_READBACK_BAD="consent-v4")
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("PENDENTE (P6)", r.stderr)
+        (self.estado / "arquivos" / "consent-v4.json").unlink()
+        (self.estado / "put_falha").touch()
+        r = self.rodar("consentir-v4", entrada="CONSINTO v4\n")
+        self.assertEqual(r.returncode, 1)
+        self.assertIsNone(self.arquivo_remoto("consent-v4.json"))
+
+    def test_consentir_v4_recusa_texto_ausente_ou_duplicado(self):
+        import shutil
+        clone = self.dir / "clone"
+        shutil.copytree(ROOT, clone, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache"))
+        doc = clone / "docs" / "governanca" / "E5_CONSENTIMENTO_V4_PROPOSTA_20261118.md"
+        original = doc.read_text(encoding="utf-8")
+        linha = next(l for l in original.splitlines() if l.startswith("> "))
+        for variante in (original.replace(linha, ""), original.replace(linha, linha + "\n" + linha), original.replace("Versão: v4.", "Versão: v5.")):
+            doc.write_text(variante, encoding="utf-8")
+            r = self.rodar("consentir-v4", entrada="CONSINTO v4\n", UFMS_DIR=str(clone))
+            self.assertEqual(r.returncode, 1, r.stdout)
+            self.assertIsNone(self.arquivo_remoto("consent-v4.json"))
+
+    def test_ajuda_lista_o_consentir_v4(self):
+        r = self.rodar("ajuda")
+        self.assertIn("consentir-v4", r.stdout)
 
     # guardar-plano -------------------------------------------------------------------------------------------
     def destino(self, arquivo):
