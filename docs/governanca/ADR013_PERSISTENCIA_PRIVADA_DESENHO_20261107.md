@@ -70,6 +70,10 @@ O v2 cobre só **resultados** de cadernos e simulados; o **plano de estudo** fic
 
 **Gravação pelo próprio proprietário** (`ufms.sh guardar-plano`): é ato dele, com a credencial dele, no repositório dele; não passa pelo Tutor nem pela Zapia e **não habilita** a escrita automática (`personal_results_writes_enabled` continua `false`; isso segue em P4, S7 e PR próprio com aprovação humana). O guardar-plano só grava com `private=true` (P1) e consentimento v3 válido e não revogado (P3), de forma idempotente (P5) e com readback (P6).
 
+## Consentimento v4 (PROPOSTO em 18/11/2026)
+
+O texto proposto, que inclui o app Claude e a leitura somente de projeções, está em `docs/governanca/E5_CONSENTIMENTO_V4_PROPOSTA_20261118.md`. **Não registrado; não habilita a escrita; só vale quando o proprietário o aprovar por PR e o registrar.**
+
 ## Próximos passos (cada um em PR próprio, em série)
 
 1. (Depende da criação do repositório privado) Fixtures e contraprovas P1–P3 e P5–P6. **Parcial (07/11/2026):** `scripts/private_persistence_guard.py` e `tests/test_private_persistence_guard.py` cobrem esses controles com leitor de visibilidade injetado (fakes), sem rede e sem gravar. **Falta** a prova contra um repositório privado real de teste, que depende da criação desse repositório pelo proprietário.
