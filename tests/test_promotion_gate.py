@@ -131,6 +131,36 @@ class PortaoTests(unittest.TestCase):
         self.assertNotIn("TENT-FICT-1", recibo)
         self.assertNotIn("acertos", recibo)
 
+    # marca de evento sintético (C5) -----------------------------------------------------------------------------
+    def entrada_marcada(self, ev, valor):
+        corpo = json.loads(entrada(ev))
+        corpo["sintetico"] = valor
+        return json.dumps(corpo).encode()
+
+    def test_entrada_sintetica_grava_com_a_marca_no_envelope_e_a_normal_nao_tem_marca(self):
+        repo = preparar()
+        r = pg.promover(self.entrada_marcada(tentativa(), True), contexto(repo))
+        self.assertEqual(r["status"], "COMMITTED", r)
+        self.assertIs(json.loads(repo.arquivos[r["path"]])["envelope"]["sintetico"], True)
+        repo2 = preparar()
+        r2 = pg.promover(entrada(tentativa()), contexto(repo2))
+        self.assertEqual(r2["status"], "COMMITTED", r2)
+        self.assertNotIn("sintetico", json.loads(repo2.arquivos[r2["path"]])["envelope"])  # evento real: envelope inalterado
+
+    def test_marca_so_aceita_o_booleano_true(self):
+        for valor in (False, "true", 1, 0, None, [], {}, "sim"):
+            repo = preparar()
+            antes = dict(repo.arquivos)
+            r = pg.promover(self.entrada_marcada(tentativa(), valor), contexto(repo))
+            self.assertEqual((r["status"], r["codigo"]), ("DENIED", "ENTRADA_CAMPOS"), valor)
+            self.assertEqual(repo.arquivos, antes, valor)  # nada foi gravado
+
+    def test_outro_campo_extra_continua_recusado_mesmo_com_a_marca(self):
+        corpo = json.loads(self.entrada_marcada(tentativa(), True))
+        corpo["extra"] = 1
+        r = pg.promover(json.dumps(corpo).encode(), contexto(preparar()))
+        self.assertEqual((r["status"], r["codigo"]), ("DENIED", "ENTRADA_CAMPOS"))
+
     def test_event_id_e_data_mais_hash_do_corpo_e_muda_com_o_conteudo(self):
         a, b = tentativa(), tentativa(acertos=9)
         self.assertRegex(a["event_id"], r"^20261117-[0-9a-f]{12}$")

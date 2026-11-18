@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c6c_flag_propria_do_fluxo_ainda_falsa",
+    "scope": "c6d_marca_de_evento_sintetico",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 129,
+    "pr_number": 130,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #128 integrado em main no merge commit 297114e4d7f7444aa34d0e5fae95c89176094526. Frente única ativa: RM-09 (c6c_flag_propria_do_fluxo_ainda_falsa), branch ccr-59d8ec9a-y3l4xj, PR #129. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #129 integrado em main no merge commit b78bf3f977202ead67f87874268525587ed80023. Frente única ativa: RM-09 (c6d_marca_de_evento_sintetico), branch ccr-59d8ec9a-y3l4xj, PR #130. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 128,
-    "merge_commit_sha": "297114e4d7f7444aa34d0e5fae95c89176094526"
+    "pr_number": 129,
+    "merge_commit_sha": "b78bf3f977202ead67f87874268525587ed80023"
   },
   "work_queue": [
     {
@@ -550,6 +550,17 @@
       "deliverable": "scripts/command_box_runner.py",
       "depends_on": [
         "C6B"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "C6D",
+      "title": "Marca de evento sintético (decisão do proprietário de 18/11/2026): a entrada aceita o campo opcional sintetico (só o booleano true), o histórico guarda a marca no envelope e as projeções descartam o evento de teste (fail-closed: marca ambígua ou registro malformado também sai); prepara a segunda metade da C5 sem poluir o histórico real; a flag segue falsa",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/promotion_gate.py",
+      "depends_on": [
+        "C6C"
       ],
       "blocking_inputs": [],
       "optional_inputs": []

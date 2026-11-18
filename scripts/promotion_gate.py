@@ -30,6 +30,7 @@ except ModuleNotFoundError:  # uso como pacote
 ENTRY_VERSION = 1
 MAX_ENTRY_BYTES = 16384
 ENTRY_KEYS = frozenset({"entrada_versao", "evento", "origem"})
+SYNTHETIC_KEY = "sintetico"  # marca OPCIONAL de entrada de TESTE (C5); só aceita o booleano true; vai ao envelope do histórico
 ORIGIN_KEYS = frozenset({"agente", "escritor", "comando_hash"})
 AGENTS = frozenset({"tutor", "coach"})
 DELIVERER = "zapia"
@@ -107,7 +108,9 @@ def parse_entry(raw):
         entry = json.loads(bytes(raw).decode("utf-8"), object_pairs_hook=_no_duplicate_keys)
     except (UnicodeDecodeError, ValueError, RecursionError):
         raise Recusa("DENIED", "ENTRADA_INVALIDA", "forma") from None
-    if not isinstance(entry, dict) or set(entry) != ENTRY_KEYS:
+    if not isinstance(entry, dict) or set(entry) not in (ENTRY_KEYS, ENTRY_KEYS | {SYNTHETIC_KEY}):
+        raise Recusa("DENIED", "ENTRADA_CAMPOS", "forma")
+    if SYNTHETIC_KEY in entry and entry[SYNTHETIC_KEY] is not True:
         raise Recusa("DENIED", "ENTRADA_CAMPOS", "forma")
     if entry["entrada_versao"] != ENTRY_VERSION or isinstance(entry["entrada_versao"], bool):
         raise Recusa("DENIED", "ENTRADA_VERSAO", "forma")
@@ -166,6 +169,8 @@ def build_stored(evento, entry, contexto, hash_corpo):
         "execucao": contexto["execucao"], "validador_sha": contexto["validador_sha"],
         "hash_corpo": hash_corpo,
     }
+    if entry.get(SYNTHETIC_KEY) is True:
+        envelope[SYNTHETIC_KEY] = True  # evento de teste: as projeções o descartam (session_read_guard.descartar_sinteticos)
     return canonical({"evento": evento, "envelope": envelope})
 
 

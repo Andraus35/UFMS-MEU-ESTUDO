@@ -113,6 +113,28 @@ class AutorizacaoTests(unittest.TestCase):
         bloqueia(self, lambda: g.authorize_session_read(consent(revoked_at="2026-11-19T13:00:00+00:00"), "projecao", PROJ, AGORA), "revogado")
 
 
+class SinteticosTests(unittest.TestCase):
+    REAL = {"evento": {"event_id": "20261120-aaaaaaaaaaaa"}, "envelope": {"origem": "tutor", "escritor": "fluxo"}}
+    TESTE = {"evento": {"event_id": "20261120-bbbbbbbbbbbb"}, "envelope": {"origem": "tutor", "sintetico": True}}
+
+    def test_descarta_o_registro_de_teste_e_mantem_a_ordem_dos_reais(self):
+        outro = {"evento": {"event_id": "20261121-cccccccccccc"}, "envelope": {"origem": "coach"}}
+        self.assertEqual(g.descartar_sinteticos([self.REAL, self.TESTE, outro]), [self.REAL, outro])
+        self.assertEqual(g.descartar_sinteticos([self.TESTE]), [])
+        self.assertEqual(g.descartar_sinteticos([]), [])
+
+    def test_marca_ambigua_ou_registro_malformado_conta_como_sintetico(self):
+        ruins = [{"evento": {}, "envelope": {"sintetico": False}}, {"evento": {}, "envelope": {"sintetico": "true"}},
+                 {"evento": {}, "envelope": {"sintetico": None}}, {"evento": {}}, {"evento": {}, "envelope": []},
+                 {"evento": {}, "envelope": "x"}, "texto", None, 3, []]
+        for r in ruins:
+            self.assertTrue(g.eh_sintetico(r), r)
+        self.assertEqual(g.descartar_sinteticos(ruins), [])
+
+    def test_registro_real_nao_e_sintetico(self):
+        self.assertFalse(g.eh_sintetico(self.REAL))
+
+
 class LimitesDoModuloTests(unittest.TestCase):
     def test_modulo_e_offline_e_nao_grava_nem_le_segredo(self):
         fonte = (ROOT / "scripts/session_read_guard.py").read_text(encoding="utf-8")
