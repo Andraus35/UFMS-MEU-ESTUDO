@@ -435,6 +435,17 @@
       "optional_inputs": []
     },
     {
+      "id": "HOOK2",
+      "title": "Hook Stop de entrega final versionado em .claude/hooks/entrega_final.py e registrado em .claude/settings.json, ativo até 20/11/2026: ao fim de rodada com entrega confere git limpo e enviado, gates e suíte de testes, bloqueia o fim da rodada se algo estiver vermelho, mostra a contagem regressiva e os desbloqueios pendentes do proprietário; só lê e avisa, falha aberta; código e testes já preparados (22 de 22 mutações mortas, execução real de 66 s), a entrar em PR próprio",
+      "roadmap_task": "RM-09",
+      "deliverable": ".claude/hooks/entrega_final.py",
+      "depends_on": [
+        "E2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "L2",
       "title": "Conversor offline da tabela estruturada de desempenho entregue pela Zapia (S9-R6, R7): contrato de entrega com as colunas do apêndice do relatório (código, profundidade, título, questões, acertos, erros, peso) mais recorte, pontuação declarada pelo Tutor e data; recusa o que fugir do contrato; recalcula o derivado; arquivo bruto e valores reais nunca no repositório; sem convenção de contagem presumida; o contrato inclui o bloco `procedimento` (relato descritivo de como a Zapia extraiu o relatório: telas, passos, filtros, hora, avisos, conferências), que é autorrelato: o harness confere a forma e não o prova",
       "roadmap_task": "RM-09",
