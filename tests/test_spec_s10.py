@@ -60,7 +60,7 @@ class SpecS10Tests(unittest.TestCase):
     def test_prompt_minimo_com_proibicoes_e_limite_do_esquema(self):
         r3 = req(3)
         for trecho in ("tópico", "lacuna", "método", "exigência de fonte", "dado pessoal", "cpf", "credencial", "exportação bruta",
-                       "captura de tela", "texto integral de questão", "2000 caracteres", "n2", "lacuna", "notebook_prompt_validator.py", "heurístico"):
+                       "captura de tela", "texto integral de questão", "2000 caracteres", "n2", "lacuna", "notebook_prompt_validator.py", "heurístico", "prompt_sha256", "caixa de comandos", "46 prompts adversariais"):
             self.assertIn(trecho, r3, trecho)
         self.assertEqual(SCHEMA["limits"]["max_param_string_chars"], 2000)
 
