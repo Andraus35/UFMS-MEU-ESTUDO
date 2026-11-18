@@ -1,5 +1,7 @@
 # S9 — Leitura direta das plataformas (especificação)
 
+**Emenda E2 (18/11/2026):** ao **fim** deste documento há a seção "Emenda E2", que **vale** onde divergir do texto abaixo (desempenho do TEC pela Zapia, origem na nuvem). Registro: `docs/governanca/E2_EMENDA_S5_S4R2_20261118.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16), pelo modelo da Spec Lean da Tech Leads Club **no que couber**. Fecha o que `docs/PLATFORMS.md` (opções A a F, critérios e regras da leitura direta) deixou aberto: **qual caminho usar primeiro, com que limites e o que provar antes de qualquer leitura em conta real**. **Aponta** para o que existe (`docs/PLATFORMS.md`, `docs/especificacoes/S6_EXECUCAO_CANAL.md`, `scripts/agent_commands.py`, `scripts/gp1_ingestion.py`); não copia. **Só especificação:** não lê nenhuma conta, não cria credencial, não altera a flag `personal_results_writes_enabled` (segue **falsa**) e nenhum código é criado. Não contém estado nem dado pessoal.
 
 **Insumos do proprietário (17/11/2026, respostas por escolha):** (1) o plano dele no **TEC Concursos oferece exportação do desempenho em CSV ou Excel**; (2) sobre o **Qconcursos**, "não sei / não conferi"; (3) ele **viu a Zapia, na conta exclusiva dela, abrir o TEC logado**. Os itens (1) e (3) são **afirmações dele, não verificadas** por este repositório; o item (2) é **lacuna declarada**, sem presunção.
@@ -73,3 +75,14 @@ Esta especificação está **aceita pelo contrato** quando `python scripts/doc_c
 - **A exportação do TEC** existe, segundo o proprietário e o autorrelato da Zapia; o **formato** não foi visto, e **não** há conversor até haver amostra.
 - **A origem do dado não é provada** (S6-R7): quem controla a conta do proprietário controla o canal.
 - **O enquadramento jurídico** do uso de sessão por terceiro nos termos de cada plataforma **não foi consultado**; esta especificação **não** é parecer jurídico.
+
+## Emenda E2 (18/11/2026): o desempenho do TEC pela Zapia
+
+**Natureza:** emenda **aditiva** da S9-R1, por decisão do proprietário. O texto acima **permanece** como histórico; onde divergir, **vale esta seção**. Não altera o `PRODUCT.md`.
+
+- **S9-R1 (emenda):** para o **TEC**, o desempenho passa a vir **pela Zapia, pedido pelo Tutor ou pelo Coach, no lugar da exportação manual**, que **continua como alternativa sempre disponível**. A "ordem de caminhos" que esta especificação propunha deixa de ser a referência para o TEC; **o proprietário escolheu testar o caminho pela Zapia** e **não aprovou a ordem proposta** como estava. **Qconcursos: inalterado, só entrada manual.**
+- **O que continua valendo, por si (D-27):** S9-R4 (1 página a cada 10 s, 30 por sessão, 1 sessão por dia; para ao primeiro bloqueio), S9-R5 (saída mínima e dado não confiável), S9-R6 (arquivo bruto nunca no repositório), S9-R8 e S9-R9: **termos lidos e registrados**, testes da L1 verdes, mecanismo escolhido e **aprovação expressa em PR da primeira leitura real**. O proprietário **mantém o aceite do risco** e **leu o item 8.1** dos termos do TEC: a conclusão dele (**veda automação; assume o risco para a exportação, no alcance do teste da Z1**) está em `docs/governanca/REGISTRO_TERMOS_TEC_20261118.md`, o que **cumpre a S9-R8(b) só para esse teste**; a **S9-R9** (aprovação expressa em PR da primeira leitura real) e a aceitação do risco **para pedidos diários** **não estão cumpridas**.
+- **Pedido e frequência:** no máximo **1 pedido por dia e só com atividade concluída**; a operação do pedido é a tarefa **E3** (aprovação explícita do proprietário, `agents/` é contrato).
+- **Contrato de entrega (L2):** tabela estruturada com as colunas do relatório de 17/11 (código, profundidade, título, questões, acertos, erros, peso), **recorte** (período e filtros) e **pontuação** declarados (a pontuação do painel pode diferir da planilha e **não se infere**), e o bloco `procedimento`; recusa o que fugir do contrato e **recalcula o derivado**. O harness **não aceita análise de conteúdo** da Zapia.
+- **Resultado pessoal:** só vai ao repositório **privado**, pela fila e pelo portão (flag `false`); o conteúdo do relatório não é gravado no repositório público nem em arquivo local.
+- **Honestidade:** o teste do caminho (Z1) **não foi executado**; a L1 continua **fechando por padrão** (nenhuma plataforma habilitada); o relato de que a Zapia "abre o TEC logado" e de como ela obteria a planilha por e-mail é **autorrelato não verificado**.

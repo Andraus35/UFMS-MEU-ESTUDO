@@ -220,8 +220,8 @@ def check_specs(root: Path) -> list[str]:
     return errs
 
 
-# Entrega de item da fila: especificação (S*), código de scripts/ (tarefas C*), o registro do hook, o CODEOWNERS, um roteiro do Termux, o registro de uma emenda (docs/governanca/E<n>_*.md) ou um prompt de teste (docs/governanca/PROMPT_*.md).
-QUEUE_DELIVERABLE_RE = r"docs/especificacoes/S[^/]+\.md|scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md"
+# Entrega de item da fila: especificação (S*), código de scripts/ (tarefas C*), o registro do hook, o CODEOWNERS, um roteiro do Termux, o registro de uma emenda (docs/governanca/E<n>_*.md) um prompt de teste (docs/governanca/PROMPT_*.md) ou um script de hook (.claude/hooks/*.py).
+QUEUE_DELIVERABLE_RE = r"docs/especificacoes/S[^/]+\.md|scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md|\.claude/hooks/[a-z0-9_]+\.py"
 QUEUE_FIELDS = ("id", "title", "roadmap_task", "deliverable", "depends_on", "blocking_inputs", "optional_inputs")
 
 

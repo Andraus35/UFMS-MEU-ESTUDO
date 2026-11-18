@@ -20,13 +20,13 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "E3", "L2"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        # L1, S10, E1, N2 e Z1 têm a entrega; só a S11 espera insumo; a E2 (emenda das especificações) é a próxima, depois E3 e L2
-        self.assertEqual(fila["proximo"]["id"], "E2")
-        self.assertEqual(fila["pendentes"], ["S11", "E2", "E3", "L2"])
-        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S11"])
+        # L1, S10, E1, N2, Z1 e E2 têm a entrega; o HOOK2 (prazo de 20/11, pedido do proprietário) é o próximo, depois a L2; S11 e E3 esperam insumo
+        self.assertEqual(fila["proximo"]["id"], "HOOK2")
+        self.assertEqual(fila["pendentes"], ["S11", "HOOK2", "L2", "E3"])
+        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S11"])  # a E3 só é liberada quando a L2 existir; então passa a bloqueada por insumo
         self.assertIn("persistência", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
@@ -39,10 +39,10 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
             if item["id"].startswith("S"):  # especificações; as tarefas de código (C4, RUNNER, HOOK, COMANDOS, CODEOWNERS) têm entrega própria
                 self.assertRegex(item["deliverable"], r"^docs/especificacoes/S[^/]+\.md$")
             else:
-                self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md)$")
+                self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md|\.claude/hooks/[a-z0-9_]+\.py)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("S11", "E2", "E3", "L2"):  # ainda por fazer; S10, L1, E1 e N2 já têm a entrega
+        for novo in ("S11", "HOOK2", "L2", "E3"):  # ainda por fazer; S10, L1, E1 e N2 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 
@@ -55,14 +55,22 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         self.assertEqual(fila["L2"]["deliverable"], "scripts/tec_export_converter.py")
         self.assertIn("pedido de merge explícito", fila["E1"]["title"])
         self.assertIn("sem convenção de contagem presumida", fila["L2"]["title"])
-        for k in ("E1", "N2", "Z1", "E2", "E3", "L2"):
+        for k in ("E1", "N2", "Z1", "E2", "L2"):
             self.assertEqual(fila[k]["blocking_inputs"], [], k)  # o relatório da Zapia chegou e o formato foi decidido (18/11/2026)
+        # a E3 espera a decisão do risco diário (depois da Z1) e a aprovação em agents/ (decisão de 18/11/2026)
+        self.assertEqual(len(fila["E3"]["blocking_inputs"]), 1)
+        self.assertIn("pedidos diários", fila["E3"]["blocking_inputs"][0])
+        self.assertIn("depois do resultado da Z1", fila["E3"]["blocking_inputs"][0])
+        self.assertIn("agents/", fila["E3"]["blocking_inputs"][0])
         self.assertIn("tabela estruturada", fila["L2"]["title"])
-        self.assertEqual(fila["E3"]["depends_on"], ["E2"])
+        self.assertEqual(fila["E3"]["depends_on"], ["E2", "L2"])  # a L2 vem primeiro (decisão de 18/11/2026)
         self.assertEqual(fila["E3"]["deliverable"], "docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md")
         self.assertIn("aprovação explícita", fila["E3"]["title"])
         self.assertIn("compartilhada pelo Tutor e pelo Coach", fila["E3"]["title"])  # decisão de 18/11/2026: o Coach também pode solicitar
         self.assertIn("Tutor ou pelo Coach", fila["E2"]["title"])
+        self.assertEqual(fila["HOOK2"]["depends_on"], ["E2"])  # pedido de 18/11/2026, prazo 20/11
+        self.assertEqual(fila["HOOK2"]["deliverable"], ".claude/hooks/entrega_final.py")
+        self.assertIn("até 20/11/2026", fila["HOOK2"]["title"])
         self.assertIn("no máximo 1 por dia e só com atividade concluída", fila["E3"]["title"])  # decisão de 18/11/2026
         self.assertIn("bloco `procedimento`", fila["L2"]["title"])
         self.assertIn("não interpreta o conteúdo", fila["E2"]["title"])

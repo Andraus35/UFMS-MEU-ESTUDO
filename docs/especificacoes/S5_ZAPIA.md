@@ -1,5 +1,7 @@
 # S5 — Harness da Zapia (especificação)
 
+**Emenda E2 (18/11/2026):** ao **fim** deste documento há a seção "Emenda E2", que **vale** onde divergir do texto abaixo (desempenho do TEC pela Zapia, origem na nuvem). Registro: `docs/governanca/E2_EMENDA_S5_S4R2_20261118.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16) do contrato de operação da **Zapia** como interface com o proprietário e executora de ferramentas (D-10). Complementa S1 a S4 (`docs/especificacoes/S4_OPERACAO.md` define o esquema dos comandos; esta define como a Zapia se orienta pelo repositório, o que executa, o que recusa e como reporta). O artefato que ela lerá (um perfil no estilo de `agents/TUTOR.md`) é implementação posterior e **não existe ainda**. Não contém estado.
 
 ## Objetivo
@@ -56,3 +58,12 @@ Consultas de 09/11/2026, somadas ao que o próprio repositório registra da Zapi
 - Não cria o perfil da Zapia, nem o mecanismo de assinatura, nem o filtro dentro do `scripts/tool_gateway.py`; descreve o que construir e provar.
 - Não habilita persistência pessoal, mensagens reais nem rotina autorizada.
 - Dados do autorrelato podem estar desatualizados; o repositório e a leitura autenticada prevalecem.
+
+## Emenda E2 (18/11/2026): comando na nuvem, credenciais e relatório de desempenho
+
+**Natureza:** emenda **aditiva**, por decisão do proprietário (D-25, D-26 e 18/11/2026). O texto acima **permanece** como histórico; onde divergir, **vale esta seção**. Não altera `agents/ZAPIA.md` (contrato) nem o `PRODUCT.md`.
+
+- **S5-R3, comando válido (emenda):** o comando **não é assinado** (S6-R7). A Zapia executa **apenas o que a caixa de comandos promoveu** para `comandos/validados/`, com **recibo de mesmo hash**; texto livre do chat **não** é comando. A assinatura Ed25519 "recomendada" **não se aplica** ao desenho atual.
+- **S5-R8, credenciais (emenda):** na fila, a Zapia usa **token só do repositório `entrada`** (Contents leitura e escrita, sem Workflows); o token `zapia_dados` **passa a ser a credencial do fluxo**, não dela (D-25). A sessão do TEC e a do Google ficam **só no navegador dela, na conta exclusiva**, e nunca vão ao modelo (S9-R3). Diante de captcha, aviso ou verificação, **para e avisa**.
+- **S5-R13, relatório de desempenho do TEC (nova):** a Zapia traz o desempenho **quando o Tutor ou o Coach pede**, por comando (E3), **no máximo 1 por dia e só com atividade concluída**. Ela: (a) entrega **tabela estruturada fiel** ao que o TEC mostra, sem corrigir nem completar; (b) **não interpreta o conteúdo** (sem "sinais principais", "achados" ou classificação de assuntos: isso é do Tutor e do Coach); (c) entrega junto um **relato do procedimento** (telas e passos usados, filtros e chaves visíveis, hora, avisos do TEC, conferências de fidelidade, como o arquivo chegou até ela), que é **autorrelato**; (d) **não guarda o arquivo** em lugar nenhum além da fila; (e) entrega **só pela fila `entrada`**, nunca ao público; (f) **para ao primeiro aviso** do TEC e não repete. O PDF é só leitura humana. **Critério:** revisão humana e o contrato de entrega da L2; **a Zapia não foi testada nisso** (Z1 não executada).
+- **Nota sobre os "Limites" acima:** o ambiente dos agentes **não** é mais o D-18 (superada pela D-25) e o acesso ao Notebook **não** está mais aberto (D-26, resolvido o OPEN-10).

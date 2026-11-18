@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "z1_prompt_do_teste_da_exportacao_do_tec_pela_zapia",
-    "branch": "ccr-l2-conversor-tec",
-    "pr_number": 116,
+    "scope": "e2_emenda_da_s5_s4_r2_s9_r1_e_s4",
+    "branch": "ccr-e2-emenda-s5-s4",
+    "pr_number": 117,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #115 integrado em main no merge commit 29068b2a316ba269cc19648adc1ae7512db8086e. Frente única ativa: RM-09 (l2_conversor_offline_da_exportacao_do_tec), branch ccr-l2-conversor-tec, PR #116. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #116 integrado em main no merge commit 5039a521fb9de9b5d4c116ae2d8531c7ae1b5f09. Frente única ativa: RM-09 (e2_emenda_da_s5_s4_r2_s9_r1_e_s4), branch ccr-e2-emenda-s5-s4, PR #117. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 115,
-    "merge_commit_sha": "29068b2a316ba269cc19648adc1ae7512db8086e"
+    "pr_number": 116,
+    "merge_commit_sha": "5039a521fb9de9b5d4c116ae2d8531c7ae1b5f09"
   },
   "work_queue": [
     {
@@ -435,10 +435,10 @@
       "optional_inputs": []
     },
     {
-      "id": "E3",
-      "title": "Operação nova, compartilhada pelo Tutor e pelo Coach (como enviar_mensagem), para pedir à Zapia o relatório de desempenho (nome, parâmetros, destino e limites no esquema de comandos e nos perfis de agents/ e de ZAPIA), em PR dedicado com texto para o proprietário aprovar; exige aprovação explícita dele para mexer em agents/; limite do pedido: no máximo 1 por dia e só com atividade concluída (decisão de 18/11/2026)",
+      "id": "HOOK2",
+      "title": "Hook Stop de entrega final versionado em .claude/hooks/entrega_final.py e registrado em .claude/settings.json, ativo até 20/11/2026: ao fim de rodada com entrega confere git limpo e enviado, gates e suíte de testes, bloqueia o fim da rodada se algo estiver vermelho, mostra a contagem regressiva e os desbloqueios pendentes do proprietário; só lê e avisa, falha aberta; código e testes já preparados (22 de 22 mutações mortas, execução real de 66 s), a entrar em PR próprio",
       "roadmap_task": "RM-09",
-      "deliverable": "docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md",
+      "deliverable": ".claude/hooks/entrega_final.py",
       "depends_on": [
         "E2"
       ],
@@ -458,6 +458,101 @@
       "optional_inputs": [
         "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
       ]
+    },
+    {
+      "id": "E3",
+      "title": "Operação nova, compartilhada pelo Tutor e pelo Coach (como enviar_mensagem), para pedir à Zapia o relatório de desempenho (nome, parâmetros, destino e limites no esquema de comandos e nos perfis de agents/ e de ZAPIA), em PR dedicado com texto para o proprietário aprovar; exige aprovação explícita dele para mexer em agents/; limite do pedido: no máximo 1 por dia e só com atividade concluída (decisão de 18/11/2026)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md",
+      "depends_on": [
+        "E2",
+        "L2"
+      ],
+      "blocking_inputs": [
+        "decisão do proprietário sobre aceitar o risco do TEC para pedidos diários (a aceitação registrada cobre só o teste da Z1), a tomar depois do resultado da Z1 (rodada 7 de autorrelato); mais a aprovação explícita dele para mexer em agents/"
+      ],
+      "optional_inputs": []
     }
-  ]
+  ],
+  "owner_priorities": [
+    {
+      "rank": 1,
+      "id": "P1",
+      "ato": "Enviar o prompt da Z1 à Zapia, com a frase AUTORIZO TEC-EXPORT-1 escrita por ele, e trazer a resposta",
+      "destrava": "Mostra se a Zapia alcança o relatório do TEC; define o formato real da L2 e é o insumo da decisão do risco diário",
+      "destrava_itens": [
+        "L2",
+        "E3"
+      ],
+      "depende_de": [],
+      "esforco": "minutos",
+      "estado": "pendente"
+    },
+    {
+      "rank": 2,
+      "id": "P2",
+      "ato": "Decidir se aceita o risco do TEC para 1 pedido por dia (a aceitação registrada cobre só o teste da Z1), depois do resultado da Z1",
+      "destrava": "Libera ou descarta a E3, a operação que o Tutor e o Coach usam para pedir o relatório; a E3 também exige a aprovação explícita dele em agents/",
+      "destrava_itens": [
+        "E3"
+      ],
+      "depende_de": [
+        "P1"
+      ],
+      "esforco": "uma decisão",
+      "estado": "pendente"
+    },
+    {
+      "rank": 3,
+      "id": "P3",
+      "ato": "Rodar a C3 no Termux (cria o repositório entrada, confere forks e colaboradores, instala o fluxo com o SHA fixado)",
+      "destrava": "Sem a C3 não há fluxo para provar (C5); a persistência e o piloto continuam bloqueados",
+      "destrava_itens": [
+        "S11"
+      ],
+      "depende_de": [],
+      "esforco": "um roteiro com frases de autorização",
+      "estado": "pendente"
+    },
+    {
+      "rank": 4,
+      "id": "P4",
+      "ato": "Aprovar o consentimento v4 (inclui o app Claude)",
+      "destrava": "Sem ele nenhuma sessão pode ler resultado; bloqueia o piloto",
+      "destrava_itens": [
+        "S11"
+      ],
+      "depende_de": [],
+      "esforco": "ler e aprovar um texto",
+      "estado": "pendente"
+    },
+    {
+      "rank": 5,
+      "id": "P5",
+      "ato": "Reconfirmar o merge do PR da tarefa ativa (E2 no momento), citando o PR e o head exato",
+      "destrava": "Libera a L2 como PR seguinte e deixa as especificações coerentes com as decisões dele",
+      "destrava_itens": [
+        "L2"
+      ],
+      "depende_de": [],
+      "esforco": "reconfirmar",
+      "estado": "pendente"
+    },
+    {
+      "rank": 6,
+      "id": "P6",
+      "ato": "C6: habilitar a flag de gravação, em PR com aprovação expressa",
+      "destrava": "Última peça da persistência; só depois de C3, C5 e do consentimento v4",
+      "destrava_itens": [
+        "S11"
+      ],
+      "depende_de": [
+        "P3",
+        "P4"
+      ],
+      "esforco": "aprovação em PR",
+      "estado": "pendente"
+    }
+  ],
+  "owner_priorities_note": "Prioridade persistente (decisão do proprietário, 18/11/2026): ordem dos atos e decisões dele que mais destravam trabalho. A sessão lembra a lista no início e a atualiza quando um item for feito (estado feito); não é fila de engenharia e não cria branch nem PR."
 }
