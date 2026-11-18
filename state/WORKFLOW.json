@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c5b_script_da_promocao_sintetica",
+    "scope": "c6_liga_a_flag_do_fluxo_privado",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 131,
+    "pr_number": 132,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #130 integrado em main no merge commit 1136b9635bda4e6867de89f4f1b80ab07aa1faf3. Frente única ativa: RM-09 (c5b_script_da_promocao_sintetica), branch ccr-59d8ec9a-y3l4xj, PR #131. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #131 integrado em main no merge commit d565e6fb71650adb5886cf906c4b0f5bf77a92ac. Frente única ativa: RM-09 (c6_liga_a_flag_do_fluxo_privado), branch ccr-59d8ec9a-y3l4xj, PR #132. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 130,
-    "merge_commit_sha": "1136b9635bda4e6867de89f4f1b80ab07aa1faf3"
+    "pr_number": 131,
+    "merge_commit_sha": "d565e6fb71650adb5886cf906c4b0f5bf77a92ac"
   },
   "work_queue": [
     {
@@ -577,6 +577,19 @@
       "optional_inputs": [
         "C6 mesclada e fluxo reinstalado com o SHA final"
       ]
+    },
+    {
+      "id": "C6",
+      "title": "C6, janela curta: liga só private_flow_promotion_enabled (a do público nunca liga), por PR próprio com aprovação expressa do proprietário; o fluxo só passa a valer depois de reinstalado com o SHA do merge (ATUALIZAR); o fechamento é outro PR que volta a flag a false mais nova reinstalação",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E6_C6_LIGA_FLAG_DO_FLUXO_20261118.md",
+      "depends_on": [
+        "C5P"
+      ],
+      "blocking_inputs": [
+        "aprovação expressa do proprietário para o merge, citando PR e head"
+      ],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
