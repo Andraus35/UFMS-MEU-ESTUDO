@@ -86,7 +86,7 @@ class ProductGateTests(unittest.TestCase):
 
     def test_fluxo_decisoes_requisitos_e_pontos_em_aberto(self):
         self.rejects(TEXT.replace("- **F5 Validar:**", "- **F6 Validar:**", 1), "Fluxo")
-        self.rejects(TEXT.replace("- **D-02 (07/11/2026):**", "- **D-01 (07/11/2026):**", 1), "duplicadas")
+        self.rejects(TEXT.replace("- **D-02 (07/11/2026; emendada pela D-25):**", "- **D-01 (07/11/2026):**", 1), "duplicadas")
         self.rejects(TEXT.replace("- **PR-002 ", "- **PR-001 ", 1), "duplicados")
         self.rejects(TEXT.replace("Aceite: testes com fixtures", "Teste: fixtures", 1), "Aceite")
         self.rejects(TEXT.replace("Elo: RM-09.", "", 1), "Elo")
@@ -95,7 +95,7 @@ class ProductGateTests(unittest.TestCase):
     def test_referencias_cruzadas_devem_existir(self):
         self.rejects(TEXT.replace("**B7:** PR-007 e PR-008.", "**B7:** PR-099.", 1), "inexistente")
         self.rejects(TEXT.replace("OPEN-01 e OPEN-02", "OPEN-01 e OPEN-77", 1), "OPEN")
-        self.rejects(TEXT.replace("(ver D-02)", "(ver D-77)", 1), "decisão")
+        self.rejects(TEXT.replace("(D-02, D-25)", "(D-02, D-77)", 1), "decisão")
 
     def test_nao_afirma_mecanismo_nao_observado(self):
         # A Zapia informou (07/11/2026) que GitHub é API REST e Gemini é interface web, sem MCP.
