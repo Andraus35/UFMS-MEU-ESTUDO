@@ -38,7 +38,7 @@ printf 'Cole o token "zapia token" (nome no GitHub; só `entrada`; NÃO o zapia_
 read -rs TOKEN || TOKEN=""; echo
 [ -n "$TOKEN" ] || falha "token vazio."
 case "$TOKEN" in github_pat_*) ;; *) falha "não parece fine-grained (github_pat_...).";; esac
-printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,255}$' || falha "o token tem caractere fora do padrão (espaço, quebra de linha ou invisível)."
+printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,1024}$' || falha "o token tem caractere fora do padrão (espaço, quebra de linha ou invisível)."
 NOME="c5-sintetica-$(date -u +%Y%m%dT%H%M%SZ).json"
 CAMINHO="fila/entradas/$NOME"
 CONTEUDO="$(printf '{"sintetico":true,"proposito":"C5","sem_dado_pessoal":true}' | base64 | tr -d '\n')"

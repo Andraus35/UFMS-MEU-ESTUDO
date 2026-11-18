@@ -42,7 +42,9 @@ DADOS_REPO = "Andraus35/ufms-meu-estudo-dados"  # P2: destino fixo, no código d
 FILA_DIR = "fila/entradas"
 MAX_HISTORICO = 2000
 _PATH = re.compile(r"^/repos/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+(?:/[A-Za-z0-9._%=-]+)*$")
-_TOKEN = re.compile(r"^[\x21-\x7e]{8,255}$")
+# ASCII imprimível sem espaço. O limite de 255 recusava o GITHUB_TOKEN do Actions (prova real de 18/11/2026: `TOKEN_INVALIDO:entrada`):
+# os tokens do GitHub podem passar de 255 caracteres. 1024 mantém o teto contra lixo e cabeçalho gigante.
+_TOKEN = re.compile(r"^[\x21-\x7e]{8,1024}$")
 _REPO = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9._-]{1,100}$")
 _NOME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}\.json$")
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
@@ -89,7 +91,10 @@ class GitHubApi:
 
     def __init__(self, token, transporte, base=API, tempo=20, rotulo=""):
         if not (isinstance(token, str) and _TOKEN.fullmatch(token)):
-            raise ValueError("TOKEN_INVALIDO:" + rotulo if rotulo else "TOKEN_INVALIDO")  # nunca ecoa o valor
+            # nunca ecoa o valor; só o rótulo, o comprimento e se todos os caracteres são ASCII imprimível (metadados sem segredo)
+            n = len(token) if isinstance(token, str) else 0
+            imprimivel = "sim" if isinstance(token, str) and all(0x21 <= ord(c) <= 0x7E for c in token) else "nao"
+            raise ValueError(f"TOKEN_INVALIDO:{rotulo}:len={n}:imprimivel={imprimivel}" if rotulo else "TOKEN_INVALIDO")
         self._token, self._transporte, self._base, self._tempo = token, transporte, base, tempo
 
     def __repr__(self):
@@ -111,9 +116,9 @@ class GitHubApi:
         return status, objeto
 
 
-# Mensagens de ValueError que o runner PODE imprimir (conjunto fechado, escritas por este código; nunca o valor de um token):
+# Mensagens de ValueError que o runner PODE imprimir (formato fechado, escritas por este código; nunca o valor de um token):
 # a prova real de 18/11/2026 só mostrou `ValueError`, sem dizer qual dos dois tokens estava malformado.
-DETALHES_SEGUROS = frozenset({"TOKEN_INVALIDO:dados", "TOKEN_INVALIDO:entrada", "fila grande demais"})
+DETALHE_SEGURO = re.compile(r"^(?:TOKEN_INVALIDO:(?:dados|entrada):len=\d{1,7}:imprimivel=(?:sim|nao)|fila grande demais)$")
 
 
 def _b64(dados):
@@ -337,7 +342,7 @@ def main(argv=None, transporte=None, ambiente=None, agora=None):
         resumo = executar(ler_fila(a.fila), contexto, fila)
     except Exception as erro:  # nunca imprime a exceção (poderia carregar contexto): só a classe e, se for uma das nossas, o detalhe
         saida = {"estado": "ERRO", "codigo": type(erro).__name__}
-        if isinstance(erro, ValueError) and str(erro) in DETALHES_SEGUROS:
+        if isinstance(erro, ValueError) and DETALHE_SEGURO.fullmatch(str(erro)):
             saida["detalhe"] = str(erro)
         print(json.dumps(saida))
         return 1
