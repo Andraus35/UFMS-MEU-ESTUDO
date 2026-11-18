@@ -101,6 +101,23 @@ def check_projection(proj):
     return proj
 
 
+def eh_sintetico(registro):
+    """True se o registro do histórico é de TESTE (C5) ou se a marca é ambígua. Fail-closed: só é real o registro cujo envelope
+    é um objeto sem a chave `sintetico`; `sintetico` presente com qualquer valor (inclusive false, texto ou número), envelope
+    ausente, malformado ou registro que não é objeto contam como sintético e saem da projeção."""
+    if not isinstance(registro, dict):
+        return True
+    envelope = registro.get("envelope")
+    if not isinstance(envelope, dict):
+        return True
+    return "sintetico" in envelope
+
+
+def descartar_sinteticos(registros):
+    """Entrada de TODA projeção feita a partir do histórico privado: devolve só os registros reais, na mesma ordem."""
+    return [r for r in registros if not eh_sintetico(r)]
+
+
 def authorize_session_read(consent, kind, projection, now=None):
     """Autoriza (ou bloqueia) UMA leitura de projeção por sessão; ordem fail-closed: tipo, consentimento v4, projeção."""
     if kind not in KINDS_PERMITIDOS:
