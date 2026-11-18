@@ -38,6 +38,7 @@ printf 'Cole o token "zapia token" (nome no GitHub; só `entrada`; NÃO o zapia_
 read -rs TOKEN || TOKEN=""; echo
 [ -n "$TOKEN" ] || falha "token vazio."
 case "$TOKEN" in github_pat_*) ;; *) falha "não parece fine-grained (github_pat_...).";; esac
+printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,255}$' || falha "o token tem caractere fora do padrão (espaço, quebra de linha ou invisível)."
 NOME="c5-sintetica-$(date -u +%Y%m%dT%H%M%SZ).json"
 CAMINHO="fila/entradas/$NOME"
 CONTEUDO="$(printf '{"sintetico":true,"proposito":"C5","sem_dado_pessoal":true}' | base64 | tr -d '\n')"
@@ -60,7 +61,7 @@ RUN=""; STATUS=""; CONC=""
 for _ in $(seq 1 "${C5_TENTATIVAS:-30}"); do
   LINHA="$(gh run list --repo "$ENTRADA" --workflow "$WF" --limit 10 --json databaseId,headSha,status,conclusion 2>/dev/null | \
     python -c 'import json,sys; sha=sys.argv[1]; r=[x for x in json.load(sys.stdin) if x["headSha"]==sha]; print((str(r[0]["databaseId"])+" "+str(r[0]["status"])+" "+str(r[0]["conclusion"])) if r else "")' "$SHA_COMMIT" 2>/dev/null || true)"
-  if [ -n "$LINHA" ]; then set -- $LINHA; RUN="$1"; STATUS="$2"; CONC="$3"; [ "$STATUS" = "completed" ] && break; fi
+  if [ -n "$LINHA" ]; then set -- $LINHA; RUN="${1:-}"; STATUS="${2:-}"; CONC="${3:-}"; [ "$STATUS" = "completed" ] && break; fi
   sleep "${C5_INTERVALO:-10}"
 done
 [ -n "$RUN" ] || div "nenhuma execução do fluxo apareceu para o commit (o gatilho não disparou)"

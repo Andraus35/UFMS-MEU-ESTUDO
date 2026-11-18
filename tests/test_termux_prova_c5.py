@@ -25,7 +25,14 @@ j = " ".join(a)
 if a[0] == "auth": sys.exit(0)
 if a[0] == "variable": sys.exit(0 if S["variavel"] else 1)
 if a[0] == "run" and a[1] == "list":
-    print(json.dumps([{"databaseId": 77, "headSha": S["run_sha"], "status": S["run_status"], "conclusion": S["run_conc"]}] if S["tem_run"] else [])); sys.exit(0)
+    seq = S.get("run_sequencia")  # lista de [status, conclusão] consumida a cada consulta; a conclusão vem VAZIA enquanto roda
+    if seq:
+        n = int(open(D + "/seq_n").read()) if os.path.exists(D + "/seq_n") else 0
+        open(D + "/seq_n", "w").write(str(n + 1))
+        st, co = seq[min(n, len(seq) - 1)]
+    else:
+        st, co = S["run_status"], S["run_conc"]
+    print(json.dumps([{"databaseId": 77, "headSha": S["run_sha"], "status": st, "conclusion": co}] if S["tem_run"] else [])); sys.exit(0)
 if a[0] == "run" and a[1] == "view":
     print("saida {\"estado\": \"FLAG_DESLIGADA\"}" if S["log_flag"] else "saida sem flag"); sys.exit(0)
 if a[0] == "api":
@@ -98,6 +105,26 @@ class CaminhoFelizTest(Base):
             self.assertNotIn(TOKEN, texto)  # o token nunca aparece em argumento nem na tela
         self.assertIn(TOKEN, self.log("curl_stdin.log"))  # entrou por stdin (config do curl)
         self.assertIn("DELETE", self.log("calls.log"))
+
+
+    def test_espera_com_conclusao_vazia_enquanto_o_fluxo_roda_nao_derruba_o_script(self):
+        # prova real de 18/11/2026: `$3: unbound variable` quando a conclusão vem vazia (fluxo ainda rodando)
+        self.estado["run_sequencia"] = [["in_progress", ""], ["queued", ""], ["completed", "success"]]
+        self.salvar()
+        env = {**os.environ, "PATH": f"{self.bin}:{os.environ['PATH']}", "FAKE_DIR": str(self.fake), "C5_TENTATIVAS": "5", "C5_INTERVALO": "0"}
+        r = subprocess.run(["bash", str(SCRIPT)], input="PROVAR\n" + TOKEN + "\nLIMPAR\n", capture_output=True, text=True, env=env, timeout=90)
+        self.assertNotIn("unbound variable", r.stderr + r.stdout)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("fluxo concluído com sucesso", r.stdout)
+
+    def test_token_com_caractere_fora_do_padrao_bloqueia_sem_curl(self):
+        # `read` já apara espaço e tabulação nas pontas; sobram o CR de colagem, o caractere invisível e o espaço no meio
+        for tok in (TOKEN + "\r", TOKEN + "\u200b", "github_pat_com espaco_no_meio_123456"):
+            self.setUp()
+            r = self.rodar(["PROVAR", tok])
+            self.assertEqual(r.returncode, 1, repr(tok))
+            self.assertIn("fora do padrão", r.stderr, repr(tok))
+            self.assertEqual(self.log("curl.log"), "", repr(tok))
 
 
 class ContraprovasTest(Base):

@@ -342,6 +342,20 @@ class SegredoTest(Base):
             self.assertIn("fine-grained", r.stderr)
             self.assertEqual(self.ler_estado()["secrets"], {})
 
+    def test_token_com_caractere_invisivel_cr_ou_espaco_no_meio_bloqueia_e_nao_grava(self):
+        # prova real de 18/11/2026: o fluxo falhou com TOKEN_INVALIDO; o roteiro agora recusa o token malformado antes de guardá-lo
+        for ruim in (TOKEN + "\r", TOKEN + "\u200b", "github_pat_com espaco_no_meio_0123456789"):
+            self.setUp()  # estado novo a cada volta: a etapa 2 só pergunta CONFIGURAR enquanto não foi aplicada
+            r = self.rodar(["CONFIGURAR", ruim, "INSTALAR"])
+            self.assertEqual(r.returncode, 1, repr(ruim))
+            self.assertIn("caractere fora do padrão", r.stderr, repr(ruim))
+            self.assertEqual(self.ler_estado()["secrets"], {})
+            self.assertNotIn("secret set", " ".join(self.chamadas()))
+        self.setUp()
+        r = self.rodar(["CONFIGURAR", TOKEN, "INSTALAR"])
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(self.ler_estado()["secrets"][ENTRADA]["DADOS_TOKEN"], TOKEN)
+
     def test_token_vazio_vira_pendencia_e_nada_e_gravado(self):
         r = self.rodar(["CONFIGURAR", "", "INSTALAR"])
         self.assertEqual(r.returncode, 2)
