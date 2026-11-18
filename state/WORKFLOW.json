@@ -529,7 +529,7 @@
     {
       "rank": 5,
       "id": "P5",
-      "ato": "Reconfirmar o merge do PR da tarefa ativa (E2 no momento), citando o PR e o head exato",
+      "ato": "Reconfirmar o merge do PR da tarefa ativa (ver `active` em `state/WORKFLOW.json`), citando o PR e o head exato",
       "destrava": "Libera a L2 como PR seguinte e deixa as especificações coerentes com as decisões dele",
       "destrava_itens": [
         "L2"
