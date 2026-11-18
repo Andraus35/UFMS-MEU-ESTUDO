@@ -60,7 +60,7 @@ class SpecS10Tests(unittest.TestCase):
     def test_prompt_minimo_com_proibicoes_e_limite_do_esquema(self):
         r3 = req(3)
         for trecho in ("tópico", "lacuna", "método", "exigência de fonte", "dado pessoal", "cpf", "credencial", "exportação bruta",
-                       "captura de tela", "texto integral de questão", "2000 caracteres", "n2", "lacuna"):
+                       "captura de tela", "texto integral de questão", "2000 caracteres", "n2", "lacuna", "notebook_prompt_validator.py", "heurístico"):
             self.assertIn(trecho, r3, trecho)
         self.assertEqual(SCHEMA["limits"]["max_param_string_chars"], 2000)
 
@@ -120,7 +120,8 @@ class SpecS10Tests(unittest.TestCase):
             self.assertIn(item, derivadas)
         ids = {i["id"] for i in FILA}
         self.assertNotIn("N1", ids)  # N1 é ato do proprietário (frases AUTORIZO); a N2 entrou na fila por decisão posterior dele
-        self.assertFalse((ROOT / "scripts" / "notebook_prompt_validator.py").exists())
+        # a N2 (validador offline do prompt) entrou na fila por decisão do proprietário e está entregue em scripts/
+        self.assertTrue((ROOT / "scripts" / "notebook_prompt_validator.py").is_file())
 
     def test_aponta_para_a_rodada_6_e_o_arquivo_existe(self):
         self.assertIn("RESPOSTA_RODADA6_ZAPIA_20261117.md", DOC)

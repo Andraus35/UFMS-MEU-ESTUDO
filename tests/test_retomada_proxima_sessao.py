@@ -20,12 +20,12 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "L2"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "L2", "E2"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        # L1, S10 e E1 têm a entrega; a S11 espera a persistência provada (blocking_inputs); o próximo é a N2, depois a L2
-        self.assertEqual(fila["proximo"]["id"], "N2")
-        self.assertEqual(fila["pendentes"], ["S11", "N2", "L2"])
+        # L1, S10, E1 e N2 têm a entrega; a S11 espera a persistência provada (blocking_inputs); o próximo é a L2, depois a E2
+        self.assertEqual(fila["proximo"]["id"], "L2")
+        self.assertEqual(fila["pendentes"], ["S11", "L2", "E2"])
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S11"])
         self.assertIn("persistência", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
@@ -42,7 +42,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
                 self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("S11", "N2", "L2"):  # ainda por fazer; S10, L1 e E1 já têm a entrega
+        for novo in ("S11", "L2", "E2"):  # ainda por fazer; S10, L1, E1 e N2 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 

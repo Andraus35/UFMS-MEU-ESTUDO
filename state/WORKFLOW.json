@@ -424,6 +424,17 @@
       "optional_inputs": [
         "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
       ]
+    },
+    {
+      "id": "E2",
+      "title": "Emenda da S5 e da S4-R2 ao que a E1 decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia), prevista na S6 e deixada de fora da E1; exige pedido de merge explícito do proprietário",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E2_EMENDA_S5_S4R2_20261118.md",
+      "depends_on": [
+        "L2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ]
 }
