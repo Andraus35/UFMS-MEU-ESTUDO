@@ -8,6 +8,12 @@
             "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/perguntas_boas_praticas.py\"",
             "timeout": 15,
             "statusMessage": "Conferindo perguntas de boas práticas..."
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/entrega_final.py\"",
+            "timeout": 180,
+            "statusMessage": "Conferindo a entrega final (git, gates e testes)..."
           }
         ]
       }

@@ -45,7 +45,7 @@ class SettingsTest(unittest.TestCase):
         grupos = self.cfg["hooks"]["Stop"]
         self.assertEqual(len(grupos), 1)
         hooks = grupos[0]["hooks"]
-        self.assertEqual(len(hooks), 1)
+        self.assertEqual(len(hooks), 2)  # o de perguntas e o de entrega final (até 20/11/2026)
         h = hooks[0]
         self.assertEqual(h["type"], "command")
         self.assertIn('"$CLAUDE_PROJECT_DIR/.claude/hooks/perguntas_boas_praticas.py"', h["command"])
