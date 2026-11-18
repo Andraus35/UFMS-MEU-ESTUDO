@@ -43,8 +43,10 @@ class PrioridadesDoProprietarioTests(unittest.TestCase):
 
     def test_next_task_lista_so_os_pendentes_em_ordem(self):
         r = next_task.owner_priorities(WF)
-        self.assertEqual([i["id"] for i in r], ["P1", "P2", "P3", "P4", "P5", "P6"])
+        self.assertEqual([i["id"] for i in r], [i["id"] for i in sorted(PRI, key=lambda x: x["rank"]) if i["estado"] != "feito"])
         wf = copy.deepcopy(WF)
+        for i in wf["owner_priorities"]:
+            i["estado"] = "pendente"
         wf["owner_priorities"][0]["estado"] = "feito"
         wf["owner_priorities"] = list(reversed(wf["owner_priorities"]))
         r = next_task.owner_priorities(wf)
@@ -54,7 +56,7 @@ class PrioridadesDoProprietarioTests(unittest.TestCase):
     def test_a_saida_do_script_traz_a_lista_e_nao_altera_a_fila(self):
         out = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         d = json.loads(out.stdout)
-        self.assertEqual(len(d["desbloqueios_do_proprietario"]), 6)
+        self.assertEqual(len(d["desbloqueios_do_proprietario"]), len([i for i in PRI if i["estado"] != "feito"]))
         self.assertIn("pendentes", d["fila"])
         wf = copy.deepcopy(WF)
         wf["owner_priorities"] = []

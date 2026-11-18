@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "l2_conversor_offline_da_tabela_de_desempenho",
-    "branch": "ccr-l2-conversor-desempenho",
-    "pr_number": 119,
+    "scope": "registro_rodadas_7_8_zapia_z1_e_decisoes",
+    "branch": "ccr-59d8ec9a-y3l4xj",
+    "pr_number": 120,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #118 integrado em main no merge commit d090039d967b175dafd1a65f95624bbc9e8e5df4. Frente única ativa: RM-09 (l2_conversor_offline_da_tabela_de_desempenho), branch ccr-l2-conversor-desempenho, PR #119. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #119 integrado em main no merge commit d6904cf3da7df18a5ecf228715abb15fe8ecd15e. Frente única ativa: RM-09 (registro_rodadas_7_8_zapia_z1_e_decisoes), branch ccr-59d8ec9a-y3l4xj, PR #120. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 118,
-    "merge_commit_sha": "d090039d967b175dafd1a65f95624bbc9e8e5df4"
+    "pr_number": 119,
+    "merge_commit_sha": "d6904cf3da7df18a5ecf228715abb15fe8ecd15e"
   },
   "work_queue": [
     {
@@ -486,8 +486,8 @@
       ],
       "depende_de": [],
       "esforco": "minutos",
-      "estado": "pendente",
-      "nota": "Enviada segundo ele em 18/11/2026; falta colar a resposta, que vira a rodada 7 de autorrelato"
+      "estado": "feito",
+      "nota": "Resposta da Z1 trazida em 18/11/2026 (rodadas 7 e 8): a Zapia não executou a exportação; ver docs/governanca/RESPOSTA_RODADAS7_8_ZAPIA_Z1_20261118.md"
     },
     {
       "rank": 2,
@@ -501,7 +501,8 @@
         "P1"
       ],
       "esforco": "uma decisão",
-      "estado": "pendente"
+      "estado": "feito",
+      "nota": "Aceitou o risco do TEC para 1 pedido por dia em 18/11/2026; a Zapia declara que nao participa sem permissao dos termos; E3 segue bloqueada pela aprovacao dele em agents/"
     },
     {
       "rank": 3,
@@ -537,7 +538,8 @@
       ],
       "depende_de": [],
       "esforco": "reconfirmar",
-      "estado": "pendente"
+      "estado": "feito",
+      "nota": "PR #119 (L2) mesclado em d6904cf"
     },
     {
       "rank": 6,
