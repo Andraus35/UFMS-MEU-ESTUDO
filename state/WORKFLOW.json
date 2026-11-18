@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "consentir_v4_ferramenta_do_termux",
+    "scope": "c6a_guarda_offline_leitura_por_sessao_v4",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 126,
+    "pr_number": 127,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #125 integrado em main no merge commit db8b79e45fff9f5b669e4ddc6988705e4e528606. Frente única ativa: RM-09 (consentir_v4_ferramenta_do_termux), branch ccr-59d8ec9a-y3l4xj, PR #126. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #126 integrado em main no merge commit 833770085b4a1b87d4bafd5d0c9d91a9251828b4. Frente única ativa: RM-09 (c6a_guarda_offline_leitura_por_sessao_v4), branch ccr-59d8ec9a-y3l4xj, PR #127. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 125,
-    "merge_commit_sha": "db8b79e45fff9f5b669e4ddc6988705e4e528606"
+    "pr_number": 126,
+    "merge_commit_sha": "833770085b4a1b87d4bafd5d0c9d91a9251828b4"
   },
   "work_queue": [
     {
@@ -518,6 +518,19 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "C6A",
+      "title": "Guarda offline da leitura de projeções por sessões do app Claude (S6-R9): exige consentimento v4 íntegro, projeção em lista fechada proposta sem texto de questão nem identificador de conta, recusa histórico bruto; não liga a flag nem dá acesso a sessão alguma (a C6 é PR próprio com aprovação expressa)",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/session_read_guard.py",
+      "depends_on": [
+        "V4F"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "decisão do proprietário sobre a lista fechada da projeção e sobre exigir a v4 também na promoção"
+      ]
     }
   ],
   "owner_priorities": [
