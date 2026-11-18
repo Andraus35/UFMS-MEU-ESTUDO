@@ -106,6 +106,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 
 **RM-09 — L1 (S9):** `scripts/platform_read_guard.py` é a guarda **offline** da leitura direta das plataformas (lista fechada, somente leitura, taxa, bloqueio, saída mínima), testada com páginas sintéticas e mutações; **fecha por padrão e não lê conta alguma**. **RM-09 permanece `planejado`.**
 
+**RM-09 — S10:** `docs/especificacoes/S10_NOTEBOOK_TUTOR.md` especifica o Notebook como ferramenta do Tutor (ponte pela Zapia, rascunho verificado por citação aberta, falha que fecha o efeito); **nada foi testado no Notebook** e **RM-09 permanece `planejado`**.
+
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.

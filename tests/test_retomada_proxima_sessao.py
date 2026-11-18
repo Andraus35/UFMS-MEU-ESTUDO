@@ -16,17 +16,18 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         inicio = HANDOFF.index("### Estado de saída")
         return HANDOFF[inicio:HANDOFF.index("**Ordem do que acontece a seguir", inicio)]
 
-    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_s10_depois_da_l1_e_da_rodada_6(self):
+    def test_fila_tem_os_itens_na_ordem_proposta_e_so_a_s11_resta_bloqueada_pela_persistencia(self):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
         self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        # a L1 tem a entrega (scripts/platform_read_guard.py) e a rodada 6 da Zapia chegou: a S10 não tem mais insumo bloqueante
-        self.assertEqual(fila["proximo"]["id"], "S10")
-        self.assertEqual(fila["pendentes"], ["S10", "S11"])
-        self.assertEqual(fila["bloqueados"], [])
+        # L1 e S10 têm a entrega; só a S11 resta e espera a persistência provada (blocking_inputs): nenhum item liberado
+        self.assertIsNone(fila["proximo"])
+        self.assertEqual(fila["pendentes"], ["S11"])
+        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S11"])
+        self.assertIn("persistência", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
         self.assertTrue((ROOT / "docs" / "governanca" / "RESPOSTA_RODADA6_ZAPIA_20261117.md").is_file())
@@ -41,7 +42,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
                 self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("S10", "S11"):  # ainda por escrever; a L1 é código e fica fora desta lista
+        for novo in ("S11",):  # ainda por escrever; S10 e L1 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 
