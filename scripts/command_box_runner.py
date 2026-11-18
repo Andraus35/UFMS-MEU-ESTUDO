@@ -8,7 +8,7 @@ Rejeitado: `comandos/rejeitadas/<nome>` só com código e id, e a entrada sai. E
 a entrada fica na caixa e a próxima execução repete, de forma idempotente (nada de comando válido perdido por falha transitória).
 
 Decisões e limites:
-- O canal segue a MESMA flag `personal_results_writes_enabled` do `settings.json` do SHA fixado (fail-closed): com ela falsa
+- O canal segue a MESMA flag do fluxo, `private_flow_promotion_enabled` (a `personal_results_writes_enabled` do público segue falsa), do `settings.json` do SHA fixado (fail-closed): com ela falsa
   (hoje) não há rede, nem token lido, nem escrita. Não há flag própria dos comandos (criar uma exige PR de configuração).
 - Só o token da fila (`GH_TOKEN`, escopo de `entrada`) é usado: este passo NÃO recebe o segredo do histórico `dados`.
 - O ledger (`comandos/ledger/`) só é gravado DEPOIS da promoção; assim uma queda no meio não consome o nonce de um comando que

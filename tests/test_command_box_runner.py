@@ -34,7 +34,7 @@ class Base(unittest.TestCase):
         self.caixa = cbr.Caixa(pr.GitHubApi(tpr.TOKEN_ENTRADA, self.gh.transporte), ENTRADA)
 
     def flag(self, valor):
-        (self.validador / "settings.json").write_text(json.dumps({"storage": {"personal_results_writes_enabled": valor}}))
+        (self.validador / "settings.json").write_text(json.dumps({"storage": {"private_flow_promotion_enabled": valor}}))
 
     def contexto(self, **sobre):
         c = {"escritas_habilitadas": True, "agora": tcb.AGORA, "execucao": "77", "validador_sha": SHA,

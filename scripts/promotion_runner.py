@@ -4,7 +4,7 @@
 tempo) -> (status, bytes)`): nos testes só há transporte falso. O transporte real (`transporte_urllib`) só é criado pelo CLI.
 
 Garantias de projeto:
-- A flag `personal_results_writes_enabled` vem do `settings.json` do checkout do validador (o SHA fixado, que a Zapia não
+- A flag `private_flow_promotion_enabled` (própria do fluxo; a `personal_results_writes_enabled` do público segue falsa) vem do `settings.json` do checkout do validador (o SHA fixado, que a Zapia não
   altera). Se não for exatamente `true`, o runner **não faz NENHUMA chamada, não lê token e não grava nada**: as entradas ficam na fila.
 - O validador em execução é conferido por `.git/HEAD` do checkout contra o SHA fixado no fluxo (S6-R5).
 - Dois tokens, dois clientes: o token da fila (`entrada`) só fala com `entrada`, o do histórico (`dados`) só com `dados`. Token
@@ -56,10 +56,15 @@ class ApiError(Exception):
         self.status = status
 
 
+FLAG_FLUXO = "private_flow_promotion_enabled"
+
+
 def ler_flag(texto):
-    """True só se `storage.personal_results_writes_enabled` for exatamente o booleano true. Qualquer dúvida é False."""
+    """True só se `storage.private_flow_promotion_enabled` (flag PRÓPRIA do fluxo privado, C6) for exatamente o booleano true.
+    A flag `personal_results_writes_enabled` é do repositório PÚBLICO (nunca guarda resultado) e este leitor NÃO a consulta.
+    Qualquer dúvida é False."""
     try:
-        return json.loads(texto)["storage"]["personal_results_writes_enabled"] is True
+        return json.loads(texto)["storage"][FLAG_FLUXO] is True
     except Exception:
         return False
 
