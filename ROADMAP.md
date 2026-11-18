@@ -110,6 +110,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 
 **RM-09 — N2:** `scripts/notebook_prompt_validator.py` valida offline, **falhando fechado**, o prompt do Tutor ao Notebook (S10-R3; fecha o PR-002); **nada foi enviado ao Google nem à Zapia** e **RM-09 permanece `planejado`**.
 
+**RM-09 — Z1:** `docs/governanca/PROMPT_TESTE_EXPORTACAO_TEC_ZAPIA_20261118.md` é o prompt, a encaminhar pelo proprietário, do teste de a Zapia trazer a exportação do TEC (um passo com efeito, só com a frase dele); **nada foi executado** e o conversor da L2 espera o relatório. **RM-09 permanece `planejado`.**
+
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.

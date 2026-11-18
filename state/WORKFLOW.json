@@ -3,7 +3,7 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "l2_conversor_offline_da_exportacao_do_tec",
+    "scope": "z1_prompt_do_teste_da_exportacao_do_tec_pela_zapia",
     "branch": "ccr-l2-conversor-tec",
     "pr_number": 116,
     "base": "main",
@@ -413,14 +413,28 @@
       "optional_inputs": []
     },
     {
+      "id": "Z1",
+      "title": "Prompt do teste da exportação do TEC pela Zapia (S9-R1, R8, R9): um passo só, com a frase AUTORIZO TEC-EXPORT-1 do proprietário; a Zapia relata como a exportação chega, o formato real e o que ela traz, só com cabeçalhos; arquivo bruto nunca no repositório",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/PROMPT_TESTE_EXPORTACAO_TEC_ZAPIA_20261118.md",
+      "depends_on": [
+        "N2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "L2",
       "title": "Conversor offline da exportação do TEC em eventos mínimos (S9-R6, R7), a partir da amostra real de 18/11/2026 (uma disciplina, um dia; lacuna do formato real em outras exportações declarada); arquivo bruto nunca no repositório, sem dado pessoal e sem convenção de contagem presumida",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/tec_export_converter.py",
       "depends_on": [
-        "N2"
+        "N2",
+        "Z1"
       ],
-      "blocking_inputs": [],
+      "blocking_inputs": [
+        "relatório da Zapia ao teste da exportação do TEC (Z1): como a exportação chega, o formato real e o que ela traz; decide a saída do conversor (decisão do proprietário de 18/11/2026)"
+      ],
       "optional_inputs": [
         "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
       ]

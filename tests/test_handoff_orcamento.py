@@ -27,7 +27,7 @@ class OrcamentoDoHandoffTests(unittest.TestCase):
 
     def test_arquivo_guarda_as_rodadas_antigas_inteiras(self):
         paragrafos = [p for p in ARQUIVO.split("\n\n") if p.startswith("**Perguntas de fim de rodada")]
-        self.assertEqual(len(paragrafos), 12)
+        self.assertGreaterEqual(len(paragrafos), 14)
         for p in paragrafos:
             self.assertGreater(len(p), 200)
         for trecho in ("reconfirmou o merge só da C3", "reconfirmou o merge só do runner", "hook Stop de perguntas",
