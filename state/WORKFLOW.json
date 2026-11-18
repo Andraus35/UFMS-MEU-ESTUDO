@@ -425,7 +425,7 @@
     },
     {
       "id": "E2",
-      "title": "Emenda da S5, da S4-R2, da S9-R1 e da S4 ao que o proprietário decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia; 18/11/2026: o desempenho do TEC vem pela Zapia, pedido pelo Tutor ou pelo Coach, no lugar da exportação manual); o PRODUCT.md não muda aqui; exige pedido de merge explícito do proprietário",
+      "title": "Emenda da S5, da S4-R2, da S9-R1 e da S4 ao que o proprietário decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia; 18/11/2026: o desempenho do TEC vem pela Zapia, pedido pelo Tutor ou pelo Coach, no lugar da exportação manual); o PRODUCT.md não muda aqui; exige pedido de merge explícito do proprietário; a Zapia não interpreta o conteúdo e relata o procedimento de extração",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E2_EMENDA_S5_S4R2_20261118.md",
       "depends_on": [
@@ -436,7 +436,7 @@
     },
     {
       "id": "E3",
-      "title": "Operação nova, compartilhada pelo Tutor e pelo Coach (como enviar_mensagem), para pedir à Zapia o relatório de desempenho (nome, parâmetros, destino e limites no esquema de comandos e nos perfis de agents/ e de ZAPIA), em PR dedicado com texto para o proprietário aprovar; exige aprovação explícita dele para mexer em agents/",
+      "title": "Operação nova, compartilhada pelo Tutor e pelo Coach (como enviar_mensagem), para pedir à Zapia o relatório de desempenho (nome, parâmetros, destino e limites no esquema de comandos e nos perfis de agents/ e de ZAPIA), em PR dedicado com texto para o proprietário aprovar; exige aprovação explícita dele para mexer em agents/; limite do pedido: no máximo 1 por dia e só com atividade concluída (decisão de 18/11/2026)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md",
       "depends_on": [
@@ -447,7 +447,7 @@
     },
     {
       "id": "L2",
-      "title": "Conversor offline da tabela estruturada de desempenho entregue pela Zapia (S9-R6, R7): contrato de entrega com as colunas do apêndice do relatório (código, profundidade, título, questões, acertos, erros, peso) mais recorte, pontuação declarada pelo Tutor e data; recusa o que fugir do contrato; recalcula o derivado; arquivo bruto e valores reais nunca no repositório; sem convenção de contagem presumida",
+      "title": "Conversor offline da tabela estruturada de desempenho entregue pela Zapia (S9-R6, R7): contrato de entrega com as colunas do apêndice do relatório (código, profundidade, título, questões, acertos, erros, peso) mais recorte, pontuação declarada pelo Tutor e data; recusa o que fugir do contrato; recalcula o derivado; arquivo bruto e valores reais nunca no repositório; sem convenção de contagem presumida; o contrato inclui o bloco `procedimento` (relato descritivo de como a Zapia extraiu o relatório: telas, passos, filtros, hora, avisos, conferências), que é autorrelato: o harness confere a forma e não o prova",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/tec_export_converter.py",
       "depends_on": [

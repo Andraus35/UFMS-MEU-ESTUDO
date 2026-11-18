@@ -63,6 +63,9 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         self.assertIn("aprovação explícita", fila["E3"]["title"])
         self.assertIn("compartilhada pelo Tutor e pelo Coach", fila["E3"]["title"])  # decisão de 18/11/2026: o Coach também pode solicitar
         self.assertIn("Tutor ou pelo Coach", fila["E2"]["title"])
+        self.assertIn("no máximo 1 por dia e só com atividade concluída", fila["E3"]["title"])  # decisão de 18/11/2026
+        self.assertIn("bloco `procedimento`", fila["L2"]["title"])
+        self.assertIn("não interpreta o conteúdo", fila["E2"]["title"])
         for termo in ("S5", "S4-R2", "S9-R1", "S4"):
             self.assertIn(termo, fila["E2"]["title"])
         self.assertEqual(fila["Z1"]["deliverable"], "docs/governanca/PROMPT_TESTE_EXPORTACAO_TEC_ZAPIA_20261118.md")
