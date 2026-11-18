@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c6_fecha_a_janela_flag_do_fluxo_volta_a_false",
+    "scope": "persistencia_da_retomada_e_prioridades_do_proprietario",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 135,
+    "pr_number": 136,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #134 integrado em main no merge commit b74be9cce027d0f5402d4b98accbfd702fd23a3f. Frente única ativa: RM-09 (c6_fecha_a_janela_flag_do_fluxo_volta_a_false), branch ccr-59d8ec9a-y3l4xj, PR #135. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #135 integrado em main no merge commit bffae626dbc23d73b63f41642be62b6eaa984df1. Frente única ativa: RM-09 (persistencia_da_retomada_e_prioridades_do_proprietario), branch ccr-59d8ec9a-y3l4xj, PR #136. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 134,
-    "merge_commit_sha": "b74be9cce027d0f5402d4b98accbfd702fd23a3f"
+    "pr_number": 135,
+    "merge_commit_sha": "bffae626dbc23d73b63f41642be62b6eaa984df1"
   },
   "work_queue": [
     {
@@ -667,7 +667,8 @@
       ],
       "depende_de": [],
       "esforco": "um roteiro com frases de autorização",
-      "estado": "pendente"
+      "estado": "feito",
+      "nota": "C3 rodada pelo proprietário em 18/11/2026 (relato com capturas); depois corrigida em duas rodadas (ações local_only e listagem de segredos pela API)"
     },
     {
       "rank": 4,
@@ -679,7 +680,8 @@
       ],
       "depende_de": [],
       "esforco": "ler e aprovar um texto",
-      "estado": "pendente"
+      "estado": "feito",
+      "nota": "Texto do consentimento v4 aprovado e registrado em 18/11/2026 (consentir-v4, leitura de volta, relato com captura)"
     },
     {
       "rank": 5,
@@ -707,6 +709,35 @@
         "P4"
       ],
       "esforco": "aprovação em PR",
+      "estado": "feito",
+      "nota": "C6 cumprida em janela curta (PR #132) e fechada pelo PR #135 (E7); religar é PR de janela com aprovação expressa"
+    },
+    {
+      "rank": 7,
+      "id": "P7",
+      "ato": "Reinstalar o fluxo em entrada com o SHA do merge do E7 (prepara_entrada.sh, etapa 4, frase ATUALIZAR) depois de atualizar o clone na main",
+      "destrava": "Sem isso a flag do fluxo continua ligada no SHA fixado antigo e o fechamento da janela da C6 não vale",
+      "destrava_itens": [
+        "E7"
+      ],
+      "depende_de": [
+        "P6"
+      ],
+      "esforco": "um roteiro com uma frase",
+      "estado": "pendente"
+    },
+    {
+      "rank": 8,
+      "id": "P8",
+      "ato": "Remover ufms-meu-estudo-entrada do Claude GitHub App (https://github.com/apps/claude/installations/select_target); a leitura foi concedida só para o diagnóstico",
+      "destrava": "Fecha a exceção de acesso antes de o piloto trazer resultado real para a fila; nunca valeu para dados",
+      "destrava_itens": [
+        "E7"
+      ],
+      "depende_de": [
+        "P6"
+      ],
+      "esforco": "minutos",
       "estado": "pendente"
     }
   ],

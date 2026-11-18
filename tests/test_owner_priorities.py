@@ -16,9 +16,9 @@ FILA = {i["id"] for i in WF["work_queue"]}
 
 
 class PrioridadesDoProprietarioTests(unittest.TestCase):
-    def test_seis_itens_em_ordem_com_campos_obrigatorios(self):
-        self.assertEqual([i["rank"] for i in PRI], [1, 2, 3, 4, 5, 6])
-        self.assertEqual([i["id"] for i in PRI], ["P1", "P2", "P3", "P4", "P5", "P6"])
+    def test_oito_itens_em_ordem_com_campos_obrigatorios(self):
+        self.assertEqual([i["rank"] for i in PRI], [1, 2, 3, 4, 5, 6, 7, 8])
+        self.assertEqual([i["id"] for i in PRI], ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"])
         for i in PRI:
             for campo in ("rank", "id", "ato", "destrava", "destrava_itens", "depende_de", "esforco", "estado"):
                 self.assertIn(campo, i, (i["id"], campo))
@@ -50,7 +50,7 @@ class PrioridadesDoProprietarioTests(unittest.TestCase):
         wf["owner_priorities"][0]["estado"] = "feito"
         wf["owner_priorities"] = list(reversed(wf["owner_priorities"]))
         r = next_task.owner_priorities(wf)
-        self.assertEqual([i["id"] for i in r], ["P2", "P3", "P4", "P5", "P6"])  # feito sai; a ordem vem do rank, não da posição
+        self.assertEqual([i["id"] for i in r], ["P2", "P3", "P4", "P5", "P6", "P7", "P8"])  # feito sai; a ordem vem do rank, não da posição
         self.assertEqual(next_task.owner_priorities({}), [])
 
     def test_a_saida_do_script_traz_a_lista_e_nao_altera_a_fila(self):
@@ -64,13 +64,13 @@ class PrioridadesDoProprietarioTests(unittest.TestCase):
 
     def test_nao_e_fila_de_engenharia_nem_cria_pr(self):
         self.assertIn("não é fila de engenharia e não cria branch nem PR", WF["owner_priorities_note"])
-        self.assertTrue({"P1", "P2", "P3", "P4", "P5", "P6"}.isdisjoint(FILA))
+        self.assertTrue({"P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"}.isdisjoint(FILA))
         self.assertEqual(WF["policy"], "single_branch_single_pr_single_merge")
 
     def test_handoff_cita_a_lista_persistente(self):
         h = (ROOT / "memory" / "HANDOFF.md").read_text(encoding="utf-8")
         self.assertIn("owner_priorities", h)
-        for ident in ("P1", "P2", "P3", "P4", "P5", "P6"):
+        for ident in ("P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"):
             self.assertIn(ident, h, ident)
 
 
