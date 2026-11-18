@@ -119,7 +119,7 @@ class SpecS10Tests(unittest.TestCase):
         for item in ("| N1 |", "| N2 |", "| E1 |"):
             self.assertIn(item, derivadas)
         ids = {i["id"] for i in FILA}
-        self.assertFalse({"N1", "N2"} & ids)
+        self.assertNotIn("N1", ids)  # N1 é ato do proprietário (frases AUTORIZO); a N2 entrou na fila por decisão posterior dele
         self.assertFalse((ROOT / "scripts" / "notebook_prompt_validator.py").exists())
 
     def test_aponta_para_a_rodada_6_e_o_arquivo_existe(self):

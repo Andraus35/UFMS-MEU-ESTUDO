@@ -389,6 +389,41 @@
         "resultado real consentido e persistência habilitada por PR próprio (P1 a P9 provados)"
       ],
       "optional_inputs": []
+    },
+    {
+      "id": "E1",
+      "title": "Emenda do PRODUCT.md (D-18, D-02 e a decisão do OPEN-10: Notebook só pela Zapia, com a correção do D-12), com redução de bytes do documento e registro da aprovação do desenho da S6 e da ordem da S9; exige pedido de merge explícito do proprietário",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E1_EMENDA_PRODUCT_20261118.md",
+      "depends_on": [
+        "S10"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "N2",
+      "title": "Validador offline do prompt do Tutor ao Notebook (S10-R3; fecha o PR-002): campos fechados, limite de 2000 caracteres, filtro de dado pessoal e segredo, com contraprovas e mutações",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/notebook_prompt_validator.py",
+      "depends_on": [
+        "E1"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "L2",
+      "title": "Conversor offline da exportação do TEC em eventos mínimos (S9-R6, R7), a partir da amostra real de 18/11/2026 (uma disciplina, um dia; lacuna do formato real em outras exportações declarada); arquivo bruto nunca no repositório, sem dado pessoal e sem convenção de contagem presumida",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/tec_export_converter.py",
+      "depends_on": [
+        "N2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
+      ]
     }
   ]
 }
