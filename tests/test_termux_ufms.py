@@ -70,9 +70,9 @@ class UfmsTermuxTests(unittest.TestCase):
         for proibido in ("GH_TOKEN", "github_pat_", "git push", "--force", "-X POST", "-X PATCH", "-X DELETE",
                          "gh repo create", "personal_results_writes_enabled=true", "read -rs"):
             self.assertNotIn(proibido, texto)
-        # só duas gravações remotas existem, ambas no repositório PRIVADO, por ato do proprietário
+        # só três gravações remotas existem (consentimentos v3 e v4 e o plano), todas no repositório PRIVADO, por ato do proprietário
         gravacoes = [l for l in texto.splitlines() if "-X PUT" in l and not l.lstrip().startswith("#")]
-        self.assertEqual(len(gravacoes), 2, gravacoes)
+        self.assertEqual(len(gravacoes), 3, gravacoes)
         for linha in gravacoes:
             self.assertIn('repos/$PRIVADO/contents/', linha)
         self.assertNotIn("UFMS-MEU-ESTUDO/contents", texto)
