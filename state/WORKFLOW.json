@@ -478,7 +478,7 @@
     {
       "rank": 1,
       "id": "P1",
-      "ato": "Enviar o prompt da Z1 à Zapia, com a frase AUTORIZO TEC-EXPORT-1 escrita por ele, e trazer a resposta",
+      "ato": "Trazer a resposta da Zapia à Z1 (o prompt já foi enviado por ele em 18/11, com a frase AUTORIZO TEC-EXPORT-1 escrita por ele; relato dele; a resposta ainda não chegou), editada sem dado pessoal",
       "destrava": "Mostra se a Zapia alcança o relatório do TEC; define o formato real da L2 e é o insumo da decisão do risco diário",
       "destrava_itens": [
         "L2",
@@ -486,7 +486,8 @@
       ],
       "depende_de": [],
       "esforco": "minutos",
-      "estado": "pendente"
+      "estado": "pendente",
+      "nota": "Enviada segundo ele em 18/11/2026; falta colar a resposta, que vira a rodada 7 de autorrelato"
     },
     {
       "rank": 2,

@@ -186,6 +186,8 @@ LEGITIMOS = [
     ("topico", "Lei 14.133/2021: modalidades de licitação (art. 28)"),
     ("topico", "Processo administrativo federal (Lei 9.784/1999), arts. 22 a 25"),
     ("topico", "Lei 12.527/2011 (Lei de Acesso à Informação): prazos e recursos"),
+    ("topico", "Desconsideração da personalidade jurídica e seus efeitos"),
+    ("lacuna", "Revelia e esquecimento: confundo os efeitos no processo administrativo"),
     ("lacuna", "Diferença entre prescrição e decadência no processo administrativo disciplinar"),
     ("lacuna", "Não lembro quando cabe suspensão e quando cabe demissão"),
     ("lacuna", "Confundo os prazos do art. 142 da Lei 8.112/1990 (§ 1º e § 2º)"),

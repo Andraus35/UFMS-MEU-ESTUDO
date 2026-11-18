@@ -47,7 +47,7 @@ _DESEMPENHO = re.compile(
     re.I)
 # complementa o filtro da L1 com ordens de esquecer/substituir regras e de revelar o sistema (heurístico; ver os limites no topo)
 _INSTRUCAO_EXTRA = re.compile(
-    r"\besquec\w* (?:tudo|todas?|as|os|suas?|seus?|o que)\b|\bforget (?:everything|all|your|the|previous)\b|\bdesconsider\w*\b"
+    r"\besquec\w* (?:tudo|todas?|as|os|suas?|seus?|o que)\b|\bforget (?:everything|all|your|the|previous)\b|\bdesconsidere\b|\bdesconsiderem\b"
     r"|\bfrom now on\b|\bde agora em diante\b|\breveal\b.{0,30}\b(?:prompt|instructions?|rules)\b"
     r"|\brevel\w+\b.{0,30}\b(?:prompt|instruc\w*|regras)\b|\bdeveloper mode\b|\bmodo desenvolvedor\b|\bnovo papel\b|\bnew role\b",
     re.I | re.S)
@@ -130,6 +130,17 @@ def _checa_exigencias(prompt):
     if "pergunt" not in metodo and "questoes de recuperacao" not in metodo and "questao de recuperacao" not in metodo:
         return _recusa("METODO_SEM_PERGUNTAS", "metodo")  # S2-R3: perguntas de recuperação, não resumo para reler
     return None
+
+
+def instrucao_embutida(texto: str) -> bool:
+    """True se o texto tem instrução embutida, no original ou sem ofuscação de letras (`i.g.n.o.r.e`). Filtro HEURÍSTICO da N2
+    (inclui os padrões de esquecer, revelar e modo de desenvolvedor), reaproveitado pelo conversor da L2."""
+    if not isinstance(texto, str):
+        return False
+    norm = _norm(texto)
+    if _INSTRUCAO_EXTRA.search(norm.replace("-", " ").replace("_", " ").replace(".", " ")):
+        return True
+    return bool(platform_read_guard.classificar_texto(texto) == "INSTRUCAO_EMBUTIDA" or platform_read_guard.classificar_texto(norm) == "INSTRUCAO_EMBUTIDA")
 
 
 def montar(prompt: dict) -> str:
