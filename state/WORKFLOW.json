@@ -424,24 +424,8 @@
       "optional_inputs": []
     },
     {
-      "id": "L2",
-      "title": "Conversor offline da exportação do TEC em eventos mínimos (S9-R6, R7), a partir da amostra real de 18/11/2026 (uma disciplina, um dia; lacuna do formato real em outras exportações declarada); arquivo bruto nunca no repositório, sem dado pessoal e sem convenção de contagem presumida",
-      "roadmap_task": "RM-09",
-      "deliverable": "scripts/tec_export_converter.py",
-      "depends_on": [
-        "N2",
-        "Z1"
-      ],
-      "blocking_inputs": [
-        "relatório da Zapia ao teste da exportação do TEC (Z1): como a exportação chega, o formato real e o que ela traz; decide a saída do conversor (decisão do proprietário de 18/11/2026)"
-      ],
-      "optional_inputs": [
-        "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
-      ]
-    },
-    {
       "id": "E2",
-      "title": "Emenda da S5 e da S4-R2 ao que a E1 decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia), prevista na S6 e deixada de fora da E1; exige pedido de merge explícito do proprietário",
+      "title": "Emenda da S5, da S4-R2, da S9-R1 e da S4 ao que o proprietário decidiu (D-25: sessões do app Claude na nuvem, a Zapia entrega na fila e o fluxo de Actions grava; D-26: Notebook só pela Zapia; 18/11/2026: o desempenho do TEC vem pela Zapia, pedido pelo Tutor, no lugar da exportação manual); o PRODUCT.md não muda aqui; exige pedido de merge explícito do proprietário",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E2_EMENDA_S5_S4R2_20261118.md",
       "depends_on": [
@@ -449,6 +433,31 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "E3",
+      "title": "Operação nova para o Tutor pedir à Zapia o relatório de desempenho (nome, parâmetros, destino e limites no esquema de comandos e nos perfis de agents/ e de ZAPIA), em PR dedicado com texto para o proprietário aprovar; exige aprovação explícita dele para mexer em agents/",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md",
+      "depends_on": [
+        "E2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "L2",
+      "title": "Conversor offline da tabela estruturada de desempenho entregue pela Zapia (S9-R6, R7): contrato de entrega com as colunas do apêndice do relatório (código, profundidade, título, questões, acertos, erros, peso) mais recorte, pontuação declarada pelo Tutor e data; recusa o que fugir do contrato; recalcula o derivado; arquivo bruto e valores reais nunca no repositório; sem convenção de contagem presumida",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/tec_export_converter.py",
+      "depends_on": [
+        "N2",
+        "Z1"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "segunda amostra do TEC (outra disciplina ou o botão Atividades)"
+      ]
     }
   ]
 }
