@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c3_acoes_local_only_correcao_etapa2",
+    "scope": "c5_roteiro_prova_real_flag_desligada",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 123,
+    "pr_number": 124,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #122 integrado em main no merge commit a55f98041aa599d822e8ed8cf1424382b66a16b5. Frente única ativa: RM-09 (c3_acoes_local_only_correcao_etapa2), branch ccr-59d8ec9a-y3l4xj, PR #123. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #123 integrado em main no merge commit 294b9c38e71edce615c47298d1bf993f4cc72c66. Frente única ativa: RM-09 (c5_roteiro_prova_real_flag_desligada), branch ccr-59d8ec9a-y3l4xj, PR #124. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 122,
-    "merge_commit_sha": "a55f98041aa599d822e8ed8cf1424382b66a16b5"
+    "pr_number": 123,
+    "merge_commit_sha": "294b9c38e71edce615c47298d1bf993f4cc72c66"
   },
   "work_queue": [
     {
@@ -482,6 +482,19 @@
       "blocking_inputs": [],
       "optional_inputs": [
         "finalidade do Outlook declarada pelo proprietário"
+      ]
+    },
+    {
+      "id": "C5R",
+      "title": "Roteiro do Termux da primeira metade da C5 (ato do proprietário), com a flag desligada: o token \"zapia token\" grava um arquivo sintético na fila de entrada, o fluxo roda, o runner responde FLAG_DESLIGADA e dados não muda; o roteiro é código offline com teste, a execução é do proprietário; a promoção até dados exige a C6",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/termux/prova_c5.sh",
+      "depends_on": [
+        "C3"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "token zapia token editado para só entrada e sonda sem divergência"
       ]
     }
   ],
