@@ -55,10 +55,13 @@ class Rodada2RespostaTests(unittest.TestCase):
         self.assertIn("coincidem exatamente", DOC)
 
     def test_product_incorpora_os_fatos_da_rodada_2(self):
+        # as evidências E-01 a E-12 foram arquivadas sem alteração pela E1: o texto integral vale como parte do PRODUCT
+        arquivo = (ROOT / "docs" / "governanca" / "ARQUIVO_PRODUCT_EVIDENCIAS_E01_E12_20261118.md").read_text(encoding="utf-8")
+        PRODUCT_COM_ARQUIVO = PRODUCT + arquivo
         for trecho in ("E-08", "E-09", "OPEN-07", "D-08", "D-09", "PR-012", "não está disponível", "sem informação de expiração",
                        "3 repositórios públicos", "exclusão lógica foi **comprovada na rodada 2**",
                        "Não declarar que apagar o repositório privado elimina todas as cópias"):
-            self.assertIn(trecho, PRODUCT)
+            self.assertIn(trecho, PRODUCT_COM_ARQUIVO)
 
     def test_consentimento_v2_aprovado_substitui_o_v1_sem_gravar_nada(self):
         self.assertIn("Consentimento v2 (APROVADO pelo proprietário em 07/11/2026, sem ajustes; substitui o v1)", ADR)
