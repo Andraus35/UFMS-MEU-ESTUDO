@@ -54,14 +54,14 @@ class EmendaTests(unittest.TestCase):
         e = emenda(S9)
         for t in ("pela zapia, pedido pelo tutor ou pelo coach", "continua como alternativa", "não aprovou a ordem proposta",
                   "qconcursos: inalterado, só entrada manual", "s9-r4", "s9-r8", "s9-r9", "mantém o aceite do risco",
-                  "a conclusão dele ainda não foi registrada", "não está cumprida", "pontuação", "bloco procedimento",
+                  "registro_termos_tec_20261118.md", "cumpre a s9-r8(b) só para esse teste", "não estão cumpridas", "pontuação", "bloco procedimento",
                   "não aceita análise de conteúdo", "repositório privado", "(z1) não foi executado", "fechando por padrão"):
             self.assertIn(t, e, t)
 
     def test_registro_diz_proposta_e_o_que_fica_de_fora(self):
         t = REG.lower().replace("**", "").replace("`", "")
         for trecho in ("proposta aguardando a revisão do proprietário", "pedido explícito dele", "não altera", "agents/", "e3",
-                       "compartilhada por tutor e coach", "disse ter lido, mas ainda não contou a conclusão", "não está cumprida",
+                       "compartilhada por tutor e coach", "registro_termos_tec_20261118.md", "veda automação", "só para esse teste",
                        "não foi testada", "aditiva", "autorrelato"):
             self.assertIn(trecho, t, trecho)
         self.assertNotRegex(REG, r"\bPR\s*#\d+")
