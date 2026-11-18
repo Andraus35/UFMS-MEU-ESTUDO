@@ -10,7 +10,8 @@ CFG = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))["storage"
 
 class FlagDoFluxoTests(unittest.TestCase):
     def test_estado_da_janela(self):
-        self.assertIs(CFG["private_flow_promotion_enabled"], True)
+        # a janela da C6 foi aberta pelo PR #132 e fechada pelo PR de fechamento (E7): em repouso a flag do fluxo é falsa
+        self.assertIs(CFG["private_flow_promotion_enabled"], False)
         self.assertIs(CFG["personal_results_writes_enabled"], False)
 
     def test_registro_diz_como_fechar_a_janela_e_o_que_ligar_nao_faz(self):

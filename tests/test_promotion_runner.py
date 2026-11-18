@@ -174,11 +174,11 @@ class FlagDesligadaTest(Base):
             self.assertIs(pr.ler_flag(texto), esperado, texto)
 
     def test_settings_real_a_flag_do_fluxo_so_muda_por_pr_de_janela_e_a_do_publico_nunca_liga(self):
-        # C6 (18/11/2026): a flag do FLUXO foi ligada por PR próprio, com aprovação expressa, para a prova da segunda metade da C5;
-        # o PR que fecha a janela volta este valor para False. Qualquer mudança aqui é decisão do proprietário.
-        self.assertTrue(pr.ler_flag((ROOT / "settings.json").read_text(encoding="utf-8")))
+        # Em repouso as duas flags são falsas. A flag do FLUXO só é ligada por PR de janela, com aprovação expressa do proprietário
+        # (C6, 18/11/2026: aberta para a prova da segunda metade da C5 e fechada por este PR); a do público nunca liga.
+        self.assertFalse(pr.ler_flag((ROOT / "settings.json").read_text(encoding="utf-8")))
         cfg = json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))["storage"]
-        self.assertIs(cfg["private_flow_promotion_enabled"], True)
+        self.assertIs(cfg["private_flow_promotion_enabled"], False)
         self.assertIs(cfg["personal_results_writes_enabled"], False)  # a do público nunca liga
 
     def test_flag_falsa_nao_faz_nenhuma_chamada_nem_le_nem_grava(self):
