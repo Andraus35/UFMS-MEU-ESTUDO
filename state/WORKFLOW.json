@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c5g_token_do_actions_mais_longo_que_o_limite_do_runner",
+    "scope": "c6_fecha_a_janela_flag_do_fluxo_volta_a_false",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 134,
+    "pr_number": 135,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #133 integrado em main no merge commit 637440a7361caf923ef31cdad114de108e825615. Frente única ativa: RM-09 (c5g_token_do_actions_mais_longo_que_o_limite_do_runner), branch ccr-59d8ec9a-y3l4xj, PR #134. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #134 integrado em main no merge commit b74be9cce027d0f5402d4b98accbfd702fd23a3f. Frente única ativa: RM-09 (c6_fecha_a_janela_flag_do_fluxo_volta_a_false), branch ccr-59d8ec9a-y3l4xj, PR #135. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 133,
-    "merge_commit_sha": "637440a7361caf923ef31cdad114de108e825615"
+    "pr_number": 134,
+    "merge_commit_sha": "b74be9cce027d0f5402d4b98accbfd702fd23a3f"
   },
   "work_queue": [
     {
@@ -611,6 +611,19 @@
         "C5F"
       ],
       "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "E7",
+      "title": "Fecha a janela da C6 (flag do fluxo volta a false) e registra a prova real da segunda metade da C5; vale depois da reinstalação do fluxo (ATUALIZAR) e da retirada do acesso de leitura a entrada do app",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E7_FECHAMENTO_JANELA_C6_20261118.md",
+      "depends_on": [
+        "C5G"
+      ],
+      "blocking_inputs": [
+        "aprovação expressa do proprietário para o merge, citando PR e head"
+      ],
       "optional_inputs": []
     }
   ],
