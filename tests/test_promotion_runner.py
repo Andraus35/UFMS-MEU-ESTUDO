@@ -356,7 +356,7 @@ class ControlesTest(Base):
             self.assertNotIn(segredo, json.dumps(res))
 
     def test_token_invalido_nao_e_ecoado_e_repr_oculta(self):
-        for ruim in ("", "curto", "com espaco no meio 123456", None, 12345678, "x" * 300):
+        for ruim in ("", "curto", "com espaco no meio 123456", None, 12345678, "x" * 2000):
             with self.assertRaises(ValueError) as e:
                 pr.GitHubApi(ruim, self.gh.transporte)
             self.assertNotIn(str(ruim) if ruim else "@@", str(e.exception) if ruim and len(str(ruim)) > 8 else "")
@@ -490,11 +490,12 @@ class CLITest(Base):
             codigo, texto = self.rodar_cli({"DADOS_TOKEN": ruim, "GH_TOKEN": TOKEN_ENTRADA})
             self.assertEqual(codigo, 1, repr(ruim))
             d = json.loads(texto)
-            self.assertEqual((d["estado"], d["codigo"], d["detalhe"]), ("ERRO", "ValueError", "TOKEN_INVALIDO:dados"), repr(ruim))
+            self.assertEqual((d["estado"], d["codigo"]), ("ERRO", "ValueError"), repr(ruim))
+            self.assertRegex(d["detalhe"], r"^TOKEN_INVALIDO:dados:len=\d+:imprimivel=(sim|nao)$", repr(ruim))
             for trecho in ("ficticio", "curto", "dados-"):
-                self.assertNotIn(trecho, texto.replace("TOKEN_INVALIDO:dados", ""))
+                self.assertNotIn(trecho, d["detalhe"])
         codigo, texto = self.rodar_cli({"DADOS_TOKEN": TOKEN_DADOS, "GH_TOKEN": "ghs_com espaco"})
-        self.assertEqual(json.loads(texto)["detalhe"], "TOKEN_INVALIDO:entrada")
+        self.assertEqual(json.loads(texto)["detalhe"], "TOKEN_INVALIDO:entrada:len=14:imprimivel=nao")
         self.assertEqual(self.gh.total_de_chamadas(), 0)
 
     def test_cli_nao_imprime_detalhe_de_erro_que_nao_e_da_lista_fechada(self):
@@ -509,7 +510,33 @@ class CLITest(Base):
         self.assertNotIn("sigiloso", texto)
 
     def test_detalhes_seguros_sao_so_os_nossos(self):
-        self.assertEqual(pr.DETALHES_SEGUROS, frozenset({"TOKEN_INVALIDO:dados", "TOKEN_INVALIDO:entrada", "fila grande demais"}))
+        for ok in ("TOKEN_INVALIDO:dados:len=5:imprimivel=sim", "TOKEN_INVALIDO:entrada:len=1500:imprimivel=nao", "fila grande demais"):
+            self.assertTrue(pr.DETALHE_SEGURO.fullmatch(ok), ok)
+        for ruim in ("TOKEN_INVALIDO:dados:len=5:imprimivel=sim\nx", "TOKEN_INVALIDO:outro:len=5:imprimivel=sim", "TOKEN_INVALIDO:dados:len=x:imprimivel=sim",
+                     "TOKEN_INVALIDO:dados:len=5:imprimivel=sim:ghs_abc", "conteudo-sigiloso", "TOKEN_INVALIDO:dados:len=5:imprimivel=talvez"):
+            self.assertFalse(pr.DETALHE_SEGURO.fullmatch(ruim), ruim)
+
+    def test_token_do_actions_mais_longo_que_255_e_aceito_e_o_absurdo_e_recusado(self):
+        # prova real de 18/11/2026: o GITHUB_TOKEN do Actions foi recusado pelo teto de 255 caracteres
+        for tamanho in (256, 300, 520, 1024):
+            pr.GitHubApi("ghs_" + "A" * (tamanho - 4), self.gh.transporte, rotulo="entrada")
+        for tamanho in (1025, 5000):
+            with self.assertRaises(ValueError) as cm:
+                pr.GitHubApi("ghs_" + "A" * (tamanho - 4), self.gh.transporte, rotulo="entrada")
+            self.assertEqual(str(cm.exception), f"TOKEN_INVALIDO:entrada:len={tamanho}:imprimivel=sim")
+        for ruim in ("ghs_ com espaco", "ghs_\u200bX1234", "curt", ""):
+            with self.assertRaises(ValueError):
+                pr.GitHubApi(ruim, self.gh.transporte, rotulo="dados")
+
+    def test_cli_com_token_longo_do_actions_nao_quebra_e_promove(self):
+        bruto = tg.entrada(tg.tentativa())
+        self.entrar("fila-001.json", bruto)
+        longo = "ghs_" + "B" * 516
+        self.gh.repos[ENTRADA]["token"] = longo  # o fake autentica cada repositório pelo token esperado
+        codigo, texto = self.rodar_cli({"DADOS_TOKEN": TOKEN_DADOS, "GH_TOKEN": longo}, {"fila-001.json": bruto})
+        self.assertEqual(codigo, 0, texto)
+        self.assertEqual(json.loads(texto)["itens"][0]["status"], "COMMITTED")
+        self.assertNotIn(longo, texto)
 
     def test_cli_sai_com_1_se_falhar_ao_registrar(self):
         self.gh.falhar = lambda m, repo, c: 500 if (repo == ENTRADA and c.startswith("contents/recibos/")) else None

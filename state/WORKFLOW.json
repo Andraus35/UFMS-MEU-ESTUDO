@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c5_correcoes_da_prova_real_token_diagnostico_e_espera",
+    "scope": "c5g_token_do_actions_mais_longo_que_o_limite_do_runner",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 133,
+    "pr_number": 134,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #132 integrado em main no merge commit 68a00f3ebd1576f937ff773dad47e162e207f78f. Frente única ativa: RM-09 (c5_correcoes_da_prova_real_token_diagnostico_e_espera), branch ccr-59d8ec9a-y3l4xj, PR #133. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #133 integrado em main no merge commit 637440a7361caf923ef31cdad114de108e825615. Frente única ativa: RM-09 (c5g_token_do_actions_mais_longo_que_o_limite_do_runner), branch ccr-59d8ec9a-y3l4xj, PR #134. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 132,
-    "merge_commit_sha": "68a00f3ebd1576f937ff773dad47e162e207f78f"
+    "pr_number": 133,
+    "merge_commit_sha": "637440a7361caf923ef31cdad114de108e825615"
   },
   "work_queue": [
     {
@@ -598,6 +598,17 @@
       "deliverable": "scripts/promotion_runner.py",
       "depends_on": [
         "C6"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "C5G",
+      "title": "Causa real da falha do fluxo na prova de 18/11/2026: o GITHUB_TOKEN do Actions (rótulo entrada) passava de 255 caracteres e o runner o recusava (TOKEN_INVALIDO:entrada); o teto vai a 1024 (ASCII imprimível, sem espaço), o diagnóstico passa a trazer comprimento e se é imprimível (metadados, nunca o valor) e os roteiros do Termux alinham o limite; a janela da C6 segue aberta até a prova passar",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/promotion_runner.py",
+      "depends_on": [
+        "C5F"
       ],
       "blocking_inputs": [],
       "optional_inputs": []

@@ -68,7 +68,7 @@ printf 'Cole o token "zapia token" (nome no GitHub; só `entrada`; NÃO o zapia_
 read -rs TOKEN || TOKEN=""; echo
 [ -n "$TOKEN" ] || falha "token vazio."
 case "$TOKEN" in github_pat_*) ;; *) falha "não parece fine-grained (github_pat_...).";; esac
-printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,255}$' || falha "o token tem caractere fora do padrão (espaço, quebra de linha ou invisível)."
+printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,1024}$' || falha "o token tem caractere fora do padrão (espaço, quebra de linha ou invisível)."
 CORPO="$(python - "$TMP/entrada.json" <<'PY'
 import base64, json, sys
 print(json.dumps({"message": "C5: entrada sintetica (teste, sem dado pessoal)", "branch": "main",
