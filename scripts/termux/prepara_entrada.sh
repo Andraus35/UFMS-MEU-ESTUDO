@@ -51,7 +51,7 @@ done
 # ---------------------------------------------------------------------------------------------------------------- sonda
 sondar() {
   command -v curl >/dev/null 2>&1 || falha "falta o curl (pkg install curl)."
-  printf 'Cole o token da Zapia que vale SÓ para `entrada` e tecle Enter (não aparece na tela): '
+  printf 'Cole o token "zapia token" (nome no GitHub; editado para valer SÓ para `entrada`; NÃO o zapia_dados) e tecle Enter (não aparece na tela): '
   read -rs TOKEN || TOKEN=""
   echo
   [ -n "$TOKEN" ] || falha "token vazio."
@@ -162,7 +162,7 @@ TEM=0; printf '%s\n' "$NOMES" | grep -qx 'DADOS_TOKEN' && TEM=1
 if [ "$TEM" -eq 1 ] && [ "${SUBSTITUIR_SEGREDO:-}" != "1" ]; then
   echo "[segredo] DADOS_TOKEN já existe; mantido (para trocar: SUBSTITUIR_SEGREDO=1 bash $0)."
 else
-  printf 'Cole o token zapia_dados (escopo só de `dados`, 30 dias) e tecle Enter (não aparece; vazio pula): '
+  printf 'Cole o token "zapia_dados" (nome no GitHub; escopo só de `dados`; NÃO o zapia token) e tecle Enter (não aparece; vazio pula): '
   read -rs TOKEN || TOKEN=""
   echo
   if [ -z "$TOKEN" ]; then

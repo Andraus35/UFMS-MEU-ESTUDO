@@ -527,5 +527,15 @@ class ContratoDoScriptTest(unittest.TestCase):
             self.assertIn(trecho, self.fonte)
 
 
+    def test_prompts_nomeiam_cada_token_e_proibem_a_troca(self):
+        # o proprietário regenera dois tokens; o prompt precisa dizer qual colar em cada etapa
+        etapa3 = next(l for l in self.fonte.splitlines() if "Cole o token" in l and "zapia_dados" in l and "SÓ" not in l)
+        self.assertIn('"zapia_dados"', etapa3)
+        self.assertIn("NÃO o zapia token", etapa3)
+        sonda = next(l for l in self.fonte.splitlines() if "Cole o token" in l and "SÓ para `entrada`" in l)
+        self.assertIn('"zapia token"', sonda)
+        self.assertIn("NÃO o zapia_dados", sonda)
+
+
 if __name__ == "__main__":
     unittest.main()
