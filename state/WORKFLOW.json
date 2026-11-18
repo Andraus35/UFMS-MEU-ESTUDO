@@ -445,7 +445,7 @@
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E2_EMENDA_S5_S4R2_20261118.md",
       "depends_on": [
-        "L2"
+        "Z1"
       ],
       "blocking_inputs": [],
       "optional_inputs": []

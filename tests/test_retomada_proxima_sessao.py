@@ -23,8 +23,8 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "L2", "E2"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        # L1, S10, E1, N2 e Z1 têm a entrega; S11 e L2 esperam insumo (blocking_inputs): nenhum item liberado até o relatório da Zapia
-        self.assertIsNone(fila["proximo"])
+        # L1, S10, E1, N2 e Z1 têm a entrega; S11 e L2 esperam insumo (blocking_inputs); a E2 (S5 e S4-R2) não depende da L2: é a próxima
+        self.assertEqual(fila["proximo"]["id"], "E2")
         self.assertEqual(fila["pendentes"], ["S11", "L2", "E2"])
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S11", "L2"])
         self.assertIn("persistência", " ".join(fila["bloqueados"][0]["aguarda"]))
@@ -49,6 +49,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
     def test_e1_n2_l2_entram_em_serie_depois_da_s11_por_decisao_do_proprietario(self):
         fila = {i["id"]: i for i in WORKFLOW["work_queue"]}
         self.assertEqual([fila[k]["depends_on"] for k in ("E1", "N2", "Z1", "L2")], [["S10"], ["E1"], ["N2"], ["N2", "Z1"]])
+        self.assertEqual(fila["E2"]["depends_on"], ["Z1"])  # decisão de 18/11/2026: a E2 não espera a L2
         self.assertEqual(fila["E1"]["deliverable"], "docs/governanca/E1_EMENDA_PRODUCT_20261118.md")
         self.assertEqual(fila["N2"]["deliverable"], "scripts/notebook_prompt_validator.py")
         self.assertEqual(fila["L2"]["deliverable"], "scripts/tec_export_converter.py")
