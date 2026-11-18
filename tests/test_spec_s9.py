@@ -75,8 +75,11 @@ class SpecS9Tests(unittest.TestCase):
         self.assertIn("não substitui", r9)
 
     def test_nao_ha_conversor_sem_amostra_nem_modulo_de_leitura_ainda(self):
-        for padrao in ("*conversor*", "*converte*", "*export_tec*", "*exportacao_tec*", "*leitura_direta*", "*platform_reader*"):
+        # a L2 entrou por decisão do proprietário (18/11/2026): o ÚNICO conversor é scripts/tec_export_converter.py, que só vê o objeto
+        # já carregado (não lê arquivo bruto, não grava, sem rede); qualquer outro conversor ou leitor direto continua proibido
+        for padrao in ("*conversor*", "*export_tec*", "*exportacao_tec*", "*leitura_direta*", "*platform_reader*"):
             self.assertEqual(list((ROOT / "scripts").glob(padrao)), [], padrao)
+        self.assertEqual(sorted(p.name for p in (ROOT / "scripts").glob("*convert*")), ["tec_export_converter.py"])
         ids = {i["id"] for i in FILA}
         self.assertNotIn("L3", ids)  # o registro dos termos é ato do proprietário e segue fora da fila
         l2 = next((i for i in FILA if i["id"] == "L2"), None)  # L2 entrou na fila por decisão dele (18/11/2026), com a amostra real; ainda sem arquivo
