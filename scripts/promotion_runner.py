@@ -28,10 +28,14 @@ from pathlib import Path
 
 try:
     import promotion_gate as pg
+    import session_read_guard as srg
     from core import ROOT, topic_rows
+    from private_persistence_guard import PersistenceBlocked
 except ModuleNotFoundError:  # uso como pacote
     from scripts import promotion_gate as pg
+    from scripts import session_read_guard as srg
     from scripts.core import ROOT, topic_rows
+    from scripts.private_persistence_guard import PersistenceBlocked
 
 API = "https://api.github.com"
 DADOS_REPO = "Andraus35/ufms-meu-estudo-dados"  # P2: destino fixo, no código do SHA fixado (nunca vem da fila)
@@ -181,9 +185,17 @@ class RepositorioDados:
         return {"private": info.get("private"), "visibility": info.get("visibility"), "full_name": info.get("full_name")}
 
     def consentimento(self):
-        """Leitor de P3: `consent.json` na raiz do privado; ausente vira None (o guard bloqueia)."""
-        dado = self.ler("consent.json")
-        return None if dado is None else json.loads(dado.decode("utf-8"))
+        """Leitor de P3: `consent-v4.json` na raiz do privado (a promoção exige o consentimento v4, que cobre `entrada` e `dados`
+        e o app Claude; o v2 e o v3 NÃO bastam). Ausente, ilegível ou inválido vira None (o guard bloqueia)."""
+        dado = self.ler("consent-v4.json")
+        if dado is None:
+            return None
+        try:
+            consentimento = json.loads(dado.decode("utf-8"))
+            srg.check_consent_v4(consentimento)
+        except (ValueError, PersistenceBlocked):
+            return None
+        return consentimento
 
 
 class FilaEntrada:

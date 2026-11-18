@@ -31,6 +31,19 @@ def b64(dados):
     return base64.b64encode(dados).decode("ascii")
 
 
+
+def consentimento_v4(**mud):
+    """Consentimento v4 íntegro, com o texto real aprovado (E5), no formato que `ufms.sh consentir-v4` grava."""
+    import hashlib
+    doc = (ROOT / "docs" / "governanca" / "E5_CONSENTIMENTO_V4_PROPOSTA_20261118.md").read_text(encoding="utf-8")
+    texto = next(l[2:].strip() for l in doc.splitlines() if l.startswith("> "))
+    c = {"version": "v4", "scope": "resultados_estudo",
+         "inclui": ["resultados_estudo", "plano_estudo", "leitura_projecoes_sessoes_app_claude"],
+         "granted_at": "2026-11-16T10:00:00-04:00", "revoked_at": None, "text": texto,
+         "text_sha256": hashlib.sha256(texto.encode("utf-8")).hexdigest()}
+    c.update(mud)
+    return c
+
 class GitHubFalso:
     """Imita o mínimo da API de conteúdo do GitHub para dois repositórios, cada um com o SEU token."""
 
@@ -121,8 +134,7 @@ class Base(unittest.TestCase):
         (self.validador / ".git" / "HEAD").write_text(SHA + "\n")
         # histórico de dados: consentimento e a recomendação que a tentativa referencia
         rec = tg.recomendacao()
-        self.gh.repos[DADOS]["files"]["consent.json"] = json.dumps(
-            {"version": "v3", "scope": "resultados_estudo", "granted_at": "2026-11-16T10:00:00-04:00", "revoked_at": None}).encode()
+        self.gh.repos[DADOS]["files"]["consent-v4.json"] = json.dumps(consentimento_v4()).encode()
         self.gh.repos[DADOS]["files"][pg.event_path(rec["event_id"])] = pg.canonical({"evento": rec, "envelope": {}})
         self.dados = pr.RepositorioDados(pr.GitHubApi(TOKEN_DADOS, self.gh.transporte), DADOS)
         self.fila = pr.FilaEntrada(pr.GitHubApi(TOKEN_ENTRADA, self.gh.transporte), ENTRADA)
@@ -289,14 +301,29 @@ class ControlesTest(Base):
         self.assertNotIn(("GET", "andraus35/outro-repo", ""), self.gh.chamadas)  # nem chegou a consultar o destino errado
 
     def test_p3_consentimento_ausente_revogado_ou_de_outro_escopo(self):
-        consent = self.arquivos(DADOS)["consent.json"]
-        base = json.loads(consent)
-        for nome, mudanca in {"revogado": {"revoked_at": "2026-11-17T08:00:00-04:00"}, "escopo": {"scope": "plano"}}.items():
-            self.arquivos(DADOS)["consent.json"] = json.dumps({**base, **mudanca}).encode()
+        base = json.loads(self.arquivos(DADOS)["consent-v4.json"])
+        casos = {"revogado": {"revoked_at": "2026-11-17T08:00:00-04:00"}, "escopo": {"scope": "plano"}, "versao_v3": {"version": "v3"},
+                 "sem_leitura_de_projecoes": {"inclui": ["resultados_estudo", "plano_estudo"]}, "hash_errada": {"text_sha256": "0" * 64},
+                 "texto_sem_app_claude": {"text": base["text"].replace("app Claude", "sistema")}}
+        for nome, mudanca in casos.items():
+            self.arquivos(DADOS)["consent-v4.json"] = json.dumps({**base, **mudanca}).encode()
             self.assertEqual(self.rodar()["codigo"], "P3_CONSENTIMENTO", nome)
             self.gh.repos[ENTRADA]["files"].clear()
-        del self.arquivos(DADOS)["consent.json"]
+        self.arquivos(DADOS)["consent-v4.json"] = b"nao e json"
+        self.assertEqual(self.rodar()["codigo"], "P3_CONSENTIMENTO", "ilegivel")
+        self.gh.repos[ENTRADA]["files"].clear()
+        del self.arquivos(DADOS)["consent-v4.json"]
         self.assertEqual(self.rodar()["codigo"], "P3_CONSENTIMENTO")
+        self.assertEqual(self.novos_eventos(), [])
+
+    def test_p3_consent_v2_ou_v3_validos_nao_bastam_sem_o_v4(self):
+        del self.arquivos(DADOS)["consent-v4.json"]
+        for versao in ("v2", "v3"):
+            self.arquivos(DADOS)["consent.json"] = json.dumps(
+                {"version": versao, "scope": "resultados_estudo", "granted_at": "2026-11-16T10:00:00-04:00", "revoked_at": None}).encode()
+            self.arquivos(DADOS)["consent-v3.json"] = self.arquivos(DADOS)["consent.json"]
+            self.assertEqual(self.rodar()["codigo"], "P3_CONSENTIMENTO", versao)
+            self.gh.repos[ENTRADA]["files"].clear()
         self.assertEqual(self.novos_eventos(), [])
 
     def test_validador_diferente_do_fixado_recusa_tudo(self):
