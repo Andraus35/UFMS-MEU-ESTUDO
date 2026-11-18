@@ -1,5 +1,7 @@
 # S4 — Operação (especificação)
 
+**Emenda E2 (18/11/2026):** ao **fim** deste documento há a seção "Emenda E2", que **vale** onde divergir do texto abaixo (desempenho do TEC pela Zapia, origem na nuvem). Registro: `docs/governanca/E2_EMENDA_S5_S4R2_20261118.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16). Liga ferramentas, agentes e repositório: o **esquema dos comandos** entre Tutor, Coach e Zapia (PR-013), o **caminho do desempenho exportado** até o repositório (PR-016), a **comparação das opções A a F** de acesso às plataformas (D-15, PR-017, `docs/PLATFORMS.md`) e as **proibições de dados pessoais**. Usa os perfis `agents/TUTOR.md` e `agents/COACH.md` e as especificações S1 a S3 (`docs/especificacoes/S1_METODO_ESTUDO_REVISAO.md`, `docs/especificacoes/S2_TUTOR.md`, `docs/especificacoes/S3_COACH.md`). **É especificação e pesquisa: nada foi testado em conta real, na Zapia, no Google ou no NotebookLM.** Não contém estado.
 
 ## Objetivo
@@ -103,3 +105,12 @@ Canal de saída ao proprietário escolhido (D-20): **somente o app da Zapia**, o
 - Não implementa esquema, filtro, assinatura nem leitura direta; descreve o que construir e como provar offline.
 - A comparação das opções é documental e pode mudar com a resposta do suporte e com os termos das plataformas.
 - Não habilita persistência pessoal, e a revogação por apagar o repositório privado não alcança as cópias da Zapia (E-09).
+
+## Emenda E2 (18/11/2026): desempenho pela Zapia e origem na nuvem
+
+**Natureza:** emenda **aditiva**, por decisão do proprietário (D-25, D-26 e 18/11/2026). O texto acima **permanece** como histórico; onde divergir, **vale esta seção**. Não altera o `PRODUCT.md`.
+
+- **PR-016, caminho do desempenho (substitui o passo 1 acima):** o desempenho do **TEC** vem **pela Zapia, pedido pelo Tutor ou pelo Coach, conforme a necessidade, no lugar da exportação manual**. O pedido é **no máximo 1 por dia e só com atividade concluída** (cada pedido aciona o TEC). A Zapia entrega **tabela estruturada** (colunas do relatório: código, profundidade, título, questões, acertos, erros, peso; mais recorte, pontuação **declarada** e data) e um **relato do procedimento** de extração (bloco `procedimento`); o PDF é só leitura humana; **análise de conteúdo não entra** (D-10, D-23). A entrega vai **pela fila `entrada`** e o fluxo de Actions grava no repositório privado (D-25); **a Zapia não grava resultado por comando** (S6-R3). **A operação para pedir o relatório não existe ainda** (tarefa E3, aprovação do proprietário): até lá o pedido não tem canal e a **exportação manual continua sendo a alternativa**. Qconcursos segue **só por entrada manual** (S9-R1).
+- **S4-R2, origem (emenda):** na nuvem **não há assinatura que o modelo não possa forjar** (S6-R7). O comando da caixa **não traz assinatura**; o campo `origin` é **informativo**; a defesa é a **validação da caixa de comandos** (esquema, destino, janela, idempotência, filtro, e, para `enviar_prompt_notebook`, o validador do prompt), o **escopo mínimo dos tokens** e o **relato** da Zapia. **S4-R2 continua não atendida** como "origem verificável"; a assinatura Ed25519 de `scripts/agent_commands.py` fica para quem guarde chave fora do modelo e **não faz parte do desenho atual**.
+- **Opção F e as opções A a E:** a exportação manual deixa de ser "o primeiro caminho" para o TEC; **continua válida e sempre disponível**. Qualquer leitura da Zapia **na conta do proprietário** segue sob S9-R4 (taxa), S9-R8 e S9-R9 (termos lidos e registrados; aprovação expressa em PR da primeira leitura real). O D-27 mantém o aceite do risco.
+- **Honestidade:** **nenhum** pedido à Zapia foi feito; o teste (Z1) **não foi executado**; o formato real que a Zapia entregará ao harness **não foi visto por inteiro** (só o relatório de 17/11, que é PDF e traz análise).
