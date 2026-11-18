@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "c3_nomes_dos_tokens_nos_prompts",
+    "scope": "c3_acoes_local_only_correcao_etapa2",
     "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 122,
+    "pr_number": 123,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #121 integrado em main no merge commit c2bfaf2527b4a29cb2ab57e10e6b32f0ec795a7b. Frente única ativa: RM-09 (c3_nomes_dos_tokens_nos_prompts), branch ccr-59d8ec9a-y3l4xj, PR #122. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #122 integrado em main no merge commit a55f98041aa599d822e8ed8cf1424382b66a16b5. Frente única ativa: RM-09 (c3_acoes_local_only_correcao_etapa2), branch ccr-59d8ec9a-y3l4xj, PR #123. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 121,
-    "merge_commit_sha": "c2bfaf2527b4a29cb2ab57e10e6b32f0ec795a7b"
+    "pr_number": 122,
+    "merge_commit_sha": "a55f98041aa599d822e8ed8cf1424382b66a16b5"
   },
   "work_queue": [
     {

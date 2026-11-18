@@ -101,6 +101,8 @@ if tail == "actions/permissions":
     if metodo == "PUT": ac["allowed_actions"] = campos["allowed_actions"]; save(); sys.exit(0)
     saida(ac)
 if tail == "actions/permissions/selected-actions":
+    if metodo == "PUT" and campos.get("github_owned_allowed") == "false" and campos.get("verified_allowed") == "false":
+        erro("gh: You cannot have 'verified_allowed', 'github_owned_allowed', and 'patterns_allowed' all disabled at the same time. (Conflict)")
     if metodo == "PUT": save(); sys.exit(0)
     saida({})
 if tail == "actions/permissions/workflow":
@@ -210,7 +212,7 @@ class CaminhoFelizTest(Base):
         self.completo(r)
         e = self.ler_estado()
         self.assertTrue(e["repos"][ENTRADA]["private"])
-        self.assertEqual(e["actions"][ENTRADA], {"allowed_actions": "selected", "default_workflow_permissions": "read"})
+        self.assertEqual(e["actions"][ENTRADA], {"allowed_actions": "local_only", "default_workflow_permissions": "read"})
         self.assertEqual(e["secrets"][ENTRADA]["DADOS_TOKEN"], TOKEN)  # entrou por stdin
         instalado = base64.b64decode(e["files"][f"{ENTRADA}|{WF}"]["bytes"])
         self.assertNotIn(b"__VALIDADOR", instalado)
@@ -305,6 +307,18 @@ class P1EConfiguracaoTest(Base):
         self.completo(r)
         self.assertIn("não aceitou desabilitar forks", r.stdout)
 
+    def test_acoes_local_only_sem_chamar_selected_actions_e_retomada_de_execucao_parcial(self):
+        # rodada real de 18/11/2026: o GitHub recusou `selected` com tudo desligado e a etapa 2 parou, com `entrada` já criada
+        self.com_entrada()
+        self.estado["actions"][ENTRADA] = {"allowed_actions": "selected", "default_workflow_permissions": "write"}
+        self.salvar()
+        r = self.rodar(["CONFIGURAR", TOKEN, "INSTALAR"])
+        self.completo(r)
+        self.assertEqual(self.ler_estado()["actions"][ENTRADA], {"allowed_actions": "local_only", "default_workflow_permissions": "read"})
+        chamadas = (self.fake / "calls.log").read_text()
+        self.assertNotIn("selected-actions", chamadas)
+        self.assertIn("allowed_actions=local_only", chamadas)
+
     def test_sem_a_frase_configurar_fica_pendente_e_nao_aplica(self):
         self.com_entrada()
         r = self.rodar(["", TOKEN, "INSTALAR"])
@@ -362,7 +376,7 @@ class FluxoTest(Base):
     def setUp(self):
         super().setUp()
         self.com_entrada()
-        self.estado["actions"][ENTRADA] = {"allowed_actions": "selected", "default_workflow_permissions": "read"}
+        self.estado["actions"][ENTRADA] = {"allowed_actions": "local_only", "default_workflow_permissions": "read"}
         self.estado["secrets"][ENTRADA] = {"DADOS_TOKEN": "x"}
         self.salvar()
 

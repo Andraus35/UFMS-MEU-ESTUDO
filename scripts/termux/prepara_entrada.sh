@@ -125,14 +125,13 @@ echo "[P1] private=true confirmado nos dois repositórios."
 echo "== 2. Configuração (forks, colaboradores, ações) =="
 set +e; AA="$(ler "repos/$ENTRADA/actions/permissions" --jq '.allowed_actions')"
 DW="$(ler "repos/$ENTRADA/actions/permissions/workflow" --jq '.default_workflow_permissions')"; set -e
-if [ "$AA" = "selected" ] && [ "$DW" = "read" ]; then
-  echo "[ações] já limitadas às selecionadas (nenhuma de terceiros) e permissão padrão só de leitura; nada a configurar."
+if [ "$AA" = "local_only" ] && [ "$DW" = "read" ]; then
+  echo "[ações] já limitadas às locais deste repositório (nenhuma de terceiros) e permissão padrão só de leitura; nada a configurar."
 elif pergunta CONFIGURAR "Aplicar: forks desabilitados (se o GitHub aceitar) e ações limitadas em $ENTRADA?"; then
   for r in "$ENTRADA" "$DADOS"; do gh api -X PATCH "repos/$r" -F allow_forking=false >/dev/null 2>&1 \
     || echo "  (o GitHub não aceitou desabilitar forks em $r; conto com 'nenhum colaborador' e forks_count=0)"; done
-  gh api -X PUT "repos/$ENTRADA/actions/permissions" -F enabled=true -f allowed_actions=selected >/dev/null
-  gh api -X PUT "repos/$ENTRADA/actions/permissions/selected-actions" -F github_owned_allowed=false \
-    -F verified_allowed=false >/dev/null
+  # `local_only` (só ações e fluxos do próprio repositório): o GitHub recusa `selected` com tudo desligado (409, rodada real de 18/11/2026)
+  gh api -X PUT "repos/$ENTRADA/actions/permissions" -F enabled=true -f allowed_actions=local_only >/dev/null
   gh api -X PUT "repos/$ENTRADA/actions/permissions/workflow" -f default_workflow_permissions=read \
     -F can_approve_pull_request_reviews=false >/dev/null
 else
@@ -149,8 +148,8 @@ for r in "$ENTRADA" "$DADOS"; do
 done
 set +e; AA="$(ler "repos/$ENTRADA/actions/permissions" --jq '.allowed_actions')"
 DW="$(ler "repos/$ENTRADA/actions/permissions/workflow" --jq '.default_workflow_permissions')"; set -e
-if [ "$AA" = "selected" ] && [ "$DW" = "read" ]; then
-  echo "[ações] limitadas às selecionadas (nenhuma de terceiros) e permissão padrão só de leitura."
+if [ "$AA" = "local_only" ] && [ "$DW" = "read" ]; then
+  echo "[ações] limitadas às locais deste repositório (nenhuma de terceiros) e permissão padrão só de leitura."
 else
   pend "ações de $ENTRADA não conferem (allowed_actions=${AA:-?}, default_workflow_permissions=${DW:-?})"
 fi
