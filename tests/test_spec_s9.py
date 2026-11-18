@@ -78,7 +78,10 @@ class SpecS9Tests(unittest.TestCase):
         for padrao in ("*conversor*", "*converte*", "*export_tec*", "*exportacao_tec*", "*leitura_direta*", "*platform_reader*"):
             self.assertEqual(list((ROOT / "scripts").glob(padrao)), [], padrao)
         ids = {i["id"] for i in FILA}
-        self.assertFalse({"L2", "L3"} & ids)  # o conversor e o registro dos termos seguem fora da fila (dependem do proprietário)
+        self.assertNotIn("L3", ids)  # o registro dos termos é ato do proprietário e segue fora da fila
+        l2 = next((i for i in FILA if i["id"] == "L2"), None)  # L2 entrou na fila por decisão dele (18/11/2026), com a amostra real; ainda sem arquivo
+        self.assertIsNotNone(l2)
+        self.assertEqual(l2["deliverable"], "scripts/tec_export_converter.py")
         l1 = next((i for i in FILA if i["id"] == "L1"), None)  # a L1 entrou na fila por decisão do proprietário (17/11/2026)
         self.assertIsNotNone(l1)
         self.assertEqual(l1["deliverable"], "scripts/platform_read_guard.py")

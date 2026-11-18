@@ -16,17 +16,18 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         inicio = HANDOFF.index("### Estado de saída")
         return HANDOFF[inicio:HANDOFF.index("**Ordem do que acontece a seguir", inicio)]
 
-    def test_fila_tem_os_proximos_itens_na_ordem_proposta_e_o_proximo_e_a_s10_depois_da_l1_e_da_rodada_6(self):
+    def test_fila_tem_os_itens_na_ordem_proposta_e_so_a_s11_resta_bloqueada_pela_persistencia(self):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "L2"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        # a L1 tem a entrega (scripts/platform_read_guard.py) e a rodada 6 da Zapia chegou: a S10 não tem mais insumo bloqueante
-        self.assertEqual(fila["proximo"]["id"], "S10")
-        self.assertEqual(fila["pendentes"], ["S10", "S11"])
-        self.assertEqual(fila["bloqueados"], [])
+        # L1 e S10 têm a entrega; a S11 espera a persistência provada (blocking_inputs); o próximo é a E1, depois N2 e L2
+        self.assertEqual(fila["proximo"]["id"], "E1")
+        self.assertEqual(fila["pendentes"], ["S11", "E1", "N2", "L2"])
+        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["S11"])
+        self.assertIn("persistência", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
         self.assertTrue((ROOT / "docs" / "governanca" / "RESPOSTA_RODADA6_ZAPIA_20261117.md").is_file())
@@ -38,12 +39,23 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
             if item["id"].startswith("S"):  # especificações; as tarefas de código (C4, RUNNER, HOOK, COMANDOS, CODEOWNERS) têm entrega própria
                 self.assertRegex(item["deliverable"], r"^docs/especificacoes/S[^/]+\.md$")
             else:
-                self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh)$")
+                self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("S10", "S11"):  # ainda por escrever; a L1 é código e fica fora desta lista
+        for novo in ("S11", "E1", "N2", "L2"):  # ainda por fazer; S10 e L1 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
+
+    def test_e1_n2_l2_entram_em_serie_depois_da_s11_por_decisao_do_proprietario(self):
+        fila = {i["id"]: i for i in WORKFLOW["work_queue"]}
+        self.assertEqual([fila[k]["depends_on"] for k in ("E1", "N2", "L2")], [["S10"], ["E1"], ["N2"]])
+        self.assertEqual(fila["E1"]["deliverable"], "docs/governanca/E1_EMENDA_PRODUCT_20261118.md")
+        self.assertEqual(fila["N2"]["deliverable"], "scripts/notebook_prompt_validator.py")
+        self.assertEqual(fila["L2"]["deliverable"], "scripts/tec_export_converter.py")
+        self.assertIn("pedido de merge explícito", fila["E1"]["title"])
+        self.assertIn("sem convenção de contagem presumida", fila["L2"]["title"])
+        for k in ("E1", "N2", "L2"):
+            self.assertEqual(fila[k]["blocking_inputs"], [], k)
 
     def test_s11_so_depende_do_que_a_precede_e_exige_dado_real_consentido(self):
         s11 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S11")
