@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "hook2_hook_stop_de_entrega_final_ate_20_11",
-    "branch": "ccr-hook2-entrega-final",
-    "pr_number": 118,
+    "scope": "l2_conversor_offline_da_tabela_de_desempenho",
+    "branch": "ccr-l2-conversor-desempenho",
+    "pr_number": 119,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #117 integrado em main no merge commit 817443fa5b31e4717406cb2e3c72510d8620f5b7. Frente única ativa: RM-09 (hook2_hook_stop_de_entrega_final_ate_20_11), branch ccr-hook2-entrega-final, PR #118. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #118 integrado em main no merge commit d090039d967b175dafd1a65f95624bbc9e8e5df4. Frente única ativa: RM-09 (l2_conversor_offline_da_tabela_de_desempenho), branch ccr-l2-conversor-desempenho, PR #119. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 117,
-    "merge_commit_sha": "817443fa5b31e4717406cb2e3c72510d8620f5b7"
+    "pr_number": 118,
+    "merge_commit_sha": "d090039d967b175dafd1a65f95624bbc9e8e5df4"
   },
   "work_queue": [
     {
