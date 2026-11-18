@@ -47,6 +47,10 @@ printf '%s' "$SETTINGS" | python -c 'import json,sys; s=json.load(sys.stdin)["st
   || falha "a flag personal_results_writes_enabled do público deveria seguir falsa neste SHA."
 echo "[ok] fluxo instalado com o SHA ${SHA_FIXADO:0:12}; flag do fluxo ligada nele; v4 presente; segredo e variável presentes."
 
+# a fila precisa estar VAZIA: entradas paradas de uma tentativa anterior seriam promovidas junto e quebrariam a contagem (+1)
+FILA_PREVIA="$(gh api "repos/$ENTRADA/contents/fila/entradas" --jq 'length' 2>/dev/null || echo 0)"
+case "$FILA_PREVIA" in ''|*[!0-9]*) FILA_PREVIA=0;; esac
+[ "$FILA_PREVIA" -eq 0 ] || falha "há $FILA_PREVIA arquivo(s) parado(s) em fila/entradas de $ENTRADA (tentativa anterior). Apague-os pela página do GitHub antes de repetir a prova."
 contar() { gh api "repos/$DADOS/git/trees/HEAD?recursive=1" --jq '[.tree[] | select(.type=="blob") | select(.path|startswith("eventos/"))] | length' 2>/dev/null || echo 0; }
 cabeca() { gh api "repos/$DADOS/commits?per_page=1" --jq '.[0].sha' 2>/dev/null | head -c 64 || true; }
 ANTES_N="$(contar)"; ANTES_H="$(cabeca)"
@@ -64,6 +68,7 @@ printf 'Cole o token "zapia token" (nome no GitHub; só `entrada`; NÃO o zapia_
 read -rs TOKEN || TOKEN=""; echo
 [ -n "$TOKEN" ] || falha "token vazio."
 case "$TOKEN" in github_pat_*) ;; *) falha "não parece fine-grained (github_pat_...).";; esac
+printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,255}$' || falha "o token tem caractere fora do padrão (espaço, quebra de linha ou invisível)."
 CORPO="$(python - "$TMP/entrada.json" <<'PY'
 import base64, json, sys
 print(json.dumps({"message": "C5: entrada sintetica (teste, sem dado pessoal)", "branch": "main",
@@ -84,7 +89,7 @@ RUN=""; STATUS=""; CONC=""
 for _ in $(seq 1 "${C5_TENTATIVAS:-30}"); do
   LINHA="$(gh run list --repo "$ENTRADA" --workflow promover.yml --limit 10 --json databaseId,headSha,status,conclusion 2>/dev/null | \
     python -c 'import json,sys; sha=sys.argv[1]; r=[x for x in json.load(sys.stdin) if x["headSha"]==sha]; print((str(r[0]["databaseId"])+" "+str(r[0]["status"])+" "+str(r[0]["conclusion"])) if r else "")' "$SHA_COMMIT" 2>/dev/null || true)"
-  if [ -n "$LINHA" ]; then set -- $LINHA; RUN="$1"; STATUS="$2"; CONC="$3"; [ "$STATUS" = "completed" ] && break; fi
+  if [ -n "$LINHA" ]; then set -- $LINHA; RUN="${1:-}"; STATUS="${2:-}"; CONC="${3:-}"; [ "$STATUS" = "completed" ] && break; fi
   sleep "${C5_INTERVALO:-10}"
 done
 [ -n "$RUN" ] || div "nenhuma execução do fluxo apareceu para o commit (o gatilho não disparou)"

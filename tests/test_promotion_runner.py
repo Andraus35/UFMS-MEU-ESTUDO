@@ -483,6 +483,34 @@ class CLITest(Base):
                               "--validador-dir", str(self.validador)], transporte=self.gh.transporte, ambiente={})
         self.assertEqual((codigo, json.loads(saida.getvalue())["codigo"]), (1, "ENTRADA_REPO_INVALIDO"))
 
+    def test_cli_diz_qual_token_esta_malformado_sem_ecoar_o_valor(self):
+        # prova real de 18/11/2026: o runner só dizia `ValueError`; agora diz de qual token, sem nunca imprimir o valor
+        ruins = ["tok-dados-ficticio-0002 ", "tok-dados-ficticio-0002\r", "tok dados ficticio", "tok-dados-\u00e9", "curto", ""]
+        for ruim in ruins:
+            codigo, texto = self.rodar_cli({"DADOS_TOKEN": ruim, "GH_TOKEN": TOKEN_ENTRADA})
+            self.assertEqual(codigo, 1, repr(ruim))
+            d = json.loads(texto)
+            self.assertEqual((d["estado"], d["codigo"], d["detalhe"]), ("ERRO", "ValueError", "TOKEN_INVALIDO:dados"), repr(ruim))
+            for trecho in ("ficticio", "curto", "dados-"):
+                self.assertNotIn(trecho, texto.replace("TOKEN_INVALIDO:dados", ""))
+        codigo, texto = self.rodar_cli({"DADOS_TOKEN": TOKEN_DADOS, "GH_TOKEN": "ghs_com espaco"})
+        self.assertEqual(json.loads(texto)["detalhe"], "TOKEN_INVALIDO:entrada")
+        self.assertEqual(self.gh.total_de_chamadas(), 0)
+
+    def test_cli_nao_imprime_detalhe_de_erro_que_nao_e_da_lista_fechada(self):
+        def explode(*a, **k):
+            raise ValueError("conteudo-sigiloso-xyz")
+        with mock.patch.object(pr, "executar", explode):
+            codigo, texto = self.rodar_cli({"DADOS_TOKEN": TOKEN_DADOS, "GH_TOKEN": TOKEN_ENTRADA})
+        self.assertEqual(codigo, 1)
+        d = json.loads(texto)
+        self.assertEqual((d["estado"], d["codigo"]), ("ERRO", "ValueError"))
+        self.assertNotIn("detalhe", d)
+        self.assertNotIn("sigiloso", texto)
+
+    def test_detalhes_seguros_sao_so_os_nossos(self):
+        self.assertEqual(pr.DETALHES_SEGUROS, frozenset({"TOKEN_INVALIDO:dados", "TOKEN_INVALIDO:entrada", "fila grande demais"}))
+
     def test_cli_sai_com_1_se_falhar_ao_registrar(self):
         self.gh.falhar = lambda m, repo, c: 500 if (repo == ENTRADA and c.startswith("contents/recibos/")) else None
         bruto = tg.entrada(tg.tentativa())

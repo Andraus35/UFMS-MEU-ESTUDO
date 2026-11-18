@@ -87,9 +87,9 @@ def ler_head_sha(validador_dir):
 class GitHubApi:
     """Cliente mínimo do GitHub REST com transporte injetado e UM token. Só fala com a API oficial."""
 
-    def __init__(self, token, transporte, base=API, tempo=20):
+    def __init__(self, token, transporte, base=API, tempo=20, rotulo=""):
         if not (isinstance(token, str) and _TOKEN.fullmatch(token)):
-            raise ValueError("TOKEN_INVALIDO")  # nunca ecoa o valor
+            raise ValueError("TOKEN_INVALIDO:" + rotulo if rotulo else "TOKEN_INVALIDO")  # nunca ecoa o valor
         self._token, self._transporte, self._base, self._tempo = token, transporte, base, tempo
 
     def __repr__(self):
@@ -109,6 +109,11 @@ class GitHubApi:
         if not isinstance(status, int) or status >= 400:
             raise ApiError(status if isinstance(status, int) else 0)
         return status, objeto
+
+
+# Mensagens de ValueError que o runner PODE imprimir (conjunto fechado, escritas por este código; nunca o valor de um token):
+# a prova real de 18/11/2026 só mostrou `ValueError`, sem dizer qual dos dois tokens estava malformado.
+DETALHES_SEGUROS = frozenset({"TOKEN_INVALIDO:dados", "TOKEN_INVALIDO:entrada", "fila grande demais"})
 
 
 def _b64(dados):
@@ -325,13 +330,16 @@ def main(argv=None, transporte=None, ambiente=None, agora=None):
         return 1
     try:
         t = transporte or transporte_urllib
-        dados = RepositorioDados(GitHubApi(ambiente.get("DADOS_TOKEN", ""), t), a.dados_repo)
-        fila = FilaEntrada(GitHubApi(ambiente.get("GH_TOKEN", ""), t), a.entrada_repo)
+        dados = RepositorioDados(GitHubApi(ambiente.get("DADOS_TOKEN", ""), t, rotulo="dados"), a.dados_repo)
+        fila = FilaEntrada(GitHubApi(ambiente.get("GH_TOKEN", ""), t, rotulo="entrada"), a.entrada_repo)
         contexto = montar_contexto(dados=dados, agora=agora or datetime.now(timezone.utc), alvo=a.dados_repo,
                                    validador_dir=validador, validador_sha_fixado=a.validador_sha, execucao=a.execucao)
         resumo = executar(ler_fila(a.fila), contexto, fila)
-    except Exception as erro:  # nunca imprime a exceção (poderia carregar contexto): só a classe
-        print(json.dumps({"estado": "ERRO", "codigo": type(erro).__name__}))
+    except Exception as erro:  # nunca imprime a exceção (poderia carregar contexto): só a classe e, se for uma das nossas, o detalhe
+        saida = {"estado": "ERRO", "codigo": type(erro).__name__}
+        if isinstance(erro, ValueError) and str(erro) in DETALHES_SEGUROS:
+            saida["detalhe"] = str(erro)
+        print(json.dumps(saida))
         return 1
     print(json.dumps(resumo, ensure_ascii=False))
     return 1 if resumo["falhas_de_registro"] else 0

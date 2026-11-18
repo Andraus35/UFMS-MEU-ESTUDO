@@ -167,6 +167,8 @@ else
   if [ -z "$TOKEN" ]; then
     pend "segredo DADOS_TOKEN NÃO guardado (o fluxo não terá a credencial do histórico)"
   else
+    # o fluxo recusa token com espaço, quebra de linha ou caractere invisível (prova real de 18/11/2026: `TOKEN_INVALIDO`)
+    printf '%s' "$TOKEN" | LC_ALL=C grep -qE '^[!-~]{8,255}$' || { unset TOKEN; falha "o token tem caractere fora do padrão (espaço, quebra de linha, tabulação ou invisível) ou tamanho inválido. Nada foi gravado."; }
     case "$TOKEN" in
       github_pat_*) ;;
       *) unset TOKEN; falha "o token não parece fine-grained (github_pat_...). Nada foi gravado.";;
