@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "s11_ciclo_e_piloto_e_s14_runtime_operacional",
+    "scope": "pf_preflight_do_piloto",
     "branch": "claude/ufms-meu-estudo-engineering-14nz4d",
-    "pr_number": 138,
+    "pr_number": 139,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #137 integrado em main no merge commit f3f756b6f52215c023dd466a8e88547c9cded45a. Frente única ativa: RM-09 (s11_ciclo_e_piloto_e_s14_runtime_operacional), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #138. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #138 integrado em main no merge commit f654cc28c823960655d90888ae4d177dc4d339a0. Frente única ativa: RM-09 (pf_preflight_do_piloto), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #139. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 137,
-    "merge_commit_sha": "f3f756b6f52215c023dd466a8e88547c9cded45a"
+    "pr_number": 138,
+    "merge_commit_sha": "f654cc28c823960655d90888ae4d177dc4d339a0"
   },
   "work_queue": [
     {
@@ -682,6 +682,19 @@
         "PJ"
       ],
       "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "CM",
+      "title": "Controle de mudança dos contratos em produção (S14-R18, decisão do proprietário de 19/11/2026): identidade própria do agente no GitHub e CODEOWNERS ativo (require_code_owner_reviews) para AGENTS.md, PRODUCT.md, agents/, .claude/, .github/ e o gateway, mais check de CI que reprova PR que altere esses caminhos sem a aprovação do dono; mexe em .github/ e na proteção da main",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E9_CONTROLE_DE_MUDANCA_CONTRATOS.md",
+      "depends_on": [
+        "RT"
+      ],
+      "blocking_inputs": [
+        "decisão e ato do proprietário no GitHub (identidade do agente e proteção da main) e aprovação expressa no PR, que altera .github/"
+      ],
       "optional_inputs": []
     },
     {
