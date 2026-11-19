@@ -37,7 +37,7 @@ def repo(**mud):
 def leituras(**mud):
     base = {
         "flags": {"personal_results_writes_enabled": False, "private_flow_promotion_enabled_no_sha_fixado": False},
-        "fluxo": {"sha_fixado": MAIN, "hash_instalado": H, "hash_esperado": H},
+        "fluxo": {"sha_fixado": MAIN, "hash_instalado": H, "hash_esperado": H, "hash_esperado_sha": MAIN},
         "main_sha": MAIN,
         "repositorios": {"entrada": repo(), "dados": repo()},
         "consentimento": consent(),
@@ -168,6 +168,29 @@ class ContraprovasVermelhasTests(unittest.TestCase):
             l["janela_aberta_em"] = aberta
             self.vermelho(l, "janela", "pos_janela")
 
+    def test_hash_esperado_de_outro_sha_ou_sem_sha_fecha(self):
+        for mud in ({"hash_esperado_sha": "1" * 40}, {"hash_esperado_sha": None}, {"hash_esperado_sha": "curto"}):
+            l = leituras()
+            l["fluxo"].update(mud)
+            self.vermelho(l, "fluxo_hash")
+        l = leituras()
+        del l["fluxo"]["hash_esperado_sha"]
+        self.vermelho(l, "fluxo_hash")
+
+    def test_token_ja_expirado_e_vermelho(self):
+        for expira in ("2026-11-19T00:00:00+00:00", "2026-11-20T12:00:00+00:00"):
+            self.vermelho(leituras(tokens=[{"nome": "zapia_dados", "expira_em": expira}]), "tokens")
+
+    def test_leitura_que_quebra_a_conferencia_vira_item_vermelho_sem_derrubar(self):
+        for texto in ("\ud800", "\x00", "a" * 10_000_000):
+            c = consent()
+            c["text"] = texto
+            s = roda(leituras(consentimento=c))  # não levanta
+            self.assertEqual(s["resultado"], "VERMELHO")
+            self.assertEqual(item(s, "consentimento_v4")["resultado"], "VERMELHO")
+        for ruim in ({"flags": object()}, {"tokens": [{"nome": object(), "expira_em": 3}]}, {"ci": {"head_sha": MAIN, "conclusoes": [[]]}}):
+            self.assertEqual(roda(leituras(**ruim))["resultado"], "VERMELHO")
+
     def test_entrada_que_nao_e_objeto_fecha_tudo(self):
         for entrada in (None, [], "texto", 3):
             s = roda(entrada)
@@ -190,11 +213,12 @@ class ContraprovasAmbarTests(unittest.TestCase):
             self.ambar(l, "repo_entrada")
 
     def test_token_com_validade_menor_que_janela_mais_7_dias(self):
-        for expira in ("2026-11-27T11:59:59+00:00", "2026-11-20T13:00:00+00:00", "2026-11-19T00:00:00+00:00"):
+        for expira in ("2026-11-27T11:59:59+00:00", "2026-11-20T13:00:00+00:00"):
             l = leituras(tokens=[{"nome": "zapia_dados", "expira_em": expira}])
             self.ambar(l, "tokens")
-        # exatamente 8 dias (janela de 24 h mais margem de 7 dias) passa
-        self.assertEqual(item(roda(leituras(tokens=[{"nome": "zapia_dados", "expira_em": "2026-11-28T12:00:00+00:00"}])), "tokens")["resultado"], "VERDE")
+        # exatamente 8 dias (janela de 24 h mais margem de 7 dias) NÃO basta: a validade precisa ser MAIOR que isso
+        self.ambar(leituras(tokens=[{"nome": "zapia_dados", "expira_em": "2026-11-28T12:00:00+00:00"}]), "tokens")
+        self.assertEqual(item(roda(leituras(tokens=[{"nome": "zapia_dados", "expira_em": "2026-11-28T12:00:01+00:00"}])), "tokens")["resultado"], "VERDE")
 
     def test_ci_nao_verde_ou_em_outro_sha(self):
         self.ambar(leituras(ci={"head_sha": MAIN, "conclusoes": ["success", "failure"]}), "ci")
@@ -266,13 +290,15 @@ class LinhaDeComandoTests(unittest.TestCase):
         ruim = leituras(consentimento=None)
         self.assertEqual(self.cli(json.dumps(ruim)).returncode, 1)
         ambar = leituras(ci={"head_sha": MAIN, "conclusoes": ["failure"]})
-        self.assertEqual(self.cli(json.dumps(ambar)).returncode, 2)
+        self.assertEqual(self.cli(json.dumps(ambar)).returncode, 3)  # 2 é o código de uso incorreto do argparse
+        self.assertEqual(subprocess.run([sys.executable, str(ROOT / "scripts/piloto_preflight.py"), "--modo", "abertura"], capture_output=True,
+                                        text=True, timeout=60, env={"PATH": "/usr/bin:/bin"}).returncode, 2)
         self.assertEqual(self.cli("{não é json").returncode, 1)
         self.assertEqual(self.cli(None).returncode, 1)
 
 
 class SomenteLeituraTests(unittest.TestCase):
-    def test_importa_so_modulos_offline_e_nao_usa_rede_arquivo_nem_ambiente(self):
+    def test_importa_so_modulos_offline_e_so_abre_arquivo_na_linha_de_comando(self):
         arvore = ast.parse((ROOT / "scripts/piloto_preflight.py").read_text(encoding="utf-8"))
         usados = set()
         for no in ast.walk(arvore):
@@ -285,6 +311,14 @@ class SomenteLeituraTests(unittest.TestCase):
         self.assertFalse(chamadas & {"exec", "eval", "__import__", "compile"})
         escrita = [n for n in ast.walk(arvore) if isinstance(n, ast.Call) and getattr(n.func, "attr", "") in ("write", "write_text", "mkdir", "unlink")]
         self.assertEqual(escrita, [])
+        # `open` só aparece em `main`, e lá só em leitura (nenhum modo de escrita); `executar` e os itens nunca abrem arquivo
+        for funcao in (f for f in ast.walk(arvore) if isinstance(f, ast.FunctionDef)):
+            aberturas = [n for n in ast.walk(funcao) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "open"]
+            if funcao.name != "main":
+                self.assertEqual(aberturas, [], funcao.name)
+            for a in aberturas:
+                modo = a.args[1].value if len(a.args) > 1 and isinstance(a.args[1], ast.Constant) else "r"
+                self.assertNotRegex(str(modo), r"[wax+]")
 
     def test_nenhuma_flag_e_alterada_pelo_modulo(self):
         antes = (ROOT / "settings.json").read_bytes()

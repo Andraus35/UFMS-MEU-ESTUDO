@@ -12,6 +12,8 @@ Cada item devolve VERDE, AMBAR ou VERMELHO (S11-R10). O resultado geral é o PIO
 (tudo ou nada). Gatilhos VERMELHOS valem mesmo no pré-voo, antes de qualquer escrita. A saída traz só identificadores, booleanos e
 prefixos de 12 caracteres de hash: nunca segredo, token ou dado pessoal (a saída é varrida antes de sair).
 
+Códigos de saída da linha de comando: 0 VERDE, 1 VERMELHO (inclui arquivo ilegível), 3 ÂMBAR; 2 é de uso incorreto (argparse).
+
 Limites: prova o que as leituras injetadas dizem; NÃO prova que elas foram feitas contra o GitHub real (isso é o roteiro do Termux,
 ato do proprietário) e NÃO liga nem desliga nenhuma flag.
 """
@@ -80,6 +82,9 @@ def _fluxo(leituras):
     instalado, esperado = f.get("hash_instalado"), f.get("hash_esperado")
     if not (isinstance(instalado, str) and isinstance(esperado, str) and HASH64.fullmatch(instalado) and HASH64.fullmatch(esperado)):
         return _item("fluxo_hash", VERMELHO, "hash do fluxo ausente ou malformado")
+    # o hash esperado é o do modelo gerado PARA o SHA fixado: sem essa amarra, um esperado velho conferiria com um instalado velho
+    if _sha(f.get("hash_esperado_sha")) is None or f.get("hash_esperado_sha") != f.get("sha_fixado"):
+        return _item("fluxo_hash", VERMELHO, "hash esperado calculado para outro SHA que não o fixado (ou sem SHA declarado)")
     if instalado != esperado:
         return _item("fluxo_hash", VERMELHO, f"hash do fluxo diferente do esperado ({instalado[:12]} contra {esperado[:12]})")
     return _item("fluxo_hash", VERDE, f"hash do fluxo igual ao esperado ({instalado[:12]})")
@@ -136,7 +141,9 @@ def _tokens(leituras, agora):
         expira = _dt(token.get("expira_em")) if isinstance(token, dict) else None
         if not (isinstance(nome, str) and re.fullmatch(r"[a-z_ ]{1,40}", nome)) or expira is None:
             return _item("tokens", VERMELHO, "token sem nome válido ou sem data de expiração com fuso")
-        if expira - agora < JANELA + MARGEM:
+        if expira <= agora:
+            return _item("tokens", VERMELHO, "token já expirado: " + nome)
+        if expira - agora <= JANELA + MARGEM:  # "maior que a janela mais 7 dias": exatamente 8 dias NÃO basta
             curtos.append(nome)
     if curtos:
         return _item("tokens", AMBAR, "validade menor que a janela mais 7 dias: " + ", ".join(sorted(curtos)))
@@ -191,11 +198,19 @@ def executar(leituras, modo, agora=None):
         raise ValueError("horário sem fuso")
     if not isinstance(leituras, dict):
         leituras = {}
-    itens = [_flags(leituras, modo), _fluxo(leituras), _sha_fixado(leituras), *_repos(leituras), _consentimento(leituras, agora),
-             _tokens(leituras, agora), _ci(leituras), _contraprova_gerador(agora)]
-    janela = _janela(leituras, modo, agora)
-    if janela:
-        itens.append(janela)
+    itens = []
+    for ident, fn in (("flags", lambda: _flags(leituras, modo)), ("fluxo_hash", lambda: _fluxo(leituras)),
+                      ("sha_fixado", lambda: _sha_fixado(leituras)), ("repositorios", lambda: _repos(leituras)),
+                      ("consentimento_v4", lambda: _consentimento(leituras, agora)), ("tokens", lambda: _tokens(leituras, agora)),
+                      ("ci", lambda: _ci(leituras)), ("contraprova_gerador", lambda: _contraprova_gerador(agora)),
+                      ("janela", lambda: _janela(leituras, modo, agora))):
+        try:
+            produzido = fn()
+        except Exception as exc:  # leitura que quebra a conferência fecha em VERMELHO, nunca derruba o relatório
+            produzido = {"id": ident, "resultado": VERMELHO, "motivo": "erro inesperado na conferência (" + type(exc).__name__ + ")"}
+        if produzido is None:
+            continue
+        itens.extend(produzido if isinstance(produzido, list) else [produzido])
     pior = max((i["resultado"] for i in itens), key=ORDEM.get)
     saida = {"modo": modo, "resultado": pior, "itens": itens, "gerado_em": agora.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
     if SEGREDO.search(json.dumps(saida, ensure_ascii=False)):
@@ -217,7 +232,7 @@ def main(argv=None):
         leituras = None
     saida = executar(leituras, a.modo)
     print(json.dumps(saida, ensure_ascii=False, indent=2))
-    return {VERDE: 0, AMBAR: 2, VERMELHO: 1}[saida["resultado"]]
+    return {VERDE: 0, AMBAR: 3, VERMELHO: 1}[saida["resultado"]]  # 2 é o código de uso incorreto do argparse: nunca é AMBAR
 
 
 if __name__ == "__main__":
