@@ -56,6 +56,14 @@ def gerar(registros, c=None, agora=AGORA):
     return pg.gerar_projecao(registros, TOPICOS, consent() if c is None else c, agora)
 
 
+def tentativa(topico="GER-LEG", n="1", data="2026-11-10", conjunto="CJ-1"):
+    return {"event_id": "att-" + n, "type": "attempt_recorded", "schema_version": "1.0", "attempt_id": "A" + n, "recorded_at": data + "T11:00:00-04:00",
+            "attempt_at": data + "T10:00:00-04:00", "recommendation_id": "REC-A" + n, "platform_notebook_id": "EXT-A" + n,
+            "source_ref": "synthetic://proj/A" + n, "independence": "without_consultation", "familiarity": "new", "diversity": "varied",
+            "source_kind": "platform_export", "confidence": "secure", "item_set_id": conjunto, "total": 10, "acertos": 7, "erros": 3,
+            "topic_results": [{"topic_id": topico, "attempted": 10, "correct": 7}]}
+
+
 class CaminhoFelizTests(unittest.TestCase):
     def test_historico_vazio_e_e0_sem_itens(self):
         p = gerar([])
@@ -80,6 +88,21 @@ class CaminhoFelizTests(unittest.TestCase):
         antes = copy.deepcopy(regs)
         self.assertEqual(gerar(regs), gerar(regs))
         self.assertEqual(regs, antes)
+
+    def test_nivel_por_topico_nao_repete_o_global(self):
+        """Tópico com contexto completo chega a E3; tópico só com resultado por tópico fica em E2 (não herda o nível do outro)."""
+        recomendacao = rec("UFMS-REC") | {"recommendation_id": "REC-A1"}
+        regs = [real(recomendacao), real(tentativa("GER-LEG")), real(res("PORT-1", "res-p") | {"topic_results": [{"topic_id": "GER-PORT", "attempted": 12, "correct": 8}]})]
+        p = gerar(regs)
+        niveis = {i["topico"]: i["nivel"] for i in p["niveis"]}
+        self.assertEqual(niveis, {"Legislação geral e normas da UFMS": "E3", "Língua Portuguesa": "E2"})
+
+    def test_revisoes_em_ordem_de_vencimento_e_data_utc(self):
+        regs = [real(revisao("GER-ING", "2026-12-30T12:00:00+00:00")), real(revisao("GER-PORT", "2026-11-21T12:00:00+00:00")),
+                real(revisao("GER-LEG", "2026-11-26T23:30:00-04:00"))]
+        p = gerar(regs)
+        self.assertEqual([(r["topico"], r["vence_em"]) for r in p["revisoes"]],
+                         [("Língua Portuguesa", "2026-11-21"), ("Legislação geral e normas da UFMS", "2026-11-27"), ("Língua Inglesa", "2026-12-30")])
 
     def test_vencimento_vem_do_evento_sem_recalculo(self):
         p = gerar([real(revisao("GER-ING", "2027-01-15T10:00:00+00:00"))])
@@ -145,10 +168,18 @@ class ContraprovasTests(unittest.TestCase):
         p["niveis"] = [{"topico": "Língua Portuguesa", "nivel": "E1"}] * (g.MAX_ITENS + 1)
         bloqueia(self, lambda: g.check_projection(p), "niveis")
 
-    def test_nao_faz_rede_nem_le_arquivos(self):
-        codigo = (ROOT / "scripts/projection_generator.py").read_text(encoding="utf-8")
-        for proibido in ("import requests", "urllib", "socket", "subprocess", "open(", "os.environ", "token"):
-            self.assertNotIn(proibido, codigo.split('"""', 2)[2], proibido)
+    def test_importa_so_modulos_offline_da_lista_permitida(self):
+        import ast
+        arvore = ast.parse((ROOT / "scripts/projection_generator.py").read_text(encoding="utf-8"))
+        usados = set()
+        for no in ast.walk(arvore):
+            if isinstance(no, ast.Import):
+                usados |= {a.name.split(".")[0] for a in no.names}
+            elif isinstance(no, ast.ImportFrom):
+                usados.add((no.module or "").split(".")[0])
+        self.assertEqual(usados, {"copy", "datetime", "core", "evidence_projection", "private_persistence_guard", "session_read_guard"})
+        chamadas = {n.func.id for n in ast.walk(arvore) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)}
+        self.assertFalse(chamadas & {"open", "exec", "eval", "__import__"})
 
 
 if __name__ == "__main__":
