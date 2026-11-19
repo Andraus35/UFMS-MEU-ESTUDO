@@ -51,6 +51,10 @@ python scripts/protect_main.py --check
 
 O desenvolvimento deve usar **uma tarefa, uma branch, um PR draft e um merge por vez**. **PR encerrado sem merge não conclui a tarefa**; depois da integração o `state/WORKFLOW.json` guarda o último ciclo e a CI valida o merge real no GitHub. Não abrir PR paralelo para testes, auditoria, correção ou outro assunto. O registro operacional é `state/WORKFLOW.json` (item ativo, PR, branch, próximos e PRs históricos suspensos), enquanto o `ROADMAP.md` contém a fila e o `memory/HANDOFF.md` orienta a próxima sessão. A verificação `python scripts/single_flow_gate.py --check` é local; o workflow usa `--remote` e falha se encontrar PRs concorrentes. A regra na CI não impede fisicamente a criação por API, mas mantém o PR sem aprovação até saneamento. PRs antigos encerrados sem merge permanecem recuperáveis pelos SHAs.
 
+## Harness cognitivo e operacional
+
+O repositório é um **harness**, não um software de produto. A **cognição** do Tutor e do Coach (escolha de assunto, bloco, dificuldade, revisão e explicação) é **livre**; o que **entra** (leituras) e o que **sai** (entregas e efeitos) é **condicionado por gates e mecanismos determinísticos**. Cada controle é classificado em **enforçada** (fora do modelo), **verificável** (qualquer um roda o verificador) ou **não gateável** (avaliação offline e amostra, sem garantia). A produção **não está homologada**. Veja [`docs/especificacoes/S14_RUNTIME_OPERACIONAL.md`](docs/especificacoes/S14_RUNTIME_OPERACIONAL.md) (runtime), [`docs/especificacoes/S11_CICLO_PILOTO.md`](docs/especificacoes/S11_CICLO_PILOTO.md) (piloto) e o [índice das especificações](docs/especificacoes/README.md).
+
 ## Roadmap estratégico
 
 A lista de prioridades e gates está no [`ROADMAP.md`](ROADMAP.md). Os validadores e a CI rejeitam ausência, placeholder, ordem incorreta, perda da fila SIM e ausência de plano de contraprova para ALTA/MEDIA. Isso **não obriga agentes externos** a executar o bootstrap: a execução compulsória do bootstrap por agentes externos e uma validação independente do workflow proposto continuam pendentes.

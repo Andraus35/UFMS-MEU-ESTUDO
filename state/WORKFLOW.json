@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "gerador_de_projecoes_para_as_sessoes",
+    "scope": "s11_ciclo_e_piloto_e_s14_runtime_operacional",
     "branch": "claude/ufms-meu-estudo-engineering-14nz4d",
-    "pr_number": 137,
+    "pr_number": 138,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #136 integrado em main no merge commit e58f339258c7df5f68af5b588795ddde5010ecdd. Frente única ativa: RM-09 (gerador_de_projecoes_para_as_sessoes), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #137. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #137 integrado em main no merge commit f3f756b6f52215c023dd466a8e88547c9cded45a. Frente única ativa: RM-09 (s11_ciclo_e_piloto_e_s14_runtime_operacional), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #138. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 136,
-    "merge_commit_sha": "e58f339258c7df5f68af5b588795ddde5010ecdd"
+    "pr_number": 137,
+    "merge_commit_sha": "f3f756b6f52215c023dd466a8e88547c9cded45a"
   },
   "work_queue": [
     {
@@ -636,6 +636,112 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "PF",
+      "title": "Pré-voo do piloto (S11-R2): script somente leitura, tudo ou nada, com leituras injetadas: duas flags false em repouso, hash do fluxo igual ao modelo do SHA da main, repositórios privados sem forks e convites, consentimento v4 íntegro, validade dos tokens com margem, CI verde no HEAD; contraprova por item vermelho; saída sem segredo",
+      "roadmap_task": "RM-08",
+      "deliverable": "scripts/piloto_preflight.py",
+      "depends_on": [
+        "S11"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "PREL",
+      "title": "Relatório do ciclo e semáforo do piloto (S11-R10, R11, R13): script que monta o relatório sem dado pessoal (contagens, SHAs, hashes, níveis, as oito etapas com prova ou NÃO PROVADA, lacunas, linha Não provado) e decide vermelho, âmbar ou verde pelos gatilhos fixados antes; recusa campo fora da lista",
+      "roadmap_task": "RM-08",
+      "deliverable": "scripts/piloto_relatorio.py",
+      "depends_on": [
+        "PF"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "PJ",
+      "title": "PR de janela do piloto (S11-R3): texto e testes do PR que liga só private_flow_promotion_enabled por no máximo 24 h, com pré-voo verde e SHA fixado; a flag do público nunca liga; o merge só sai com a aprovação expressa do proprietário; o fechamento (R12) é PR próprio",
+      "roadmap_task": "RM-08",
+      "deliverable": "docs/governanca/E8_JANELA_PILOTO.md",
+      "depends_on": [
+        "PF",
+        "PREL"
+      ],
+      "blocking_inputs": [
+        "aprovação expressa do proprietário para abrir a janela e para o merge dela, citando PR e head, no chat ou no próprio PR (o atalho 'Mesclar' não vale para a janela)"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "RT",
+      "title": "Roteiro do Termux do piloto (ato do proprietário): entrega manual do resultado do caderno real pela Zapia, conferência do evento no repositório privado sem colar valores e fechamento da janela",
+      "roadmap_task": "RM-08",
+      "deliverable": "scripts/termux/piloto.sh",
+      "depends_on": [
+        "PJ"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "S14",
+      "title": "Especificação do runtime operacional do harness (regra do proprietário de 19/11/2026: LLM livre na cognição, condicionado nas leituras e entregas por gates e mecanismos determinísticos): zonas Z0 a Z3, três classes de garantia (enforçada, verificável, não gateável), contrato fixado por SHA, recibo de START, envelope de entrega com alegações verificadas, modo sombra e bloqueio, avaliação offline sem juiz-LLM como portão, registro, auditoria por amostra, rotinas, parada e controle de mudança; rastreia cada lacuna da auditoria de 19/11/2026",
+      "roadmap_task": "RM-07",
+      "deliverable": "docs/especificacoes/S14_RUNTIME_OPERACIONAL.md",
+      "depends_on": [
+        "S5",
+        "S6",
+        "S8",
+        "S11"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GE",
+      "title": "Verificador de entrega (S14-R5 a R8, R11, R13, R17): envelope fechado, alegações declaradas e verificadas contra edital e projeção, modo sombra e modo bloqueio, registro sem dado pessoal; COMANDO sempre em bloqueio; sem rede, credencial nem modelo",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/delivery_gate.py",
+      "depends_on": [
+        "S14",
+        "PF"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "RS",
+      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/start_receipt.py",
+      "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "AE",
+      "title": "Avaliação offline do verificador de entrega (S14-R12a): suíte de envelopes sintéticos válidos e adversariais com resultado esperado determinístico; fecha parte de RM-06 e RM-07 só para o que é gateável; nenhum portão chama modelo",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/delivery_eval.py",
+      "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "AM",
+      "title": "Relatório da auditoria por amostra e critério de pausa (S14-R14): função das entradas, rubrica fechada, relatório sem dado pessoal; a proposta de periodicidade é ajustável pelo proprietário",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/audit_sample.py",
+      "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
@@ -735,7 +841,8 @@
         "P6"
       ],
       "esforco": "um roteiro com uma frase",
-      "estado": "pendente"
+      "estado": "feito",
+      "nota": "Relato do proprietário em 19/11/2026, com captura: prepara_entrada.sh, etapa 4, ATUALIZAR; fluxo trocado (hash d2cad256cbd9 para b092dd9ba636, SHA fixado f3f756b6f522), código de saída 0, leitura de volta conferida; o repositório não lê entrada, então não é prova independente"
     },
     {
       "rank": 8,
@@ -749,7 +856,8 @@
         "P6"
       ],
       "esforco": "minutos",
-      "estado": "pendente"
+      "estado": "feito",
+      "nota": "Relato do proprietário em 19/11/2026 (sem captura): entrada removido do Claude GitHub App; não verificado pelo repositório"
     }
   ],
   "owner_priorities_note": "Prioridade persistente (decisão do proprietário, 18/11/2026): ordem dos atos e decisões dele que mais destravam trabalho. A sessão lembra a lista no início e a atualiza quando um item for feito (estado feito); não é fila de engenharia e não cria branch nem PR."
