@@ -636,6 +636,53 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "PF",
+      "title": "Pré-voo do piloto (S11-R2): script somente leitura, tudo ou nada, com leituras injetadas: duas flags false em repouso, hash do fluxo igual ao modelo do SHA da main, repositórios privados sem forks e convites, consentimento v4 íntegro, validade dos tokens com margem, CI verde no HEAD; contraprova por item vermelho; saída sem segredo",
+      "roadmap_task": "RM-08",
+      "deliverable": "scripts/piloto_preflight.py",
+      "depends_on": [
+        "S11"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "PREL",
+      "title": "Relatório do ciclo e semáforo do piloto (S11-R10, R11, R13): script que monta o relatório sem dado pessoal (contagens, SHAs, hashes, níveis, as oito etapas com prova ou NÃO PROVADA, lacunas, linha Não provado) e decide vermelho, âmbar ou verde pelos gatilhos fixados antes; recusa campo fora da lista",
+      "roadmap_task": "RM-08",
+      "deliverable": "scripts/piloto_relatorio.py",
+      "depends_on": [
+        "PF"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "PJ",
+      "title": "PR de janela do piloto (S11-R3): texto e testes do PR que liga só private_flow_promotion_enabled por no máximo 24 h, com pré-voo verde e SHA fixado; a flag do público nunca liga; o merge só sai com a aprovação expressa do proprietário; o fechamento (R12) é PR próprio",
+      "roadmap_task": "RM-08",
+      "deliverable": "docs/governanca/E8_JANELA_PILOTO.md",
+      "depends_on": [
+        "PF",
+        "PREL"
+      ],
+      "blocking_inputs": [
+        "aprovação expressa do proprietário para abrir a janela e para o merge dela, citando PR e head (ou 'Mesclar' com um só PR aberto)"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "RT",
+      "title": "Roteiro do Termux do piloto (ato do proprietário): entrega manual do resultado do caderno real pela Zapia, conferência do evento no repositório privado sem colar valores e fechamento da janela",
+      "roadmap_task": "RM-08",
+      "deliverable": "scripts/termux/piloto.sh",
+      "depends_on": [
+        "PJ"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [

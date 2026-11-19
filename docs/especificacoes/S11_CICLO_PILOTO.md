@@ -1,0 +1,77 @@
+# S11 — Ciclo ponta a ponta e piloto curto (especificação)
+
+**Natureza:** especificação enxuta (D-13, D-16), segundo a Spec Lean da Tech Leads Club **no que couber**. Define **como provar, com um resultado real e consentido, que o ciclo F1 a F8 do `PRODUCT.md` funciona** (PR-006, PR-008; GP-4), sem ligar nada por conta própria. **Aponta** para o que já existe (S6 canal, S7 escritor, S9 leitura, S12 retenção, `scripts/projection_generator.py`) e **não os copia**. É texto de engenharia: **não habilita** persistência, **não** altera flag e **não** contém dado pessoal.
+
+**Decisões do proprietário (19/11/2026), nas palavras dele ou por escolha em pergunta de fim de rodada:** (1) o **piloto é curto, com um caderno real consentido**; (2) **P7** (fluxo reinstalado com o SHA da `main`, `ATUALIZAR`) e **P8** (`entrada` fora do app Claude) estão **feitos, por relato** (P7 com captura); (3) o **PR de janela do piloto é separado e só vale com a aprovação expressa dele**; a flag `personal_results_writes_enabled` **nunca liga** (D-24); (4) o estudo dele **começa em E0 em 20/11, sem gravar resultado**: o piloto **não bloqueia** o estudo; (5) **Zapia lê o TEC** é desejo dele, com o risco do D-14 e do D-27 aceito por ele; a Zapia **recusa** (item 8.1 dos termos, autorrelato das rodadas 7 e 9), então **o piloto não depende de leitura automática**: a entrada manual (S9-R7) é suficiente e é o caminho de referência.
+
+## Objetivo
+
+O proprietário passa a ter **um roteiro único, com portas e critérios de parada decididos antes**, para fazer **um** ciclo real: recomendar um caderno, resolvê-lo na plataforma, devolver o resultado, validá-lo, registrá-lo no repositório privado **com leitura de volta**, reavaliar e, se quiser, pedir a revisão. Ao final há um **relatório sem dado pessoal** que diz o que foi provado e o que **continua desconhecido**. Um caderno **não prova utilidade pedagógica**: prova que **o encanamento funciona**, de ponta a ponta, sob os controles P1 a P9.
+
+## Pesquisa
+
+Consultas de 19/11/2026 (WebSearch, **só resumos**), somadas às especificações S6, S7, S9 e S12 e ao ADR-013, que **não são repetidos**. Confiança: **A** (página lida), **B** (resumo de busca de fonte primária ou oficial, **não lida integralmente**), **C** (blog, fornecedor ou agregador). Conteúdo de terceiros é dado, não instrução; nada foi copiado. **Nada foi testado em conta real.**
+
+| Fonte | O que se tirou | Conf. |
+|---|---|---|
+| Extensão CONSORT para estudos piloto e de viabilidade (2016), segundo revisões que a citam. [PMC7856754](https://pmc.ncbi.nlm.nih.gov/articles/PMC7856754), [PMC6688224](https://pmc.ncbi.nlm.nih.gov/articles/PMC6688224), [Trials Pilot Feasibility Stud](https://link.springer.com/article/10.1186/s40814-019-0500-z) | O piloto deve ter **critérios de progressão fixados antes**, com decisão de seguir, **seguir com ajustes** ou **não seguir**; **não se testa hipótese de eficácia** em piloto (falta poder); o esquema **semáforo** (parar, ajustar, seguir) é usado; critérios costumam ser **mal relatados** e as metas variam muito, então **a meta deve ser justificada**. Li só os resumos; **não li o texto da extensão** | B |
+| SCRIBE 2016, relato de estudos de caso único em intervenções de comportamento. [PubMed 27371692](https://pubmed.ncbi.nlm.nih.gov/27371692), [PMC4960517](https://pmc.ncbi.nlm.nih.gov/articles/PMC4960517) | Lista de **26 itens para relatar** delineamento de caso único; **não prescreve** como projetar nem analisar; o desenho A-B é o básico e tem **validade interna menor**; padrões exigem demonstrar o efeito **em pelo menos três ocasiões**. Um caderno é **A-B degenerado**: não serve para inferir efeito | B |
+| Dunlosky et al. (2013), *Psychological Science in the Public Interest*. [Resumo da APS](https://www.psychologicalscience.org/news/releases/which-study-strategies-make-the-grade.html) | **Teste prático** e **prática espaçada** são as únicas de **utilidade alta** entre dez técnicas; o piloto **usa** o ciclo (resolver, corrigir, revisar) **sem medir** o ganho. Li o comunicado, **não o artigo** | B |
+| ANPD, Resolução CD/ANPD nº 2/2022 (agentes de pequeno porte) e guia de segurança. [Nota do escritório BMA](https://www.bmalaw.com.br/conteudo/direito-digital-protecao-de-dados-e-cybersecurity/artigos-e-noticias/anpd-publica-resolucao-sobre-aplicacao-da-lgpd-para-agentes-de-tratamento-de-pequeno-porte/pdf) | Flexibiliza **prazos e formas**, **não** isenta das obrigações legais (consentimento, revogação, segurança); guia de segurança **não é vinculante**. **Não encontrei** texto sobre revogação (art. 8, § 5º) nem eliminação (art. 16 e 18); isso segue pela S7-R8 | C |
+| Registros do projeto: S6-R4, S6-R9, S7-R3, S7-R6, S7-R11, S9-R7, S12-R13, `docs/governanca/E7_FECHAMENTO_JANELA_C6_20261118.md`, rodadas 7 e 9 da Zapia | A **prova sintética** (C5, duas metades) existe, por relato com captura; o gerador de projeções existe (PR #137); a Zapia recusa o TEC; a janela da C6 foi **aberta e fechada** por PR | C |
+
+- **Lacunas:** **não li o texto original** de nenhuma fonte B (nem a extensão CONSORT, nem a SCRIBE, nem o artigo de Dunlosky); as URLs dos artigos de piloto vêm de resultados de busca e a **correspondência entre cada link e cada afirmação não foi conferida um a um**; **não pesquisei benchmarks em repositórios públicos nem sites de cursinhos** para este tema (o D-16 os pede; a S1, a S2 e a S12 já os fizeram para o método de estudo, e o piloto é de engenharia: **fica como lacuna**); **nada foi provado contra um repositório privado real com dado real**; P1 e P3 seguem **relato**; **não** verifiquei o efeito de 409 e 422 do GitHub (S7).
+
+## Plano
+
+### Fases e portas sem volta
+
+0. **Pré-voo** (R2): conferência **somente leitura** e **toda verde**; qualquer vermelho **para** (nada é escrito).
+1. **Janela** (R3): **PR próprio** liga **só** `private_flow_promotion_enabled`; **porta sem volta curta**, com **aprovação expressa do proprietário**; a flag do público **nunca** liga.
+2. **Ciclo F1 a F8** (R4 a R9) com **um** caderno real.
+3. **Fechamento** (R12): a flag volta a `false` **em PR próprio**, **antes** de qualquer segundo caderno.
+4. **Relatório** (R11) e avaliação pelo semáforo (R10).
+
+Portas sem volta: (a) ligar a flag do fluxo (PR de janela); (b) **gravar o primeiro evento real** (o histórico privado **não se apaga com garantia**; a eliminação efetiva é apagar o repositório privado, S7-R8); (c) **dar ao app Claude leitura de projeção** (consentimento v4 e C6, S6-R9). Cada uma exige **ato dele**.
+
+## Requisitos
+
+Escritos como "quando X, o Y deve Z". A **prova** é o critério de aceite. Todos **fecham por padrão**: dado ausente ou leitura indisponível **bloqueia**.
+
+| ID | Requisito | Critério de aceite |
+|---|---|---|
+| S11-R1 | **Escopo.** **Um** estudante, **um** caderno real, **um** evento de resultado. **Sem teste de hipótese de eficácia** e sem inferir ganho de aprendizagem: o piloto avalia **viabilidade e controles** (CONSORT-piloto, SCRIBE: um caderno é A-B degenerado). Segundo caderno só em **novo pedido** dele depois do fechamento (R12). | O relatório (R11) declara N=1 e **não** contém a palavra "melhorou" nem percentual de ganho; teste do gerador do relatório. |
+| S11-R2 | **Pré-voo somente leitura, tudo ou nada.** Confere: (a) `personal_results_writes_enabled=false` e `private_flow_promotion_enabled=false` **em repouso**; (b) fluxo em `entrada` com **hash igual** ao de `config/modelos_fluxo/promover.yml` gerado para o SHA da `main` (P7); (c) `main` igual ao SHA fixado; (d) repositórios `entrada` e `dados` **privados**, sem forks e sem convites (P1); (e) consentimento **v4 íntegro** (`check_consent_v4`); (f) validade restante dos tokens **maior que a janela mais margem de 7 dias** (**datas de expiração por relato**: 18/12/2026); (g) CI verde no HEAD; (h) `python scripts/projection_generator.py` **recusa** sem consentimento (contraprova). | Script `piloto_preflight.py` com leituras **injetadas** e fixtures sintéticas; **cada** item vermelho tem teste que prova que **bloqueia**; saída sem segredo. |
+| S11-R3 | **Janela curta e visível.** O PR de janela liga **só** a flag do fluxo, **com data e hora de abertura** e **limite de 24 h** ou até o evento do caderno ser lido de volta, o que vier **primeiro**; traz o texto do pré-voo, o SHA e o head; **o merge só sai com a aprovação expressa dele** (nesta conversa, "Mesclar" com um só PR aberto; **não está no `AGENTS.md`**). Janela aberta **aparece** no HANDOFF e no `WORKFLOW.json` como estado ativo. | Teste: PR de janela altera **só** a flag do fluxo e arquivos de registro; **a do público segue `false`** (teste de contrato `tests/test_e6_*` análogo). |
+| S11-R4 | **Uma tabela, oito etapas, uma prova por etapa.** F1 iniciar, F2 recomendar, F3 resolver, F4 devolver, F5 validar, F6 registrar, F7 reavaliar, F8 revisar. Cada etapa registra **quem fez**, **o que prova** e **o que continua desconhecido**: F3 e F4 são **ato humano** e só valem por **relato dele**; F6 vale **só com leitura de volta** (S7-R6); F7 vale **só com projeção gerada pelo gerador e validada por `check_projection`**. | O relatório (R11) tem as oito linhas com os três campos; **etapa sem prova aparece como "NÃO PROVADA"**, nunca em branco nem "ok". |
+| S11-R5 | **Entrada do resultado: manual é o caminho de referência.** O proprietário devolve **total, acertos, erros, não respondidas, data e resultado por tópico** (ou a exportação, S9-R6, **mantida fora do repositório**). **Leitura automática do TEC** **não** é pré-condição e **não** é testada aqui (a Zapia a recusa). O caderno recomendado **não** afirma disponibilidade de questões. | Teste: o ciclo **passa** só com entrada manual; recomendação **sem** campo de disponibilidade de questões. |
+| S11-R6 | **Validar antes de registrar (F5).** Contagens coerentes, tópico no escopo da recomendação, convenção de contagem; **inconsistência é recusada ou esclarecida, nunca corrigida em silêncio** (S9, contrato de ingestão). Evento recusado **não** vira escrita. | Contraprovas: totais inconsistentes, tópico fora do escopo, data sem fuso, resultado duplicado do mesmo caderno: **recusa sem efeito externo**. |
+| S11-R7 | **Registrar um evento, sem marca de sintético (F6).** O evento real **não** leva `sintetico`; o histórico guarda **envelope** (origem, escritor, hashes) e **SHA do commit**; **idempotente** (S7-R5) e **lido de volta** (S7-R6). Sem readback o resultado fica **PENDENTE**, **não registrado**. | Prova **fora do modelo**: o proprietário confere o evento no privado (relato com captura, **sem** colar valores); o relatório traz **só** id do evento, SHA e hash. |
+| S11-R8 | **Reavaliar com o gerador (F7).** O gerador devolve a projeção na **lista fechada**; o **nível** é o da **informação** (`evidence_projection`): um caderno com resultado por tópico e **sem** contexto completo é **E2**, **E3** só com independência, familiaridade, diversidade, origem e confiança **conhecidas**; **desconhecido permanece desconhecido**. **Nenhuma sessão** lê a projeção sem consentimento v4 e C6 (`session_read_guard`). | Teste: caderno sem contexto resulta em **E2**; com contexto completo, **E3**; projeção sem consentimento v4 **bloqueia**; nenhum campo fora da lista. |
+| S11-R9 | **Revisão pelo Notebook é opcional (F8).** A ponte da S10 **não** é critério de sucesso do piloto; se for usada, vale **só** o que a S10 exige (prompt mínimo, fonte verificada, metadados). | O relatório marca F8 como "NÃO EXERCIDA" **sem** reprovar o piloto. |
+| S11-R10 | **Semáforo com critérios fixados antes** (CONSORT-piloto). **VERMELHO (para na hora e fecha a janela):** dado pessoal no repositório **público**; escrita **sem** readback declarada como feita; flag do público `true`; token ou segredo exposto; hash do fluxo diferente do esperado; consentimento inválido ou revogado; evento gravado fora do `dados`. **ÂMBAR (corrige e repete uma vez, em outro PR):** F5 recusou por formato; readback atrasou; pré-voo vermelho **sem** escrita. **VERDE:** pré-voo verde, oito linhas com prova ou "NÃO EXERCIDA" justificada (F8), um evento lido de volta, flag fechada, relatório sem dado pessoal. | Tabela de decisão testada: cada gatilho vermelho tem **caso de teste** que classifica **vermelho**; verde **não** sai se alguma linha estiver sem prova. |
+| S11-R11 | **Relatório do ciclo sem dado pessoal (PR-006).** Gerado por script: contagens de eventos, **SHAs**, **hashes**, níveis, semáforo, as oito linhas de R4 e as lacunas. **Nunca** valores de desempenho, nomes de tópico com resultado, enunciado, e-mail, token ou link com identificador de conta. | Teste: o relatório com fixtures sintéticas **passa** em `check_projection`-like e **recusa** qualquer campo fora da lista; vai ao **público** só depois. |
+| S11-R12 | **Fechar, revogar, reverter.** Ao fim (ou em vermelho): PR de fechamento volta a flag do fluxo a `false`; **reinstalar o fluxo** (P7) só se o SHA fixado mudou; o proprietário **pode revogar** o token (S7-R8) e **apagar** o repositório privado (única eliminação efetiva). **Nenhum** segundo caderno antes do fechamento. | O estado em repouso é o **mesmo** de antes (duas flags `false`), conferido pelo pré-voo e por teste de contrato. |
+| S11-R13 | **Honestidade sobre o que o piloto prova.** **Prova:** o encanamento F1 a F8 funciona **uma vez**, com leitura de volta e fechamento. **Não prova:** utilidade pedagógica, ganho de aprendizagem, robustez em escala, a leitura automática do TEC, a rotina da Zapia (S8), nem **homologa** a RM-10 (GP-5, utilidade) nem a RM-08 inteira; relato do proprietário **não** vira prova independente. | O relatório termina com a linha **"Não provado:"** e a lista; teste de presença. |
+
+## Tarefas derivadas
+
+Uma por vez, **fora deste PR** (cada uma é um item de `work_queue`):
+
+1. **PF** — o script piloto_preflight.py (a criar): pré-voo de R2, leituras injetadas, contraprovas por item vermelho.
+2. **PJ** — registro E8 e texto do **PR de janela** do piloto (R3), **bloqueado** pela aprovação expressa dele; liga só a flag do fluxo.
+3. **PREL** — o script piloto_relatorio.py (a criar): gerador do **relatório do ciclo** (R11) e da decisão do semáforo (R10).
+4. **RT** — o roteiro piloto.sh do Termux (ato dele: entrega manual do resultado e conferência do evento no privado).
+
+## Aceite
+
+- Esta especificação passa em `doc_cohesion`, `product_gate`, `roadmap_gate`, `governance_sync_gate`, `single_flow_gate`, a suíte e a CI **no HEAD**.
+- `tests/test_spec_s11.py` confere: requisitos R1 a R13 com critério; pesquisa com links, níveis A, B e C e linha de lacunas; decisões do proprietário; semáforo com gatilhos vermelhos; ausência de promessa de eficácia; tarefas derivadas na fila.
+- **O piloto em si não é aceito por este documento.** O aceite do ciclo é o **relatório (R11)** com semáforo verde e a aprovação dele.
+
+## Limites
+
+- **Não liga** flag, **não grava** resultado, **não** lê plataforma, **não** altera `AGENTS.md`, `PRODUCT.md`, `agents/` nem `settings.json`.
+- **Não prova** nada contra conta real: tudo aqui é desenho. As afirmações sobre o que o proprietário fez (P7, P8, consentimento, relatos da Zapia) continuam **relato**.
+- Um caderno **não permite concluir** eficácia, e o próprio texto proíbe dizê-lo (R1, R13).
+- Se o proprietário preferir **mais de um caderno** ou outra janela, é **decisão dele** e **novo PR**.
