@@ -625,6 +625,17 @@
         "aprovação expressa do proprietário para o merge, citando PR e head"
       ],
       "optional_inputs": []
+    },
+    {
+      "id": "PROJ",
+      "title": "Gerador offline de projeções para as sessões do app Claude (decisão do proprietário de 18/11/2026): função pura que recebe registros do histórico já lidos, os tópicos e o consentimento v4 e devolve a projeção na lista fechada (schema, gerado_em, niveis E0 a E4, pendencias, revisoes); consentimento v4 antes de olhar os registros, descartar_sinteticos, validação dos eventos reais, check_projection e authorize_session_read; vencimentos vêm dos eventos (7/15/30, D-11), sem cálculo; sem rede, credencial, arquivo ou flag; não liga a leitura por sessão (isso é a C6)",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/projection_generator.py",
+      "depends_on": [
+        "E7"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
