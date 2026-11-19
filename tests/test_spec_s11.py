@@ -43,15 +43,19 @@ class SpecS11Tests(unittest.TestCase):
 
     def test_um_caderno_sem_promessa_de_eficacia(self):
         r1, r13 = req(1), req(13)
-        for trecho in ("um caderno real", "sem teste de hipótese de eficácia", "n=1", "melhorou"):
+        for trecho in ("um caderno real", "sem teste de hipótese de eficácia", "n=1"):
             self.assertIn(trecho, r1, trecho)
+        # a palavra proibida só pode aparecer na frase que a proíbe; qualquer promessa de ganho em outro lugar reprova
+        self.assertEqual(TEXTO.count("melhorou"), 1)
+        self.assertIn("não contém a palavra \"melhorou\"", r1)
         for trecho in ("utilidade pedagógica", "nem homologa", "rm-10", "relato do proprietário não vira prova independente", "não provado:"):
-            self.assertIn(trecho, r13 + req(13), trecho)
+            self.assertIn(trecho, r13, trecho)
 
     def test_preflight_tudo_ou_nada_com_flags_hash_e_consentimento(self):
         r2 = req(2)
         for trecho in ("somente leitura", "tudo ou nada", "personal_results_writes_enabled=false", "private_flow_promotion_enabled=false",
-                       "hash igual", "privados", "sem forks", "consentimento", "v4", "margem de 7 dias", "contraprova", "leituras injetadas"):
+                       "hash igual", "privados", "sem forks", "consentimento", "v4", "margem de 7 dias", "contraprova", "leituras injetadas",
+                       "head da main no momento do pré-voo", "reinstala o fluxo antes", "não tem linha de comando"):
             self.assertIn(trecho, r2, trecho)
 
     def test_janela_curta_so_a_flag_do_fluxo_e_aprovacao_expressa(self):
@@ -61,7 +65,7 @@ class SpecS11Tests(unittest.TestCase):
 
     def test_oito_etapas_cada_uma_com_prova_ou_nao_provada(self):
         r4 = req(4)
-        for trecho in ("f1", "f8", "relato dele", "leitura de volta", "check_projection", "não provada"):
+        for trecho in ("f1", "f8", "relato dele", "leitura de volta", "check_projection", "não provada", "relatada nunca é escrita como provada"):
             self.assertIn(trecho, r4, trecho)
 
     def test_entrada_manual_e_o_caminho_de_referencia(self):
@@ -76,13 +80,15 @@ class SpecS11Tests(unittest.TestCase):
 
     def test_reavaliacao_usa_o_gerador_e_niveis_honestos(self):
         r8 = req(8)
-        for trecho in ("gerador", "lista fechada", "e2", "e3", "desconhecido permanece desconhecido", "consentimento v4", "session_read_guard"):
+        for trecho in ("gerador", "lista fechada", "e2", "e3", "desconhecido permanece desconhecido", "consentimento v4", "session_read_guard",
+                       "attempt_at", "e4", "fora do alcance de um caderno"):
             self.assertIn(trecho, r8, trecho)
 
     def test_semaforo_fixado_antes_com_gatilhos_vermelhos(self):
         r10 = req(10)
         for trecho in ("vermelho", "âmbar", "verde", "dado pessoal no repositório público", "sem readback", "flag do público", "token ou segredo exposto",
-                       "hash do fluxo diferente", "consentimento inválido", "caso de teste"):
+                       "hash do fluxo diferente", "consentimento inválido", "caso de teste", "inclusive no pré-voo", "fora da lista vermelha",
+                       "janela aberta há mais de 24 h", "relatadas", "nunca é verde"):
             self.assertIn(trecho, r10, trecho)
 
     def test_relatorio_sem_dado_pessoal(self):
@@ -103,6 +109,10 @@ class SpecS11Tests(unittest.TestCase):
     def test_tarefas_derivadas_estao_na_fila_na_ordem(self):
         for item in ("PF", "PJ", "PREL", "RT"):
             self.assertIn(item, FILA, item)
+        ordem = [i for i in FILA if i in ("PF", "PREL", "PJ", "RT")]
+        self.assertEqual(ordem, ["PF", "PREL", "PJ", "RT"])  # a ordem da fila é a do texto e a das dependências
+        derivadas = DOC.split("## Tarefas derivadas", 1)[1].split("## Aceite", 1)[0]
+        self.assertEqual(re.findall(r"^\d+\. \*\*(\w+)\*\*", derivadas, re.M), ["PF", "PREL", "PJ", "RT"])
         self.assertEqual(FILA["PF"]["depends_on"], ["S11"])
         self.assertIn("PF", FILA["PJ"]["depends_on"])
         self.assertTrue(FILA["PJ"]["blocking_inputs"])
