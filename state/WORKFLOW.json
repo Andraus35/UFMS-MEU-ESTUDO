@@ -683,6 +683,65 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "S14",
+      "title": "Especificação do runtime operacional do harness (regra do proprietário de 19/11/2026: LLM livre na cognição, condicionado nas leituras e entregas por gates e mecanismos determinísticos): zonas Z0 a Z3, três classes de garantia (enforçada, verificável, não gateável), contrato fixado por SHA, recibo de START, envelope de entrega com alegações verificadas, modo sombra e bloqueio, avaliação offline sem juiz-LLM como portão, registro, auditoria por amostra, rotinas, parada e controle de mudança; rastreia cada lacuna da auditoria de 19/11/2026",
+      "roadmap_task": "RM-07",
+      "deliverable": "docs/especificacoes/S14_RUNTIME_OPERACIONAL.md",
+      "depends_on": [
+        "S5",
+        "S6",
+        "S8",
+        "S11"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GE",
+      "title": "Verificador de entrega (S14-R5 a R8, R11, R13, R17): envelope fechado, alegações declaradas e verificadas contra edital e projeção, modo sombra e modo bloqueio, registro sem dado pessoal; COMANDO sempre em bloqueio; sem rede, credencial nem modelo",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/delivery_gate.py",
+      "depends_on": [
+        "S14",
+        "PF"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "RS",
+      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/start_receipt.py",
+      "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "AE",
+      "title": "Avaliação offline do verificador de entrega (S14-R12a): suíte de envelopes sintéticos válidos e adversariais com resultado esperado determinístico; fecha parte de RM-06 e RM-07 só para o que é gateável; nenhum portão chama modelo",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/delivery_eval.py",
+      "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "AM",
+      "title": "Relatório da auditoria por amostra e critério de pausa (S14-R14): função das entradas, rubrica fechada, relatório sem dado pessoal; a proposta de periodicidade é ajustável pelo proprietário",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/audit_sample.py",
+      "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [

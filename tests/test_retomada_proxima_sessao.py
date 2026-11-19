@@ -20,12 +20,12 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "S14", "GE", "RS", "AE", "AM"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11 tem a entrega (19/11/2026); o próximo é o pré-voo do piloto (PF); a E3 segue esperando insumo do proprietário
         self.assertEqual(fila["proximo"]["id"], "PF")
-        self.assertEqual(fila["pendentes"], ["E3", "PF", "PREL", "PJ", "RT"])
+        self.assertEqual(fila["pendentes"], ["E3", "PF", "PREL", "PJ", "RT", "GE", "RS", "AE", "AM"])
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["E3"])
         self.assertIn("agents/", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
@@ -42,7 +42,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
                 self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md|\.claude/hooks/[a-z0-9_]+\.py)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("E3", "PF", "PREL", "PJ", "RT"):  # ainda por fazer; a S11 (19/11/2026), S10, L1, E1 e N2 já têm a entrega
+        for novo in ("E3", "PF", "PREL", "PJ", "RT", "GE", "RS", "AE", "AM"):  # ainda por fazer; a S11 (19/11/2026), S10, L1, E1 e N2 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 
