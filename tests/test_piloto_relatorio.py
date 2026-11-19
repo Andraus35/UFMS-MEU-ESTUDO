@@ -6,7 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -140,13 +140,13 @@ class VermelhoTests(unittest.TestCase):
 
     def test_estado_inesperado_cai_no_padrao_fechado(self):
         c = ciclo()
-        c["etapas"]["F6"] = etapa("NAO_EXERCIDA")
+        c["etapas"]["F6"] = etapa("NAO_EXERCIDA", "fluxo", "justificativa")
         self.vermelho(c, "F6_estado_inesperado")
         c = ciclo()
         c["etapas"]["F8"] = etapa("RELATADA", "tutor", "relato")
         self.vermelho(c, "F8_estado_inesperado")
         c = ciclo()
-        c["etapas"]["F3"] = etapa("NAO_EXERCIDA", "proprietario", "relato")
+        c["etapas"]["F3"] = etapa("NAO_EXERCIDA", "proprietario", "justificativa")
         self.vermelho(c, "F3_estado_inesperado")
 
     def test_entradas_ausentes_ou_malformadas_fecham_sem_repetir_o_conteudo(self):
@@ -222,6 +222,98 @@ class AmbarTests(unittest.TestCase):
             c = ciclo()
             c["etapas"][e] = etapa("NAO_PROVADA", "proprietario", "nenhuma")
             self.assertNotEqual(gera(c)["semaforo"], "VERDE", e)
+
+
+class AchadosDaRevisaoTests(unittest.TestCase):
+    def test_entrada_invalida_nunca_repete_o_conteudo_recebido(self):
+        for chave, valor, segredo in (("evento", {"id": "Questao 5 do caderno de fulano acertou", "commit_sha": SHA, "hash_corpo": H, "readback": True}, "fulano"),
+                                      ("janela", {"aberta_em": "2026-11-20T10:00:00+00:00", "fechada_em": "github.com/fulano/dados"}, "fulano")):
+            c = ciclo()
+            c[chave] = valor
+            r = gera(c)
+            self.assertEqual(r["semaforo"], "VERMELHO")
+            self.assertEqual(set(r), {"schema", "gerado_em", "n", "semaforo", "motivos"})
+            self.assertNotIn(segredo, json.dumps(r))
+
+    def test_link_de_conta_em_lacunas_e_recusado_pela_lista_fechada(self):
+        for lacuna in ("ver github.com/fulano/dados", "api.github.com/repos/fulano/dados"):
+            c = ciclo()
+            c["lacunas"] = [lacuna]
+            r = gera(c)
+            self.assertEqual(r["semaforo"], "VERMELHO")
+            self.assertEqual(r["motivos"], ["lacunas_fora_da_lista_fechada"])
+            self.assertNotIn("fulano", json.dumps(r))
+        c = ciclo()
+        c["lacunas"] = list(pr.LACUNAS_OPCIONAIS)
+        r = gera(c)
+        self.assertEqual(r["semaforo"], "VERDE")
+        self.assertEqual(r["lacunas"], list(pr.LACUNAS_PADRAO) + list(pr.LACUNAS_OPCIONAIS))
+
+    def test_prova_precisa_ser_compativel_com_o_estado_sem_falso_verde(self):
+        # F1, F2, F5, F6 e F7 "PROVADAS" sem prova técnica não podem dar verde
+        c = ciclo()
+        for e in ("F1", "F2", "F5", "F6", "F7"):
+            c["etapas"][e] = etapa("PROVADA", "tutor", "nenhuma")
+        r = gera(c)
+        self.assertEqual(r["semaforo"], "VERMELHO")
+        self.assertIn("incompativeis", r["motivos"][0])
+        for estado, prova in (("PROVADA", "relato"), ("PROVADA", "justificativa"), ("RELATADA", "readback"), ("NAO_EXERCIDA", "relato"),
+                              ("NAO_PROVADA", "readback")):
+            c = ciclo()
+            c["etapas"]["F2"] = etapa(estado, "tutor", prova)
+            self.assertEqual(gera(c)["semaforo"], "VERMELHO", (estado, prova))
+
+    def test_prova_tem_de_valer_para_a_etapa(self):
+        for e, prova in (("F5", "readback"), ("F6", "projecao_check"), ("F7", "readback"), ("F6", "validacao_f5")):
+            c = ciclo()
+            c["etapas"][e] = etapa("PROVADA", "tutor", prova)
+            r = gera(c)
+            self.assertEqual(r["semaforo"], "VERMELHO", (e, prova))
+            self.assertIn("prova_nao_vale_para_a_etapa", r["motivos"][0])
+
+    def test_f3_e_f4_nao_aceitam_prova_tecnica_como_atalho(self):
+        for e in ("F3", "F4"):
+            c = ciclo()
+            c["etapas"][e] = etapa("PROVADA", "proprietario", "readback")
+            r = gera(c)
+            self.assertEqual(r["semaforo"], "VERMELHO")
+            self.assertTrue(any(f"{e}_escrita_como_provada" in m for m in r["motivos"]))
+            c = ciclo()
+            c["etapas"][e] = etapa("RELATADA", "proprietario", "readback")
+            self.assertEqual(gera(c)["semaforo"], "VERMELHO")
+
+    def test_diagnostico_de_entrada_ausente_nao_vira_erro_generico(self):
+        c = ciclo()
+        del c["gatilhos"]
+        del c["evento"]
+        self.assertEqual(gera(c)["motivos"], ["gatilhos_ausentes"])
+        c = ciclo()
+        del c["evento"]
+        self.assertEqual(gera(c)["motivos"], ["evento_ausente_ou_malformado"])
+        c = ciclo()
+        del c["janela"]
+        self.assertEqual(gera(c)["motivos"], ["janela_sem_hora_de_abertura"])
+
+    def test_janela_no_futuro_e_contagem_inconsistente(self):
+        c = ciclo()
+        c["janela"] = {"aberta_em": "2026-11-22T01:00:00+00:00", "fechada_em": "2026-11-22T02:00:00+00:00"}
+        self.assertEqual(gera(c)["motivos"], ["janela_no_futuro"])
+        for gravados in (0, 2):
+            c = ciclo()
+            c["contagens"]["eventos_gravados"] = gravados
+            r = gera(c)
+            self.assertEqual(r["semaforo"], "VERMELHO")
+            self.assertIn("contagem_de_eventos_diferente_de_1_com_n_igual_a_1", r["motivos"])
+
+    def test_janela_aberta_aparece_como_ainda_aberta_e_sem_duracao(self):
+        c = ciclo()
+        c["janela"] = {"aberta_em": "2026-11-21T10:00:00+00:00", "fechada_em": None}
+        r = gera(c)
+        self.assertEqual(r["semaforo"], "VERMELHO")
+        self.assertIsNone(r["janela"]["duracao_horas"])
+        md = pr.para_markdown(r)
+        self.assertIn("AINDA ABERTA", md)
+        self.assertNotIn("None", md)
 
 
 class CamposFechadosETextoTests(unittest.TestCase):
@@ -302,7 +394,8 @@ class LinhaDeComandoTests(unittest.TestCase):
 
     def test_codigos_de_saida_e_markdown(self):
         c = ciclo()
-        # a linha de comando usa o relógio real: o ciclo sintético de 20/11 com janela fechada continua VERDE
+        agora = datetime.now(timezone.utc)  # a linha de comando usa o relógio real: a janela do ciclo sintético é relativa a ele
+        c["janela"] = {"aberta_em": (agora - timedelta(days=2)).isoformat(), "fechada_em": (agora - timedelta(days=2) + timedelta(hours=6)).isoformat()}
         verde = self.cli(json.dumps(c))
         self.assertEqual(verde.returncode, 0, verde.stderr[-300:])
         self.assertEqual(json.loads(verde.stdout)["semaforo"], "VERDE")

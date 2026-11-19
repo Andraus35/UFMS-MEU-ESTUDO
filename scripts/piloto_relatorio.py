@@ -47,7 +47,15 @@ TOPO = ("schema", "gerado_em", "n", "semaforo", "motivos", "preflights", "janela
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 HASH64 = re.compile(r"^[0-9a-f]{64}$")
 ID = re.compile(r"^[A-Za-z0-9._-]{1,64}$")
-LACUNA = re.compile(r"^[A-Za-zÀ-ÿ ,;:()./-]{3,100}$")
+LACUNAS_OPCIONAIS = ("o relatório de captura não foi lido pelo repositório", "a leitura de volta foi conferida só por relato do proprietário",
+                     "o pré-voo usou leituras feitas pelo proprietário", "a CI foi lida fora do repositório",
+                     "o fechamento da janela foi conferido só por relato")
+PROVAS_TECNICAS = ("readback", "projecao_check", "validacao_f5")
+PROVA_POR_ESTADO = {"PROVADA": PROVAS_TECNICAS, "RELATADA": ("relato_com_captura", "relato"), "NAO_EXERCIDA": ("justificativa",),
+                    "NAO_PROVADA": ("nenhuma",)}
+PROVA_DA_ETAPA = {"F5": ("validacao_f5",), "F6": ("readback",), "F7": ("projecao_check",)}  # S11-R4: o que vale para cada etapa técnica
+ENTRADA_INVALIDA = ("gatilhos_ausentes", "preflights_ausentes_ou_invalidos", "janela_sem_hora_de_abertura", "janela_no_futuro",
+                    "janela_com_fechamento_invalido", "evento_ausente_ou_malformado")
 PROIBIDO = re.compile(r"melhorou|melhora\b|ganhou|%|github_pat_|\bgh[pousr]_|\bsk-|-----BEGIN|@[A-Za-z0-9.-]+\.[a-z]{2,}|https?://|\bcpf\b|enunciado|gabarito",
                       re.I)
 
@@ -85,11 +93,19 @@ def _etapas(ciclo):
                 and r.get("desconhecido") in DESCONHECIDOS):
             erros.append(f"etapa_{e}_malformada")
             continue
+        # estado e prova precisam ser compatíveis: PROVADA exige prova técnica; relato nunca é prova (S11-R4); F3 e F4 PROVADA têm regra própria
+        humano_provado = e in ("F3", "F4") and r["estado"] == "PROVADA"
+        if not humano_provado and r["prova"] not in PROVA_POR_ESTADO[r["estado"]]:
+            erros.append(f"etapa_{e}_estado_e_prova_incompativeis")
+            continue
+        if r["estado"] == "PROVADA" and e in PROVA_DA_ETAPA and r["prova"] not in PROVA_DA_ETAPA[e]:
+            erros.append(f"etapa_{e}_prova_nao_vale_para_a_etapa")
+            continue
         linhas.append({"etapa": e, "estado": r["estado"], "quem": r["quem"], "prova": r["prova"], "desconhecido": r["desconhecido"]})
     return linhas, erros
 
 
-def _decidir(ciclo, etapas, agora):
+def _decidir(ciclo, etapas, agora, contagens):
     """Aplica S11-R10. Devolve (semaforo, motivos). Qualquer coisa fora das regras conhecidas cai em VERMELHO (padrão fechado)."""
     vermelhos, ambares = [], []
     gat = ciclo.get("gatilhos")
@@ -110,6 +126,8 @@ def _decidir(ciclo, etapas, agora):
     fechada = _dt(janela.get("fechada_em")) if isinstance(janela, dict) else None
     if aberta is None:
         return VERMELHO, ["janela_sem_hora_de_abertura"]
+    if aberta > agora or (fechada is not None and fechada > agora):
+        return VERMELHO, ["janela_no_futuro"]
     if janela.get("fechada_em") is None:
         vermelhos.append("janela_ainda_aberta_no_relatorio")
         if agora - aberta > JANELA:
@@ -125,6 +143,8 @@ def _decidir(ciclo, etapas, agora):
         return VERMELHO, ["evento_ausente_ou_malformado"]
     if not ev["readback"]:
         vermelhos.append("evento_sem_readback")
+    if contagens["eventos_gravados"] != 1:
+        vermelhos.append("contagem_de_eventos_diferente_de_1_com_n_igual_a_1")
     estado = {l["etapa"]: l["estado"] for l in etapas}
     for e in ("F3", "F4"):
         if estado[e] == "PROVADA":
@@ -162,24 +182,27 @@ def gerar_relatorio(ciclo, agora=None):
         etapas, erros = _etapas(ciclo)
         if erros:
             return {**base, **_fechado(erros[0])}
-        semaforo, motivos = _decidir(ciclo, etapas, agora)
-        ev, janela, cont, niv = ciclo["evento"], ciclo["janela"], ciclo.get("contagens"), ciclo.get("niveis")
+        cont, niv = ciclo.get("contagens"), ciclo.get("niveis")
         if not (isinstance(cont, dict) and _int(cont.get("eventos_gravados")) and _int(cont.get("eventos_recusados"))):
             return {**base, **_fechado("contagens_ausentes_ou_invalidas")}
         if not (isinstance(niv, dict) and set(niv) <= set(NIVEIS) and all(_int(v) for v in niv.values())):
             return {**base, **_fechado("niveis_ausentes_ou_invalidos")}
         lacunas = ciclo.get("lacunas", [])
-        if not (isinstance(lacunas, list) and len(lacunas) <= 10 and all(isinstance(x, str) and LACUNA.fullmatch(x) for x in lacunas)):
-            return {**base, **_fechado("lacunas_invalidas")}
+        if not (isinstance(lacunas, list) and len(lacunas) <= len(LACUNAS_OPCIONAIS) and all(x in LACUNAS_OPCIONAIS for x in lacunas)):
+            return {**base, **_fechado("lacunas_fora_da_lista_fechada")}
+        semaforo, motivos = _decidir(ciclo, etapas, agora, cont)
+        if semaforo == VERMELHO and (motivos[0] in ENTRADA_INVALIDA or motivos[0].startswith("gatilho_")):
+            return {**base, **_fechado(motivos[0])}  # entrada ruim: só o motivo, NUNCA o conteúdo recebido
+        ev, janela = ciclo["evento"], ciclo["janela"]
         aberta, fechada = _dt(janela["aberta_em"]), _dt(janela.get("fechada_em"))
-        horas = round(((fechada or agora) - aberta).total_seconds() / 3600, 1)
+        horas = None if fechada is None else round((fechada - aberta).total_seconds() / 3600, 1)
         relatorio = {
             **base, "semaforo": semaforo, "motivos": motivos, "preflights": {m: ciclo["preflights"][m] for m in PREVOOS},
             "janela": {"aberta_em": janela["aberta_em"], "fechada_em": janela.get("fechada_em"), "duracao_horas": horas},
             "evento": {"id": ev["id"], "commit_sha": ev["commit_sha"][:12], "hash_corpo": ev["hash_corpo"][:12], "readback": ev["readback"]},
             "contagens": {"eventos_gravados": cont["eventos_gravados"], "eventos_recusados": cont["eventos_recusados"]},
             "niveis": {k: niv[k] for k in NIVEIS if k in niv}, "etapas": etapas,
-            "lacunas": list(LACUNAS_PADRAO) + [x for x in lacunas if x not in LACUNAS_PADRAO], "nao_provado": list(NAO_PROVADO),
+            "lacunas": list(LACUNAS_PADRAO) + [x for x in LACUNAS_OPCIONAIS if x in lacunas], "nao_provado": list(NAO_PROVADO),
         }
         validar_relatorio(relatorio)
         return relatorio
@@ -214,7 +237,8 @@ def para_markdown(r):
               "- Motivos: " + ", ".join(r["motivos"])]
     if "etapas" in r:
         linhas += ["- Pré-voos: " + ", ".join(f"{m} {v}" for m, v in r["preflights"].items()),
-                   f"- Janela: aberta {r['janela']['aberta_em']}, fechada {r['janela']['fechada_em']}, {r['janela']['duracao_horas']} h",
+                   f"- Janela: aberta {r['janela']['aberta_em']}, " + (f"fechada {r['janela']['fechada_em']}, {r['janela']['duracao_horas']} h"
+                                                                       if r['janela']['fechada_em'] else "AINDA ABERTA"),
                    f"- Evento: {r['evento']['id']}, commit {r['evento']['commit_sha']}, hash {r['evento']['hash_corpo']}, readback {r['evento']['readback']}",
                    f"- Contagens: {r['contagens']['eventos_gravados']} gravado(s), {r['contagens']['eventos_recusados']} recusado(s)",
                    "- Níveis (quantidade de tópicos por nível): " + (", ".join(f"{k}: {v}" for k, v in r["niveis"].items()) or "nenhum"),
