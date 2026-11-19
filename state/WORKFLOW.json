@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "persistencia_da_retomada_e_prioridades_do_proprietario",
-    "branch": "ccr-59d8ec9a-y3l4xj",
-    "pr_number": 136,
+    "scope": "gerador_de_projecoes_para_as_sessoes",
+    "branch": "claude/ufms-meu-estudo-engineering-14nz4d",
+    "pr_number": 137,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #135 integrado em main no merge commit bffae626dbc23d73b63f41642be62b6eaa984df1. Frente única ativa: RM-09 (persistencia_da_retomada_e_prioridades_do_proprietario), branch ccr-59d8ec9a-y3l4xj, PR #136. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #136 integrado em main no merge commit e58f339258c7df5f68af5b588795ddde5010ecdd. Frente única ativa: RM-09 (gerador_de_projecoes_para_as_sessoes), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #137. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 135,
-    "merge_commit_sha": "bffae626dbc23d73b63f41642be62b6eaa984df1"
+    "pr_number": 136,
+    "merge_commit_sha": "e58f339258c7df5f68af5b588795ddde5010ecdd"
   },
   "work_queue": [
     {
@@ -624,6 +624,17 @@
       "blocking_inputs": [
         "aprovação expressa do proprietário para o merge, citando PR e head"
       ],
+      "optional_inputs": []
+    },
+    {
+      "id": "PROJ",
+      "title": "Gerador offline de projeções para as sessões do app Claude (decisão do proprietário de 18/11/2026): função pura que recebe registros do histórico já lidos, os tópicos e o consentimento v4 e devolve a projeção na lista fechada (schema, gerado_em, niveis E0 a E4, pendencias, revisoes); consentimento v4 antes de olhar os registros, descartar_sinteticos, validação dos eventos reais, check_projection e authorize_session_read; vencimentos vêm dos eventos (7/15/30, D-11), sem cálculo; sem rede, credencial, arquivo ou flag; não liga a leitura por sessão (isso é a C6)",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/projection_generator.py",
+      "depends_on": [
+        "E7"
+      ],
+      "blocking_inputs": [],
       "optional_inputs": []
     }
   ],
