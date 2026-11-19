@@ -57,9 +57,10 @@ class SpecS14Tests(unittest.TestCase):
                        "forma, não a verdade", "rotina diária", "observabilidade", "parada não testada", "rm-06 e rm-07",
                        "versão fixa", "hooks que falham abertos", "regra de merge"):
             self.assertIn(trecho, sem, trecho)
-        # R4 a R8 aparecem pelas faixas das zonas (R5 a R8); a tabela de lacunas cita os demais um a um
+        # a tabela de lacunas cita cada requisito com fronteira de palavra (R1 não pode casar com R10)
+        tabela = sem.split("### rastreabilidade", 1)[1]
         for r in (1, 2, 3, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18):
-            self.assertIn(f"r{r}", sem, f"R{r}")
+            self.assertRegex(tabela, rf"\br{r}\b", f"R{r}")
 
     def test_contrato_em_producao_e_sha_fixado(self):
         r2 = req(2)
@@ -85,7 +86,7 @@ class SpecS14Tests(unittest.TestCase):
     def test_declarar_e_verificar_alegacoes_com_limite_honesto(self):
         r6 = req(6)
         for trecho in ("declara", "citacao_edital", "dado_aluno", "nivel_evidencia", "inferencia", "trecho literal",
-                       "número, percentual, id ou citação no corpo que não esteja declarado bloqueia",
+                       "fato não declarado bloqueia", "número de prescrição", "só avisa", "em sombra só avisa",
                        "não numérica e não declarada não é detectável"):
             self.assertIn(trecho, r6, trecho)
 
@@ -162,6 +163,11 @@ class SpecS14Tests(unittest.TestCase):
             self.assertEqual(FILA[i]["roadmap_task"], "RM-07", i)
         self.assertIn("S14", FILA["GE"]["depends_on"])
         self.assertIn("PF", FILA["GE"]["depends_on"])  # uma tarefa por vez: o PF vem antes
+
+    def test_nao_ha_recibo_de_producao_indefinido(self):
+        self.assertNotIn("recibo de produção", TEXTO)  # a produção liga e desliga pelo SHA fixado (R2), não por recibo sem definição
+        self.assertIn("desfixam o sha de produção", req(14))
+        self.assertIn("sem sha de produção fixado", req(16))
 
     def test_nenhum_portao_depende_de_modelo(self):
         for proibido in ("juiz-llm decide", "o modelo aprova", "o llm aprova"):

@@ -60,7 +60,8 @@ class SpecS11Tests(unittest.TestCase):
 
     def test_janela_curta_so_a_flag_do_fluxo_e_aprovacao_expressa(self):
         r3 = req(3)
-        for trecho in ("só a flag do fluxo", "24 h", "aprovação expressa", "a do público segue false", "não está no agents.md"):
+        for trecho in ("só a flag do fluxo", "24 h", "aprovação expressa", "a do público segue false", "não está no agents.md",
+                       "citando pr e head", "não vale para a janela", "reinstalar o fluxo no sha do merge da janela", "pré-voo pós-janela"):
             self.assertIn(trecho, r3, trecho)
 
     def test_oito_etapas_cada_uma_com_prova_ou_nao_provada(self):
@@ -88,7 +89,8 @@ class SpecS11Tests(unittest.TestCase):
         r10 = req(10)
         for trecho in ("vermelho", "âmbar", "verde", "dado pessoal no repositório público", "sem readback", "flag do público", "token ou segredo exposto",
                        "hash do fluxo diferente", "consentimento inválido", "caso de teste", "inclusive no pré-voo", "fora da lista vermelha",
-                       "janela aberta há mais de 24 h", "relatadas", "nunca é verde"):
+                       "janela aberta há mais de 24 h", "relatadas", "nunca é verde", "padrão fechado", "não privado",
+                       "fechamento sem reinstalar o fluxo"):
             self.assertIn(trecho, r10, trecho)
 
     def test_relatorio_sem_dado_pessoal(self):
@@ -98,7 +100,8 @@ class SpecS11Tests(unittest.TestCase):
 
     def test_fechamento_volta_as_duas_flags_a_false(self):
         r12 = req(12)
-        for trecho in ("flag do fluxo a false", "pr de fechamento", "duas flags false", "nenhum segundo caderno antes do fechamento"):
+        for trecho in ("flag do fluxo a false", "pr de fechamento", "duas flags false", "nenhum segundo caderno antes do fechamento",
+                       "reinstalar o fluxo no sha do merge do fechamento", "não desliga o fluxo", "hash do fluxo"):
             self.assertIn(trecho, r12, trecho)
 
     def test_nao_liga_nada_nem_altera_contratos(self):
