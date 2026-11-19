@@ -13,6 +13,8 @@
 
 **Ponto de corte:** sem confirmação de commit, a próxima sessão trata a escrita como pendente, não como finalizada.
 
+**Nota de runtime:** este ciclo descreve o fluxo, **não as garantias**. O que é imposto fora do modelo, o que é só verificável e o que não se consegue gatear em produção está em `docs/especificacoes/S14_RUNTIME_OPERACIONAL.md`; o piloto com um caderno real, em `docs/especificacoes/S11_CICLO_PILOTO.md`.
+
 
 ## Autonomia cognitiva e gates proporcionais
 

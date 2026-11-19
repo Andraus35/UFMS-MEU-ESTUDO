@@ -4,7 +4,26 @@
 
 ## Onde ficam
 
-Uma página por especificação, em `docs/especificacoes/`, com nome `S<n>_<assunto>.md` (S1 método de estudo e revisão, S2 Tutor, S3 Coach, S4 operação, S5 harness da Zapia). Uma especificação **aponta** para o que já existe (`agents/`, `docs/pedagogia/`, `docs/PLATFORMS.md`); não copia.
+Uma página por especificação, em `docs/especificacoes/`, com nome `S<n>_<assunto>.md` (índice abaixo). Uma especificação **aponta** para o que já existe (`agents/`, `docs/pedagogia/`, `docs/PLATFORMS.md`); não copia.
+
+### Índice das especificações
+
+| ID | Assunto | Foco |
+|---|---|---|
+| S1 | Método de estudo e revisão | pedagogia (Método 4.2, revisão 7, 15 e 30 dias) |
+| S2, S3 | Tutor e Coach | papéis cognitivos |
+| S4 | Operação | ferramentas, agentes, repositório |
+| S5 | Harness da Zapia | START, comandos válidos, negar por padrão |
+| S6 | Execução e canal | sessões na nuvem, fila `entrada`, portão de promoção |
+| S7 | Persistência privada e escritor | escrita com leitura de volta, token mínimo |
+| S8 | Rotina do Coach | uma mensagem por dia, lembretes autorizados |
+| S9 | Leitura das plataformas | somente leitura, entrada manual como alternativa |
+| S10 | Notebook como ferramenta do Tutor | ponte pela Zapia |
+| S11 | Ciclo ponta a ponta e piloto curto | um caderno real, janela curta, semáforo, relatório sem dado pessoal |
+| S12, S13 | Retenção, recuperação na prova e conceitos cognitivos | evidência e honestidade sobre eficácia |
+| S14 | **Runtime operacional** | cognição livre; leitura e entrega condicionadas por gates determinísticos (enforçada, verificável, não gateável) |
+
+A S11 e a S14 definem **como provar** e **como operar** o harness; **não o implantam nem o homologam** (RM-01 a RM-07 seguem `implementado_nao_homologado`). O estado de cada item da fila fica só em `state/WORKFLOW.json`.
 
 ## Modelo (seções, nesta ordem)
 
