@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "prel_relatorio_do_ciclo_e_semaforo",
+    "scope": "ge_verificador_de_entrega",
     "branch": "claude/ufms-meu-estudo-engineering-14nz4d",
-    "pr_number": 140,
+    "pr_number": 141,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #139 integrado em main no merge commit 70d47a6ed2e6ae30aa4ecb8409e7b19ed044da27. Frente única ativa: RM-09 (prel_relatorio_do_ciclo_e_semaforo), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #140. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #140 integrado em main no merge commit b5463ba7f8c30b532418630ffb5030fd2d9cc3b4. Frente única ativa: RM-09 (ge_verificador_de_entrega), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #141. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 139,
-    "merge_commit_sha": "70d47a6ed2e6ae30aa4ecb8409e7b19ed044da27"
+    "pr_number": 140,
+    "merge_commit_sha": "b5463ba7f8c30b532418630ffb5030fd2d9cc3b4"
   },
   "work_queue": [
     {
@@ -719,6 +719,17 @@
       "depends_on": [
         "S14",
         "PF"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "HOOK3",
+      "title": "Prorrogação do hook Stop de entrega final até o fim do piloto (decisão do proprietário de 20/11/2026, por escolha em pergunta de fim de rodada): .claude/hooks/entrega_final.py hoje vale só até 20/11/2026; a mudança é pequena (a data limite passa a ser o fechamento da janela do piloto), altera .claude/ (arquivo de contrato, CODEOWNERS) e o merge continua sendo o Mesclar dele; o hook falha aberto e segue sendo lembrete, não controle (S14-R17)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E10_PRORROGACAO_HOOK_ENTREGA_FINAL.md",
+      "depends_on": [
+        "GE"
       ],
       "blocking_inputs": [],
       "optional_inputs": []
