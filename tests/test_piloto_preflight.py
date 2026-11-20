@@ -177,6 +177,11 @@ class ContraprovasVermelhasTests(unittest.TestCase):
         del l["fluxo"]["hash_esperado_sha"]
         self.vermelho(l, "fluxo_hash")
 
+    def test_nome_de_token_com_digito_ou_hifen_nao_e_erro(self):
+        for nome in ("zapia_dados2", "Zapia-dados", "token 2"):
+            l = leituras(tokens=[{"nome": nome, "expira_em": "2026-12-18T00:00:00+00:00"}])
+            self.assertEqual(item(roda(l), "tokens")["resultado"], "VERDE", nome)
+
     def test_token_ja_expirado_e_vermelho(self):
         for expira in ("2026-11-19T00:00:00+00:00", "2026-11-20T12:00:00+00:00"):
             self.vermelho(leituras(tokens=[{"nome": "zapia_dados", "expira_em": expira}]), "tokens")

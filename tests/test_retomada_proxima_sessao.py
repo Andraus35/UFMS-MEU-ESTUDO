@@ -23,10 +23,10 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "RS", "AE", "AM"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
-        # a S11 e o PF têm a entrega (19/11/2026); o próximo é o relatório do ciclo (PREL); a E3 segue esperando insumo do proprietário
-        self.assertEqual(fila["proximo"]["id"], "PREL")
-        self.assertEqual(fila["pendentes"], ["E3", "PREL", "PJ", "RT", "CM", "GE", "RS", "AE", "AM"])
-        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["E3"])
+        # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o verificador de entrega (GE); a E3 e a janela (PJ) esperam o proprietário
+        self.assertEqual(fila["proximo"]["id"], "GE")
+        self.assertEqual(fila["pendentes"], ["E3", "PJ", "RT", "CM", "GE", "RS", "AE", "AM"])
+        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["E3", "PJ"])
         self.assertIn("agents/", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
@@ -42,7 +42,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
                 self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md|\.claude/hooks/[a-z0-9_]+\.py)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("E3", "PREL", "PJ", "RT", "CM", "GE", "RS", "AE", "AM"):  # ainda por fazer; a S11 e o PF (19/11/2026), S10, L1, E1 e N2 já têm a entrega
+        for novo in ("E3", "PJ", "RT", "CM", "GE", "RS", "AE", "AM"):  # ainda por fazer; a S11, o PF e o PREL (19/11/2026), S10, L1, E1 e N2 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 

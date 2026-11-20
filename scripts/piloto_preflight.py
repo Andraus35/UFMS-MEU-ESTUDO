@@ -139,7 +139,7 @@ def _tokens(leituras, agora):
     for token in t:
         nome = token.get("nome") if isinstance(token, dict) else None
         expira = _dt(token.get("expira_em")) if isinstance(token, dict) else None
-        if not (isinstance(nome, str) and re.fullmatch(r"[a-z_ ]{1,40}", nome)) or expira is None:
+        if not (isinstance(nome, str) and re.fullmatch(r"[A-Za-z0-9_ -]{1,40}", nome)) or expira is None:
             return _item("tokens", VERMELHO, "token sem nome válido ou sem data de expiração com fuso")
         if expira <= agora:
             return _item("tokens", VERMELHO, "token já expirado: " + nome)
