@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "ge_verificador_de_entrega",
+    "scope": "hook3_prorroga_o_hook_de_entrega_final",
     "branch": "claude/ufms-meu-estudo-engineering-14nz4d",
-    "pr_number": 141,
+    "pr_number": 142,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #140 integrado em main no merge commit b5463ba7f8c30b532418630ffb5030fd2d9cc3b4. Frente única ativa: RM-09 (ge_verificador_de_entrega), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #141. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #141 integrado em main no merge commit b03f25ca57bfec2160e520580cf7db2c6661603c. Frente única ativa: RM-09 (hook3_prorroga_o_hook_de_entrega_final), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #142. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 140,
-    "merge_commit_sha": "b5463ba7f8c30b532418630ffb5030fd2d9cc3b4"
+    "pr_number": 141,
+    "merge_commit_sha": "b03f25ca57bfec2160e520580cf7db2c6661603c"
   },
   "work_queue": [
     {

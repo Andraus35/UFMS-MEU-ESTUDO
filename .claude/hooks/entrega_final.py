@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Hook Stop determinístico de ENTREGA FINAL, ativo até 20/11/2026 (decisão do proprietário, 18/11/2026).
+"""Hook Stop determinístico de ENTREGA FINAL, ativo até 18/12/2026 (decisão do proprietário, 18/11/2026; prorrogado em 20/11/2026 até o fim do
+piloto, que não passa do vencimento dos tokens, 18/12/2026; ver `docs/governanca/E10_PRORROGACAO_HOOK_ENTREGA_FINAL.md`).
 
 Ao fim de cada rodada COM ENTREGA (mesma detecção do hook de perguntas: commit, push ou operação de PR neste turno), confere se o
 que foi entregue está de pé: árvore limpa, HEAD enviado ao remoto, gates do repositório e a suíte de testes completa. Se algo estiver
 vermelho, BLOQUEIA o fim da rodada e diz o que falhou; se estiver tudo verde, deixa encerrar e mostra a contagem regressiva até
-20/11 e os desbloqueios pendentes do proprietário (`owner_priorities`). Depois de 20/11 não faz nada.
+18/12 e os desbloqueios pendentes do proprietário (`owner_priorities`). Depois de 18/12 não faz nada.
 
 Só LÊ e AVISA: não faz merge, não grava, não usa rede nem credencial, não altera estado. Falha ABERTA: erro interno, comando ausente
 ou tempo esgotado permitem encerrar (com aviso). Trava contra laço: se o hook já bloqueou nesta rodada (`stop_hook_active`), roda a
@@ -24,7 +25,7 @@ import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-PRAZO = date(2026, 11, 20)
+PRAZO = date(2026, 12, 18)  # prorrogado de 20/11 (E10): o piloto não passa do vencimento dos tokens
 FUSO = timezone(timedelta(hours=-4))  # horário de Mato Grosso do Sul
 ORCAMENTO_S = 165  # o hook inteiro cabe no timeout do settings.json (180 s)
 TAIL = 500
@@ -124,10 +125,10 @@ def pendencias_do_proprietario(raiz, executar):
 def contagem(hoje):
     d = dias_restantes(hoje)
     if d > 1:
-        return "faltam %d dias para 20/11" % d
+        return "faltam %d dias para 18/12" % d
     if d == 1:
-        return "falta 1 dia para 20/11"
-    return "hoje é 20/11, o prazo"
+        return "falta 1 dia para 18/12"
+    return "hoje é 18/12, o prazo"
 
 
 def mensagem_verde(hoje, pendencias, nao_concluidas, aviso_laco=False):
