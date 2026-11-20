@@ -271,6 +271,17 @@ class AchadosDaRevisaoTests(unittest.TestCase):
             self.assertEqual(r["semaforo"], "VERMELHO", (e, prova))
             self.assertIn("prova_nao_vale_para_a_etapa", r["motivos"][0])
 
+    def test_f1_e_f2_tem_prova_propria(self):
+        for e, prova in (("F1", "validacao_f5"), ("F2", "readback"), ("F2", "validacao_f5")):
+            c = ciclo()
+            c["etapas"][e] = etapa("PROVADA", "tutor", prova)
+            r = gera(c)
+            self.assertEqual(r["semaforo"], "VERMELHO", (e, prova))
+            self.assertIn("prova_nao_vale_para_a_etapa", r["motivos"][0])
+        c = ciclo()
+        c["etapas"]["F1"] = etapa("PROVADA", "tutor", "projecao_check")
+        self.assertEqual(gera(c)["semaforo"], "VERDE")
+
     def test_f3_e_f4_nao_aceitam_prova_tecnica_como_atalho(self):
         for e in ("F3", "F4"):
             c = ciclo()

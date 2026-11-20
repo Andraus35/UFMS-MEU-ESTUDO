@@ -11,9 +11,11 @@ Classes de garantia (S14): o que este verificador recusa é ENFORÇADO quando ro
 VERIFICÁVEL quando é rodado por quem quiser sobre o chat direto: nada aqui impõe o uso. NÃO GATEÁVEL: afirmação não numérica e não
 declarada, interpretação do edital além do literal, adequação pedagógica (avaliação offline e amostra, S14-R12 e R14).
 
-Modos (S14-R11): `sombra` avisa e registra (entrega inválida de texto livre passa com AVISO); `bloqueio` recusa. O tipo COMANDO
-(efeito externo) é SEMPRE bloqueio, e tipo desconhecido ou envelope malformado também (não se sabe se tem efeito). Códigos de saída da
-linha de comando: 0 ACEITA, 1 RECUSADA, 3 AVISO; 2 é de uso incorreto (argparse).
+Modos (S14-R11): `sombra` avisa e registra (entrega inválida de texto livre passa com AVISO); `bloqueio` recusa. Os tipos com EFEITO
+EXTERNO (COMANDO, LEMBRETE enviado pela Zapia e PROMPT_NOTEBOOK enviado ao Notebook) são SEMPRE bloqueio, e tipo desconhecido ou
+envelope malformado também (não se sabe se tem efeito); nesses tipos um recibo não conferido contra o repositório também recusa
+(S14-R3). Códigos de saída da linha de comando: 0 ACEITA, 1 RECUSADA, 3 AVISO, 4 falha ao gravar o registro (a decisão já foi
+impressa); 2 é de uso incorreto (argparse).
 """
 import argparse
 import json
@@ -49,15 +51,17 @@ ORIGEM_DA_OPERACAO = {"registrar_resultado": ("tutor",), "registrar_exportacao_d
                       "ler_arquivo_repositorio": ("tutor", "coach"), "enviar_prompt_notebook": ("tutor",)}
 RISCO_DA_OPERACAO = {"enviar_mensagem": "ROTINA_AUTORIZADA", "ler_arquivo_repositorio": "ORIENTACAO", "enviar_prompt_notebook": "ROTINA_AUTORIZADA"}
 
+TIPOS_COM_EFEITO = ("COMANDO", "LEMBRETE", "PROMPT_NOTEBOOK")
+PREFIXOS_DE_ID = ("UFMS", "TEC", "QC", "CAD", "CADERNO")  # prefixos dos ids de atividade do projeto; outro hífen-número (COVID-19) não é id
 _URL = re.compile(r"https?://|\bwww\.", re.I)
-_QUESTAO = re.compile(r"enunciado|gabarito|alternativa\s+[a-e]\b", re.I)
+_QUESTAO = re.compile(r"enunciado\s*:|enunciado\s+d[aeo]s?\s+quest|gabarito\s+(?:é|e|oficial|da)\b|alternativa\s+[a-e]\s+(?:é|e|est[áa]|correta|incorreta)\b", re.I)
 _DISPONIB = re.compile(r"dispon[ií]ve(?:l|is)|\bh[áa]\s+\d+\s+quest|\bexistem?\s+\d+\s+quest", re.I)
 _PERCENTUAL = re.compile(r"\d+(?:[.,]\d+)?\s*%")
 _DESEMPENHO = re.compile(r"\b(?:acertou|errou|acertos?|erros?|nota)\b\D{0,12}\d+", re.I)
 _PAGINA = re.compile(r"p[áa]g(?:ina|\.)?\s*(\d{1,3})", re.I)
 _DISPOSITIVO = re.compile(r"\b(?:art(?:igo)?\.?|inciso|item)\s*\d+", re.I)
 _NIVEL = re.compile(r"\bE[0-4]\b")
-_ID = re.compile(r"\b[A-Za-z]{2,}-\d{1,6}\b")
+_ID = re.compile(r"\b(?:" + "|".join(PREFIXOS_DE_ID) + r")-\d{1,6}\b", re.I)
 _PRESCRICAO = re.compile(r"(\d+)\s*(quest(?:[õo]es|[ãa]o)|dias?)\b", re.I)
 _ID_VALIDO = re.compile(r"^[A-Za-z0-9._-]{1,64}$")
 _TEXTO_CURTO = re.compile(r"^[^\x00-\x1f]{1,200}$")
@@ -82,7 +86,7 @@ def carregar_edital(root=ROOT):
     return paginas
 
 
-def _recibo(recibo, contexto, motivos, avisos):
+def _recibo(recibo, contexto, motivos, avisos, efeito):
     if not (isinstance(recibo, dict) and set(recibo) == {"sha", "hashes"} and isinstance(recibo["sha"], str) and SHA40.fullmatch(recibo["sha"])
             and isinstance(recibo["hashes"], dict) and recibo["hashes"]
             and all(isinstance(k, str) and 1 <= len(k) <= 60 and isinstance(v, str) and HASH64.fullmatch(v) for k, v in recibo["hashes"].items())):
@@ -90,7 +94,8 @@ def _recibo(recibo, contexto, motivos, avisos):
         return
     esperado = contexto.get("recibo_esperado")
     if esperado is None:
-        avisos.append("recibo_nao_conferido_contra_o_repositorio")  # a conferência é a tarefa RS
+        # a conferência contra o repositório é a tarefa RS: em tipo com efeito externo, não decidir é recusar (S14-R3 e R17)
+        (motivos if efeito else avisos).append("recibo_nao_conferido_contra_o_repositorio")
     elif recibo != esperado:
         motivos.append("recibo_diferente_do_esperado")
 
@@ -175,8 +180,9 @@ def _corpo(corpo, estruturado, declarado, contexto, motivos, avisos):
     conhecidos = set(declarado["ids"]) | ({i["atividade_id"] for i in proj.get("pendencias", [])} if isinstance(proj, dict) else set())
     if isinstance(estruturado, dict) and isinstance(estruturado.get("atividade_id"), str):
         conhecidos.add(estruturado["atividade_id"])
+    conhecidos_norm = {c.upper() for c in conhecidos}
     for ident in set(_ID.findall(corpo)):
-        if ident not in conhecidos:
+        if ident.upper() not in conhecidos_norm:
             motivos.append("id_sem_alegacao")
     quantidade = estruturado.get("quantidade") if isinstance(estruturado, dict) else None
     for numero, unidade in _PRESCRICAO.findall(corpo):
@@ -265,7 +271,7 @@ def _verificar(env, contexto):
     tipo, papel, est = env["tipo"], env["papel"], env.get("estruturado")
     if not (isinstance(env["sha_contrato"], str) and SHA40.fullmatch(env["sha_contrato"])) or env["sha_contrato"] != contexto.get("sha_contrato"):
         motivos.append("sha_diferente_do_fixado")  # S14-R2: o contrato em produção é o SHA fixado
-    _recibo(env["recibo"], contexto, motivos, avisos)
+    _recibo(env["recibo"], contexto, motivos, avisos, tipo in TIPOS_COM_EFEITO)
     if tipo in ("COMANDO", "PROMPT_NOTEBOOK") and env["corpo"] != "":
         motivos.append("corpo_deve_ser_vazio_neste_tipo")
     if tipo not in ("COMANDO", "PROMPT_NOTEBOOK") and not env["corpo"].strip():
@@ -317,8 +323,11 @@ def verificar_entrega(envelope, contexto, modo="sombra", agora=None):
         motivos, avisos, op = ["erro_inesperado_na_verificacao_" + type(exc).__name__], [], None
     if projecao_invalida:
         motivos.append("projecao_do_contexto_invalida")
+    extras = contexto.get("motivos_extras")
+    if isinstance(extras, list):
+        motivos.extend(x for x in extras if x in ("envelope_ilegivel", "projecao_ilegivel"))
     tipo = envelope.get("tipo") if isinstance(envelope, dict) and envelope.get("tipo") in TIPOS else None
-    efeito = tipo in (None, "COMANDO")  # tipo desconhecido ou envelope malformado: não se sabe se tem efeito, então é bloqueio
+    efeito = tipo is None or tipo in TIPOS_COM_EFEITO  # tipo desconhecido ou envelope malformado: não se sabe se tem efeito, então é bloqueio
     modo_efetivo = "bloqueio" if efeito else modo
     motivos, avisos = sorted(set(motivos)), sorted(set(avisos))
     if motivos and modo_efetivo == "bloqueio":
@@ -360,20 +369,27 @@ def main(argv=None):
     ap.add_argument("--modo", choices=MODOS, default="sombra")
     ap.add_argument("--registro", help="arquivo local, FORA do repositório, onde acrescentar o registro da entrega")
     a = ap.parse_args(argv)
+    envelope, projecao, extras = None, None, []
     try:
         with open(a.envelope, encoding="utf-8") as arq:
             envelope = json.load(arq)
-        projecao = None
-        if a.projecao:
+    except (OSError, ValueError):
+        extras.append("envelope_ilegivel")
+    if a.projecao:
+        try:
             with open(a.projecao, encoding="utf-8") as arq:
                 projecao = json.load(arq)
-    except (OSError, ValueError):
-        envelope, projecao = None, None
-    contexto = {"sha_contrato": a.sha_contrato, "edital": carregar_edital(), "projecao": projecao}
+        except (OSError, ValueError):
+            extras.append("projecao_ilegivel")  # o envelope válido continua sendo avaliado; só a projeção ficou de fora
+    contexto = {"sha_contrato": a.sha_contrato, "edital": carregar_edital(), "projecao": projecao, "motivos_extras": extras}
     resultado = verificar_entrega(envelope, contexto, a.modo)
     print(json.dumps(resultado, ensure_ascii=False, indent=2))
     if a.registro:
-        gravar_registro(a.registro, montar_registro(resultado, envelope))
+        try:
+            gravar_registro(a.registro, montar_registro(resultado, envelope))
+        except (OSError, ValueError) as exc:
+            print("falha ao gravar o registro: " + type(exc).__name__, file=sys.stderr)
+            return 4  # a decisão já foi impressa; 4 não se confunde com RECUSADA (1) nem com uso incorreto (2)
     return {ACEITA: 0, AVISO: 3, RECUSADA: 1}[resultado["decisao"]]
 
 

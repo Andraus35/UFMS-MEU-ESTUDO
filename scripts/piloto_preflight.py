@@ -136,17 +136,17 @@ def _tokens(leituras, agora):
     if not isinstance(t, list) or not t:
         return _item("tokens", VERMELHO, "leitura da validade dos tokens ausente")
     curtos = []
-    for token in t:
+    for posicao, token in enumerate(t, 1):
         nome = token.get("nome") if isinstance(token, dict) else None
         expira = _dt(token.get("expira_em")) if isinstance(token, dict) else None
         if not (isinstance(nome, str) and re.fullmatch(r"[A-Za-z0-9_ -]{1,40}", nome)) or expira is None:
             return _item("tokens", VERMELHO, "token sem nome válido ou sem data de expiração com fuso")
         if expira <= agora:
-            return _item("tokens", VERMELHO, "token já expirado: " + nome)
+            return _item("tokens", VERMELHO, f"token {posicao} já expirado")  # posição, não o nome: um nome com cara de segredo apagaria o relatório
         if expira - agora <= JANELA + MARGEM:  # "maior que a janela mais 7 dias": exatamente 8 dias NÃO basta
-            curtos.append(nome)
+            curtos.append(str(posicao))
     if curtos:
-        return _item("tokens", AMBAR, "validade menor que a janela mais 7 dias: " + ", ".join(sorted(curtos)))
+        return _item("tokens", AMBAR, "validade menor que a janela mais 7 dias nos tokens de posição " + ", ".join(curtos))
     return _item("tokens", VERDE, "validade maior que a janela mais 7 dias")
 
 
@@ -160,7 +160,7 @@ def _ci(leituras):
         return _item("ci", VERMELHO, "leitura da CI malformada")
     if head != main:
         return _item("ci", AMBAR, "CI lida em outro SHA que não o HEAD da main")
-    if any(x != "success" for x in concl):
+    if any(x not in ("success", "skipped", "neutral") for x in concl):  # job pulado por filtro não torna a CI vermelha
         return _item("ci", AMBAR, "CI do HEAD não está toda verde")
     return _item("ci", VERDE, f"CI verde no HEAD ({head[:12]})")
 

@@ -53,7 +53,10 @@ LACUNAS_OPCIONAIS = ("o relatório de captura não foi lido pelo repositório", 
 PROVAS_TECNICAS = ("readback", "projecao_check", "validacao_f5")
 PROVA_POR_ESTADO = {"PROVADA": PROVAS_TECNICAS, "RELATADA": ("relato_com_captura", "relato"), "NAO_EXERCIDA": ("justificativa",),
                     "NAO_PROVADA": ("nenhuma",)}
-PROVA_DA_ETAPA = {"F5": ("validacao_f5",), "F6": ("readback",), "F7": ("projecao_check",)}  # S11-R4: o que vale para cada etapa técnica
+# S11-R4: o que vale para cada etapa técnica. F8 (revisão pelo Notebook) é opcional e aceita qualquer prova técnica: só F1 e F2 (START e recomendação)
+# e F5, F6 e F7 têm prova própria; F3 e F4 são atos humanos e nunca passam de RELATADA.
+PROVA_DA_ETAPA = {"F1": ("readback", "projecao_check"), "F2": ("projecao_check",), "F5": ("validacao_f5",), "F6": ("readback",),
+                  "F7": ("projecao_check",)}
 ENTRADA_INVALIDA = ("gatilhos_ausentes", "preflights_ausentes_ou_invalidos", "janela_sem_hora_de_abertura", "janela_no_futuro",
                     "janela_com_fechamento_invalido", "evento_ausente_ou_malformado")
 PROIBIDO = re.compile(r"melhorou|melhora\b|ganhou|%|github_pat_|\bgh[pousr]_|\bsk-|-----BEGIN|@[A-Za-z0-9.-]+\.[a-z]{2,}|https?://|\bcpf\b|enunciado|gabarito",

@@ -225,6 +225,23 @@ class ContraprovasAmbarTests(unittest.TestCase):
         self.ambar(leituras(tokens=[{"nome": "zapia_dados", "expira_em": "2026-11-28T12:00:00+00:00"}]), "tokens")
         self.assertEqual(item(roda(leituras(tokens=[{"nome": "zapia_dados", "expira_em": "2026-11-28T12:00:01+00:00"}])), "tokens")["resultado"], "VERDE")
 
+    def test_job_pulado_ou_neutro_nao_torna_a_ci_vermelha(self):
+        self.assertEqual(item(roda(leituras(ci={"head_sha": MAIN, "conclusoes": ["success", "skipped", "neutral"]})), "ci")["resultado"], "VERDE")
+        for ruim in ("cancelled", "timed_out", "action_required", "failure"):
+            self.ambar(leituras(ci={"head_sha": MAIN, "conclusoes": ["success", ruim]}), "ci")
+
+    def test_nome_de_token_com_cara_de_segredo_nao_apaga_o_relatorio(self):
+        for nome in ("github_pat_entrada", "ghp_zapia"):
+            l = leituras(tokens=[{"nome": nome, "expira_em": "2026-11-23T00:00:00+00:00"}])
+            s = roda(l)
+            self.assertEqual(s["resultado"], "AMBAR", nome)  # o item de token continua âmbar; nada virou "saida"
+            self.assertNotIn("saida", {i["id"] for i in s["itens"]})
+            self.assertNotIn(nome, json.dumps(s))
+        l = leituras(tokens=[{"nome": "ghp_zapia", "expira_em": "2026-11-19T00:00:00+00:00"}])
+        s = roda(l)
+        self.assertEqual(item(s, "tokens")["resultado"], "VERMELHO")
+        self.assertNotIn("ghp_zapia", json.dumps(s))
+
     def test_ci_nao_verde_ou_em_outro_sha(self):
         self.ambar(leituras(ci={"head_sha": MAIN, "conclusoes": ["success", "failure"]}), "ci")
         self.ambar(leituras(ci={"head_sha": "1" * 40, "conclusoes": ["success"]}), "ci")
