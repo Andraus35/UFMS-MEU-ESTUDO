@@ -736,7 +736,7 @@
     },
     {
       "id": "RS",
-      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão. Decisão do proprietário de 20/11/2026: os hashes do recibo cobrem os arquivos do START do papel (quatro de estudo, seis de engenharia, como o broker usa) mais o SHA; o verificador recalcula no repositório no SHA fixado, sem rede",
+      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão. Decisão do proprietário de 20/11/2026: os hashes do recibo cobrem os arquivos do START do papel (quatro de estudo, seis de engenharia, como o broker usa) mais o SHA; o verificador recalcula no repositório no SHA fixado, sem rede; o mesmo módulo roda local (Termux) e no CI, sem rede",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/start_receipt.py",
       "depends_on": [
