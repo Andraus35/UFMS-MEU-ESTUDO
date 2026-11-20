@@ -736,7 +736,7 @@
     },
     {
       "id": "RS",
-      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão",
+      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão. Decisão do proprietário de 20/11/2026: os hashes do recibo cobrem os arquivos do START do papel (quatro de estudo, seis de engenharia, como o broker usa) mais o SHA; o verificador recalcula no repositório no SHA fixado, sem rede",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/start_receipt.py",
       "depends_on": [
@@ -882,6 +882,19 @@
       "esforco": "minutos",
       "estado": "feito",
       "nota": "Relato do proprietário em 19/11/2026 (sem captura): entrada removido do Claude GitHub App; não verificado pelo repositório"
+    },
+    {
+      "rank": 9,
+      "id": "P9",
+      "ato": "Renovar zapia_dados e zapia token antes do piloto (vencimento relatado em 18/12/2026; aviso de renovação em 04/12/2026, S14-R15); o pré-voo exige validade maior que a janela de 24 h mais 7 dias",
+      "destrava": "Sem a renovação o piloto esbarra na margem do pré-voo e o hook de entrega final expira em 18/12/2026",
+      "destrava_itens": [
+        "PJ"
+      ],
+      "depende_de": [],
+      "esforco": "minutos, no GitHub",
+      "estado": "pendente",
+      "nota": "Decisão do proprietário em 20/11/2026: renova antes do piloto"
     }
   ],
   "owner_priorities_note": "Prioridade persistente (decisão do proprietário, 18/11/2026): ordem dos atos e decisões dele que mais destravam trabalho. A sessão lembra a lista no início e a atualiza quando um item for feito (estado feito); não é fila de engenharia e não cria branch nem PR."
