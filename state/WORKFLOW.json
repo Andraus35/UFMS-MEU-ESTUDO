@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "ge_verificador_de_entrega",
+    "scope": "hook3_prorroga_o_hook_de_entrega_final",
     "branch": "claude/ufms-meu-estudo-engineering-14nz4d",
-    "pr_number": 141,
+    "pr_number": 142,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #140 integrado em main no merge commit b5463ba7f8c30b532418630ffb5030fd2d9cc3b4. Frente única ativa: RM-09 (ge_verificador_de_entrega), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #141. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #141 integrado em main no merge commit b03f25ca57bfec2160e520580cf7db2c6661603c. Frente única ativa: RM-09 (hook3_prorroga_o_hook_de_entrega_final), branch claude/ufms-meu-estudo-engineering-14nz4d, PR #142. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 140,
-    "merge_commit_sha": "b5463ba7f8c30b532418630ffb5030fd2d9cc3b4"
+    "pr_number": 141,
+    "merge_commit_sha": "b03f25ca57bfec2160e520580cf7db2c6661603c"
   },
   "work_queue": [
     {
@@ -736,7 +736,7 @@
     },
     {
       "id": "RS",
-      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão",
+      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa recibo ausente, SHA errado e hash adulterado; declara que não prova compreensão. Decisão do proprietário de 20/11/2026: os hashes do recibo cobrem os arquivos do START do papel (quatro de estudo, seis de engenharia, como o broker usa) mais o SHA; o verificador recalcula no repositório no SHA fixado, sem rede; o mesmo módulo roda local (Termux) e no CI, sem rede",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/start_receipt.py",
       "depends_on": [
@@ -882,6 +882,19 @@
       "esforco": "minutos",
       "estado": "feito",
       "nota": "Relato do proprietário em 19/11/2026 (sem captura): entrada removido do Claude GitHub App; não verificado pelo repositório"
+    },
+    {
+      "rank": 9,
+      "id": "P9",
+      "ato": "Renovar zapia_dados e zapia token antes do piloto (vencimento relatado em 18/12/2026; aviso de renovação em 04/12/2026, S14-R15); o pré-voo exige validade maior que a janela de 24 h mais 7 dias",
+      "destrava": "Sem a renovação o piloto esbarra na margem do pré-voo e o hook de entrega final expira em 18/12/2026",
+      "destrava_itens": [
+        "PJ"
+      ],
+      "depende_de": [],
+      "esforco": "minutos, no GitHub",
+      "estado": "pendente",
+      "nota": "Decisão do proprietário em 20/11/2026: renova antes do piloto"
     }
   ],
   "owner_priorities_note": "Prioridade persistente (decisão do proprietário, 18/11/2026): ordem dos atos e decisões dele que mais destravam trabalho. A sessão lembra a lista no início e a atualiza quando um item for feito (estado feito); não é fila de engenharia e não cria branch nem PR."

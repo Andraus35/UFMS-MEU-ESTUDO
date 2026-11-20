@@ -1,4 +1,4 @@
-"""Contrato do hook Stop de ENTREGA FINAL (até 20/11/2026): .claude/settings.json + .claude/hooks/entrega_final.py. Offline, com executor falso."""
+"""Contrato do hook Stop de ENTREGA FINAL (até 18/12/2026, prorrogado em 20/11): .claude/settings.json + .claude/hooks/entrega_final.py. Offline, com executor falso."""
 import importlib.util
 import json
 import os
@@ -16,7 +16,7 @@ spec = importlib.util.spec_from_file_location("entrega_final", SCRIPT)
 ef = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ef)
 
-HOJE = date(2026, 11, 18)
+HOJE = date(2026, 12, 16)  # dois dias antes do prazo prorrogado (18/12)
 
 
 def usuario(t="faça algo"):
@@ -90,25 +90,32 @@ class SettingsTest(unittest.TestCase):
         for git in (a for a in ("status", "rev-parse")):  # só leitura do git
             self.assertIn('"git", "%s"' % git, fonte)
 
-    def test_prazo_e_20_de_novembro_de_2026(self):
-        self.assertEqual(ef.PRAZO, date(2026, 11, 20))
+    def test_prazo_e_18_de_dezembro_de_2026_prorrogado_em_20_de_novembro(self):
+        # E10: o proprietário prorrogou até o fim do piloto; o piloto não passa do vencimento dos tokens (18/12/2026)
+        self.assertEqual(ef.PRAZO, date(2026, 12, 18))
 
 
 class PrazoTest(Base):
-    def test_depois_de_20_11_nao_faz_nada_nem_roda_nada(self):
-        saida, ex = self.decidir(ENTREGA, hoje=date(2026, 11, 21))
+    def test_depois_de_18_12_nao_faz_nada_nem_roda_nada(self):
+        saida, ex = self.decidir(ENTREGA, hoje=date(2026, 12, 19))
         self.assertEqual(saida, {})
         self.assertEqual(ex.chamadas, [])
 
-    def test_no_dia_20_ainda_confere(self):
-        saida, ex = self.decidir(ENTREGA, hoje=date(2026, 11, 20))
+    def test_a_prorrogacao_mantem_o_hook_ativo_depois_do_prazo_antigo(self):
+        for dia in (date(2026, 11, 21), date(2026, 12, 1), date(2026, 12, 17)):
+            saida, ex = self.decidir(ENTREGA, hoje=dia)
+            self.assertIn("systemMessage", saida, dia)
+            self.assertTrue(ex.chamadas, dia)
+
+    def test_no_dia_18_12_ainda_confere(self):
+        saida, ex = self.decidir(ENTREGA, hoje=date(2026, 12, 18))
         self.assertIn("systemMessage", saida)
-        self.assertIn("hoje é 20/11", saida["systemMessage"])
+        self.assertIn("hoje é 18/12", saida["systemMessage"])
 
     def test_contagem_regressiva(self):
-        self.assertEqual(ef.contagem(date(2026, 11, 18)), "faltam 2 dias para 20/11")
-        self.assertEqual(ef.contagem(date(2026, 11, 19)), "falta 1 dia para 20/11")
-        self.assertEqual(ef.contagem(date(2026, 11, 20)), "hoje é 20/11, o prazo")
+        self.assertEqual(ef.contagem(date(2026, 12, 16)), "faltam 2 dias para 18/12")
+        self.assertEqual(ef.contagem(date(2026, 12, 17)), "falta 1 dia para 18/12")
+        self.assertEqual(ef.contagem(date(2026, 12, 18)), "hoje é 18/12, o prazo")
 
 
 class DisparoTest(Base):
@@ -135,7 +142,7 @@ class VerdeTest(Base):
         saida, ex = self.decidir(ENTREGA)
         self.assertNotIn("decision", saida)
         m = saida["systemMessage"]
-        for trecho in ("faltam 2 dias para 20/11", "git limpo e enviado, gates e testes verdes", "NÃO prova a CI do GitHub",
+        for trecho in ("faltam 2 dias para 18/12", "git limpo e enviado, gates e testes verdes", "NÃO prova a CI do GitHub",
                        "o merge, que é seu", "P1 Enviar a Z1", "P2 Decidir o risco diário"):
             self.assertIn(trecho, m, trecho)
 
@@ -157,7 +164,7 @@ class VermelhoTest(Base):
         saida, _ = self.decidir(ENTREGA, executor=ex)
         self.assertEqual(saida["decision"], "block")
         r = saida["reason"]
-        for trecho in ("NÃO está de pé", "suíte de testes falhou", "FAIL: test_x", "faltam 2 dias para 20/11", "P1 Enviar a Z1"):
+        for trecho in ("NÃO está de pé", "suíte de testes falhou", "FAIL: test_x", "faltam 2 dias para 18/12", "P1 Enviar a Z1"):
             self.assertIn(trecho, r, trecho)
 
     def test_gate_falhando_bloqueia(self):
