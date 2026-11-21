@@ -8,8 +8,8 @@
 
 | ID | Severidade | Achado | Onde | Confirmação | Lote |
 |---|---|---|---|---|---|
-| AT-1 | **Alta** | `delivery_gate` aceita COMANDO `enviar_prompt_notebook` **sem conferir o prompt** (texto livre, hash errado, instrução embutida: `ACEITA`); o validador e a caixa recusam o mesmo texto (`HASH_DIVERGENTE`, `FORMA_NAO_CANONICA`) | `scripts/delivery_gate.py` `_comando` | reproduzido | COR-A |
-| AT-2 | Média | O formato do prompt diverge: o envelope `PROMPT_NOTEBOOK` espera 5 campos; o comando e a caixa usam `{prompt, prompt_sha256}`; um `preparar()` válido enviado como `PROMPT_NOTEBOOK` é recusado. Não há definição única do que a Zapia recebe | `delivery_gate.py`, `notebook_prompt_validator.py` | relatado | COR-A |
+| AT-1 **[corrigido no COR-A: `E15_COR_A_ENTREGA_INTEGRADA.md`]** | **Alta** | `delivery_gate` aceita COMANDO `enviar_prompt_notebook` **sem conferir o prompt** (texto livre, hash errado, instrução embutida: `ACEITA`); o validador e a caixa recusam o mesmo texto (`HASH_DIVERGENTE`, `FORMA_NAO_CANONICA`) | `scripts/delivery_gate.py` `_comando` | reproduzido | COR-A |
+| AT-2 **[corrigido no COR-A: `E15_COR_A_ENTREGA_INTEGRADA.md`]** | Média | O formato do prompt diverge: o envelope `PROMPT_NOTEBOOK` espera 5 campos; o comando e a caixa usam `{prompt, prompt_sha256}`; um `preparar()` válido enviado como `PROMPT_NOTEBOOK` é recusado. Não há definição única do que a Zapia recebe | `delivery_gate.py`, `notebook_prompt_validator.py` | relatado | COR-A |
 | AT-3 | Média | URL **sem esquema** passa no prompt do Notebook (`google.com.br`, `example[.]com`, `hxxp://`); a S10-R3 proíbe endereço da web | `notebook_prompt_validator.py` `_URL` | reproduzido | COR-C |
 | AT-4 | Baixa/Média | Instrução embutida heurística com bypass (`act as DAN`, homóglifo cirílico, leet); texto de questão em prosa aceito no campo `lacuna` (o validador do prompt não usa `texto_de_questao`) | `notebook_prompt_validator.py` | relatado | COR-C |
 | AT-5 | Baixa | `enviar_mensagem` aceita URL e "ignore previous instructions" no validador e na caixa; o `delivery_gate` recusa URL: validador e caixa são mais permissivos que o verificador | `agent_commands.py`, `command_box.py` | relatado | COR-C |
@@ -22,8 +22,8 @@
 
 | ID | Severidade | Achado | Onde | Confirmação | Lote |
 |---|---|---|---|---|---|
-| AC-1 | **Alta** | O `delivery_gate` **não confere a idade da projeção** (S15-R5): `conferir_idade` não é chamada na entrega; projeção de `2026-01-01` com agora em 21/11 aceita o LEMBRETE | `delivery_gate.py` `verificar_entrega` | reproduzido | COR-A |
-| AC-2 | Média | O vínculo por hash não amarra os ids: hash do LEMBRETE de UFMS-002 com `atividade_ids: ["UFMS-003"]` (também pendente) é aceito; o hash não é recalculado | `delivery_gate.py` `_vinculo_lembrete` | reproduzido | COR-A |
+| AC-1 **[corrigido no COR-A: `E15_COR_A_ENTREGA_INTEGRADA.md`]** | **Alta** | O `delivery_gate` **não confere a idade da projeção** (S15-R5): `conferir_idade` não é chamada na entrega; projeção de `2026-01-01` com agora em 21/11 aceita o LEMBRETE | `delivery_gate.py` `verificar_entrega` | reproduzido | COR-A |
+| AC-2 **[corrigido no COR-A: `E15_COR_A_ENTREGA_INTEGRADA.md`]** | Média | O vínculo por hash não amarra os ids: hash do LEMBRETE de UFMS-002 com `atividade_ids: ["UFMS-003"]` (também pendente) é aceito; o hash não é recalculado | `delivery_gate.py` `_vinculo_lembrete` | reproduzido | COR-A |
 | AC-3 | Média | A chave `briefing` aceita **qualquer id** (`briefing-x/y/z`): a deduplicação por chave e o teto de 2 mensagens por dia não valem; não existe decisor do teto | `command_idempotency.py` | reproduzido | COR-B |
 | AC-4 | Média | O descanso só é checado para `criar_lembrete`; `enviar_mensagem` com chave `lembrete2-...` em dia de descanso é promovida (S8-R1 diz que o lembrete2 é recusado); sem checagem de atividade pendente | `command_box.py`, `agent_commands.py` | relatado | COR-B |
 | AC-5 | Média | `gates_mot` **não está ligado à entrega**; paráfrases escapam ("Aprovação garantida", "Garanto que você passa", "Você tem TDAH", "Pare a medicação", "Você é um preguiçoso") e há **falsos positivos** ("Ninguém pode garantir aprovação", "Não quero que você durma menos": a janela de negação de 15 caracteres é curta) | `gates_mot.py` | reproduzido (paráfrases e falsos positivos) | COR-D |

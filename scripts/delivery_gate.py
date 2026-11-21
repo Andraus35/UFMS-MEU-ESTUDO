@@ -31,7 +31,7 @@ import command_params_schema
 import delivery_receipt_binding
 import notebook_prompt_validator
 from private_persistence_guard import PersistenceBlocked
-from session_read_guard import check_projection
+from session_read_guard import check_projection, conferir_idade
 
 ROOT = Path(__file__).resolve().parents[1]
 ACEITA, AVISO, RECUSADA = "ACEITA", "AVISO", "RECUSADA"
@@ -57,6 +57,7 @@ RISCO_DA_OPERACAO = {"enviar_mensagem": "ROTINA_AUTORIZADA", "ler_arquivo_reposi
                      "criar_lembrete": "ROTINA_AUTORIZADA", "consultar_agenda_minima": "ROTINA_AUTORIZADA"}
 
 TIPOS_COM_EFEITO = ("COMANDO", "LEMBRETE", "PROMPT_NOTEBOOK")
+FORMATO_PROMPT = ("prompt", "prompt_sha256")  # AT-2: formato ÚNICO do que a Zapia recebe (o rascunho de 5 campos é a forma de AUTORIA do Tutor, via `preparar`)
 PREFIXOS_DE_ID = ("UFMS", "TEC", "QC", "CAD", "CADERNO")  # prefixos dos ids de atividade do projeto; outro hífen-número (COVID-19) não é id
 _URL = re.compile(r"https?://|\bwww\.", re.I)
 _QUESTAO = re.compile(r"enunciado\s*:|enunciado\s+d[aeo]s?\s+quest|gabarito\s+(?:é|e|oficial|da)\b|alternativa\s+[a-e]\s+(?:é|e|est[áa]|correta|incorreta)\b", re.I)
@@ -237,6 +238,11 @@ def _lembrete(est, corpo, contexto, motivos):
         motivos.append("lembrete_sem_atividade_pendente")  # S8-R2: só lembra atividade pendente
 
 
+def _ids_ordenados(est):
+    ids = _ids_do_lembrete(est)
+    return sorted(ids) if ids is not None else None
+
+
 def _comando(est, papel, contexto, motivos):
     schema = agent_commands.load_schema()
     if papel == "zapia":
@@ -256,6 +262,8 @@ def _comando(est, papel, contexto, motivos):
         motivos.append("comando_com_params_fora_do_esquema")  # GA-1: o mesmo esquema fechado do validador
     elif op == "criar_lembrete":
         _vinculo_lembrete(est["params"], contexto, motivos)
+    elif op == "enviar_prompt_notebook" and not notebook_prompt_validator.conferir_parametros(est["params"]).ok:
+        motivos.append("comando_prompt_notebook_invalido")  # AT-1: o mesmo hash, forma canônica e filtros do validador e da caixa
     texto = est["params"].get("texto")
     if isinstance(texto, str):  # GA-2: o texto livre dos params passa pelos MESMOS filtros do corpo (identificadores e prompt do Notebook têm validação própria)
         _corpo(texto, None, {"paginas": set(), "ids": [], "citou": False, "niveis": set()}, {}, motivos, [])
@@ -263,10 +271,23 @@ def _comando(est, papel, contexto, motivos):
 
 
 def _vinculo_lembrete(params, contexto, motivos):
-    """GA-4: o COMANDO `criar_lembrete` referencia o hash de um LEMBRETE já verificado e só lista atividades pendentes."""
+    """GA-4 e AC-2: o COMANDO `criar_lembrete` referencia o hash de um LEMBRETE já verificado; o hash é RECALCULADO a partir do corpo e dos ids
+    que o verificador guardou, e os ids do comando têm de ser exatamente os do lembrete. `lembretes_verificados`: {hash: {"corpo", "atividade_ids"}}."""
     verificados = contexto.get("lembretes_verificados")
-    if not (isinstance(verificados, (set, frozenset, list, tuple)) and params["lembrete_sha256"] in verificados):
+    h = params["lembrete_sha256"]
+    if isinstance(verificados, (set, frozenset, list, tuple)):
+        motivos.append("comando_vinculo_sem_ids_verificados")  # forma antiga: só hashes, não prova quais atividades o lembrete cobre
+    elif not (isinstance(verificados, dict) and h in verificados):
         motivos.append("comando_sem_vinculo_com_lembrete")
+    else:
+        reg = verificados[h]
+        if not (isinstance(reg, dict) and set(reg) == {"corpo", "atividade_ids"} and isinstance(reg["corpo"], str)
+                and command_idempotency.lista_de_atividades_valida(reg["atividade_ids"])):
+            motivos.append("comando_vinculo_sem_ids_verificados")
+        elif command_idempotency.hash_lembrete(reg["corpo"], reg["atividade_ids"]) != h:
+            motivos.append("comando_vinculo_hash_nao_confere")
+        elif sorted(params["atividade_ids"]) != sorted(reg["atividade_ids"]):
+            motivos.append("comando_lembrete_ids_diferentes_do_lembrete")
     proj = contexto.get("projecao")
     pend = {i["atividade_id"] for i in proj.get("pendencias", [])} if isinstance(proj, dict) else None
     if pend is None or not set(params["atividade_ids"]) <= pend:
@@ -276,8 +297,10 @@ def _vinculo_lembrete(params, contexto, motivos):
 def _prompt_notebook(est, papel, motivos):
     if papel != "tutor":
         motivos.append("prompt_notebook_so_do_tutor")  # o Notebook é ferramenta do Tutor (S10)
-    resultado = notebook_prompt_validator.validar(est)
-    if not resultado.ok:
+    if isinstance(est, dict) and set(est) == set(notebook_prompt_validator.CAMPOS):
+        motivos.append("prompt_notebook_forma_nao_canonica")  # AT-2: o rascunho de 5 campos passa por `preparar` antes de ir à Zapia
+        return
+    if not notebook_prompt_validator.conferir_parametros(est).ok:
         motivos.append("prompt_notebook_invalido")
 
 
@@ -299,7 +322,22 @@ def _estrutura(env, motivos):
     return True
 
 
-def _verificar(env, contexto):
+def _idade_da_projecao(tipo, op, contexto, agora, motivos, avisos):
+    """AC-1 (S15-R5): decisão de PRAZO (LEMBRETE e COMANDO criar_lembrete) exige projeção de até 24 h com instante; as demais entregas só avisam
+    acima de 72 h. Projeção no futuro ou sem `gerado_em` recusa em qualquer tipo. Sem projeção, nada muda."""
+    proj = contexto.get("projecao")
+    if not isinstance(proj, dict):
+        return
+    uso = "prazo" if tipo == "LEMBRETE" or (tipo == "COMANDO" and op == "criar_lembrete") else "orientacao"
+    r = conferir_idade(proj, agora, uso)
+    if r["decisao"] == "RECUSA":
+        motivos.append({"PROJECAO_VELHA_PARA_PRAZO": "projecao_velha_para_prazo", "PROJECAO_SEM_INSTANTE": "projecao_sem_instante_para_prazo",
+                        "PROJECAO_NO_FUTURO": "projecao_no_futuro", "PROJECAO_SEM_GERADO_EM": "projecao_do_contexto_invalida"}.get(r["codigo"], "projecao_nao_confere"))
+    elif r["decisao"] == "AVISO":
+        avisos.append("projecao_defasada")
+
+
+def _verificar(env, contexto, agora=None):
     motivos, avisos, op = [], [], None
     if not _estrutura(env, motivos):
         return motivos, avisos, None
@@ -324,6 +362,7 @@ def _verificar(env, contexto):
         _prompt_notebook(est, papel, motivos)
     elif tipo == "ORIENTACAO" and est is not None:
         motivos.append("orientacao_nao_tem_campo_estruturado")
+    _idade_da_projecao(tipo, op, contexto, agora, motivos, avisos)
     return motivos, avisos, op
 
 
@@ -353,7 +392,7 @@ def verificar_entrega(envelope, contexto, modo="sombra", agora=None):
     else:
         projecao_invalida = False
     try:
-        motivos, avisos, op = _verificar(envelope, contexto)
+        motivos, avisos, op = _verificar(envelope, contexto, agora)
     except Exception as exc:  # erro inesperado: fecha, nunca derruba
         motivos, avisos, op = ["erro_inesperado_na_verificacao_" + type(exc).__name__], [], None
     if projecao_invalida:
@@ -375,6 +414,7 @@ def verificar_entrega(envelope, contexto, modo="sombra", agora=None):
                  "motivos": motivos, "avisos": avisos, "gerado_em": agora.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
     if tipo == "LEMBRETE" and not motivos:  # GA-4: o hash que o COMANDO `criar_lembrete` deve citar (texto e conjunto de atividades)
         resultado["lembrete_sha256"] = command_idempotency.hash_lembrete(envelope["corpo"], _ids_do_lembrete(envelope.get("estruturado")))
+        resultado["lembrete_atividade_ids"] = _ids_ordenados(envelope.get("estruturado"))  # AC-2: o que o hash cobre, para o vínculo do COMANDO
     return resultado
 
 
