@@ -163,6 +163,13 @@ class FronteirasTest(unittest.TestCase):
         ordem = [fonte.index(t) for t in ("(1) PENDÊNCIAS", "(2) ROADMAP", "(3) FILA")]
         self.assertEqual(ordem, sorted(ordem))
 
+    def test_texto_do_bloqueio_segue_a_regra_de_lote_do_agents(self):
+        fonte = SCRIPT.read_text(encoding="utf-8")
+        compacta = re.sub(r"\"\s*\n\s*\"", "", fonte)
+        for trecho in ("Um lote por vez", "micro tarefas coesas da mesma frente no mesmo PR", "outra frente, o merge vem antes"):
+            self.assertIn(trecho, compacta)
+        self.assertNotIn("Uma tarefa por vez", fonte)  # a regra antiga foi substituída pela de lote (AGENTS.md, 21/11/2026)
+
 
 if __name__ == "__main__":
     unittest.main()
