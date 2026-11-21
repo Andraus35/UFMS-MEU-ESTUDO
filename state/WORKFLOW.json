@@ -2,10 +2,10 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-09",
-    "scope": "governanca_regra_de_merge_por_lote",
+    "task_id": "RM-07",
+    "scope": "lote_rm07_ligacao_do_recibo_de_start_ao_verificador_de_entrega",
     "branch": "ccr-4d19ce2c-towj2v",
-    "pr_number": 145,
+    "pr_number": 146,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #144 integrado em main no merge commit ea623530bff39907b020fe9c727e8a0e9435dcde. Frente única ativa: RM-09 (governanca_regra_de_merge_por_lote), branch ccr-4d19ce2c-towj2v, PR #145. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #145 integrado em main no merge commit 3ec1232ba3ee5c1382bfe3b7bab5a2a9617b44a4. Frente única ativa: RM-07 (lote_rm07_ligacao_do_recibo_de_start_ao_verificador_de_entrega), branch ccr-4d19ce2c-towj2v, PR #146. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-07",
-    "pr_number": 144,
-    "merge_commit_sha": "ea623530bff39907b020fe9c727e8a0e9435dcde"
+    "task_id": "RM-09",
+    "pr_number": 145,
+    "merge_commit_sha": "3ec1232ba3ee5c1382bfe3b7bab5a2a9617b44a4"
   },
   "work_queue": [
     {
@@ -762,6 +762,18 @@
       "roadmap_task": "RM-07",
       "deliverable": "scripts/audit_sample.py",
       "depends_on": [
+        "GE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "RG",
+      "title": "Ligação do recibo de START ao verificador de entrega (S14-R3): o delivery_gate recalcula o recibo esperado no checkout do contrato, no SHA fixado, com o start_receipt; papel sem START definido, SHA ruim ou falha ao calcular deixam o recibo não conferido (fail-closed); sem rede e sem modelo. Mesma frente do RS, do GE e do AE (lote S14); item registrado na decisão do proprietário de 21/11/2026",
+      "roadmap_task": "RM-07",
+      "deliverable": "scripts/delivery_receipt_binding.py",
+      "depends_on": [
+        "RS",
         "GE"
       ],
       "blocking_inputs": [],
