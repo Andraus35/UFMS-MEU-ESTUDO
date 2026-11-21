@@ -53,6 +53,8 @@ class SpecS16Tests(unittest.TestCase):
     def test_pendencias_e_conflitos_para_o_proprietario(self):
         for pid in ("P1", "P2", "P3", "P4", "P5", "C1", "C2", "C3"):
             self.assertRegex(PENDENCIAS, rf"\| {pid} \|", pid)
+        for trecho in ("decidido (21/11/2026): o harness não impõe cronograma", "decidido (21/11/2026): o top 10 por matéria restringe o plano"):
+            self.assertIn(trecho, PENDENCIAS.lower().replace("**", ""), trecho)
         for trecho in ("pai e um subassunto", "denominador", "empate no 10º lugar", "menos de 10 itens", "pendencia_aberta",
                        "não inventa regra"):
             self.assertIn(trecho, (PENDENCIAS + REQUISITOS).lower().replace("**", "").replace("`", ""), trecho)
