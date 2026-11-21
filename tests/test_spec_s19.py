@@ -19,9 +19,9 @@ class SpecS19Tests(unittest.TestCase):
         pos = [DOC.index(s) for s in ("## Objetivo", "## Pesquisa", "## Mapa", "## Requisitos", "## Tarefas derivadas", "## Aceite", "## Limites")]
         self.assertEqual(pos, sorted(pos))
 
-    def test_requisitos_r1_a_r10_cada_um_com_criterio(self):
+    def test_requisitos_r1_a_r11_cada_um_com_criterio(self):
         linhas = [l for l in REQUISITOS.splitlines() if re.match(r"\| S19-R\d+ \|", l)]
-        self.assertEqual([re.match(r"\| (S19-R\d+) ", l).group(1) for l in linhas], [f"S19-R{i}" for i in range(1, 11)])
+        self.assertEqual([re.match(r"\| (S19-R\d+) ", l).group(1) for l in linhas], [f"S19-R{i}" for i in range(1, 12)])
         for l in linhas:
             self.assertGreaterEqual(len([c for c in l.split("|") if c.strip()]), 3)
 
@@ -30,7 +30,7 @@ class SpecS19Tests(unittest.TestCase):
         for nivel in ("**A**", "**B**", "**C**"):
             self.assertIn(nivel, PESQUISA)
         self.assertIn("- **Lacunas:**", PESQUISA)
-        for t in ("pdf da zapia não foi lido", "não achei", "não testei", "nada foi implantado", "hook"):
+        for t in ("pdf da zapia", "não achei", "não testei", "nada foi implantado", "hook"):
             self.assertIn(t, PESQUISA.lower().replace("**", ""), t)
 
     def test_mapa_aponta_para_as_fontes_sem_duplicar(self):
@@ -63,8 +63,14 @@ class SpecS19Tests(unittest.TestCase):
             self.assertIn(t, req(8), t)
         for t in ("s15-r4", "autorrelato"):
             self.assertIn(t, req(9), t)
-        for t in ("não prova", "pdf da zapia não foi lido", "aprovação expressa"):
+        for t in ("não prova", "autorrelato", "aprovação expressa"):
             self.assertIn(t, req(10), t)
+
+    def test_sem_canal_sem_integracao_e_frase_decidida(self):
+        for t in ("não herda", "canal testado", "não presume", "finalizar estudos"):
+            self.assertIn(t, req(11), t)
+        self.assertIn("não é hook", MAPA)
+        self.assertIn("e4ee0018", PESQUISA)
 
     def test_nada_aplicado_e_flag_false(self):
         for perfil in ("TUTOR", "COACH"):
