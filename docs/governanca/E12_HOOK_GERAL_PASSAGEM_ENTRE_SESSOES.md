@@ -1,6 +1,6 @@
 # E12 — Hook geral de passagem entre sessões (`claude_context_guard`)
 
-**Natureza:** registro do item `HOOKG` (pedido do proprietário de 21/11/2026). O código é **ferramenta de usuário**, vale para **todos os projetos** e é instalado por **ele** em `~/.claude`. **Este PR não ativa nada no projeto**: `.claude/settings.json` e `.claude/` (contrato) **não foram alterados**; a ativação no projeto e na nuvem está no fim, como **proposta para a aprovação dele**.
+**Natureza:** registro do item `HOOKG` (pedido do proprietário de 21/11/2026). **E12-A (PR #157, mesclado):** o código é **ferramenta de usuário**, vale para **todos os projetos** e é instalado por **ele** em `~/.claude`. **E12-B (este lote, PR #158):** **ativação no projeto**, para valer também nas sessões na nuvem (que não leem o `~/.claude` dele): alteração de `.claude/settings.json` e criação de `.claude/context-guard.json`, **arquivos de contrato** (`CODEOWNERS`). **Situação de E12-B: proposta aguardando a aprovação expressa do texto e do merge, citando PR e head;** até lá, nada vale na `main`.
 
 ## O que faz (em código, não por pedido ao modelo)
 
@@ -27,17 +27,28 @@ Prompts ficam em `~/.claude/handoffs/<projeto>-<hash>/NEXT_SESSION_PROMPT.md` (h
 - **Provado (testes sintéticos em HOME temporário):** limite exato de 50%, não contar subagente nem `isSidechain`, janela 200k ou 1M, limite configurável, transcript ausente ou corrompido sem quebrar, recusa de prompt sem seção ou curto, bloqueio do `Stop` com teto de 3, fallback só quando houve trabalho, não sobrescrever prompt selado da mesma sessão, isolamento entre projetos, falha aberta, instalador que preserva e remove só o seu. **18 de 18 mutações do código mortas** (as duas que sobreviveram na primeira rodada ganharam teste).
 - **Não provado:** **nenhum teste em Claude Code real**: os testes simulam a entrada dos hooks; o formato exato da entrada de cada evento (por exemplo `source` do `SessionStart` e a injeção de contexto no `PostToolUse`) é o documentado, não observado. O **percentual é estimativa** do `usage` da última chamada (entrada mais cache) com janela de 200k, ou 1M se configurada ou deduzida; não é o número da interface. O **conteúdo** do prompt é redigido pelo modelo: o script exige a forma e confere fatos do git, não a verdade do texto (por isso a sessão nova o lê como "confira o estado real"). **Commit e push não são feitos pelo hook**: a ordem manda fazê-los só se as regras do projeto e do usuário permitirem. **Hooks de usuário não existem em sessões na nuvem.**
 
-## Proposta para a aprovação dele (NÃO aplicada neste PR)
+## E12-B — ativação no projeto (este PR; aguarda a aprovação dele)
 
-Ativar o mesmo hook **no projeto** e na **nuvem** exige adicionar ao `.claude/settings.json` (arquivo de contrato, `CODEOWNERS`) os eventos acima apontando para um caminho versionado (por exemplo `python3 scripts/claude_context_guard.py <Evento>`), com `repo_copy` ligado para o prompt sobreviver à máquina efêmera. Isso exige a **aprovação expressa do texto e do merge**, citando PR e head, e é PR **próprio** (outra frente). Texto proposto, para exemplo:
+**O que muda (somente `.claude/`):**
 
-```json
-{"hooks": {"UserPromptSubmit": [{"hooks": [{"type": "command", "command": "python3 scripts/claude_context_guard.py UserPromptSubmit", "timeout": 30}]}]}}
-```
+| Arquivo | Antes | Depois |
+|---|---|---|
+| `.claude/settings.json` | só dois hooks `Stop` (`perguntas_boas_praticas.py`, `entrega_final.py`) | **preserva os dois** e acrescenta `SessionStart` (`startup\|resume\|clear\|compact`), `UserPromptSubmit`, `PostToolUse`, `Stop`, `PreCompact` e `SessionEnd`, todos com `python3 "$CLAUDE_PROJECT_DIR/scripts/claude_context_guard.py" <Evento>` e `timeout` 30 |
+| `.claude/context-guard.json` (novo) | não existia | `extra_instruction` do projeto: onde registrar o ponto de retomada (`memory/HANDOFF.md`), quais gates rodar, **commit e push só na branch de trabalho e só se o lote foi autorizado; nunca merge, push forçado nem arquivo de contrato sem aprovação expressa**, e o prompt de start abre com `bootstrap.py --mode engineering` e `next_task.py` |
 
-(Repetir para `PostToolUse`, `Stop`, `PreCompact`, `SessionEnd` e `SessionStart` com o `matcher` `startup|resume|clear|compact`.) O repositório já tem hooks `Stop` próprios; a mescla precisa preservá-los.
+**Ajustes no script (mesmo PR, sem mudar o comportamento já testado):** o comando de `seal` aponta para o **próprio caminho do script** (`$HOME/...` se estiver sob o HOME, senão o absoluto), e o script lê `.claude/context-guard.json` do projeto (apenas `threshold`, `window_tokens`, `max_stop_blocks`, `min_prompt_chars` e `extra_instruction`; **`repo_copy` do projeto é ignorado**).
+
+**O que NÃO muda:** nenhuma regra do `AGENTS.md`, `PRODUCT.md`, `agents/`, esquema de comandos, flags de escrita nem os dois hooks `Stop` existentes. Não há regra de permissão nova: o `seal` pode pedir confirmação de execução, a menos que o instalador de usuário (que acrescenta a regra no `~/.claude`) esteja instalado.
+
+**Riscos e limites declarados:**
+- **Três hooks `Stop` no mesmo evento** (perguntas, entrega final e este). Todos podem bloquear o fim do turno; o deste é limitado a 3 bloqueios, o de entrega final tem trava própria. **A combinação não foi testada em Claude Code real.**
+- **Persistência na nuvem:** o prompt selado fica em `~/.claude/handoffs/` **da máquina da sessão**, que na nuvem é efêmera. O que sobrevive é o que for **commitado**: por isso a instrução do projeto manda registrar o essencial no `memory/HANDOFF.md`. **Não há `repo_copy` no projeto** (um arquivo não rastreado sujaria a árvore e faria o hook de entrega final bloquear). Corrige o que o registro E12-A dizia sobre `repo_copy` resolver a máquina efêmera.
+- O hook **mede com atraso de um turno** e o percentual é estimativa; o conteúdo do prompt é do modelo; commit e push não são feitos pelo hook.
+- Se o script faltar ou falhar, o hook falha **aberto** (a sessão segue) e registra em `~/.claude/context-guard/errors.log`.
+
+**Como desfazer:** reverter este PR, ou remover as seis entradas `claude_context_guard` de `.claude/settings.json`.
 
 ## Frases literais do proprietário
 
 - Conferência feita: `Hook conferido: a ordem apareceu aos <limite> e o seal rodou; a sessão nova citou o prompt anterior.` (ou o que **não** funcionou, com o erro de `~/.claude/context-guard/errors.log`, sem dado pessoal).
-- Ativação no projeto: `Aprovo o texto e o merge do PR #<n>, head <sha completo>.`
+- Aprovação da E12-B (altera `.claude/`): `Aprovo o texto e o merge do PR #158, head <sha completo>.`

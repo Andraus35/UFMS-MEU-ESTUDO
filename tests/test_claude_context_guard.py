@@ -232,6 +232,56 @@ class FallbackEPassagemTests(Base):
         self.assertIn("UserPromptSubmit", (self.home / ".claude" / "context-guard" / "errors.log").read_text())
 
 
+class ConfigDoProjetoTests(Base):
+    def projeto_cfg(self, obj):
+        (self.proj / ".claude").mkdir(exist_ok=True)
+        (self.proj / ".claude" / "context-guard.json").write_text(obj if isinstance(obj, str) else json.dumps(obj), encoding="utf-8")
+
+    def texto(self, **kw):
+        o = self.run_hook("UserPromptSubmit", **kw)
+        return o["hookSpecificOutput"]["additionalContext"] if o else None
+
+    def test_limite_do_projeto_vale_para_aquele_projeto(self):
+        self.transcript(60_000)  # 30%
+        self.assertIsNone(self.texto())
+        self.projeto_cfg({"threshold": 0.25})
+        self.assertIn("COMECE AGORA", self.texto())
+
+    def test_instrucao_extra_do_projeto_entra_na_ordem(self):
+        self.transcript(150_000)
+        self.assertNotIn("Instrução específica deste projeto", self.texto())
+        self.projeto_cfg({"extra_instruction": "Atualize memory/HANDOFF.md e rode os gates do projeto."})
+        t = self.texto()
+        self.assertIn("Instrução específica deste projeto: Atualize memory/HANDOFF.md", t)
+
+    def test_projeto_nao_muda_chaves_fora_da_lista(self):
+        self.transcript(150_000)
+        self.projeto_cfg({"repo_copy": ".claude/handoff/X.md", "threshold": 0.9})
+        self.assertIsNone(self.texto())  # threshold do projeto vale (0,9)
+        self.transcript(190_000)
+        self.assertIsNotNone(self.texto())
+        self.assertEqual(self.seal().returncode, 0)
+        self.assertFalse((self.proj / ".claude" / "handoff").exists())  # repo_copy do projeto é ignorado
+
+    def test_config_do_projeto_invalida_e_ignorada(self):
+        self.transcript(150_000)
+        self.projeto_cfg("{quebrado")
+        self.assertIn("COMECE AGORA", self.texto())
+
+    def test_comando_de_selo_aponta_para_este_script(self):
+        self.transcript(150_000)
+        self.assertIn(f'python3 "{SCRIPT.resolve()}" seal --session s1', self.texto())
+
+    def test_comando_de_selo_usa_home_quando_o_script_esta_sob_o_home(self):
+        subprocess.run([sys.executable, str(INSTALL), "--home", str(self.home)], check=True, capture_output=True)
+        instalado = self.home / ".claude" / "hooks" / "claude_context_guard.py"
+        self.transcript(150_000)
+        r = subprocess.run([sys.executable, str(instalado), "UserPromptSubmit"], capture_output=True, text=True, env=self.env,
+                           input=json.dumps({"session_id": "s1", "cwd": str(self.proj), "transcript_path": str(self.tr)}))
+        self.assertIn('python3 "$HOME/.claude/hooks/claude_context_guard.py" seal --session s1',
+                      json.loads(r.stdout)["hookSpecificOutput"]["additionalContext"])
+
+
 class InstaladorTests(Base):
     def run_install(self, *a):
         return subprocess.run([sys.executable, str(INSTALL), *a, "--home", str(self.home)], capture_output=True, text=True)

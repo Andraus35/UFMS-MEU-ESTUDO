@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #156; SHA cfffafe0dba84e1004df937a817bf8ec9ace17b4
-- Frente ativa: **RM-00 / PR #157**; branch `claude/ufms-meu-estudo-lote-b-2mcohs`; base main; fase review.
+- Último merge comprovado: PR #157; SHA c9802d6a6d3ed16fe0a4801151642ab4c2514198
+- Frente ativa: **RM-00 / PR #158**; branch `claude/ufms-meu-estudo-lote-b-2mcohs`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -19,7 +19,9 @@
 
 **RETOMADA DA PRÓXIMA SESSÃO (fim da sessão de 21/11/2026; ler isto primeiro):**
 
-**Estado (21/11/2026, atualizado após o merge do #156).** `main` em `cfffafe` (PR #156 mesclado por "Mesclar" do proprietário, squash, head `07fe92d` com os dois `validate` verdes; lote C = roteiros P9, PJ, CM e 523). **PR #157 aberto (draft), lote `HOOKG` = hook geral de passagem entre sessões (RM-00; pedido dele "Quero Hook agora", que passou na frente do S18 e do S19):** `scripts/claude_context_guard.py`, `scripts/claude_context_guard_install.py`, `tests/test_claude_context_guard.py` (26), `tests/test_e12_hook_geral.py` (7) e `docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md`. É ferramenta de **usuário** (`~/.claude`), instalada por ele; **não ativa nada no projeto** (`.claude/settings.json` intocado; a ativação no projeto e na nuvem é PR próprio, contrato, com aprovação expressa). **Não testado em Claude Code real:** ele confere com `CONTEXT_GUARD_THRESHOLD=0.01` e relata. Depois do #157: S18 (IMC do Coach) e S19 (Zapia como interface). Merge só por pedido dele, citando PR e head, ou "Mesclar" com um só PR aberto.
+**Estado (21/11/2026, atualizado após o merge do #157).** `main` em `c9802d6` (PR #157 mesclado por "Mesclar" do proprietário, head `b18ad3e` com os dois `validate` verdes: hook geral `claude_context_guard` como ferramenta de usuário, registro E12-A). **PR #158 aberto (draft), lote E12-B = ativação do hook no projeto (RM-00; pedido dele "Sim, abra o PR de ativação"):** `.claude/settings.json` (preserva os dois hooks `Stop` e acrescenta seis entradas do hook), `.claude/context-guard.json` (instrução do projeto) e ajustes no script (caminho do `seal` e config do projeto); **arquivos de contrato: exige a aprovação expressa do texto e do merge, citando PR e head** (frase em `docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md`). **Prova real parcial:** o hook JÁ disparou nesta sessão aos 57% (a `.claude/settings.json` alterada foi lida); não foi testado o `Stop` bloqueando nem a sessão nova recebendo o prompt. Pendência dele: instalar o hook de usuário no celular **não é recomendado** (sessão na nuvem; Termux com hooks é relato não confirmado). Depois do #158: S18 (IMC do Coach, ele reenvia IMC-COACH-001, PDF da Zapia e o manual) e S19. Recibo do #157 já está no estado.
+
+**Respostas do proprietário (21/11/2026, fim da rodada do E12-B; não reabrir):** (1) conferir o CI do head do #158 e **aguardar a aprovação expressa dele** (`Aprovo o texto e o merge do PR #158, head <sha completo>`; contrato, o atalho "Mesclar" não basta); (2) nada mudou nos atos dele: P9 antes da PJ; (3) S18: ele **anexa na abertura do lote, depois do merge do #158** (IMC-COACH-001, PDF da Zapia e Manual do Imparável).
 
 **Respostas do proprietário (21/11/2026, fim da rodada do lote C; não reabrir):** (1) conferir o CI do #156 e aguardar o "Mesclar #156" dele; (2) **P9 primeiro, depois pedir a PJ** (meta até 04/12/2026); (3) **Manual do Imparável:** no público só índice, página e citação curta (com fonte, edição e hash); texto integral só no repositório privado. Próximo lote depois do #156: S18 (ele reenvia o IMC-COACH-001 e anexa o manual) e depois S19.
 
