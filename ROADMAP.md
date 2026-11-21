@@ -116,6 +116,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
 
+**RM-08 — reavaliação de 21/11/2026:** `docs/governanca/RM08_REAVALIACAO_20261121.md` reavalia os bloqueadores no HEAD vigente, lista os insumos que faltam do proprietário e **mantém RM-08 `bloqueado`**; não homologa GP-3, GQ-D, GQ-C, GQ-O nem GP-4.
+
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
 **Auditoria RM-01 (05/11/2026; atualizada em 07/11/2026):** workflow agendado e contrato read-only verificados. Em 05/11 nenhum run `event=schedule` existia; em 07/11 foram observados dois (`42279755785` e `42397876811`, ambos `success`, `no_change_observed_on_single_page`), o que verifica o **agendamento**. SHA dos bytes remotos FAPEC/UFMS permanece ausente, equivalência `unverified`, cobertura de uma página e `ALERTA-DOC-01` aberto. Ver `docs/governanca/RM01_AUDITORIA_FONTES_MONITORAMENTO_20261105.md`. RM-01 continua `implementado_nao_homologado` até evidência documental remota verificável.
