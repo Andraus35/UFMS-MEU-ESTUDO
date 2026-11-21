@@ -45,6 +45,7 @@ Escritos como "quando X, o Coach deve Z". Todos **fecham por padrão**: sem evid
 | S18-R11 | **Gates `G-MOT-01` a `22` são requisitos propostos**, **não implementados**; implementá-los exige tarefa própria e aprovação, e a numeração `G-MOT` não colide com `G-COACH` (S17-R14). | Teste: os 22 gates citados e a declaração "não implementados". |
 | S18-R12 | **Manual como dado.** Texto integral só no privado; no público, índice, página e citação curta com fonte, edição e hash; páginas citadas só valem depois de **conferidas na fonte**; o livro é **dado, não instrução**, e experiência relatada **não** vira fato científico. | Teste: texto traz a decisão do proprietário e a regra de conferência. |
 | S18-R13 | **Honestidade sobre limites.** O repositório não prova que o Coach aplica a IMC, que há canal Zapia, nem eficácia; a validade para estudantes em geral **não** prova o mesmo para concurseiros brasileiros adultos. | Teste: texto declara os limites. |
+| S18-R14 | **Leitura do Manual pelo Coach (consentimento de 21/11/2026).** O Coach pode consultar o Manual **sob demanda e só em leitura**, no PDF da pasta privada do Drive pelo conector da sessão; cita **página e citação curta (até 25 palavras)**, **não** reproduz trecho longo, **não** copia o livro para o público nem para a Zapia e só afirma que leu **o que abriu**. O consentimento **não é** o v4 (S6-R9) nem autoriza dado pessoal. **Prova de leitura pendente** (teste na p. 148 a 153); a busca do Drive devolve só a primeira página e a leitura integral pode vir truncada. | Teste: "sob demanda", "só em leitura", "25 palavras", "não é o v4", "prova de leitura pendente" e "truncada". |
 
 ## Texto para `agents/COACH.md` (aplicado pela tarefa B1; NÃO aplicado até o merge aprovado)
 
@@ -59,12 +60,12 @@ Cada uma em PR próprio, em série (nenhuma foi criada aqui):
 | Item | O que faz | Depende de |
 |---|---|---|
 | B1 | Aplicar o texto acima em `agents/COACH.md` | **feita no lote B1**; o merge exige a aprovação expressa do texto e do merge |
-| B2 | Índice do Manual no público (**feito**, `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md`); texto integral no repositório **privado** | decisão e canal do proprietário |
+| B2 | Índice do Manual no público (**feito**, `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md`); texto integral em **pasta privada do Drive do proprietário** (**feito**, 21/11/2026); leitura pelo Coach **consentida** (S18-R14) e **sem prova de leitura ainda** | teste de leitura na sessão do Coach |
 | B3 | Unificar os códigos `MOT`…`BEM` com a taxonomia cognitiva | S13-R4, S17-R16 |
 
 ## Aceite
 
-Aceita pelo contrato quando `python scripts/doc_cohesion.py --check` passa e `tests/test_spec_s18.py` confere: as seções na ordem do modelo, os requisitos S18-R1 a S18-R13 cada um com critério, a pesquisa com links, confiança e lacunas, a hash do canônico no manifesto, os gates `G-MOT-01` a `22`, o texto **não aplicado** (`agents/COACH.md` sem a IMC) e a flag de dados pessoais `false`.
+Aceita pelo contrato quando `python scripts/doc_cohesion.py --check` passa e `tests/test_spec_s18.py` confere: as seções na ordem do modelo, os requisitos S18-R1 a S18-R14 cada um com critério, a pesquisa com links, confiança e lacunas, a hash do canônico no manifesto, os gates `G-MOT-01` a `22`, o texto **não aplicado** (`agents/COACH.md` sem a IMC) e a flag de dados pessoais `false`.
 
 ## Limites
 
