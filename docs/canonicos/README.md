@@ -18,6 +18,7 @@
 | `BASE-COGNITIVA-TUTOR-COACH-001` | `docs/canonicos/cognicao/BASE_COGNITIVA_INTEGRADA_TUTOR_COACH.md` | Base cognitiva compartilhada, matriz de responsabilidades e contrato de passagem |
 | `BASE-COGNITIVA-HARNESS-001` | `docs/canonicos/cognicao/BASE_COGNITIVA_ESTRATEGICA_DO_HARNESS.md` | Arquitetura Tutor, Coach e Orquestrador; assistência H0 a H5; gates; estados de domínio; piloto |
 | `BASE-COGNITIVA-COACH-001` | `docs/canonicos/cognicao/BASE_COGNITIVA_ESTRATEGICA_DO_COACH_DE_PROVA.md` | Base cognitiva do Coach de Prova: recuperação como diagnóstico, gates G-COACH, matriz de diagnóstico, simulação e estabilidade; subordinada à inteligência adversarial |
+| `IMC-COACH-001` | `docs/canonicos/cognicao/INTELIGENCIA_MOTIVACIONAL_COMPORTAMENTAL_DO_COACH.md` | IMC do Coach: diagnóstico comportamental, intervenções IMC-01 a 22, ciclos, métricas N-of-1, contratos e gates G-MOT; **proposta**, não escala validada; subordinada à inteligência adversarial |
 | `AUDITORIA-GEMINI-NOTEBOOK-20261116` | `docs/canonicos/plataformas/AUDITORIA_GEMINI_NOTEBOOK_PLANO_DE_ESTUDOS_20261116.pdf` | Auditoria prática do Gemini Notebook (PDF, autor Zapia) |
 | `AUDITORIA-TEC-523-324-20261116` | `docs/canonicos/plataformas/AUDITORIA_TECCONCURSOS_UFMS_523_324_20261116_EDITADA.md` | Auditoria funcional do TEC Concursos (**versão editada**) |
 

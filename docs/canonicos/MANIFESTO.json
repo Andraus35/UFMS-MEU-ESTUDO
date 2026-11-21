@@ -54,6 +54,16 @@
       "sha256_do_envio_original": "eef4effc3f4aca7bf7e90cdf8e7f6e0ab91b895603fa78b55999dc4c61f4677b"
     },
     {
+      "id": "IMC-COACH-001",
+      "path": "docs/canonicos/cognicao/INTELIGENCIA_MOTIVACIONAL_COMPORTAMENTAL_DO_COACH.md",
+      "papel": "Inteligência Motivacional e Comportamental (IMC) do Coach de Prova: análise crítica do Manual do Imparável, diagnóstico por comportamento, biblioteca de intervenções, ciclos, métricas N-of-1, contratos e gates G-MOT (PROPOSTA, não escala validada)",
+      "hierarquia": "complementar e subordinado à inteligência adversarial; capacidade interna do Coach, não um quarto agente",
+      "envio": "fe603d5d-INTELIGENCIA_MOTIVACIONAL_COMPORTAMENTAL_DO_COACH.md (entrada de 21/11/2026)",
+      "editado": false,
+      "sha256": "0dc4f37ec04b73d58078bf7ec8a6aee8a99d55e8c1f1589897a2c0afd39d738c",
+      "sha256_do_envio_original": "0dc4f37ec04b73d58078bf7ec8a6aee8a99d55e8c1f1589897a2c0afd39d738c"
+    },
+    {
       "id": "AUDITORIA-GEMINI-NOTEBOOK-20261116",
       "path": "docs/canonicos/plataformas/AUDITORIA_GEMINI_NOTEBOOK_PLANO_DE_ESTUDOS_20261116.pdf",
       "papel": "Auditoria prática do Gemini Notebook para estudo e revisão (autor do PDF: Zapia)",
