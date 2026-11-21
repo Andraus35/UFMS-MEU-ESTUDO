@@ -4,10 +4,10 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #149; SHA 2f908c4d781c9a92c2c86ea7f0412383fae0cb93
-- Frente ativa: **RM-08 / PR #150**; branch `ccr-d0f3862d-toas04`; base main; fase review.
+- Último merge comprovado: PR #150; SHA 515214da3f63b69e916fe2f97460a54f19d57f76
+- Frente ativa: **RM-09 / PR #151**; branch `ccr-d0f3862d-toas04`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
-- **Próxima tarefa: RM-09**; a entrega formal RM-08 está em reavaliação no lote ativo e continua bloqueada até os gates precedentes serem avaliados.
+- **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
@@ -107,6 +107,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 **RM-09 — L1 (S9):** `scripts/platform_read_guard.py` é a guarda **offline** da leitura direta das plataformas (lista fechada, somente leitura, taxa, bloqueio, saída mínima), testada com páginas sintéticas e mutações; **fecha por padrão e não lê conta alguma**. **RM-09 permanece `planejado`.**
 
 **RM-09 — S15:** `docs/especificacoes/S15_ORQUESTRACAO_FLUXO_ROTINA_TEMPO.md` unifica o fluxo e a rotina dos agentes com a Zapia e o estudante e define, **como proposta**, a fonte de verdade do tempo (relógio injetado em UTC, fuso `America/Campo_Grande`, dia de estudo, idade máxima da projeção e quem acorda Tutor e Coach); **nada foi implantado, agendado ou testado**; rotina diária só com `AUTORIZO`, flags de escrita `false`, piloto depende de PJ e P9; **RM-09 permanece `planejado`**.
+
+**RM-09 — S16:** `docs/especificacoes/S16_ROTINA_ESTUDO_TOP10_UFMS_2027.md` traduz os requisitos do proprietário de 21/11/2026 (cargos 324 e 523, hierarquia do TEC, top 10 por matéria pelos percentuais do guia, entrega diária, comandos de início e encerramento, Notebook, lacunas) em requisitos S16-R1 a R16, separa intenção, especificado, implementado, testado e bloqueado, e registra as regras P1 a P8 (decididas pelo proprietário a partir das duas amostras de 21/11/2026, não versionadas) e o conflito C3 **para decisão do proprietário** (C1 e C2 também decididos). **Não lista o top 10, não cria comando e não implanta**; RM-09 permanece `planejado`.
 
 **RM-09 — S10:** `docs/especificacoes/S10_NOTEBOOK_TUTOR.md` especifica o Notebook como ferramenta do Tutor (ponte pela Zapia, rascunho verificado por citação aberta, falha que fecha o efeito); **nada foi testado no Notebook** e **RM-09 permanece `planejado`**.
 
