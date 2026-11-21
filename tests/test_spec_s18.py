@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOC = (ROOT / "docs" / "especificacoes" / "S18_INTELIGENCIA_MOTIVACIONAL_COACH.md").read_text(encoding="utf-8")
 PESQUISA = DOC.split("## Pesquisa", 1)[1].split("## O Manual do Imparável", 1)[0]
 MANUAL = DOC.split("## O Manual do Imparável", 1)[1].split("## Requisitos", 1)[0]
-REQUISITOS = DOC.split("## Requisitos", 1)[1].split("## Texto proposto", 1)[0]
+REQUISITOS = DOC.split("## Requisitos", 1)[1].split("## Texto para `agents/COACH.md`", 1)[0]
 
 
 def req(n):
@@ -18,7 +18,7 @@ def req(n):
 
 class SpecS18Tests(unittest.TestCase):
     def test_secoes_na_ordem(self):
-        pos = [DOC.index(s) for s in ("## Objetivo", "## Pesquisa", "## O Manual do Imparável", "## Requisitos", "## Texto proposto", "## Tarefas derivadas", "## Aceite", "## Limites")]
+        pos = [DOC.index(s) for s in ("## Objetivo", "## Pesquisa", "## O Manual do Imparável", "## Requisitos", "## Texto para `agents/COACH.md`", "## Tarefas derivadas", "## Aceite", "## Limites")]
         self.assertEqual(pos, sorted(pos))
 
     def test_requisitos_r1_a_r13_cada_um_com_criterio(self):
@@ -80,11 +80,14 @@ class SpecS18Tests(unittest.TestCase):
         self.assertIn("não está neste repositório público", idx)
         self.assertFalse(list(ROOT.rglob("Manual-do-imparavel*.pdf")))
 
-    def test_texto_nao_aplicado_e_flag_false(self):
+    def test_texto_aplicado_pela_b1_e_flag_false(self):
         self.assertIn("NÃO aplicado", DOC)
         coach = (ROOT / "agents/COACH.md").read_text(encoding="utf-8")
-        self.assertNotIn("IMC-COACH-001", coach)
-        self.assertNotIn("Aplicar a IMC", coach)
+        self.assertIn("Aplicar a IMC, capacidade interna do Coach", coach)  # aplicado pela B1
+        self.assertIn("INTELIGENCIA_MOTIVACIONAL_COMPORTAMENTAL_DO_COACH.md", coach)
+        self.assertIn("MANUAL_DO_IMPARAVEL_INDICE.md", coach)
+        self.assertIn("nunca vai ao repositório público", coach)
+        self.assertNotIn("IMC-COACH-001", (ROOT / "agents/TUTOR.md").read_text(encoding="utf-8"))
         self.assertRegex((ROOT / "settings.json").read_text(encoding="utf-8"), r'"personal_results_writes_enabled":\s*false')
         self.assertIsNone(re.search(r"[\w.+-]+@[\w-]+\.[\w.]+", DOC))
         self.assertIn("| S18 |", (ROOT / "docs/especificacoes/README.md").read_text(encoding="utf-8"))

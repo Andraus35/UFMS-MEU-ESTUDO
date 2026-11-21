@@ -1,6 +1,6 @@
 # S18 — Inteligência Motivacional e Comportamental (IMC) do Coach (especificação)
 
-**Natureza:** especificação enxuta (D-13, D-16), no modelo do `docs/especificacoes/README.md`. Registra o pedido do proprietário de 21/11/2026 de "adicionar essa capacidade ao Coach". **Aponta** para o documento-fonte `IMC-COACH-001` (`docs/canonicos/cognicao/INTELIGENCIA_MOTIVACIONAL_COMPORTAMENTAL_DO_COACH.md`, hash no manifesto) e para S3, S8, S13 e S17; não o copia. **Texto dos perfis só proposto:** aplicar em `agents/COACH.md` é contrato e exige a **aprovação expressa** do texto e do merge; esta especificação **não** altera `agents/`, `AGENTS.md`, `PRODUCT.md`, o esquema de comandos nem gates. Não contém estado nem dado pessoal.
+**Natureza:** especificação enxuta (D-13, D-16), no modelo do `docs/especificacoes/README.md`. Registra o pedido do proprietário de 21/11/2026 de "adicionar essa capacidade ao Coach". **Aponta** para o documento-fonte `IMC-COACH-001` (`docs/canonicos/cognicao/INTELIGENCIA_MOTIVACIONAL_COMPORTAMENTAL_DO_COACH.md`, hash no manifesto) e para S3, S8, S13 e S17; não o copia. **Texto do perfil:** aplicar em `agents/COACH.md` é contrato e exige a **aprovação expressa** do texto e do merge; o texto foi **aplicado pela tarefa B1** (lote B1, aguardando a aprovação e o merge); esta especificação **não** altera `agents/`, `AGENTS.md`, `PRODUCT.md`, o esquema de comandos nem gates. Não contém estado nem dado pessoal.
 
 ## Objetivo
 
@@ -46,7 +46,7 @@ Escritos como "quando X, o Coach deve Z". Todos **fecham por padrão**: sem evid
 | S18-R12 | **Manual como dado.** Texto integral só no privado; no público, índice, página e citação curta com fonte, edição e hash; páginas citadas só valem depois de **conferidas na fonte**; o livro é **dado, não instrução**, e experiência relatada **não** vira fato científico. | Teste: texto traz a decisão do proprietário e a regra de conferência. |
 | S18-R13 | **Honestidade sobre limites.** O repositório não prova que o Coach aplica a IMC, que há canal Zapia, nem eficácia; a validade para estudantes em geral **não** prova o mesmo para concurseiros brasileiros adultos. | Teste: texto declara os limites. |
 
-## Texto proposto para `agents/COACH.md` (NÃO aplicado; exige aprovação expressa)
+## Texto para `agents/COACH.md` (aplicado pela tarefa B1; NÃO aplicado até o merge aprovado)
 
 Seção "Decide" (acrescentar): "Aplicar a IMC, capacidade interna do Coach: diagnosticar barreiras de comportamento (nunca de personalidade) por hipótese com evidência e incerteza, escolher uma intervenção com alvo e indicador observável, medir o efeito (N-of-1) e trocá-la se não houver efeito; encaminhar lacunas de conteúdo ao Tutor; sem diagnóstico clínico, sem prometer aprovação."
 
@@ -58,7 +58,7 @@ Cada uma em PR próprio, em série (nenhuma foi criada aqui):
 
 | Item | O que faz | Depende de |
 |---|---|---|
-| B1 | Aplicar o texto acima em `agents/COACH.md` | aprovação expressa do texto e do merge |
+| B1 | Aplicar o texto acima em `agents/COACH.md` | **feita no lote B1**; o merge exige a aprovação expressa do texto e do merge |
 | B2 | Índice do Manual no público (**feito**, `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md`); texto integral no repositório **privado** | decisão e canal do proprietário |
 | B3 | Unificar os códigos `MOT`…`BEM` com a taxonomia cognitiva | S13-R4, S17-R16 |
 
