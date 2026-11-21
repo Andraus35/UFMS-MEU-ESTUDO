@@ -25,7 +25,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
         self.assertEqual(fila["proximo"]["id"], "S18")  # liberado, a abrir só depois do merge do lote B (S16 T1 a T3); S19 vem depois dele; antes: # RS, AE, AM, RG, HOOK4, S15, S16, S17 e a proposta E3 têm a entrega (21/11/2026): o que resta espera o proprietário (PJ, RT, CM)
-        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "S18", "S19"]  # HOOKG tem a entrega (E12, 21/11/2026))
+        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "S18", "S19"])  # HOOKG tem a entrega (E12, 21/11/2026)
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["PJ"])
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
