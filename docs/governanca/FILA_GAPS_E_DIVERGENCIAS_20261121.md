@@ -45,8 +45,8 @@
 
 | ID | Gap | Gravidade | Onde | Correção proposta | Origem |
 |---|---|---|---|---|---|
-| GE-1 | O Coach **não leu** as p. 148 a 153 (conector do Drive truncou; só ficha e sumário): S18-R14 **não é cumprível** com o PDF único | **Alta** (para a S18-R14) | S18-R14, índice do Manual | Derivado **paginado** na pasta privada (decisão do proprietário) e teste de leitura | Coach |
-| GE-2 | Os gates `G-MOT-01` a `22` são **todos não implementados** (14 aplicados só por conduta) | Média | S18-R11 | Implementar os verificáveis, em tarefa própria e com aprovação | Coach |
+| GE-1 | **[PARCIAL no GAP-E: `scripts/manual_pages.py` (manifesto por página, prova de leitura por hash, citação de até 25 palavras, suspeita de truncamento), só com dados sintéticos; PENDENTE DO PROPRIETÁRIO: gerar o derivado paginado e o manifesto reais no ambiente privado e provar a leitura das p. 148 a 153]** O Coach **não leu** as p. 148 a 153 (conector do Drive truncou; só ficha e sumário): S18-R14 **não é cumprível** com o PDF único | **Alta** (para a S18-R14) | S18-R14, índice do Manual | Derivado **paginado** na pasta privada (decisão do proprietário) e teste de leitura | Coach |
+| GE-2 | **[feito no que é verificável no GAP-E: `scripts/gates_mot.py` (10 estruturais, 10 lexicais heurísticos, G-MOT-20 e 22 declarados não gateáveis); texto do perfil só PROPOSTO em `docs/governanca/E14_GATES_MOT_E_MANUAL_PAGINADO_20261121.md`, aplicar em `agents/COACH.md` exige sua aprovação]** Os gates `G-MOT-01` a `22` são **todos não implementados** (14 aplicados só por conduta) | Média | S18-R11 | Implementar os verificáveis, em tarefa própria e com aprovação | Coach |
 
 ## HOOKR — Hook de passagem desarma abaixo do limite (entrega: `scripts/context_guard_state.py`)
 
