@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #165; SHA 5774a84d20a0f915eb63ffaaa12514d386592de9
-- Frente ativa: **RM-00 / PR #166**; branch `claude/hookr-desarma-abaixo-do-limite`; base main; fase review.
+- Último merge comprovado: PR #166; SHA 0d227162a67e40ca60593b61670235592c21059d
+- Frente ativa: **RM-09 / PR #167**; branch `claude/gap-a-comandos-e-entrega`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
