@@ -28,10 +28,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import command_params_schema
     import ed25519_pure
     from agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 except ModuleNotFoundError:  # pragma: no cover - uso como pacote
-    from scripts import ed25519_pure
+    from scripts import command_params_schema, ed25519_pure
     from scripts.agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -187,7 +188,7 @@ def _deny(code, detail=""):
     return {"decision": DENIED, "code": code, "detail": detail}
 
 
-def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict | None = None) -> dict:
+def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict | None = None, flags: dict | None = None) -> dict:
     """Valida um comando. Nunca levanta exceção para entrada ruim; nada é registrado em recusa."""
     schema = schema or load_schema()
     limits = schema["limits"]
@@ -229,6 +230,11 @@ def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict
     if not isinstance(params, dict):
         return _deny("PARAMS_NAO_OBJETO")
     reason = _scan_params(params, schema)
+    if reason:
+        return _deny(reason)
+    if command_params_schema.registro_pessoal_bloqueado(operation, flags):  # GA-1: resultado pessoal só com a flag verdadeira (fail-closed)
+        return _deny("REGISTRO_PESSOAL_BLOQUEADO_PELA_FLAG")
+    reason = command_params_schema.validar_params(operation, params)  # GA-1: esquema fechado de params por operação
     if reason:
         return _deny(reason)
     body_hash = params_hash({"operation": operation, "destination": command["destination"], "params": params})

@@ -30,8 +30,10 @@ def make(origin="tutor", operation="enviar_mensagem", destination=None, params=N
     return command
 
 
-def run(command, ledger=None, now=NOW):
-    return ac.validate_command(command, keys=KEYS, now=now, ledger=ledger or ac.CommandLedger(), schema=SCHEMA)
+def run(command, ledger=None, now=NOW, flags=None):
+    # flags permissivas por padrão: estes testes verificam OUTRAS regras; o bloqueio de registro pessoal tem testes próprios (GAP-A)
+    flags = {"personal_results_writes_enabled": True} if flags is None else flags
+    return ac.validate_command(command, keys=KEYS, now=now, ledger=ledger or ac.CommandLedger(), schema=SCHEMA, flags=flags)
 
 
 class CommandSchemaTests(unittest.TestCase):
@@ -68,7 +70,7 @@ class CommandSchemaTests(unittest.TestCase):
     def test_operacoes_compartilhadas_servem_aos_dois(self):
         for op in SHARED:
             for origin in ("tutor", "coach"):
-                self.assertEqual(run(make(origin, op, params={"a": "b"}))["decision"], ac.ACCEPTED, (origin, op))
+                self.assertEqual(run(make(origin, op, params={"texto": "x"} if op == "enviar_mensagem" else {"a": "b"}))["decision"], ac.ACCEPTED, (origin, op))
 
     def test_destino_nao_designado(self):
         self.assertEqual(run(make(destination="qualquer_pessoa"))["code"], "DESTINO_NAO_DESIGNADO")

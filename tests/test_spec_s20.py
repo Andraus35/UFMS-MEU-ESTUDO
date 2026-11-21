@@ -79,11 +79,14 @@ class SpecS20Tests(unittest.TestCase):
         lotes = ["GAP-A", "GAP-B", "GAP-C", "GAP-D", "GAP-E"]
         self.assertEqual(FILA["HOOKR"]["depends_on"], ["S20"])  # correção do hook entra logo depois do S20
         self.assertEqual(FILA["GAP-A"]["depends_on"], ["HOOKR"])
-        for ant, atual in zip(lotes, lotes[1:]):
+        self.assertEqual(FILA["GAP-A2"]["depends_on"], ["GAP-A"])  # continuação do GAP-A (GA-3 a GA-5)
+        self.assertEqual(FILA["GAP-B"]["depends_on"], ["GAP-A2"])
+        for ant, atual in zip(lotes[1:], lotes[2:]):
             self.assertEqual(FILA[atual]["depends_on"], [ant])
         for l in lotes:
             self.assertRegex(FILA[l]["deliverable"], r"^scripts/[a-z_]+\.py$")
-            self.assertFalse((ROOT / FILA[l]["deliverable"]).exists(), l)  # ainda não feitos: viram pendentes
+            if l != "GAP-A":  # GAP-A tem a entrega (command_params_schema.py, 21/11/2026); os demais ainda são pendentes
+                self.assertFalse((ROOT / FILA[l]["deliverable"]).exists(), l)
             self.assertIn(FILA[l]["deliverable"], GAPS)
         for gid in ("GA-1", "GA-2", "GB-1", "GC-1", "GD-1", "GE-1", "G-1", "G-6"):
             self.assertIn(f"| {gid} |", GAPS)

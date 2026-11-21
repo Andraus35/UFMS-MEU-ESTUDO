@@ -2,10 +2,10 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-00",
-    "scope": "lote_hookr_hook_de_passagem_desarma_abaixo_do_limite",
-    "branch": "claude/hookr-desarma-abaixo-do-limite",
-    "pr_number": 166,
+    "task_id": "RM-09",
+    "scope": "lote_gap_a_comandos_e_entrega_ga1_ga2",
+    "branch": "claude/gap-a-comandos-e-entrega",
+    "pr_number": 167,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #165 integrado em main no merge commit 5774a84d20a0f915eb63ffaaa12514d386592de9. Frente única ativa: RM-00 (lote_hookr_hook_de_passagem_desarma_abaixo_do_limite), branch claude/hookr-desarma-abaixo-do-limite, PR #166. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #166 integrado em main no merge commit 0d227162a67e40ca60593b61670235592c21059d. Frente única ativa: RM-09 (lote_gap_a_comandos_e_entrega_ga1_ga2), branch claude/gap-a-comandos-e-entrega, PR #167. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-09",
-    "pr_number": 165,
-    "merge_commit_sha": "5774a84d20a0f915eb63ffaaa12514d386592de9"
+    "task_id": "RM-00",
+    "pr_number": 166,
+    "merge_commit_sha": "0d227162a67e40ca60593b61670235592c21059d"
   },
   "work_queue": [
     {
@@ -943,12 +943,23 @@
       "optional_inputs": []
     },
     {
+      "id": "GAP-A2",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md), continuação do GAP-A: GA-3 a GA-5 (hash do prompt obrigatório no validador, LEMBRETE com várias atividades e vínculo com o COMANDO, formato único da chave de idempotência S8-R1 x S15-R6 e janelas) e o fechamento do esquema de params das operações que ficaram sem esquema (ler_arquivo_repositorio, criar_lembrete, consultar_agenda_minima, registrar_plano); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/command_idempotency.py",
+      "depends_on": [
+        "GAP-A"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "GAP-B",
       "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GB-1 e GB-2: classificação do dia (S15-R16) como função pura e gerado_em como instante UTC",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/day_classifier.py",
       "depends_on": [
-        "GAP-A"
+        "GAP-A2"
       ],
       "blocking_inputs": [],
       "optional_inputs": []
