@@ -1,0 +1,8 @@
+{
+  "norma": "Lei 8.112/1990",
+  "status": "texto_oficial_pendente",
+  "fonte_oficial": "https://www.planalto.gov.br/ccivil_03/leis/l8112cons.htm",
+  "nota": "GD-4. Âncoras por artigo e página do texto OFICIAL, só o necessário, cada uma com SHA-256 do trecho. Nenhum texto foi inserido: o acesso a planalto.gov.br estava bloqueado na sessão que abriu este arquivo e texto de memória não é fonte. O proprietário fornece o trecho oficial (ou libera o acesso) e as âncoras entram em PR próprio. Enquanto a lista estiver vazia, a conferência da S10-R7 contra o repositório RECUSA (ANCORA_AUSENTE) e a conferência segue externa.",
+  "campos_da_ancora": ["norma", "artigo", "pagina", "fonte", "texto", "sha256"],
+  "ancoras": []
+}

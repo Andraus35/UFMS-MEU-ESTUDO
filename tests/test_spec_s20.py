@@ -85,7 +85,7 @@ class SpecS20Tests(unittest.TestCase):
             self.assertEqual(FILA[atual]["depends_on"], [ant])
         for l in lotes:
             self.assertRegex(FILA[l]["deliverable"], r"^scripts/[a-z_]+\.py$")
-            if l not in ("GAP-A", "GAP-A2", "GAP-B", "GAP-C"):  # GAP-A a GAP-C têm a entrega (21/11/2026); os demais ainda são pendentes
+            if l not in ("GAP-A", "GAP-A2", "GAP-B", "GAP-C", "GAP-D"):  # GAP-A a GAP-D têm a entrega (21/11/2026); os demais ainda são pendentes
                 self.assertFalse((ROOT / FILA[l]["deliverable"]).exists(), l)
             self.assertIn(FILA[l]["deliverable"], GAPS)
         for gid in ("GA-1", "GA-2", "GB-1", "GC-1", "GD-1", "GE-1", "G-1", "G-6"):

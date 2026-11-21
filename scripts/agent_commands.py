@@ -129,6 +129,23 @@ def scan_text(text: str, *, html: bool = False):
     return None
 
 
+_ENUNCIADO_IMPERATIVO = re.compile(
+    r"\b(?:julgue|assinale|marque|indique)\s+(?:o|a|os|as)?\s*(?:\w+\s+){0,2}?(?:item|itens|alternativa|alternativas|afirmativa|assertiva|op[cç][aã]o)\b"
+    r"(?:\s+(?:a\s+seguir|seguinte|correta|incorreta|certa|errada|verdadeira|falsa))", re.I)
+_ALTERNATIVAS_PARENTESES = re.compile(r"(?:^|[\s;])\(\s*[A-Ea-e]\s*\)\s*\S")
+_GABARITO = re.compile(r"\bgabarito\s*:", re.I)
+_ASSERTIVA_INCORRETA = re.compile(r"\b(?:marque|assinale|indique)\s+(?:a|o)\s+(?:assertiva|afirmativa|alternativa|op[cç][aã]o)\s+(?:correta|incorreta|certa|errada)\b", re.I)
+
+
+def texto_de_questao(texto) -> bool:
+    """GD-3: heurística de TEXTO DE QUESTÃO em prosa curta (comando de prova, alternativas entre parênteses, "Gabarito:"). Orientação comum
+    ("releia o enunciado", "revise as alternativas") não casa. É heurística: reduz, não elimina; não prova ausência de questão."""
+    if not isinstance(texto, str):
+        return False
+    return bool(_ENUNCIADO_IMPERATIVO.search(texto) or _ASSERTIVA_INCORRETA.search(texto) or _GABARITO.search(texto)
+                or len(_ALTERNATIVAS_PARENTESES.findall(texto)) >= 2)
+
+
 def _scan_params(value, schema, depth=0):
     """Devolve o motivo de recusa ou None."""
     limits = schema["limits"]
@@ -151,7 +168,7 @@ def _scan_params(value, schema, depth=0):
     elif isinstance(value, str):
         if len(value) > limits["max_param_string_chars"]:
             return "PARAMS_TEXTO_LONGO"
-        return scan_text(value, html=True)
+        return scan_text(value, html=True) or ("PARAMS_TEXTO_DE_QUESTAO" if texto_de_questao(value) else None)
     elif value is not None and not isinstance(value, (bool, int, float)):
         return "PARAMS_TIPO_INVALIDO"
     return None

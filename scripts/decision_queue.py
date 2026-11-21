@@ -78,13 +78,32 @@ def _candidate(candidate):
     return candidate
 
 
-def rank_candidates(candidates, *, as_of, source_commit, edital_version, policy=None):
+def rank_simple(candidates, *, as_of, edital_version=None, policy=None):
+    """GD-5, consulta simples: aceita candidatos com SÓ alguns fatores (os ausentes ficam desconhecidos, nunca zero) e dispensa o SHA.
+    O snapshot sai marcado `simples` e `auditavel: False` (sem `source_commit`), para não se passar por um snapshot auditável."""
+    if not isinstance(candidates, list):
+        raise ValueError("candidates deve ser lista")
+    completos = []
+    for raw in candidates:
+        if not isinstance(raw, dict) or not isinstance(raw.get("priority_factors"), dict):
+            raise ValueError("Candidato deve ser objeto com priority_factors")
+        desconhecidos = set(raw["priority_factors"]) - set(FACTOR_NAMES)
+        if desconhecidos:
+            raise ValueError("Fator desconhecido: " + ",".join(sorted(map(str, desconhecidos))))
+        completos.append({**raw, "priority_factors": {n: raw["priority_factors"].get(n) for n in FACTOR_NAMES}})
+    return rank_candidates(completos, as_of=as_of, source_commit=None, edital_version=edital_version, policy=policy, _simples=True)
+
+
+def rank_candidates(candidates, *, as_of, source_commit, edital_version, policy=None, _simples=False):
     """Return an immutable-style snapshot; no clock, network, random or persistence."""
     _validate_as_of(as_of)
-    if not isinstance(source_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", source_commit):
-        raise ValueError("source_commit deve ser SHA Git de 40 caracteres")
-    if not isinstance(edital_version, str) or not edital_version.strip():
-        raise ValueError("edital_version ausente")
+    if not _simples:
+        if not isinstance(source_commit, str) or not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+            raise ValueError("source_commit deve ser SHA Git de 40 caracteres")
+        if not isinstance(edital_version, str) or not edital_version.strip():
+            raise ValueError("edital_version ausente")
+    else:
+        edital_version = edital_version if isinstance(edital_version, str) and edital_version.strip() else "nao_informada"
     if not isinstance(candidates, list):
         raise ValueError("candidates deve ser lista")
     selected_policy = _policy(policy)
@@ -140,6 +159,9 @@ def rank_candidates(candidates, *, as_of, source_commit, edital_version, policy=
         "ranked": ranked,
         "excluded": sorted(excluded, key=lambda row: row["candidate_id"]),
     }
+    if _simples:
+        payload["simples"] = True
+        payload["auditavel"] = False
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     payload["snapshot_id"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
     payload["selected_candidate_id"] = ranked[0]["candidate_id"] if ranked else None
