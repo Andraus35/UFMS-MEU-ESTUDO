@@ -33,15 +33,33 @@ HANDOFFS = HOME / ".claude" / "handoffs"
 CONFIG = HOME / ".claude" / "context-guard.json"
 DEFAULTS = {"threshold": 0.5, "window_tokens": 200000, "max_stop_blocks": 3, "repo_copy": None, "min_prompt_chars": 400}
 REQUIRED = ("## Primeiro passo", "## Estado", "## Pendências")
-SCRIPT = "$HOME/.claude/hooks/claude_context_guard.py"
+PROJECT_KEYS = ("threshold", "window_tokens", "max_stop_blocks", "min_prompt_chars", "extra_instruction")
 
 
-def cfg():
+def script_ref():
+    """Caminho DESTE script para o comando de selo: `$HOME/...` se estiver sob o HOME (casa com a regra de permissão do instalador),
+    senão o caminho absoluto (ex.: cópia versionada no repositório do projeto)."""
+    p = Path(__file__).resolve()
+    try:
+        return f'"$HOME/{p.relative_to(HOME.resolve()).as_posix()}"'
+    except ValueError:
+        return f'"{p}"'
+
+
+def cfg(cwd=None):
+    """Padrões, depois ~/.claude/context-guard.json (usuário), depois <raiz do projeto>/.claude/context-guard.json (projeto;
+    só as chaves de PROJECT_KEYS), depois variáveis de ambiente."""
     c = dict(DEFAULTS)
     try:
         c.update(json.loads(CONFIG.read_text(encoding="utf-8")))
     except (OSError, ValueError):
         pass
+    if cwd:
+        try:
+            proj = json.loads((project_root(cwd) / ".claude" / "context-guard.json").read_text(encoding="utf-8"))
+            c.update({k: v for k, v in proj.items() if k in PROJECT_KEYS})
+        except (OSError, ValueError, AttributeError):
+            pass
     for k, env in (("threshold", "CONTEXT_GUARD_THRESHOLD"), ("window_tokens", "CONTEXT_GUARD_WINDOW")):
         if os.environ.get(env):
             c[k] = float(os.environ[env]) if k == "threshold" else int(os.environ[env])
@@ -198,11 +216,12 @@ def instruction(session_id, pct, c, cwd):
         "SOMENTE se as regras do projeto e do usuário permitirem; senão liste as alterações pendentes no prompt. Nunca force push nem aja "
         "fora das regras do projeto.\n"
         "3. Redija o PROMPT DE START da próxima sessão e sele-o com UM comando (o conteúdo vai no heredoc):\n"
-        f"   python3 {SCRIPT} seal --session {session_id} --cwd \"{cwd}\" <<'PROMPT'\n"
+        f"   python3 {script_ref()} seal --session {session_id} --cwd \"{cwd}\" <<'PROMPT'\n"
         "   ## Primeiro passo\n   (a ação exata e o comando para começar)\n   ## Estado\n   (o que está feito, onde parou, branch/PR/SHA, o que está verde ou vermelho)\n"
         "   ## Pendências\n   (decisões e atos do usuário, riscos, armadilhas, o que NÃO fazer)\n   PROMPT\n"
         "   O comando recusa o prompt sem as seções `## Primeiro passo`, `## Estado` e `## Pendências` e anexa os fatos medidos do git.\n"
         f"O prompt selado fica em {p}. Enquanto não houver prompt selado, esta ordem se repete e o fim do turno é bloqueado."
+        + (f"\nInstrução específica deste projeto: {c['extra_instruction']}" if isinstance(c.get("extra_instruction"), str) and c["extra_instruction"].strip() else "")
     )
 
 
@@ -214,7 +233,7 @@ def out(event, **kw):
 
 
 def measure(payload):
-    c = cfg()
+    c = cfg(payload.get("cwd") or os.getcwd())
     rows = read_transcript(payload.get("transcript_path") or "")
     return c, rows, percent(context_tokens(rows), c)
 
@@ -241,7 +260,7 @@ def on_stop(payload):
     st = load_state(sid)
     if not st.get("armed_at") or st.get("sealed"):
         return
-    c = cfg()
+    c = cfg(st.get("cwd") or payload.get("cwd") or os.getcwd())
     blocks = int(st.get("stop_blocks", 0))
     if blocks >= int(c["max_stop_blocks"]):
         return  # nunca prende a sessão: o fallback em PreCompact/SessionEnd cobre
@@ -291,7 +310,7 @@ def cmd_seal(args):
     sid = opts.get("--session") or "unknown"
     cwd = opts.get("--cwd") or os.getcwd()
     body = sys.stdin.read()
-    c = cfg()
+    c = cfg(cwd)
     miss = validate(body, c)
     if miss:
         print("RECUSADO: faltam " + "; ".join(miss) + ". Reescreva e rode o comando de novo.", file=sys.stderr)

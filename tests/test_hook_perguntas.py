@@ -39,11 +39,13 @@ class SettingsTest(unittest.TestCase):
 
     def test_so_o_hook_stop_e_nada_mais(self):
         self.assertEqual(set(self.cfg), {"hooks"})  # sem permissions, env, plugins, modelo etc. (decisão do proprietário)
-        self.assertEqual(set(self.cfg["hooks"]), {"Stop"})
+        # E12-B: o hook geral de passagem entre sessões (claude_context_guard) acrescenta eventos; o conjunto é fechado e testado em test_e12_hook_geral
+        self.assertEqual(set(self.cfg["hooks"]), {"SessionStart", "UserPromptSubmit", "PostToolUse", "Stop", "PreCompact", "SessionEnd"})
 
     def test_um_unico_hook_de_comando_que_chama_o_script_versionado(self):
         grupos = self.cfg["hooks"]["Stop"]
-        self.assertEqual(len(grupos), 1)
+        self.assertEqual(len(grupos), 2)  # o grupo original (perguntas e entrega final) e o do hook geral (E12-B)
+        self.assertIn("claude_context_guard.py", grupos[1]["hooks"][0]["command"])
         hooks = grupos[0]["hooks"]
         self.assertEqual(len(hooks), 2)  # o de perguntas e o de entrega final (até 20/11/2026)
         h = hooks[0]

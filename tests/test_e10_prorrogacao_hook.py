@@ -37,7 +37,8 @@ class E10Tests(unittest.TestCase):
     def test_so_o_hook_de_entrega_muda_settings_e_contratos_ficam_intocados(self):
         settings = json.loads((ROOT / ".claude" / "settings.json").read_text(encoding="utf-8"))
         comandos = [h["command"] for g in settings["hooks"]["Stop"] for h in g["hooks"]]
-        self.assertEqual(len(comandos), 2)
+        proprios = [c for c in comandos if "claude_context_guard.py" not in c]  # o hook geral entrou na E12-B
+        self.assertEqual(len(proprios), 2)
         self.assertTrue(any("entrega_final.py" in c for c in comandos))
         self.assertIn("não altera .claude/settings.json", TEXTO)
 
