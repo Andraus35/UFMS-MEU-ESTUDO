@@ -823,6 +823,17 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "TOP1",
+      "title": "S16 T1: nó do TEC com caminho inteiro, origem, modalidade e percentuais da matéria e do caderno com denominador (S16-R1, R2, R3, R5); offline, sintético, sem gravar resultado; recusa pai marcado folha, soma de folhas acima de 100% e identidade repetida; desconhecido nunca é preenchido",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/tec_no.py",
+      "depends_on": [
+        "S16"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
