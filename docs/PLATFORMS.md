@@ -5,7 +5,7 @@ A IA prescreve **filtros configuráveis**, não inventa um caderno publicado ou 
 - TEC Concursos: priorizar cadernos por assunto e estatísticas verificadas pelo usuário; exportação CSV está sujeita ao plano e formato real do arquivo.
 - Qconcursos: usar filtros por disciplina/assunto, banca, ano, dificuldade e histórico quando disponíveis; não presumir exportação CSV.
 - Para provas FAPEC: começar por questões próximas e ampliar filtros explicitamente quando a amostra for insuficiente.
-- Acesso à conta do proprietário só pelo conector local descrito abaixo (decisões D-14 e D-15 do `PRODUCT.md`); nenhum outro robô, nenhum scraping em escala e nenhum acesso a contas de terceiros. Não armazenar comentários ou enunciados completos de terceiros sem autorização.
+- Acesso à conta do proprietário só pelo conector local descrito abaixo (decisões D-14 e D-15 do `PRODUCT.md`); nenhum acesso a contas de terceiros. Não armazenar comentários ou enunciados completos de terceiros sem autorização.
 - Estudante pode fornecer relatórios por tabela, captura legível ou arquivo exportado. **A estrutura exata do CSV do TEC permanece por validar.**
 
 ## Leitura direta das plataformas (especificação S4, PR-017)
@@ -26,7 +26,7 @@ A IA prescreve **filtros configuráveis**, não inventa um caderno publicado ou 
 ### Critérios de comparação (iguais para todas)
 
 1. A credencial ou sessão fica fora do modelo e do repositório?
-2. Risco de bloqueio da conta e aderência aos termos de uso (E-12).
+2. Risco de bloqueio da conta (E-12).
 3. Cobertura: quais dados chegam (cadernos, resultados, estatísticas por assunto).
 4. Disponibilidade no dia a dia (precisa de computador ligado?).
 5. Esforço do proprietário por semana.
@@ -38,7 +38,7 @@ Nenhuma opção é descartada antes do teste; o registro do resultado e da escol
 
 - Somente leitura: proibido resolver questão, criar, editar ou apagar caderno, enviar formulário ou executar código recebido do modelo.
 - Só os domínios do TEC e do Qconcursos; qualquer outro é recusado.
-- Limite de taxa inicial, ajustável pelo proprietário: no máximo 1 página a cada 10 segundos e 30 páginas por sessão.
+- Sem limite de taxa imposto pelo harness (decisão do proprietário de 21/11/2026).
 - Cada leitura devolve JSON no formato do contrato de ingestão (PR-016), com plataforma, data da leitura e `origem = leitura_direta`; sem cookie, token, HTML bruto nem enunciado completo. O que foi lido é dado não confiável.
 - O TEC vem primeiro; o Qconcursos só entra depois do teste aceito no TEC (D-14). A primeira leitura em conta real exige o mecanismo escolhido na especificação, os testes sintéticos do PR-017 e a aprovação expressa do proprietário; a consulta ao suporte do TEC (OPEN-12) foi **dispensada pelo proprietário** (D-22), sem alterar as condições da D-14.
 

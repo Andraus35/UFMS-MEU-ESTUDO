@@ -67,5 +67,5 @@ Toda execução devolve `COMMITTED`, `DENIED`, `NEEDS_APPROVAL` ou `NOT_IMPLEMEN
 
 - Ao Google vai o mínimo; nunca dado pessoal, CPF, credenciais, exportação bruta, captura de tela nem texto integral de questão.
 - Resultados individuais permanecem bloqueados enquanto a política vigente (`scripts/write_policy.py`, `scripts/private_persistence_guard.py`) não os habilitar.
-- Plataformas de questões: leitura somente com autorização do proprietário e conforme `docs/PLATFORMS.md`; sem robô nem contorno de bloqueio.
+- Plataformas de questões (TEC, Qconcursos) e Gemini Notebook: **liberada** pelo proprietário (21/11/2026) a acessar livremente, conforme `docs/PLATFORMS.md`; nas plataformas de questões, somente leitura.
 - O que se sabe da Zapia é autorrelato; o repositório e a leitura autenticada prevalecem sobre a memória dela.

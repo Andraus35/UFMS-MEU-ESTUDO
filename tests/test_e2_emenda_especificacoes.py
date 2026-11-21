@@ -50,18 +50,17 @@ class EmendaTests(unittest.TestCase):
             self.assertIn(t, e, t)
         self.assertIn("1 por dia e só com atividade concluída", e)
 
-    def test_s9_r1_emendada_sem_aprovar_a_ordem_e_com_termos_nao_cumpridos(self):
+    def test_s9_r1_emendada_sem_aprovar_a_ordem_e_com_zapia_liberada(self):
         e = emenda(S9)
         for t in ("pela zapia, pedido pelo tutor ou pelo coach", "continua como alternativa", "não aprovou a ordem proposta",
-                  "qconcursos: inalterado, só entrada manual", "s9-r4", "s9-r8", "s9-r9", "mantém o aceite do risco",
-                  "registro_termos_tec_20261118.md", "cumpre a s9-r8(b) só para esse teste", "não estão cumpridas", "pontuação", "bloco procedimento",
-                  "não aceita análise de conteúdo", "repositório privado", "(z1) não foi executado", "fechando por padrão"):
+                  "a zapia também está liberada", "s9-r5", "s9-r6", "s9-r8", "liberada pelo proprietário", "pontuação", "bloco procedimento",
+                  "não aceita análise de conteúdo", "repositório privado", "(z1) não foi executado", "habilita as plataformas por padrão"):
             self.assertIn(t, e, t)
 
     def test_registro_diz_proposta_e_o_que_fica_de_fora(self):
         t = REG.lower().replace("**", "").replace("`", "")
         for trecho in ("proposta aguardando a revisão do proprietário", "pedido explícito dele", "não altera", "agents/", "e3",
-                       "compartilhada por tutor e coach", "registro_termos_tec_20261118.md", "veda automação", "só para esse teste",
+                       "compartilhada por tutor e coach", "liberada", "não impõe condição prévia",
                        "não foi testada", "aditiva", "autorrelato"):
             self.assertIn(trecho, t, trecho)
         self.assertNotRegex(REG, r"\bPR\s*#\d+")

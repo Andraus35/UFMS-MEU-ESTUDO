@@ -1,8 +1,10 @@
 """Guarda offline da leitura direta das plataformas (L1; S9-R2 a R5, R8, R9). Somente leitura, sem rede e sem navegador.
 
-Este módulo **decide**; quem navega (um futuro conector, fora do modelo) pergunta antes de cada ação e obedece. Ele não
-abre página, não lê conta, não guarda cookie nem token, não grava nada e não habilita a leitura real: `PADRAO` recusa
-tudo (S9-R8, R9). Tempo e registro de sessões diárias são injetados. Tudo que vem de página é **dado não confiável**.
+Este módulo **decide**; quem navega (a Zapia, fora do modelo) pergunta antes de cada ação e obedece. Ele não abre página,
+não guarda cookie nem token e não grava nada. Por decisão do proprietário (21/11/2026), a Zapia está **liberada** a acessar
+TEC Concursos e Qconcursos livremente: `PADRAO` habilita as duas plataformas, sem condição de termos, sem decisão
+adicional e sem cota de páginas, de intervalo ou de sessões. Permanecem só as travas de segurança: somente leitura,
+domínio exato e página tratada como **dado não confiável**.
 
 Limites: heurístico no filtro de instrução e de bloqueio; a trava só vale para quem chamar por aqui (não impede um
 navegador que ignore o guarda); páginas e formatos reais das plataformas **não** são supostos (não há parser aqui).
@@ -27,9 +29,6 @@ HOSTS = {
     "qconcursos": frozenset({"qconcursos.com", "www.qconcursos.com"}),
 }
 FUSO = timezone(timedelta(hours=-4))  # dia da sessão: horário de Mato Grosso do Sul
-INTERVALO_MIN_S = 10.0  # S9-R4: 1 página a cada 10 s
-PAGINAS_MAX = 30  # S9-R4: por sessão
-SESSOES_POR_DIA = 1  # S9-R4
 
 ACOES_LEITURA = frozenset({"navegar", "ler_texto"})
 ACOES_ESCRITA = frozenset({
@@ -70,13 +69,10 @@ _DATA_ISO = re.compile(r"\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]
 
 @dataclass(frozen=True)
 class Config:
-    """Tudo fecha por padrão: nada habilitado, nada registrado, nada suspenso."""
+    """Plataformas liberadas por padrão (decisão do proprietário de 21/11/2026); nada suspenso."""
 
-    habilitadas: frozenset = frozenset()
-    termos_tec_registrados: bool = False  # S9-R8(b): L3, ato do proprietário
-    decisao_qconcursos_expressa: bool = False  # S9-R8(c): decisão expressa dele
-    termos_qconcursos_lidos: bool = False
-    suspensas: frozenset = frozenset()  # S9-R8(d): bloqueio ou aviso suspende a plataforma
+    habilitadas: frozenset = frozenset({"tec", "qconcursos"})
+    suspensas: frozenset = frozenset()  # captcha ou bloqueio da própria plataforma suspende a sessão
 
 
 PADRAO = Config()
@@ -87,7 +83,7 @@ class Decisao:
     ok: bool
     codigo: str  # só código; nunca eco de URL, texto de página ou segredo
     avisar_proprietario: bool = False
-    repetir: bool = False  # S9-R4: nunca repetir sozinho
+    repetir: bool = False  # nunca repetir sozinho
 
 
 def _sim(codigo="OK"):
@@ -203,13 +199,6 @@ class Guarda:
             return "PLATAFORMA_SUSPENSA"
         if plataforma not in self.config.habilitadas:
             return "PLATAFORMA_DESABILITADA"
-        if plataforma == "tec" and not self.config.termos_tec_registrados:
-            return "TERMOS_TEC_NAO_REGISTRADOS"
-        if plataforma == "qconcursos":
-            if not self.config.decisao_qconcursos_expressa:
-                return "QCONCURSOS_SEM_DECISAO_EXPRESSA"
-            if not self.config.termos_qconcursos_lidos:
-                return "TERMOS_QCONCURSOS_NAO_LIDOS"
         return None
 
     # -- sessão ---------------------------------------------------------------------------------------------------
@@ -224,8 +213,6 @@ class Guarda:
         agora = self._agora()
         if agora is None:
             return _nao("RELOGIO_INVALIDO")
-        if self._dias.count(_dia(agora)) >= SESSOES_POR_DIA:
-            return _nao("LIMITE_DIARIO")
         self._dias.append(_dia(agora))
         self._plataforma, self._paginas, self._ultima, self._em_voo = plataforma, 0, None, False
         return _sim()
@@ -260,29 +247,23 @@ class Guarda:
             return _nao("URL_COM_EFEITO")
         if self._em_voo:
             return _nao("PARALELISMO")
-        if self._paginas >= PAGINAS_MAX:
-            return _nao("LIMITE_DE_PAGINAS")
         agora = self._agora()
         if agora is None:
             return _nao("RELOGIO_INVALIDO")
-        if self._ultima is not None:
-            passou = (agora - self._ultima).total_seconds()
-            if passou < 0:
-                return _nao("RELOGIO_INVALIDO")
-            if passou < INTERVALO_MIN_S:
-                return _nao("LIMITE_DE_TAXA")
+        if self._ultima is not None and (agora - self._ultima).total_seconds() < 0:
+            return _nao("RELOGIO_INVALIDO")
         self._paginas += 1
         self._ultima, self._em_voo = agora, True
         return _sim()
 
     def concluir_pagina(self, status_http, texto) -> Decisao:
         """Registra o resultado da página. Bloqueio, captcha, limitação ou resposta inesperada ENCERRA a sessão,
-        sem repetição, e pede aviso ao proprietário (S9-R4). O texto é só inspecionado; nunca devolvido."""
+        sem repetição, e pede aviso ao proprietário. O texto é só inspecionado; nunca devolvido."""
         self._em_voo = False
         if self._plataforma is None:
             return _nao("SEM_SESSAO")
         if status_http in (403, 429) or detectar_bloqueio(texto):
-            self._suspensas.add(self._plataforma)  # S9-R8(d)
+            self._suspensas.add(self._plataforma)  
             self.encerrar_sessao()
             return _nao("BLOQUEIO_DETECTADO", avisar=True)
         if status_http != 200:

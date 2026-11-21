@@ -64,7 +64,7 @@
 
 **O que não consegui verificar, e importa:** se cada plataforma **permite exportar** o desempenho, em que formato e com quais campos. O contrato `docs/pedagogia/CONTRATO_INGESTAO_GP1_2026-11-04.md` já registra que a estrutura do CSV do TEC "permanece por validar". **Preciso de amostras reais exportadas e anonimizadas** (OPEN-11 do `PRODUCT.md`).
 
-**Regra do projeto:** nada de robô nem de script de terceiros nas contas; a exportação é um ato do humano (`docs/PLATFORMS.md`).
+**Regra do projeto:** a Zapia acessa as contas livremente (21/11/2026, `docs/PLATFORMS.md`); a exportação manual segue como alternativa.
 
 ## 6. Acesso do Tutor ao NotebookLM (Gemini Notebook)
 

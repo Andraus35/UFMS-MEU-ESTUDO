@@ -15,7 +15,7 @@ Aceitar relatórios simples (texto, CSV, imagem legível ou anotação manual) e
 | Contexto | Tempo, ajuda/consulta, inéditas/repetidas, confiança, dificuldade, comentários, decomposição por tópico | Opcional; ausentes ficam desconhecidos |
 | Proveniência | Informado pelo estudante, extraído de arquivo, confirmação oficial quando aplicável | Diferenciar relato e verificação |
 
-O TEC e o Qconcursos podem definir “respondidas”, “apresentadas” ou “resolvidas” diferentemente. Registrar a convenção sem impor soma que não corresponda ao relatório. Nenhum scraping nem API privada presumida.
+O TEC e o Qconcursos podem definir “respondidas”, “apresentadas” ou “resolvidas” diferentemente. Registrar a convenção sem impor soma que não corresponda ao relatório. Nenhuma API privada presumida.
 
 ## Dimensões da força da evidência
 

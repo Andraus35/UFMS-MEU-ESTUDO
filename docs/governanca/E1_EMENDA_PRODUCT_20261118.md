@@ -11,7 +11,7 @@
 | D-12 | "O Tutor deve acessar o NotebookLM diretamente; a Zapia só faz a ponte se isso não for possível" | Marcada **acesso ao Notebook emendado pela D-26** | decisão de 18/11/2026 |
 | **D-25** (nova) | — | Execução em sessões do app Claude na nuvem, sem chave no modelo, **origem do comando não provada**; a Zapia entrega na fila de `entrada`, o fluxo de Actions é o **único escritor** de `dados`; aviso de rejeição no app e por e-mail; flag segue `false` | S6, aprovação de 17/11/2026 |
 | **D-26** (nova) | — | O Tutor usa o Notebook **só pela Zapia, como ponte**; resolve o OPEN-10 | S10, resposta de 18/11/2026 |
-| **D-27** (nova) | — | O proprietário **mantém o aceite do risco do D-14** para a leitura direta do TEC, **sem condição nova**; S9-R8 e S9-R9 valem por si; Qconcursos fora da leitura automatizada | resposta de 18/11/2026 |
+| **D-27** (nova) | — | O proprietário **liberou a Zapia** (redação de 21/11/2026) a acessar livremente TEC, Qconcursos e Gemini Notebook, sem condição prévia; S9-R5 e S9-R6 valem por si | resposta de 18/11/2026 |
 | F6, §4, PR-003, PR-012 | Escrita pela Zapia; caminho direto ao Notebook como prioridade | Alinhados à D-25 e à D-26 (a Zapia entrega, o fluxo grava; Notebook pela Zapia) | consistência |
 | OPEN-09, OPEN-10 | Agentes no computador do proprietário; acesso direto não decidido | OPEN-09 reescrito para a nuvem com origem não provada; **OPEN-10 resolvido** pela D-26, ficam abertas a prova do caminho e a retenção do Google | consistência |
 

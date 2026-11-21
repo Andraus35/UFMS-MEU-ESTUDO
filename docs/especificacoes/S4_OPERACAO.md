@@ -21,7 +21,7 @@ Consultas de 08/11/2026, somadas a `docs/pedagogia/ESTADO_DA_ARTE_TUTOR_COACH_20
 | Guias de API: [besthub](https://www.besthub.dev/articles/how-to-build-secure-idempotent-apis-keys-tokens-and-anti-replay-strategies-d0abdbabd4c1), [botoi](https://botoi.com/blog/webhook-security-hmac-idempotency/) | Padrão comum: **assinar** método, destino, carimbo de tempo, *nonce* e hash do corpo; rejeitar mensagem fora de uma janela curta; *nonce* único por requisição e **chave de idempotência igual nas tentativas da mesma operação**, ligada ao hash do corpo. Blogs de vendor, sem norma formal | C |
 | TEC Concursos e Qconcursos | A busca de 08/11/2026 **não achou** nenhuma página de ajuda sobre exportação de desempenho; permanece o que está em E-12 (anúncio de CSV no plano avançado, formato não encontrado) | — |
 
-- **Lacunas:** a ajuda oficial e os termos de uso do TEC e do Qconcursos não foram lidos, então **exportação, formato do arquivo, leitura automatizada e risco de bloqueio da conta não estão verificados** (OPEN-11, OPEN-12, E-12); nenhuma das seis opções foi **testada**, e a comparação abaixo é documental; não verifiquei a documentação da Zapia sobre canais, assinatura de comandos nem identidade da origem (OPEN-09, E-04, E-09); expiração e alcance do token da Zapia seguem desconhecidos (OPEN-02); não pesquisei repositórios públicos de orquestração de agentes com executor separado, nem a política de uso de dados do Google para o NotebookLM; os números de janela de tempo vieram de blogs, não de norma; o OWASP não foi lido por inteiro.
+- **Lacunas:** a ajuda oficial do TEC e do Qconcursos não foi lida, então **exportação, formato do arquivo, leitura automatizada e risco de bloqueio da conta não estão verificados** (OPEN-11, OPEN-12, E-12); nenhuma das seis opções foi **testada**, e a comparação abaixo é documental; não verifiquei a documentação da Zapia sobre canais, assinatura de comandos nem identidade da origem (OPEN-09, E-04, E-09); expiração e alcance do token da Zapia seguem desconhecidos (OPEN-02); não pesquisei repositórios públicos de orquestração de agentes com executor separado; os números de janela de tempo vieram de blogs, não de norma; o OWASP não foi lido por inteiro.
 
 ## Esquema dos comandos (PR-013)
 
@@ -49,9 +49,9 @@ Efeito: `enviar_mensagem` e a orientação comum são **ORIENTACAO** (sem aprova
 
 ## Opções de acesso às plataformas (D-15)
 
-Comparação **documental**, pelos critérios de `docs/PLATFORMS.md` (credencial fora do modelo; risco de bloqueio e termos; cobertura; disponibilidade; esforço semanal; testável sem conta real). Nenhuma opção foi testada nem descartada.
+Comparação **documental**, pelos critérios de `docs/PLATFORMS.md` (credencial fora do modelo; risco de bloqueio; cobertura; disponibilidade; esforço semanal; testável sem conta real). Nenhuma opção foi testada nem descartada.
 
-| Opção | Credencial fora do modelo | Risco de bloqueio e termos | Cobertura | Disponibilidade e esforço | Testável sem conta real |
+| Opção | Credencial fora do modelo | Risco de bloqueio | Cobertura | Disponibilidade e esforço | Testável sem conta real |
 |---|---|---|---|---|---|
 | A. Conector local (perfil dedicado, somente leitura) | Sim, se a sessão ficar só no perfil e a porta só em localhost; **a porta de depuração é alvo de roubo de sessão** | Termos não lidos; automação na conta pode violar (E-12) | Em tese tudo que a tela mostra | Exige o computador ligado; novo login no perfil; esforço baixo depois de montado | Sim, com páginas sintéticas (PR-017) |
 | B. Navegador do assistente | Parcial: a sessão fica no navegador do proprietário, mas o assistente a usa | Idem A | Idem A | Exige o aplicativo aberto; esforço baixo | Parcial |
@@ -60,7 +60,7 @@ Comparação **documental**, pelos critérios de `docs/PLATFORMS.md` (credencial
 | E. Suporte ou API oficial | Sim (autorização formal) | Menor, se autorizado por escrito | Depende da resposta; nenhuma API pública localizada | Depende da plataforma; consulta pendente (OPEN-12) | Não, depende de terceiros |
 | F. Exportação manual | Sim: o modelo nunca vê credencial | **Nenhum** além do uso normal | O que o plano exporta; formato por validar (OPEN-11) | Sempre disponível; esforço semanal do proprietário | Sim, com amostras anonimizadas |
 
-**Recomendação provisória, não decisão** (a escolha é do proprietário, que decide depois do teste): **F como linha de base imediata**; **E em paralelo** (consulta escrita, que também destrava OPEN-12); **A** como candidata à leitura direta, **só** se E não vetar e o proprietário aceitar o risco (E-12), começando pelo TEC e com as regras de `docs/PLATFORMS.md` (somente leitura, domínios fixos, no máximo 1 página a cada 10 segundos e 30 por sessão). B, C e D só entram se A falhar, por maior exposição da sessão.
+**Recomendação provisória, não decisão** (a escolha é do proprietário, que decide depois do teste): **F como linha de base imediata**; **E em paralelo** (consulta escrita, que também destrava OPEN-12); **A** como candidata à leitura direta, com as regras de `docs/PLATFORMS.md` (somente leitura, domínios fixos, sem cota de páginas). B, C e D só entram se A falhar, por maior exposição da sessão.
 
 ## Canal Tutor → Zapia
 
@@ -103,7 +103,7 @@ Canal de saída ao proprietário escolhido (D-20): **somente o app da Zapia**, o
 - Não escolhe o mecanismo de acesso, o ambiente do Tutor e do Coach nem o caminho do Notebook; apresenta opções e uma recomendação provisória.
 - Não prova que a Zapia recusa comando falso: sem assinatura verificável, a restrição é protocolo (E-04).
 - Não implementa esquema, filtro, assinatura nem leitura direta; descreve o que construir e como provar offline.
-- A comparação das opções é documental e pode mudar com a resposta do suporte e com os termos das plataformas.
+- A comparação das opções é documental e pode mudar com a resposta do suporte.
 - Não habilita persistência pessoal, e a revogação por apagar o repositório privado não alcança as cópias da Zapia (E-09).
 
 ## Emenda E2 (18/11/2026): desempenho pela Zapia e origem na nuvem
@@ -112,5 +112,5 @@ Canal de saída ao proprietário escolhido (D-20): **somente o app da Zapia**, o
 
 - **PR-016, caminho do desempenho (substitui o passo 1 acima):** o desempenho do **TEC** vem **pela Zapia, pedido pelo Tutor ou pelo Coach, conforme a necessidade, no lugar da exportação manual**. O pedido é **no máximo 1 por dia e só com atividade concluída** (cada pedido aciona o TEC). A Zapia entrega **tabela estruturada** (colunas do relatório: código, profundidade, título, questões, acertos, erros, peso; mais recorte, pontuação **declarada** e data) e um **relato do procedimento** de extração (bloco `procedimento`); o PDF é só leitura humana; **análise de conteúdo não entra** (D-10, D-23). A entrega vai **pela fila `entrada`** e o fluxo de Actions grava no repositório privado (D-25); **a Zapia não grava resultado por comando** (S6-R3). **A operação para pedir o relatório não existe ainda** (tarefa E3, aprovação do proprietário): até lá o pedido não tem canal e a **exportação manual continua sendo a alternativa**. Qconcursos segue **só por entrada manual** (S9-R1).
 - **S4-R2, origem (emenda):** na nuvem **não há assinatura que o modelo não possa forjar** (S6-R7). O comando da caixa **não traz assinatura**; o campo `origin` é **informativo**; a defesa é a **validação da caixa de comandos** (esquema, destino, janela, idempotência, filtro, e, para `enviar_prompt_notebook`, o validador do prompt), o **escopo mínimo dos tokens** e o **relato** da Zapia. **S4-R2 continua não atendida** como "origem verificável"; a assinatura Ed25519 de `scripts/agent_commands.py` fica para quem guarde chave fora do modelo e **não faz parte do desenho atual**.
-- **Opção F e as opções A a E:** a exportação manual deixa de ser "o primeiro caminho" para o TEC; **continua válida e sempre disponível**. Qualquer leitura da Zapia **na conta do proprietário** segue sob S9-R4 (taxa), S9-R8 e S9-R9 (termos lidos e registrados; aprovação expressa em PR da primeira leitura real). O D-27 mantém o aceite do risco.
+- **Opção F e as opções A a E:** a exportação manual deixa de ser "o primeiro caminho" para o TEC; **continua válida e sempre disponível**. Qualquer leitura da Zapia **na conta do proprietário** segue sob S9-R8 (liberação de 21/11/2026, sem condição prévia). O D-27 registra a liberação.
 - **Honestidade:** **nenhum** pedido à Zapia foi feito; o teste (Z1) **não foi executado**; o formato real que a Zapia entregará ao harness **não foi visto por inteiro** (só o relatório de 17/11, que é PDF e traz análise).

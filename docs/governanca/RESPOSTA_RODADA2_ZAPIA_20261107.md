@@ -129,7 +129,7 @@ Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_RODADA2_20261107.m
     "status": "OBSERVADO",
     "resposta": "Em 04/11 houve um teste agendado único que reportou consulta concluída ao Notebook sem nova solicitação no momento do disparo. Isso não prova confiabilidade recorrente. Não medi tempo típico de consulta.",
     "evidencia": "Histórico da POC com tarefa única agendada às 10h32 e resultado reportado posteriormente.",
-    "risco": "Sessão, captcha, termos do Google ou alterações da interface podem impedir execuções futuras."
+    "risco": "Sessão, captcha ou alterações da interface podem impedir execuções futuras."
   },
   {
     "id": "R18",

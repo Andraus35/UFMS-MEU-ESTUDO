@@ -6,7 +6,7 @@
 
 Maximizar aquisição, compreensão, recuperação independente, aplicação, transferência e retenção de conhecimentos exigidos pelas provas. A finalidade não é apenas aumentar volume de questões nem percentual de acertos em itens familiares: é melhorar desempenho em questões inéditas, após intervalos e em condições próximas às provas.
 
-A IA é tutora, analista de evidências e recomendadora de cadernos. O estudante cria e resolve os cadernos no TEC Concursos ou no Qconcursos e devolve resultados. O agente não deve presumir APIs ou scraping autorizado.
+A IA é tutora, analista de evidências e recomendadora de cadernos. O estudante cria e resolve os cadernos no TEC Concursos ou no Qconcursos e devolve resultados. O agente não deve presumir APIs; a Zapia acessa as plataformas livremente (21/11/2026).
 
 ## Estratégia simultânea para 523 e 324
 

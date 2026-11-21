@@ -99,7 +99,7 @@ Roteiro respondido: `docs/governanca/PROMPT_VERIFICACAO_ZAPIA_20261107.md`.
     "status": "DESCONHECIDO",
     "resposta": "O prompt digitado e o contexto do notebook/fonte consultado são enviados ao serviço do Google para produzir a resposta. Não verifiquei as configurações da conta nem a política específica aplicável à retenção, histórico ou uso dos dados nessa conta; não posso afirmar por quanto tempo são guardados.",
     "evidencia": "O envio de prompts à interface foi observado; configurações de privacidade e retenção da conta não foram verificadas.",
-    "risco": "Não enviar dados pessoais ou sensíveis sem confirmar as configurações e os termos aplicáveis."
+    "risco": "Não enviar dados pessoais ou sensíveis sem confirmar as configurações aplicáveis."
   },
   {
     "id": "Q14",

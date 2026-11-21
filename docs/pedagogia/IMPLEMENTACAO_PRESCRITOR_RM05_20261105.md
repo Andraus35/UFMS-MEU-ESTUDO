@@ -31,7 +31,7 @@
 - Disponibilidade desconhecida/zero resulta em `unavailable_or_unverified`; não inventar estoque.
 - `questions_suggested` permanece null sem quantidade-alvo e estoque confirmado.
 - Capacidade de filtro marcada `confirmed` exige `evidence_ref`.
-- Nenhuma rede, login, scraping, API privada, escrita ou efeito externo ocorre.
+- Nenhuma rede, login, API privada, escrita ou efeito externo ocorre.
 
 ## Testes
 

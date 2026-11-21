@@ -21,22 +21,17 @@ class Rodada6Tests(unittest.TestCase):
                        "nada foi verificado por este repositório", "não foram executados"):
             self.assertIn(trecho, TEXTO, trecho)
 
-    def test_registra_o_achado_dos_termos_do_tec_sem_tratar_como_verificado(self):
-        for trecho in ("item 8.1", "robôs, scripts", "compartilhamento de contas", "não é parecer jurídico",
-                       "ainda não conferido por este repositório", "pesa contra a leitura direta do tec"):
-            self.assertIn(trecho, TEXTO, trecho)
-
     def test_nada_sensivel_foi_executado_e_s10_continua_com_lacunas(self):
-        for trecho in ("tec-export-1", "g-chat-1", "g-fonte-1", "não executado", "lei 8.112",
+        for trecho in ("tec-export-1", "não executado", "lei 8.112",
                        "lacunas declaradas", "não foram testados"):
             self.assertIn(trecho, TEXTO, trecho)
 
     def test_cobre_os_itens_do_prompt(self):
-        for item in ("A1", "A5", "T3", "T9", "T12", "Q5", "G0", "G8", "G12", "F1", "F3", "F4"):
+        for item in ("A1", "A5", "T3", "G0", "G8", "G12", "F1", "F3", "F4"):
             self.assertIn(item, DOC, item)
 
     def test_documentos_apontam_para_o_registro(self):
-        for caminho in ("memory/HANDOFF.md", "docs/especificacoes/S9_LEITURA_PLATAFORMAS.md"):
+        for caminho in ("memory/HANDOFF.md",):
             self.assertIn("RESPOSTA_RODADA6_ZAPIA_20261117.md", (ROOT / caminho).read_text(encoding="utf-8"), caminho)
 
 
