@@ -908,6 +908,74 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "S20",
+      "title": "Automação ponta a ponta: Tutor e Coach acionam a Zapia, e o Gemini Notebook por ela, sem o proprietário colar prompts (pedido de 21/11/2026): especificação com pesquisa (D-16), mapa do que falta (P1 a P8), decisões D1 a D3 do proprietário sem adoção e fases F0 a F5; só especifica, não implanta; fecha com S5, S6, S10, S14, S15 e S19",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S20_AUTOMACAO_PONTA_A_PONTA_ZAPIA.md",
+      "depends_on": [
+        "S19"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GAP-A",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GA-1 a GA-5: esquema de params por operação, filtros no texto de params do COMANDO, hash do prompt, LEMBRETE com várias atividades e formato único da chave de idempotência",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/command_params_schema.py",
+      "depends_on": [
+        "S20"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GAP-B",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GB-1 e GB-2: classificação do dia (S15-R16) como função pura e gerado_em como instante UTC",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/day_classifier.py",
+      "depends_on": [
+        "GAP-A"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GAP-C",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GC-1 a GC-3: resumo de estudo de uma página, SHA externo do START e reconciliação das divergências documentais",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/study_summary.py",
+      "depends_on": [
+        "GAP-B"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GAP-D",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GD-1 a GD-5: formato Tutor→Coach, meta pretendida, filtro de dado pessoal, âncora da Lei 8.112 e decision_queue",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/tutor_coach_handoff.py",
+      "depends_on": [
+        "GAP-C"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "GAP-E",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GE-1 e GE-2: derivado paginado do Manual (texto integral só no privado) e gates G-MOT verificáveis; aplicar em agents/ exige aprovação expressa",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/manual_pages.py",
+      "depends_on": [
+        "GAP-D"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "decisão do proprietário sobre o derivado paginado do Manual no Drive privado"
+      ]
     }
   ],
   "owner_priorities": [
