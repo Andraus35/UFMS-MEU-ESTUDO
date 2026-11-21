@@ -19,9 +19,9 @@ class SpecS19Tests(unittest.TestCase):
         pos = [DOC.index(s) for s in ("## Objetivo", "## Pesquisa", "## Mapa", "## Requisitos", "## Tarefas derivadas", "## Aceite", "## Limites")]
         self.assertEqual(pos, sorted(pos))
 
-    def test_requisitos_r1_a_r11_cada_um_com_criterio(self):
+    def test_requisitos_r1_a_r12_cada_um_com_criterio(self):
         linhas = [l for l in REQUISITOS.splitlines() if re.match(r"\| S19-R\d+ \|", l)]
-        self.assertEqual([re.match(r"\| (S19-R\d+) ", l).group(1) for l in linhas], [f"S19-R{i}" for i in range(1, 12)])
+        self.assertEqual([re.match(r"\| (S19-R\d+) ", l).group(1) for l in linhas], [f"S19-R{i}" for i in range(1, 13)])
         for l in linhas:
             self.assertGreaterEqual(len([c for c in l.split("|") if c.strip()]), 3)
 
@@ -71,6 +71,12 @@ class SpecS19Tests(unittest.TestCase):
             self.assertIn(t, req(11), t)
         self.assertIn("não é hook", MAPA)
         self.assertIn("e4ee0018", PESQUISA)
+
+    def test_estado_da_conta_e_drive_so_como_hipotese(self):
+        for t in ("outlook", "envio", "sem conector de github", "hipótese", "decisão do proprietário", "s8-r6"):
+            self.assertIn(t, req(12), t)
+        self.assertIn("20 tarefas", PESQUISA)
+        self.assertIn("prevalece o mais restritivo", PESQUISA)
 
     def test_nada_aplicado_e_flag_false(self):
         for perfil in ("TUTOR", "COACH"):
