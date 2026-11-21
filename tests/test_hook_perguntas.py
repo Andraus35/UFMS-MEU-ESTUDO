@@ -195,9 +195,9 @@ class ScriptTest(unittest.TestCase):
         self.estado_do_guard(armed_at=1.0, lote_pendente=False)  # o guard bloqueia por conta própria; as perguntas não competem
         self.assertIsNone(self.rodar([usuario(), bash("git push")], sessao="sx"))
 
-    def test_lote_pendente_mantem_as_perguntas(self):
+    def test_lote_pendente_tambem_cede_pois_o_guard_obriga_a_persistir_sem_perguntas(self):
         self.estado_do_guard(armed_at=1.0, sealed=True, lote_pendente=True)
-        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="sx"))
+        self.assertIsNone(self.rodar([usuario(), bash("git push")], sessao="sx"))
 
     def test_sem_limite_ultrapassado_ou_sem_estado_ou_ilegivel_pergunta_como_antes(self):
         self.estado_do_guard(sessao="a", pct=0.2)  # não armado
@@ -216,9 +216,9 @@ class ScriptTest(unittest.TestCase):
         self.estado_do_guard(sessao="outra", armed_at=1.0, sealed=True, lote_pendente=False)
         self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="sx"))
 
-    def test_lote_pendente_ausente_no_estado_nao_cede(self):
-        self.estado_do_guard(armed_at=1.0, sealed=True)  # estado antigo, sem o campo: na dúvida, pergunta
-        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="sx"))
+    def test_estado_antigo_sem_lote_pendente_mas_armado_cede(self):
+        self.estado_do_guard(armed_at=1.0, sealed=True)
+        self.assertIsNone(self.rodar([usuario(), bash("git push")], sessao="sx"))
 
     def test_estado_indisponivel_nao_impede_o_bloqueio(self):
         motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.dir))  # sem scripts/next_task.py

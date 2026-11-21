@@ -205,39 +205,75 @@ def validate(body, c):
     return miss
 
 
+PROTEGIDAS = ("main", "master", "HEAD")
+
+
+def lote_info(cwd):
+    """Fatos do git (só leitura): branch, se é protegida (principal ou destacada), alterações, commits não enviados e `pendente`."""
+    branch = git(cwd, "symbolic-ref", "--short", "-q", "HEAD")  # funciona também em repositório sem commits
+    if not branch:
+        branch = "HEAD" if git(cwd, "rev-parse", "--git-dir") else ""  # destacada, ou fora de um repositório git
+    sujo = [l for l in git(cwd, "status", "--porcelain").splitlines() if l]
+    nao_enviado = [l for l in git(cwd, "log", "--oneline", "@{u}..HEAD").splitlines() if l]
+    return {"branch": branch or "(sem git)", "protegida": branch in PROTEGIDAS, "sujo": sujo, "nao_enviado": nao_enviado,
+            "pendente": bool(sujo or nao_enviado)}
+
+
+def lote_pendente(cwd):
+    """True se o lote ainda não terminou: árvore com alterações ou commits locais não enviados."""
+    return lote_info(cwd)["pendente"]
+
+
+def fatos_do_lote(info):
+    if info["branch"] == "(sem git)":
+        return "Estado do lote medido agora: o diretório não é um repositório git."
+    t = (f"Estado do lote medido agora: branch `{info['branch']}`{' (PROTEGIDA: não comite nela)' if info['protegida'] else ''}; "
+         f"{len(info['sujo'])} alteração(ões) não commitada(s); {len(info['nao_enviado'])} commit(s) não enviado(s)")
+    if info["sujo"]:
+        t += ": " + ", ".join(l.split(None, 1)[-1] for l in info["sujo"][:8]) + ("…" if len(info["sujo"]) > 8 else "")
+    return t + "."
+
+
+REGRA_PERSISTIR = ("Persistir NÃO exige pedir permissão: faça commit e push na branch de trabalho atual, sem perguntar ao usuário e sem AskUserQuestion. "
+                   "Limites que não dependem de permissão: nunca force push, nunca merge, nunca commit na branch principal ou destacada, nunca arquivo "
+                   "que o projeto declare como contrato sem aprovação já dada; se algum limite impedir, registre o que ficou pendente no prompt.")
+
+
 def instruction(session_id, pct, c, cwd):
     p = prompt_path(cwd)
+    info = lote_info(cwd)
     return (
         f"[context-guard] A janela de contexto desta sessão está em {pct * 100:.0f}% (limite {c['threshold'] * 100:.0f}%). "
-        "COMECE AGORA, antes de qualquer outro trabalho, a preparar a passagem para a próxima sessão:\n"
-        "1. Atualize a memória e o estado persistente do projeto pelas regras do PRÓPRIO projeto (CLAUDE.md/AGENTS.md, arquivos de handoff, "
-        "estado, roadmap) e a memória automática do Claude com o que for durável.\n"
-        "2. Deixe o repositório inteiro num estado conhecido: rode os testes/gates que o projeto exige se forem rápidos; faça commit e push "
-        "SOMENTE se as regras do projeto e do usuário permitirem; senão liste as alterações pendentes no prompt. Nunca force push nem aja "
-        "fora das regras do projeto.\n"
-        "3. Redija o PROMPT DE START da próxima sessão e sele-o com UM comando (o conteúdo vai no heredoc):\n"
+        "COMECE AGORA, antes de qualquer outro trabalho, a preparar a passagem para a próxima sessão. NÃO peça permissão ao usuário e NÃO use "
+        "AskUserQuestion: execute os passos nesta ordem.\n"
+        f"1. VERIFICAR O FIM DO LOTE (para não cortar ao meio). {fatos_do_lote(info)} Se há micro tarefa em andamento, NÃO inicie outra: "
+        "conclua só o que falta para chegar ao ponto de corte consistente mais próximo (testes e gates do projeto passando). Se não der para "
+        "chegar a um ponto verde sem estourar o contexto, deixe o trabalho num commit marcado `WIP:` na branch de trabalho e descreva no prompt "
+        "o que falta.\n"
+        "2. PERSISTIR O REPOSITÓRIO. Atualize a memória e o estado persistente do projeto pelas regras do PRÓPRIO projeto (CLAUDE.md/AGENTS.md, "
+        "arquivos de handoff, estado, roadmap) e a memória automática do Claude com o que for durável; rode os gates que o projeto exige. "
+        f"{REGRA_PERSISTIR}\n"
+        "3. SELAR o PROMPT DE START da próxima sessão com UM comando (o conteúdo vai no heredoc; selar só depois de persistir, para os fatos do git saírem certos):\n"
         f"   python3 {script_ref()} seal --session {session_id} --cwd \"{cwd}\" <<'PROMPT'\n"
         "   ## Primeiro passo\n   (a ação exata e o comando para começar)\n   ## Estado\n   (o que está feito, onde parou, branch/PR/SHA, o que está verde ou vermelho)\n"
         "   ## Pendências\n   (decisões e atos do usuário, riscos, armadilhas, o que NÃO fazer)\n   PROMPT\n"
         "   O comando recusa o prompt sem as seções `## Primeiro passo`, `## Estado` e `## Pendências` e anexa os fatos medidos do git.\n"
-        f"O prompt selado fica em {p}. Enquanto não houver prompt selado, esta ordem se repete e o fim do turno é bloqueado."
+        f"O prompt selado fica em {p}. Enquanto não houver prompt selado e o lote persistido, esta ordem se repete e o fim do turno é bloqueado."
         + (f"\nInstrução específica deste projeto: {c['extra_instruction']}" if isinstance(c.get("extra_instruction"), str) and c["extra_instruction"].strip() else "")
     )
 
 
-def lote_pendente(cwd):
-    """True se o lote ainda não terminou: árvore com alterações ou commits locais não enviados (só leitura do git)."""
-    sujo = bool(git(cwd, "status", "--porcelain"))
-    nao_enviado = bool(git(cwd, "log", "--oneline", "@{u}..HEAD"))
-    return sujo or nao_enviado
+def texto_persistir(info, pct):
+    return (f"[context-guard] Contexto em {pct * 100:.0f}% e o lote ainda NÃO está persistido. {fatos_do_lote(info)} Conclua o ponto de corte "
+            f"consistente e persista agora (commit e push na branch de trabalho). {REGRA_PERSISTIR} Depois, se o conteúdo do prompt de start mudou, sele-o de novo.")
 
 
-def aviso_selado(pendente, p):
+def aviso_selado(info, p):
     base = f"[context-guard] Contexto acima do limite e prompt de start JÁ SELADO ({p}). "
-    if pendente:
-        return (base + "O lote em curso AINDA NÃO terminou (alterações não commitadas ou commits não enviados): finalize-o (testes, commit e push "
-                "conforme as regras do projeto), NÃO abra outro lote e, ao terminar, diga ao usuário para iniciar uma nova sessão.")
-    return (base + "Lote finalizado: NÃO proponha novo lote nem pergunte sobre a próxima rodada (as perguntas automáticas de continuidade ficam "
+    if info["pendente"]:
+        return (base + f"O lote AINDA NÃO está persistido. {fatos_do_lote(info)} NÃO abra outro lote: conclua o ponto de corte e persista agora (commit e "
+                f"push na branch de trabalho), sem pedir permissão. {REGRA_PERSISTIR} Depois, sele o prompt de novo e diga ao usuário para iniciar uma nova sessão.")
+    return (base + "Lote finalizado e persistido: NÃO proponha novo lote nem pergunte sobre a próxima rodada (as perguntas automáticas de continuidade ficam "
             "suspensas). Diga ao usuário, em uma frase, que a próxima sessão começa pelo prompt selado, e encerre.")
 
 
@@ -264,12 +300,13 @@ def on_measure(event, payload):
     st.update({"cwd": cwd, "pct": round(pct, 4), "seen_at": time.time()})
     if pct >= float(c["threshold"]):
         st.setdefault("armed_at", time.time())
-        st["lote_pendente"] = lote_pendente(cwd)
+        info = lote_info(cwd)
+        st["lote_pendente"] = info["pendente"]
         save_state(sid, st)
         if not st.get("sealed"):
             out(event, text=instruction(sid, pct, c, cwd))
         else:
-            out(event, text=aviso_selado(st["lote_pendente"], prompt_path(cwd)))
+            out(event, text=aviso_selado(info, prompt_path(cwd)))
         return
     save_state(sid, st)
 
@@ -277,16 +314,22 @@ def on_measure(event, payload):
 def on_stop(payload):
     sid = payload.get("session_id") or "unknown"
     st = load_state(sid)
-    if not st.get("armed_at") or st.get("sealed"):
+    if not st.get("armed_at"):
         return
-    c = cfg(st.get("cwd") or payload.get("cwd") or os.getcwd())
+    cwd = st.get("cwd") or payload.get("cwd") or os.getcwd()
+    c = cfg(cwd)
+    info = lote_info(cwd)
+    falta_selar = not st.get("sealed")
+    falta_persistir = info["pendente"] and not info["protegida"]  # na branch protegida não há como persistir: não prende a sessão
+    if not (falta_selar or falta_persistir):
+        return
     blocks = int(st.get("stop_blocks", 0))
     if blocks >= int(c["max_stop_blocks"]):
         return  # nunca prende a sessão: o fallback em PreCompact/SessionEnd cobre
     st["stop_blocks"] = blocks + 1
     save_state(sid, st)
-    out("Stop", text=instruction(sid, float(st.get("pct", 0)), c, st.get("cwd") or payload.get("cwd") or os.getcwd())
-        + f"\n(bloqueio {blocks + 1} de {c['max_stop_blocks']})")
+    texto = instruction(sid, float(st.get("pct", 0)), c, cwd) if falta_selar else texto_persistir(info, float(st.get("pct", 0)))
+    out("Stop", text=texto + f"\n(bloqueio {blocks + 1} de {c['max_stop_blocks']})")
 
 
 def fallback(payload):

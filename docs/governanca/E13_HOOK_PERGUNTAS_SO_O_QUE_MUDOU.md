@@ -11,20 +11,28 @@
 
 **O que NÃO muda:** a detecção de entrega (commit, push, operação de PR), a sequência (1) pendências, (2) roadmap, (3) fila, a regra de lote do `AGENTS.md`, a trava `stop_hook_active`, a falha aberta e o prazo. **O hook continua só lendo:** não grava arquivo nem estado (testes proíbem escrita); por isso a memória do "já perguntei" vem do transcript, não de arquivo.
 
-## Prioridade do hook de passagem sobre as perguntas (correção de 21/11/2026)
+## Prioridade do hook de passagem: verificar o fim do lote, persistir sem pedir permissão (correções de 21/11/2026)
 
-**Defeito observado pelo proprietário:** depois do limite de 50% e do prompt selado, a sessão antiga continuava propondo continuidade, porque o hook de perguntas seguia bloqueando o fim de rodada e o hook de passagem ficava em silêncio depois do selo. **Verificado:** o hook de passagem funcionava (estado da sessão com `armed_at`, `sealed`, 63% e sem erro); faltava mandar **encerrar** e fazer as perguntas **cederem**.
+**Defeitos apontados pelo proprietário:** (1) depois dos 50% e do selo, a sessão seguia propondo continuidade por perguntas (o hook de passagem ficava em silêncio e o de perguntas continuava bloqueando); (2) o hook devia **obrigar a verificar o fim do lote antes de salvar, para não cortar ao meio**, e **atualizar e persistir o repositório sem pedir permissão**. **Verificado:** o hook de passagem já disparava; faltavam a ordem de verificação, a persistência autônoma e a cessão das perguntas.
+
+**Ordem imposta aos 50% (nesta sequência, sem perguntar ao usuário e sem `AskUserQuestion`):**
+1. **Verificar o fim do lote:** o script mede o git (branch, se é protegida, alterações não commitadas, commits não enviados) e injeta os fatos; se há micro tarefa em andamento, **não iniciar outra**, concluir só até o **ponto de corte consistente** (testes e gates passando) ou, se não der, deixar um commit `WIP:` na branch de trabalho com o que falta descrito.
+2. **Persistir:** atualizar memória e estado pelas regras do próprio projeto, rodar os gates e **fazer commit e push na branch de trabalho atual, sem pedir permissão**. **Limites que não dependem de permissão:** nunca force push, nunca merge, nunca commit na branch principal ou destacada, nunca arquivo de contrato sem aprovação já dada; se um limite impedir, registrar a pendência no prompt.
+3. **Selar** o prompt de start **só depois de persistir** (os fatos do git saem certos).
 
 | Situação | Hook de passagem (`claude_context_guard`) | Hook de perguntas |
 |---|---|---|
 | Abaixo do limite | nada | como antes (e só o que mudou) |
-| Acima do limite, sem selo | ordena preparar e selar; bloqueia o fim (até 3 vezes) | **cede** (não compete) |
-| Acima do limite, selado, **lote finalizado** (árvore limpa e tudo enviado) | a cada prompt e ferramenta avisa: **não proponha novo lote nem pergunte sobre a próxima rodada; diga ao usuário que a próxima sessão começa pelo prompt selado e encerre** | **cede**: não bloqueia |
-| Acima do limite, selado, **lote pendente** (alteração não commitada ou commit não enviado) | avisa: **finalize o lote, não abra outro e depois peça nova sessão** | **continua valendo** (o lote ainda precisa ser finalizado) |
+| Acima do limite, sem selo | ordena as três etapas; **`Stop` bloqueia** até selar (máx. 3 vezes) | **cede** |
+| Acima do limite, selado, **lote não persistido** (alteração não commitada ou commit não enviado, em branch de trabalho) | a cada prompt e ferramenta manda **concluir o corte e persistir sem pedir permissão**; **`Stop` bloqueia** até persistir (máx. 3 vezes) | **cede** |
+| Acima do limite, selado, lote persistido | avisa: **não proponha novo lote nem pergunte; diga que a próxima sessão começa pelo prompt selado e encerre**; `Stop` libera | **cede** |
+| Branch principal ou destacada | não bloqueia o `Stop` por pendência (não há como persistir lá) e a instrução diz para **não** comitar | **cede** |
 
-**Como o hook de perguntas sabe:** só **lê** `~/.claude/context-guard/state/<sessão>.json`, que o hook de passagem atualiza a cada medição acima do limite (`armed_at` e `lote_pendente`). **Na dúvida, não cede** (estado ausente, ilegível, de outra sessão, sem `lote_pendente` ou sem `armed_at`). A pendência do lote é medida pelo git (`status --porcelain` e `@{u}..HEAD`) a cada prompt e a cada ferramenta, então reflete o último commit e push da sessão.
+**Interpretação a confirmar:** a regra anterior ("as perguntas só prevalecem se o lote ainda precisar ser finalizado") foi substituída pela de agora: com o lote pendente quem age é o hook de passagem, **que manda finalizar e persistir sem perguntar**; por isso o hook de perguntas **cede sempre** que o limite foi ultrapassado. Se a intenção era manter as perguntas com lote pendente, é uma linha para voltar.
 
-**Limites:** o aviso é instrução ao modelo (não impede o usuário de seguir conversando); a medição do contexto tem atraso de um turno; **não observado ainda em Claude Code real além do disparo do aviso nesta sessão**. Sessões novas não herdam o estado (é por sessão).
+**Como o hook de perguntas sabe:** só **lê** `~/.claude/context-guard/state/<sessão>.json` (`armed_at`). **Na dúvida, não cede** (estado ausente, ilegível, de outra sessão ou sem `armed_at`).
+
+**Limites:** o aviso é instrução ao modelo (não impede o usuário de seguir conversando, nem prova que o commit foi bem feito: o `Stop` só confere que o git ficou limpo e enviado); a medição do contexto tem atraso de um turno; **o commit automático segue as regras de contrato: arquivos de contrato com aprovação pendente (como os deste PR) não devem ser comitados à revelia** — o hook manda "nunca arquivo de contrato sem aprovação já dada", e quem decide o que é contrato é o projeto. Observado ao vivo nesta sessão: o aviso de lote pendente listou os arquivos e mudou para "lote finalizado" ao push.
 
 ## Garantias e limites
 
@@ -35,7 +43,7 @@
 
 ## Testes
 
-`tests/test_hook_perguntas.py` (35) e `tests/test_claude_context_guard.py` (36): mesmo estado com pergunta depois não bloqueia; sem pergunta depois bloqueia; pergunta antes do aviso não conta (duas posições); estado mudado bloqueia e mostra o antes e o agora; aviso em bloco `text` é lido; sem histórico ou sem estado legível pergunta como antes; o hook continua sem escrever. **7 de 7 mutações mortas.**
+`tests/test_hook_perguntas.py` e `tests/test_claude_context_guard.py` (46): mesmo estado com pergunta depois não bloqueia; sem pergunta depois bloqueia; pergunta antes do aviso não conta (duas posições); estado mudado bloqueia e mostra o antes e o agora; aviso em bloco `text` é lido; sem histórico ou sem estado legível pergunta como antes; o hook continua sem escrever. **7 de 7 mutações mortas.**
 
 ## Como desfazer
 

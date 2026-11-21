@@ -12,9 +12,10 @@ daquele estado já foi feita e o hook NÃO bloqueia de novo. Se o estado mudou (
 Sem estado legível ou sem pergunta depois do último aviso, bloqueia como antes (na dúvida, pergunta).
 
 PRIORIDADE DO HOOK DE PASSAGEM (E13, correção de 21/11/2026): se o hook geral `claude_context_guard` já foi acionado nesta sessão (contexto
-acima do limite, `armed_at` no estado dele) e o lote NÃO está pendente (`lote_pendente` falso: árvore limpa e tudo enviado), este hook
-CEDE e não bloqueia: as perguntas de continuidade não prevalecem sobre a passagem para a próxima sessão. Com o lote pendente, ele
-continua valendo. Leitura apenas do estado do guard (`~/.claude/context-guard/state/<sessão>.json`); estado ausente ou ilegível: não cede.
+acima do limite, `armed_at` no estado dele), este hook CEDE e não bloqueia: as perguntas de continuidade não prevalecem sobre a passagem para
+a próxima sessão. Lote pendente também cede: nesse caso é o hook geral que obriga a verificar o fim do lote, concluir o ponto de corte e
+persistir (commit e push) SEM pedir permissão. Leitura apenas do estado do guard (`~/.claude/context-guard/state/<sessão>.json`); estado
+ausente ou ilegível: não cede.
 """
 import json
 import os
@@ -102,14 +103,14 @@ def estado_anterior(linhas):
 
 
 def cede_ao_hook_de_passagem(dados):
-    """True se a sessão já passou do limite de contexto (hook geral) e o lote não está pendente. Só lê; qualquer dúvida: False."""
+    """True se a sessão já passou do limite de contexto (hook geral). Só lê; qualquer dúvida: False."""
     try:
         sessao = re.sub(r"[^A-Za-z0-9_-]", "_", str(dados.get("session_id") or ""))[:80]
         if not sessao:
             return False
         base = Path(os.environ.get("CONTEXT_GUARD_HOME") or Path.home())
         st = json.loads((base / ".claude" / "context-guard" / "state" / (sessao + ".json")).read_text(encoding="utf-8"))
-        return bool(st.get("armed_at")) and st.get("lote_pendente") is False
+        return bool(st.get("armed_at"))
     except Exception:
         return False
 

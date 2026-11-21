@@ -247,7 +247,7 @@ class AvisoPosSeloTests(Base):
         self.armado_e_selado()
         for ev in ("UserPromptSubmit", "PostToolUse"):
             t = self.run_hook(ev)["hookSpecificOutput"]["additionalContext"]
-            self.assertIn("Lote finalizado", t)
+            self.assertIn("Lote finalizado e persistido", t)
             self.assertIn("NÃO proponha novo lote", t)
             self.assertIn("encerre", t)
         self.assertIs(self.estado()["lote_pendente"], False)
@@ -256,7 +256,7 @@ class AvisoPosSeloTests(Base):
         self.armado_e_selado()
         (self.proj / "alteracao.txt").write_text("x")  # árvore suja
         t = self.run_hook("UserPromptSubmit")["hookSpecificOutput"]["additionalContext"]
-        self.assertIn("AINDA NÃO terminou", t)
+        self.assertIn("AINDA NÃO está persistido", t)
         self.assertIn("NÃO abra outro lote", t)
         self.assertNotIn("Lote finalizado", t)
         self.assertIs(self.estado()["lote_pendente"], True)
@@ -271,12 +271,99 @@ class AvisoPosSeloTests(Base):
         self.armado_e_selado()
         self.assertIn("Lote finalizado", self.run_hook("PostToolUse")["hookSpecificOutput"]["additionalContext"])
         subprocess.run([*g, "commit", "-q", "--allow-empty", "-m", "b"], check=True)
-        self.assertIn("AINDA NÃO terminou", self.run_hook("PostToolUse")["hookSpecificOutput"]["additionalContext"])
+        self.assertIn("AINDA NÃO está persistido", self.run_hook("PostToolUse")["hookSpecificOutput"]["additionalContext"])
 
     def test_abaixo_do_limite_nao_avisa(self):
         self.transcript(50_000)
         self.assertIsNone(self.run_hook("UserPromptSubmit"))
         self.assertNotIn("lote_pendente", self.estado())
+
+
+class FimDeLoteEPersistenciaTests(Base):
+    def ramo_de_trabalho(self, nome="feat"):
+        subprocess.run(["git", "-C", str(self.proj), "symbolic-ref", "HEAD", f"refs/heads/{nome}"], check=True)
+
+    def ordem(self):
+        self.transcript(150_000)
+        return self.run_hook("UserPromptSubmit")["hookSpecificOutput"]["additionalContext"]
+
+    def test_ordem_manda_verificar_o_fim_do_lote_antes_de_persistir_e_selar_sem_pedir_permissao(self):
+        t = self.ordem()
+        posicoes = [t.index(x) for x in ("1. VERIFICAR O FIM DO LOTE", "2. PERSISTIR O REPOSITÓRIO", "3. SELAR")]
+        self.assertEqual(posicoes, sorted(posicoes))
+        for trecho in ("para não cortar ao meio", "NÃO inicie outra", "ponto de corte consistente", "`WIP:`", "NÃO peça permissão ao usuário",
+                       "NÃO use AskUserQuestion", "faça commit e push na branch de trabalho atual", "nunca force push", "nunca merge",
+                       "nunca commit na branch principal", "selar só depois de persistir"):
+            self.assertIn(trecho, t, trecho)
+
+    def test_fatos_do_lote_aparecem_com_o_nome_correto_dos_arquivos(self):
+        self.ramo_de_trabalho()
+        (self.proj / "alteracao.txt").write_text("x")
+        (self.proj / "outro.txt").write_text("y")
+        t = self.ordem()
+        self.assertIn("branch `feat`", t)
+        self.assertIn("2 alteração(ões) não commitada(s)", t)
+        self.assertIn("alteracao.txt", t)  # o strip do git não pode comer o começo do nome
+        self.assertNotIn("PROTEGIDA", t)
+
+    def test_arquivo_rastreado_modificado_mantem_o_nome_inteiro(self):
+        self.ramo_de_trabalho()
+        (self.proj / "rastreado.txt").write_text("a")
+        g = ["git", "-C", str(self.proj), "-c", "user.email=a@b.c", "-c", "user.name=t"]
+        subprocess.run([*g, "add", "-A"], check=True)
+        subprocess.run([*g, "commit", "-q", "-m", "a"], check=True)
+        (self.proj / "rastreado.txt").write_text("b")  # " M rastreado.txt": o strip do git come o espaço inicial
+        self.assertIn("rastreado.txt", self.ordem())
+        self.assertNotIn("astreado.txt,", self.ordem().replace("rastreado.txt", ""))
+
+    def test_branch_principal_e_marcada_como_protegida(self):
+        self.ramo_de_trabalho("main")
+        self.assertIn("PROTEGIDA: não comite nela", self.ordem())
+
+    def test_stop_bloqueia_selado_mas_nao_persistido(self):
+        self.ramo_de_trabalho()
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.assertEqual(self.seal().returncode, 0)
+        self.assertIsNone(self.run_hook("Stop"))  # selado e limpo: libera
+        (self.proj / "pendente.txt").write_text("x")
+        o = self.run_hook("Stop")
+        self.assertEqual(o["decision"], "block")
+        self.assertIn("ainda NÃO está persistido", o["reason"])
+        self.assertIn("persista agora (commit e push", o["reason"])
+        self.assertIn("pendente.txt", o["reason"])
+
+    def test_stop_nao_prende_em_branch_protegida(self):
+        self.ramo_de_trabalho("main")
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.seal()
+        (self.proj / "pendente.txt").write_text("x")
+        self.assertIsNone(self.run_hook("Stop"))  # não há como persistir na principal: não bloqueia
+
+    def test_stop_persistir_tem_teto_de_bloqueios(self):
+        self.ramo_de_trabalho()
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.seal()
+        (self.proj / "pendente.txt").write_text("x")
+        for _ in range(3):
+            self.assertEqual(self.run_hook("Stop")["decision"], "block")
+        self.assertIsNone(self.run_hook("Stop"))
+
+    def test_aviso_pos_selo_com_lote_pendente_manda_persistir_sem_pedir_permissao(self):
+        self.ramo_de_trabalho()
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.seal()
+        (self.proj / "pendente.txt").write_text("x")
+        t = self.run_hook("PostToolUse")["hookSpecificOutput"]["additionalContext"]
+        self.assertIn("sem pedir permissão", t)
+        self.assertIn("pendente.txt", t)
+        self.assertIn("sele o prompt de novo", t)
+
+    def test_repositorio_sem_commits_nao_e_confundido_com_sem_git(self):
+        self.assertNotIn("não é um repositório git", self.ordem())
 
 
 class ConfigDoProjetoTests(Base):
