@@ -10,12 +10,18 @@ SÓ O QUE MUDOU (E13, decisão do proprietário de 21/11/2026): o hook continua 
 último "Estado lido agora: ..." que ele mesmo emitiu é IGUAL ao estado atual e já houve AskUserQuestion depois dele, a pergunta
 daquele estado já foi feita e o hook NÃO bloqueia de novo. Se o estado mudou (ciclo, PR ou próximo item), bloqueia e mostra o que mudou.
 Sem estado legível ou sem pergunta depois do último aviso, bloqueia como antes (na dúvida, pergunta).
+
+PRIORIDADE DO HOOK DE PASSAGEM (E13, correção de 21/11/2026): se o hook geral `claude_context_guard` já foi acionado nesta sessão (contexto
+acima do limite, `armed_at` no estado dele) e o lote NÃO está pendente (`lote_pendente` falso: árvore limpa e tudo enviado), este hook
+CEDE e não bloqueia: as perguntas de continuidade não prevalecem sobre a passagem para a próxima sessão. Com o lote pendente, ele
+continua valendo. Leitura apenas do estado do guard (`~/.claude/context-guard/state/<sessão>.json`); estado ausente ou ilegível: não cede.
 """
 import json
 import os
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 _ASK = re.compile(r'"name"\s*:\s*"AskUserQuestion"')
 _GIT = re.compile(r"(?:^|[;&|(]|\n)\s*(?:cd\s+\S+\s*&&\s*)?git\s+(?:commit|push)\b")
@@ -95,6 +101,19 @@ def estado_anterior(linhas):
     return ultimo, any(_ASK.search(l) for l in linhas[onde + 1:])
 
 
+def cede_ao_hook_de_passagem(dados):
+    """True se a sessão já passou do limite de contexto (hook geral) e o lote não está pendente. Só lê; qualquer dúvida: False."""
+    try:
+        sessao = re.sub(r"[^A-Za-z0-9_-]", "_", str(dados.get("session_id") or ""))[:80]
+        if not sessao:
+            return False
+        base = Path(os.environ.get("CONTEXT_GUARD_HOME") or Path.home())
+        st = json.loads((base / ".claude" / "context-guard" / "state" / (sessao + ".json")).read_text(encoding="utf-8"))
+        return bool(st.get("armed_at")) and st.get("lote_pendente") is False
+    except Exception:
+        return False
+
+
 def estado_da_fila():
     """Resumo do estado real (ciclo e próximo item); vazio se não puder ler."""
     try:
@@ -126,6 +145,8 @@ def main():
     try:
         dados = json.load(sys.stdin)
         if dados.get("stop_hook_active"):
+            return 0
+        if cede_ao_hook_de_passagem(dados):
             return 0
         turno = trecho_do_turno(dados["transcript_path"])
         if any(_ASK.search(l) for l in turno):

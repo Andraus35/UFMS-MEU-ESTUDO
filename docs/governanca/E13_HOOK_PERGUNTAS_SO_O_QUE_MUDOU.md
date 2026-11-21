@@ -11,6 +11,21 @@
 
 **O que NÃO muda:** a detecção de entrega (commit, push, operação de PR), a sequência (1) pendências, (2) roadmap, (3) fila, a regra de lote do `AGENTS.md`, a trava `stop_hook_active`, a falha aberta e o prazo. **O hook continua só lendo:** não grava arquivo nem estado (testes proíbem escrita); por isso a memória do "já perguntei" vem do transcript, não de arquivo.
 
+## Prioridade do hook de passagem sobre as perguntas (correção de 21/11/2026)
+
+**Defeito observado pelo proprietário:** depois do limite de 50% e do prompt selado, a sessão antiga continuava propondo continuidade, porque o hook de perguntas seguia bloqueando o fim de rodada e o hook de passagem ficava em silêncio depois do selo. **Verificado:** o hook de passagem funcionava (estado da sessão com `armed_at`, `sealed`, 63% e sem erro); faltava mandar **encerrar** e fazer as perguntas **cederem**.
+
+| Situação | Hook de passagem (`claude_context_guard`) | Hook de perguntas |
+|---|---|---|
+| Abaixo do limite | nada | como antes (e só o que mudou) |
+| Acima do limite, sem selo | ordena preparar e selar; bloqueia o fim (até 3 vezes) | **cede** (não compete) |
+| Acima do limite, selado, **lote finalizado** (árvore limpa e tudo enviado) | a cada prompt e ferramenta avisa: **não proponha novo lote nem pergunte sobre a próxima rodada; diga ao usuário que a próxima sessão começa pelo prompt selado e encerre** | **cede**: não bloqueia |
+| Acima do limite, selado, **lote pendente** (alteração não commitada ou commit não enviado) | avisa: **finalize o lote, não abra outro e depois peça nova sessão** | **continua valendo** (o lote ainda precisa ser finalizado) |
+
+**Como o hook de perguntas sabe:** só **lê** `~/.claude/context-guard/state/<sessão>.json`, que o hook de passagem atualiza a cada medição acima do limite (`armed_at` e `lote_pendente`). **Na dúvida, não cede** (estado ausente, ilegível, de outra sessão, sem `lote_pendente` ou sem `armed_at`). A pendência do lote é medida pelo git (`status --porcelain` e `@{u}..HEAD`) a cada prompt e a cada ferramenta, então reflete o último commit e push da sessão.
+
+**Limites:** o aviso é instrução ao modelo (não impede o usuário de seguir conversando); a medição do contexto tem atraso de um turno; **não observado ainda em Claude Code real além do disparo do aviso nesta sessão**. Sessões novas não herdam o estado (é por sessão).
+
 ## Garantias e limites
 
 - **Na dúvida, pergunta:** sem estado legível (`next_task.py` indisponível), sem aviso anterior no transcript ou sem pergunta depois do último aviso, o hook bloqueia como antes. Pergunta feita **antes** do aviso não conta.
@@ -20,7 +35,7 @@
 
 ## Testes
 
-`tests/test_hook_perguntas.py` (28): mesmo estado com pergunta depois não bloqueia; sem pergunta depois bloqueia; pergunta antes do aviso não conta (duas posições); estado mudado bloqueia e mostra o antes e o agora; aviso em bloco `text` é lido; sem histórico ou sem estado legível pergunta como antes; o hook continua sem escrever. **7 de 7 mutações mortas.**
+`tests/test_hook_perguntas.py` (35) e `tests/test_claude_context_guard.py` (36): mesmo estado com pergunta depois não bloqueia; sem pergunta depois bloqueia; pergunta antes do aviso não conta (duas posições); estado mudado bloqueia e mostra o antes e o agora; aviso em bloco `text` é lido; sem histórico ou sem estado legível pergunta como antes; o hook continua sem escrever. **7 de 7 mutações mortas.**
 
 ## Como desfazer
 

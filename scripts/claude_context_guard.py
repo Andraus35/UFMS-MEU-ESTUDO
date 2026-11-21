@@ -225,6 +225,22 @@ def instruction(session_id, pct, c, cwd):
     )
 
 
+def lote_pendente(cwd):
+    """True se o lote ainda não terminou: árvore com alterações ou commits locais não enviados (só leitura do git)."""
+    sujo = bool(git(cwd, "status", "--porcelain"))
+    nao_enviado = bool(git(cwd, "log", "--oneline", "@{u}..HEAD"))
+    return sujo or nao_enviado
+
+
+def aviso_selado(pendente, p):
+    base = f"[context-guard] Contexto acima do limite e prompt de start JÁ SELADO ({p}). "
+    if pendente:
+        return (base + "O lote em curso AINDA NÃO terminou (alterações não commitadas ou commits não enviados): finalize-o (testes, commit e push "
+                "conforme as regras do projeto), NÃO abra outro lote e, ao terminar, diga ao usuário para iniciar uma nova sessão.")
+    return (base + "Lote finalizado: NÃO proponha novo lote nem pergunte sobre a próxima rodada (as perguntas automáticas de continuidade ficam "
+            "suspensas). Diga ao usuário, em uma frase, que a próxima sessão começa pelo prompt selado, e encerre.")
+
+
 def out(event, **kw):
     if event == "Stop":
         print(json.dumps({"decision": "block", "reason": kw["text"]}, ensure_ascii=False))
@@ -248,9 +264,12 @@ def on_measure(event, payload):
     st.update({"cwd": cwd, "pct": round(pct, 4), "seen_at": time.time()})
     if pct >= float(c["threshold"]):
         st.setdefault("armed_at", time.time())
+        st["lote_pendente"] = lote_pendente(cwd)
         save_state(sid, st)
         if not st.get("sealed"):
             out(event, text=instruction(sid, pct, c, cwd))
+        else:
+            out(event, text=aviso_selado(st["lote_pendente"], prompt_path(cwd)))
         return
     save_state(sid, st)
 

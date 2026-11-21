@@ -116,7 +116,9 @@ class SeloETravaTests(Base):
         self.assertIn("bloqueio 1 de 3", o["reason"])
         self.assertEqual(self.seal().returncode, 0)
         self.assertIsNone(self.run_hook("Stop"))
-        self.assertIsNone(self.run_hook("UserPromptSubmit"))  # selado: a ordem para de repetir
+        aviso = self.run_hook("UserPromptSubmit")["hookSpecificOutput"]["additionalContext"]  # selado: a ordem de preparar para de repetir
+        self.assertIn("JÁ SELADO", aviso)
+        self.assertNotIn("COMECE AGORA", aviso)
 
     def test_stop_nao_bloqueia_sem_ter_atingido_o_limite(self):
         self.transcript(50_000)
@@ -230,6 +232,51 @@ class FallbackEPassagemTests(Base):
         r = subprocess.run([sys.executable, str(SCRIPT), "UserPromptSubmit"], input="{não é json", capture_output=True, text=True, env=self.env)
         self.assertEqual((r.returncode, r.stdout.strip()), (0, ""))
         self.assertIn("UserPromptSubmit", (self.home / ".claude" / "context-guard" / "errors.log").read_text())
+
+
+class AvisoPosSeloTests(Base):
+    def armado_e_selado(self):
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.assertEqual(self.seal().returncode, 0)
+
+    def estado(self):
+        return json.loads((self.home / ".claude" / "context-guard" / "state" / "s1.json").read_text())
+
+    def test_lote_finalizado_manda_nao_propor_novo_lote_e_encerrar(self):
+        self.armado_e_selado()
+        for ev in ("UserPromptSubmit", "PostToolUse"):
+            t = self.run_hook(ev)["hookSpecificOutput"]["additionalContext"]
+            self.assertIn("Lote finalizado", t)
+            self.assertIn("NÃO proponha novo lote", t)
+            self.assertIn("encerre", t)
+        self.assertIs(self.estado()["lote_pendente"], False)
+
+    def test_lote_pendente_manda_finalizar_antes_de_encerrar(self):
+        self.armado_e_selado()
+        (self.proj / "alteracao.txt").write_text("x")  # árvore suja
+        t = self.run_hook("UserPromptSubmit")["hookSpecificOutput"]["additionalContext"]
+        self.assertIn("AINDA NÃO terminou", t)
+        self.assertIn("NÃO abra outro lote", t)
+        self.assertNotIn("Lote finalizado", t)
+        self.assertIs(self.estado()["lote_pendente"], True)
+
+    def test_commit_local_nao_enviado_conta_como_pendente(self):
+        remoto = Path(self.tmp.name) / "remoto.git"
+        subprocess.run(["git", "init", "-q", "--bare", str(remoto)], check=True)
+        g = ["git", "-C", str(self.proj), "-c", "user.email=a@b.c", "-c", "user.name=t"]
+        subprocess.run([*g, "commit", "-q", "--allow-empty", "-m", "a"], check=True)
+        subprocess.run([*g, "remote", "add", "origin", str(remoto)], check=True)
+        subprocess.run([*g, "push", "-q", "-u", "origin", "HEAD"], check=True, capture_output=True)
+        self.armado_e_selado()
+        self.assertIn("Lote finalizado", self.run_hook("PostToolUse")["hookSpecificOutput"]["additionalContext"])
+        subprocess.run([*g, "commit", "-q", "--allow-empty", "-m", "b"], check=True)
+        self.assertIn("AINDA NÃO terminou", self.run_hook("PostToolUse")["hookSpecificOutput"]["additionalContext"])
+
+    def test_abaixo_do_limite_nao_avisa(self):
+        self.transcript(50_000)
+        self.assertIsNone(self.run_hook("UserPromptSubmit"))
+        self.assertNotIn("lote_pendente", self.estado())
 
 
 class ConfigDoProjetoTests(Base):

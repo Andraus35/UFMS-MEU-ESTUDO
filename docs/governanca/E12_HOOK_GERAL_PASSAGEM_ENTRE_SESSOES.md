@@ -12,6 +12,7 @@ Mede a janela de contexto da sessão e, ao atingir **50%**, faz a sessão prepar
 | `Stop` | **bloqueia o fim do turno** enquanto o prompt não estiver selado, no máximo 3 vezes (nunca prende a sessão) |
 | `PreCompact`, `SessionEnd` | sem prompt selado e com trabalho feito, **o próprio script gera** um prompt de fallback (git e últimos pedidos do usuário) |
 | `SessionStart` (`startup`, `clear`, `compact`) | entrega à sessão nova o prompt **do mesmo projeto** (raiz do git; pastas com o mesmo nome em caminhos diferentes não se misturam); marca o fallback como "pista, não fato" |
+| (acima do limite, **já selado**) | a cada prompt e ferramenta avisa para **não propor novo lote** e encerrar se o lote está finalizado, ou finalizar o lote pendente antes (correção de 21/11/2026; ver E13); e **faz as perguntas de continuidade do projeto cederem** |
 | `seal` (comando) | aceita o prompt só com `## Primeiro passo`, `## Estado` e `## Pendências` e ao menos 400 caracteres; anexa fatos do git e do contexto; arquiva o prompt anterior |
 
 Prompts ficam em `~/.claude/handoffs/<projeto>-<hash>/NEXT_SESSION_PROMPT.md` (histórico em `history/`). Falha do script é **aberta** (nunca derruba a sessão) e vai para `~/.claude/context-guard/errors.log`. Configuração opcional em `~/.claude/context-guard.json`: `threshold` (0,5), `window_tokens` (200000), `max_stop_blocks` (3), `repo_copy` (cópia do prompt dentro do repositório; nulo por padrão).
