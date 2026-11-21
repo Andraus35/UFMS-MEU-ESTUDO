@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #155; SHA 0993cac1e129a7de7beafd43d518f4c427f2490a
-- Frente ativa: **RM-09 / PR #156**; branch `claude/ufms-meu-estudo-lote-b-2mcohs`; base main; fase review.
+- Último merge comprovado: PR #156; SHA cfffafe0dba84e1004df937a817bf8ec9ace17b4
+- Frente ativa: **RM-00 / PR #157**; branch `claude/ufms-meu-estudo-lote-b-2mcohs`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -113,6 +113,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 **RM-09 — E3 (proposta):** `docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md` propõe, **só como texto para o proprietário aprovar**, a operação compartilhada `pedir_relatorio_desempenho` (Tutor e Coach, até 2 por dia: TEC e Gemini Notebook) e os eventos de início ("Iniciar estudos") e de encerramento ("finalizar estudos") na fila `entrada`, com a Zapia como interface única; a aplicação vem depois da persistência privada; **não altera** `agents/`, o esquema de comandos nem o gate, e depende de duas aprovações expressas (texto e merge); RM-09 permanece `planejado`.
 
 **RM-09 — S16:** `docs/especificacoes/S16_ROTINA_ESTUDO_TOP10_UFMS_2027.md` traduz os requisitos do proprietário de 21/11/2026 (cargos 324 e 523, hierarquia do TEC, top 10 por matéria pelos percentuais do guia, entrega diária, comandos de início e encerramento, Notebook, lacunas) em requisitos S16-R1 a R16, separa intenção, especificado, implementado, testado e bloqueado, e registra as regras P1 a P8 (decididas pelo proprietário a partir das duas amostras de 21/11/2026, não versionadas) e o conflito C3 **para decisão do proprietário** (C1 e C2 também decididos). **Não lista o top 10, não cria comando e não implanta**; as tarefas T1 a T3 (`scripts/tec_no.py`, `scripts/top10_materia.py`, `scripts/entrega_diaria.py`) são código offline sintético, sem dado real; RM-09 permanece `planejado`.
+
+**RM-00 — hook geral `HOOKG` (E12):** `scripts/claude_context_guard.py` e seu instalador são ferramenta de **usuário** (`~/.claude`) que mede o contexto e, aos 50%, obriga a preparar o prompt de start da próxima sessão (selo validado, bloqueio limitado do fim do turno, fallback gerado pelo script, entrega à sessão nova); registro em `docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md`; **não ativa nada no projeto** e **não foi testado em Claude Code real**; RM-00 permanece `implementado_nao_homologado`.
 
 **RM-09 — lote C (roteiros do proprietário):** `docs/governanca/ROTEIRO_P9_RENOVAR_TOKENS_20261121.md`, `ROTEIRO_PJ_JANELA_PILOTO_20261121.md`, `ROTEIRO_CM_CONTROLE_DE_MUDANCA_20261121.md` e `ROTEIRO_RECONCILIACAO_523_20261121.md` descrevem os atos dele com comandos e frases literais, com teste de contrato; **nada foi executado**, nenhuma flag mudou e RM-09 permanece `planejado`.
 

@@ -2,10 +2,10 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-09",
-    "scope": "lote_c_roteiros_do_proprietario_p9_pj_cm_reconciliacao_523",
+    "task_id": "RM-00",
+    "scope": "lote_hookg_hook_geral_de_passagem_entre_sessoes",
     "branch": "claude/ufms-meu-estudo-lote-b-2mcohs",
-    "pr_number": 156,
+    "pr_number": 157,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #155 integrado em main no merge commit 0993cac1e129a7de7beafd43d518f4c427f2490a. Frente única ativa: RM-09 (lote_c_roteiros_do_proprietario_p9_pj_cm_reconciliacao_523), branch claude/ufms-meu-estudo-lote-b-2mcohs, PR #156. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #156 integrado em main no merge commit cfffafe0dba84e1004df937a817bf8ec9ace17b4. Frente única ativa: RM-00 (lote_hookg_hook_geral_de_passagem_entre_sessoes), branch claude/ufms-meu-estudo-lote-b-2mcohs, PR #157. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 155,
-    "merge_commit_sha": "0993cac1e129a7de7beafd43d518f4c427f2490a"
+    "pr_number": 156,
+    "merge_commit_sha": "cfffafe0dba84e1004df937a817bf8ec9ace17b4"
   },
   "work_queue": [
     {
