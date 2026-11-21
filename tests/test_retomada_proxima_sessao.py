@@ -24,10 +24,9 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertIsNone(fila["proximo"])  # RS, AE, AM, RG, HOOK4, S15 e S16 têm a entrega (21/11/2026): o que resta espera o proprietário (E3, PJ, RT, CM)
-        self.assertEqual(fila["pendentes"], ["E3", "PJ", "RT", "CM"])
-        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["E3", "PJ"])
-        self.assertIn("agents/", " ".join(fila["bloqueados"][0]["aguarda"]))
+        self.assertIsNone(fila["proximo"])  # RS, AE, AM, RG, HOOK4, S15, S16 e a proposta E3 têm a entrega (21/11/2026): o que resta espera o proprietário (PJ, RT, CM)
+        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM"])
+        self.assertEqual([b["id"] for b in fila["bloqueados"]], ["PJ"])
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
         self.assertTrue((ROOT / "docs" / "governanca" / "RESPOSTA_RODADA6_ZAPIA_20261117.md").is_file())
@@ -42,7 +41,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
                 self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md|\.claude/hooks/[a-z0-9_]+\.py)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("E3", "PJ", "RT", "CM"):  # ainda por fazer; a S11, o PF, o PREL, o GE, o HOOK3, o RS, o AE, o AM e o RG (19 a 21/11/2026), S10, L1, E1 e N2 já têm a entrega
+        for novo in ("PJ", "RT", "CM"):  # ainda por fazer; a E3 (proposta de texto, 21/11/2026), a S11, o PF, o PREL, o GE, o HOOK3, o RS, o AE, o AM e o RG (19 a 21/11/2026), S10, L1, E1 e N2 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 

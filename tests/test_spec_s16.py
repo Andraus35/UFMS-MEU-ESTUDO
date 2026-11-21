@@ -68,7 +68,8 @@ class SpecS16Tests(unittest.TestCase):
         for n in (10, 11):
             for trecho in ("não há comando hoje",):
                 self.assertIn(trecho, req(n))
-        self.assertIn("estudo de hoje finalizado.", req(11))
+        self.assertIn("finalizar estudos", req(11))
+        self.assertIn("iniciar estudos", req(11))
         self.assertIn("e3", req(10))
 
     def test_nao_lista_top10_nem_dado_pessoal_nem_credencial(self):
