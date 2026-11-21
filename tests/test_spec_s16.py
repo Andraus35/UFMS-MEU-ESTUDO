@@ -32,14 +32,15 @@ class SpecS16Tests(unittest.TestCase):
     def test_pesquisa_com_link_e_lacunas_honestas(self):
         self.assertGreaterEqual(len(re.findall(r"https?://", PESQUISA)), 1)
         self.assertIn("- **Lacunas:**", PESQUISA)
-        for trecho in ("não consultei nenhuma página do tec", "percentuais do guia não foram vistos", "denominador",
+        for trecho in ("não consultei nenhuma página do tec", "não estão versionados", "não foi reconciliada",
                        "retificações do edital não foram conferidas", "nada foi implantado"):
             self.assertIn(trecho, PESQUISA.lower().replace("**", ""), trecho)
 
     def test_regra_do_top10_usa_so_percentual_do_guia_e_nao_amplia(self):
         r4 = req(4)
-        for trecho in ("10 assuntos ou subassuntos de maior percentual por matéria", "apenas os percentuais efetivamente apresentados",
-                       "do maior para o menor", "não amplia", "não completa o ranking com estimativa"):
+        for trecho in ("exclusivo da fapec", "só dele sai o top 10", "por matéria do tec", "apenas os percentuais efetivamente apresentados",
+                       "do maior para o menor", "guias de estudo do tec", "só para aprofundar", "não altera a seleção", "não é histórico da fapec",
+                       "não amplia", "não completa o ranking com estimativa"):
             self.assertIn(trecho, r4, trecho)
 
     def test_origem_caminho_e_pai_filho(self):
@@ -47,16 +48,16 @@ class SpecS16Tests(unittest.TestCase):
         self.assertIn("caminho inteiro", req(2))
         for trecho in ("não** soma pai e filho", "probabilidade"):
             self.assertIn(trecho.replace("**", ""), req(3).replace("**", ""), trecho)
-        for campo in ("posição", "percentual", "fonte", "data", "filtros", "denominador"):
+        for campo in ("posição", "percentual", "fonte", "data", "filtros", "denominador", "modalidade", "percentual do caderno"):
             self.assertIn(campo, req(5), campo)
 
     def test_pendencias_e_conflitos_para_o_proprietario(self):
-        for pid in ("P1", "P2", "P3", "P4", "P5", "C1", "C2", "C3"):
+        for pid in ("P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "C1", "C2", "C3"):
             self.assertRegex(PENDENCIAS, rf"\| {pid} \|", pid)
         for trecho in ("decidido (21/11/2026): o harness não impõe cronograma", "decidido (21/11/2026): o top 10 por matéria restringe o plano"):
             self.assertIn(trecho, PENDENCIAS.lower().replace("**", ""), trecho)
-        for trecho in ("pai e um subassunto", "denominador", "empate no 10º lugar", "menos de 10 itens", "pendencia_aberta",
-                       "não inventa regra"):
+        for trecho in ("nós terminais", "composição da amostra", "empate no 10º lugar", "teto de 15", "menos de 10 folhas", "pendencia_aberta",
+                       "não versionados", "específicos do 523 não definitivos", "sem correspondência", "não inventa regra"):
             self.assertIn(trecho, (PENDENCIAS + REQUISITOS).lower().replace("**", "").replace("`", ""), trecho)
 
     def test_comandos_de_inicio_e_fim_nao_existem_e_dependem_do_e3(self):
