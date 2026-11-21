@@ -11,8 +11,8 @@ O que garante, de forma determinística (código, não pedido ao modelo):
      SessionEnd. Assim toda sessão que trabalhou deixa um prompt de start.
   6. A sessão nova (SessionStart: startup, clear, compact) recebe o prompt do projeto como contexto.
 
-Limites honestos: o percentual é o `usage` da ÚLTIMA chamada à API (entrada + cache), não o número da interface; a janela é 200k, ou
-1M se configurada (ou se o uso observado a ultrapassar). O CONTEÚDO do prompt é redigido pelo modelo; o script só exige forma e
+Limites honestos: o percentual é o `usage` da ÚLTIMA chamada à API (entrada + cache), não o número da interface; a janela padrão é 1M (modelos atuais; ajuste
+`window_tokens` para 200k se a sua for menor). O CONTEÚDO do prompt é redigido pelo modelo; o script só exige forma e
 confere fatos. Hooks de usuário não existem em sessões na nuvem sem o hook no repositório do projeto. Falha do script é aberta
 (nunca derruba a sessão) e fica em ~/.claude/context-guard/errors.log.
 """
@@ -31,7 +31,7 @@ HOME = Path(os.environ.get("CONTEXT_GUARD_HOME") or Path.home())
 BASE = HOME / ".claude" / "context-guard"
 HANDOFFS = HOME / ".claude" / "handoffs"
 CONFIG = HOME / ".claude" / "context-guard.json"
-DEFAULTS = {"threshold": 0.5, "window_tokens": 200000, "max_stop_blocks": 3, "repo_copy": None, "min_prompt_chars": 400}
+DEFAULTS = {"threshold": 0.5, "window_tokens": 1_000_000, "max_stop_blocks": 3, "repo_copy": None, "min_prompt_chars": 400}
 REQUIRED = ("## Primeiro passo", "## Estado", "## Pendências")
 PROJECT_KEYS = ("threshold", "window_tokens", "max_stop_blocks", "min_prompt_chars", "extra_instruction")
 
@@ -306,7 +306,11 @@ def on_measure(event, payload):
         if not st.get("sealed"):
             out(event, text=instruction(sid, pct, c, cwd))
         else:
-            out(event, text=aviso_selado(info, prompt_path(cwd)))
+            chave = f"{info['pendente']}|{fatos_do_lote(info)}"
+            if st.get("aviso_chave") != chave:  # depois do selo o aviso sai uma vez por estado do lote, não a cada ferramenta
+                st["aviso_chave"] = chave
+                save_state(sid, st)
+                out(event, text=aviso_selado(info, prompt_path(cwd)))
         return
     save_state(sid, st)
 
