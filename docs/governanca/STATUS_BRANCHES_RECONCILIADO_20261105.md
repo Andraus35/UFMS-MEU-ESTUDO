@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #161; SHA df80d70c9189ffb3c415ae6ad0339216074fab7a
-- Frente ativa: **RM-09 / PR #162**; branch `claude/s19-zapia-interface`; base main; fase review.
+- Último merge comprovado: PR #162; SHA 76d9353a03deb4086bdc5ab108a1890e12089b26
+- Frente ativa: **RM-09 / PR #163**; branch `claude/b1-imc-coach`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
