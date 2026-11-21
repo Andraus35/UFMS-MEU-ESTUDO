@@ -845,6 +845,17 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "TOP3",
+      "title": "S16 T3: entrega diária (S16-R7, R8, R9) e recorte do plano ao top 10 (C2, R4, R14): cargo, matéria, caminho, posição e percentual só quando verificados, material, atividade, quantidade definida pelo Tutor, filtros obrigatórios e objetivo; só cita recurso verificado, não afirma disponibilidade nem probabilidade; fora do top 10 vira lacuna com cargo e fonte e só entra com decisão registrada do proprietário; matéria sem lista definitiva vai a pendentes; sem cronograma imposto; função pura offline",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/entrega_diaria.py",
+      "depends_on": [
+        "TOP2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
