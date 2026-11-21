@@ -10,9 +10,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import platform_read_guard as g  # noqa: E402
 
 T0 = datetime(2026, 11, 17, 15, 0, 0, tzinfo=timezone.utc)
-LIBERADA = g.Config(habilitadas=frozenset({"tec", "qconcursos"}), termos_tec_registrados=True,
-                    decisao_qconcursos_expressa=True, termos_qconcursos_lidos=True)
-TEC_SO = g.Config(habilitadas=frozenset({"tec"}), termos_tec_registrados=True)
+LIBERADA = g.Config(habilitadas=frozenset({"tec", "qconcursos"}))
+TEC_SO = g.Config(habilitadas=frozenset({"tec"}))
 URL = "https://www.tecconcursos.com.br/estatisticas/desempenho"
 
 
@@ -55,21 +54,15 @@ def leitura(**mudar):
 CONV = "answered_excludes_unanswered"
 
 
-class PadraoFechadoTest(unittest.TestCase):
-    def test_padrao_recusa_as_duas_plataformas(self):
+class PadraoLiberadoTest(unittest.TestCase):
+    def test_padrao_libera_as_duas_plataformas_sem_condicao(self):
         for p in ("tec", "qconcursos"):
             gd, _ = guarda(g.PADRAO)
-            self.assertEqual(gd.iniciar_sessao(p).codigo, "PLATAFORMA_DESABILITADA")
+            self.assertTrue(gd.iniciar_sessao(p).ok)
 
-    def test_tec_exige_termos_registrados(self):
-        gd, _ = guarda(g.Config(habilitadas=frozenset({"tec"})))
-        self.assertEqual(gd.iniciar_sessao("tec").codigo, "TERMOS_TEC_NAO_REGISTRADOS")
-
-    def test_qconcursos_exige_decisao_expressa_e_termos_lidos(self):
-        gd, _ = guarda(g.Config(habilitadas=frozenset({"qconcursos"}), termos_tec_registrados=True))
-        self.assertEqual(gd.iniciar_sessao("qconcursos").codigo, "QCONCURSOS_SEM_DECISAO_EXPRESSA")
-        gd, _ = guarda(g.Config(habilitadas=frozenset({"qconcursos"}), decisao_qconcursos_expressa=True))
-        self.assertEqual(gd.iniciar_sessao("qconcursos").codigo, "TERMOS_QCONCURSOS_NAO_LIDOS")
+    def test_plataforma_fora_da_configuracao_continua_desabilitada(self):
+        gd, _ = guarda(g.Config(habilitadas=frozenset({"qconcursos"})))
+        self.assertEqual(gd.iniciar_sessao("tec").codigo, "PLATAFORMA_DESABILITADA")
 
     def test_plataforma_desconhecida_e_relogio_obrigatorio(self):
         gd, _ = guarda(LIBERADA)
@@ -157,39 +150,17 @@ class OperacoesDeEscritaTest(unittest.TestCase):
         self.assertEqual(gd.autorizar({"tipo": "enviar_formulario"}).codigo, "OPERACAO_ESCRITA")
 
 
-class TaxaESessaoTest(unittest.TestCase):
-    def test_segunda_pagina_antes_de_10s_e_recusada(self):
-        gd, r = sessao()
-        self.assertTrue(nav(gd).ok)
-        gd.concluir_pagina(200, "ok")
-        r.avanca(9.9)
-        self.assertEqual(nav(gd).codigo, "LIMITE_DE_TAXA")
-        r.avanca(0.1)
-        self.assertTrue(nav(gd).ok)
-
-    def test_pagina_recusada_nao_conta_nem_reinicia_o_intervalo(self):
-        gd, r = sessao()
-        nav(gd)
-        gd.concluir_pagina(200, "ok")
-        r.avanca(5)
-        self.assertEqual(nav(gd).codigo, "LIMITE_DE_TAXA")
-        r.avanca(5)  # 10 s desde a primeira, não desde a recusada
-        self.assertTrue(nav(gd).ok)
-        self.assertEqual(gd.paginas_lidas, 2)
-
-    def test_31a_pagina_e_recusada(self):
-        gd, r = sessao()
-        for _ in range(g.PAGINAS_MAX):
+class SessaoLivreTest(unittest.TestCase):
+    def test_paginas_em_sequencia_sem_intervalo_nem_cota(self):
+        gd, _ = sessao()
+        for _ in range(100):
             self.assertTrue(nav(gd).ok)
             gd.concluir_pagina(200, "ok")
-            r.avanca(10)
-        self.assertEqual(nav(gd).codigo, "LIMITE_DE_PAGINAS")
-        self.assertEqual(gd.paginas_lidas, 30)
+        self.assertEqual(gd.paginas_lidas, 100)
 
     def test_sem_paralelismo_pagina_em_voo(self):
         gd, r = sessao()
         nav(gd)
-        r.avanca(60)
         self.assertEqual(nav(gd).codigo, "PARALELISMO")
         self.assertEqual(gd.autorizar({"tipo": "ler_texto"}).codigo, "PARALELISMO")
         gd.concluir_pagina(200, "ok")
@@ -202,25 +173,11 @@ class TaxaESessaoTest(unittest.TestCase):
         r.avanca(-30)
         self.assertEqual(nav(gd).codigo, "RELOGIO_INVALIDO")
 
-    def test_uma_sessao_por_dia_e_sem_sessao_simultanea(self):
-        gd, r = sessao()
+    def test_varias_sessoes_no_mesmo_dia_mas_nunca_simultaneas(self):
+        gd, _ = sessao()
         self.assertEqual(gd.iniciar_sessao("tec").codigo, "SESSAO_EM_ANDAMENTO")
         gd.encerrar_sessao()
-        self.assertEqual(gd.iniciar_sessao("tec").codigo, "LIMITE_DIARIO")
-        r.avanca(86400)
         self.assertTrue(gd.iniciar_sessao("tec").ok)
-
-    def test_sessao_anterior_do_dia_vinda_do_registro_conta(self):
-        gd, _ = guarda(TEC_SO, anteriores=("2026-11-17",))
-        self.assertEqual(gd.iniciar_sessao("tec").codigo, "LIMITE_DIARIO")
-        self.assertEqual(g.Guarda(config=TEC_SO, relogio=lambda: T0 + timedelta(days=1),
-                                  sessoes_anteriores=("2026-11-17",)).iniciar_sessao("tec").codigo, "OK")
-
-    def test_dia_segue_o_fuso_de_ms(self):
-        # 02:00Z de 18/11 ainda é 17/11 em MS (-04:00)
-        gd, _ = guarda(TEC_SO, anteriores=("2026-11-17",))
-        gd.relogio = lambda: datetime(2026, 11, 18, 2, 0, tzinfo=timezone.utc)
-        self.assertEqual(gd.iniciar_sessao("tec").codigo, "LIMITE_DIARIO")
 
     def test_registro_de_sessoes_e_devolvido_ao_chamador(self):
         gd, _ = sessao()
@@ -262,7 +219,7 @@ class BloqueioTest(unittest.TestCase):
         self.assertEqual(nav(gd).codigo, "SEM_SESSAO")
 
     def test_suspensao_da_configuracao_vale(self):
-        gd, _ = guarda(g.Config(habilitadas=frozenset({"tec"}), termos_tec_registrados=True, suspensas=frozenset({"tec"})))
+        gd, _ = guarda(g.Config(habilitadas=frozenset({"tec"}), suspensas=frozenset({"tec"})))
         self.assertEqual(gd.iniciar_sessao("tec").codigo, "PLATAFORMA_SUSPENSA")
 
     def test_pagina_normal_nao_e_bloqueio(self):
@@ -392,12 +349,11 @@ class ContratoDoModuloTest(unittest.TestCase):
                 self.assertNotIn("*", h)
                 self.assertTrue(h.isascii())
 
-    def test_limites_do_s9_r4(self):
-        self.assertEqual((g.INTERVALO_MIN_S, g.PAGINAS_MAX, g.SESSOES_POR_DIA), (10.0, 30, 1))
-
-    def test_padrao_nao_habilita_nada_e_a_flag_segue_falsa(self):
+    def test_sem_cotas_e_padrao_liberado_e_a_flag_segue_falsa(self):
+        for nome in ("INTERVALO_MIN_S", "PAGINAS_MAX", "SESSOES_POR_DIA"):
+            self.assertFalse(hasattr(g, nome), nome)
         self.assertEqual(g.PADRAO, g.Config())
-        self.assertFalse(g.PADRAO.habilitadas)
+        self.assertEqual(g.PADRAO.habilitadas, frozenset({"tec", "qconcursos"}))
         import json
         self.assertIs(json.loads((ROOT / "settings.json").read_text(encoding="utf-8"))
                       ["storage"]["personal_results_writes_enabled"], False)

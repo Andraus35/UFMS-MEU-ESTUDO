@@ -68,7 +68,7 @@ class SpecS10Tests(unittest.TestCase):
         for trecho in ("só texto público e oficial", "nunca entram como fonte", "exportação do tec", "insumo ainda ausente",
                        "o tutor não pede prompt"):
             self.assertIn(trecho, req(4), trecho)
-        for trecho in ("privado", "sem compartilhamento por link", "autorizo g-share-off", "somente leitura"):
+        for trecho in ("privado", "sem compartilhamento por link", "pode executar", "somente leitura"):
             self.assertIn(trecho, req(5), trecho)
 
     def test_resposta_e_dado_nao_confiavel_e_instrucao_embutida_so_relatada(self):
@@ -89,12 +89,12 @@ class SpecS10Tests(unittest.TestCase):
 
     def test_falha_fecha_o_efeito_e_nao_a_orientacao(self):
         r9 = req(9)
-        for trecho in ("não repete em laço", "avisa o proprietário", "10 prompts por dia", "primeiro aviso", "proposta", "não alterar"):
+        for trecho in ("não repete em laço", "avisa o proprietário", "sem limite diário", "primeiro aviso", "não alterar"):
             self.assertIn(trecho, r9, trecho)
 
-    def test_nada_provado_e_n1_exige_frases_e_contraprova_de_fidelidade(self):
+    def test_nada_provado_e_n1_exige_prompt_exato_e_contraprova_de_fidelidade(self):
         r11 = req(11)
-        for trecho in ("não foram testados", "n1", "autorizo g-chat-1", "autorizo g-fonte-1", "prompt exato", "não consta nas fontes",
+        for trecho in ("não foram testados", "n1", "liberada", "prompt exato", "não consta nas fontes",
                        "nenhuma integração é declarada"):
             self.assertIn(trecho, r11, trecho)
 
@@ -119,7 +119,7 @@ class SpecS10Tests(unittest.TestCase):
         for item in ("| N1 |", "| N2 |", "| E1 |"):
             self.assertIn(item, derivadas)
         ids = {i["id"] for i in FILA}
-        self.assertNotIn("N1", ids)  # N1 é ato do proprietário (frases AUTORIZO); a N2 entrou na fila por decisão posterior dele
+        self.assertNotIn("N1", ids)  # N1 é ato do proprietário (prompt exato do proprietário); a N2 entrou na fila por decisão posterior dele
         # a N2 (validador offline do prompt) entrou na fila por decisão do proprietário e está entregue em scripts/
         self.assertTrue((ROOT / "scripts" / "notebook_prompt_validator.py").is_file())
 

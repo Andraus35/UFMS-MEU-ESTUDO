@@ -30,7 +30,7 @@ class EmendaProductTests(unittest.TestCase):
         for t in ("só pela zapia, como ponte", "open-10", "emenda a d-12", "enviar_prompt_notebook", "não há mcp"):
             self.assertIn(t, d26, t)
         d27 = bullet(PRODUCT, "D-27").lower()
-        for t in ("mantém o aceite do risco do d-14", "sem condição nova", "item 8.1", "não verificado", "s9-r8", "s9-r9", "qconcursos"):
+        for t in ("liberou a zapia", "sem condição prévia", "livremente", "gemini notebook", "s9-r5", "qconcursos"):
             self.assertIn(t, d27, t)
 
     def test_decisoes_antigas_marcadas_como_emendadas_sem_perder_o_texto(self):
@@ -67,7 +67,6 @@ class EmendaProductTests(unittest.TestCase):
             ident = f"E-{n:02d}"
             linha = bullet(ARQUIVO, ident)
             self.assertGreater(len(linha), 120, ident)
-        self.assertIn("https://www.tecconcursos.com.br/termos-de-uso", ARQUIVO)  # E-12 com seus links
         self.assertIn("Bloomsbury", ARQUIVO)  # E-08
         self.assertIn("36 meses", ARQUIVO)  # E-09
         self.assertIn("sem alteração", ARQUIVO.lower())

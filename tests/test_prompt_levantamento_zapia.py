@@ -8,6 +8,7 @@ DOC = (ROOT / "docs" / "governanca" / "PROMPT_LEVANTAMENTO_PLATAFORMAS_ZAPIA_202
 PROMPT = DOC.split("```text", 1)[1].split("```", 1)[0]
 IDS = (["A%d" % i for i in range(1, 7)] + ["T%d" % i for i in range(0, 13)] + ["Q%d" % i for i in range(0, 9)]
        + ["G%d" % i for i in range(0, 13)] + ["F1", "F2", "F3", "F4"])
+IDS = [i for i in IDS if i not in ("T9", "Q6")]
 
 
 class PromptLevantamentoZapiaTests(unittest.TestCase):
@@ -38,14 +39,6 @@ class PromptLevantamentoZapiaTests(unittest.TestCase):
             linha = next(l for l in PROMPT.splitlines() if l.startswith(id_ + " "))
             self.assertTrue("só cabeçalhos" in linha or "Sem nenhum valor" in linha, id_)
         self.assertIn("o proprietário o guarda", PROMPT)
-
-    def test_termos_pedem_citacao_literal_e_o_qconcursos_confere_as_clausulas_ja_lidas(self):
-        for id_ in ("T9", "Q6"):  # cada pergunta de termos pede a citação literal, não um resumo
-            linha = next(l for l in PROMPT.splitlines() if l.startswith(id_ + " "))
-            self.assertIn("LITERALMENTE", linha, id_)
-        q6 = next(l for l in PROMPT.splitlines() if l.startswith("Q6 "))
-        for trecho in ("1.3", "3.5", "escala incompatível com o uso regular por um usuário humano", "em nenhuma hipótese"):
-            self.assertIn(trecho, q6, trecho)
 
     def test_gemini_pergunta_o_que_a_s10_precisa_provar(self):
         g4 = next(l for l in PROMPT.splitlines() if l.startswith("G4 "))

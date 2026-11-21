@@ -14,7 +14,7 @@ edicao: "Trechos de dado pessoal trocados por '[omitido: ...]': totais e percent
 
 Plano de estudos UFMS · cargos 523 e 324 · consulta em 16/11/2026
 
-Escopo: navegação pela interface autenticada da conta TecConcursos do proprietário ([omitido: vínculo da conta]), com ferramentas de automação do navegador baseadas em Playwright. Não se trata de auditoria de segurança, teste de API, de cobertura exaustiva do produto ou avaliação dos termos de uso.
+Escopo: navegação pela interface autenticada da conta TecConcursos do proprietário ([omitido: vínculo da conta]), com ferramentas de automação do navegador baseadas em Playwright. Não se trata de auditoria de segurança, teste de API, ou de cobertura exaustiva do produto.
 
 Classificação das evidências: TESTADO = ação executada e resultado observado; OBSERVADO = botão, texto ou configuração visível, sem executar o efeito; DOCUMENTADO = funcionalidade descrita pelo próprio TEC, mas não comprovada de ponta a ponta nesta auditoria; NÃO VERIFICADO = hipótese ou comportamento pendente.
 

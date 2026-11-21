@@ -4,7 +4,7 @@
 
 **Como usar:** copiar o bloco abaixo para a Zapia (se o aplicativo limitar o tamanho, enviar por blocos: 0 e 1, depois 2, 3, 4 e 5). **Só 4 passos** exigem a frase do proprietário (`AUTORIZO TEC-EXPORT-1`, `AUTORIZO G-CHAT-1`, `AUTORIZO G-FONTE-1`, `AUTORIZO G-SHARE-OFF`); sem a frase, voltam como NÃO EXECUTADO e o levantamento continua útil. Para o passo G-CHAT-1 o proprietário precisa colar um **prompt de teste sem dado pessoal**. Ao receber a resposta, colar no chat com a sessão de engenharia: ela é registrada como **rodada 6 de autorrelato** (nunca como verificada) e atualiza a S9 e a S10. **Nenhum dado pessoal** vai para o repositório público (D-24): a resposta é editada antes de registrada.
 
-**O que ela deve devolver e a sessão deve conferir:** nomes de colunas da exportação do TEC (sem valores); formato do Qconcursos (provavelmente só tela); cláusulas literais de automação e compartilhamento de acesso nos termos de cada plataforma (item 1.3 "e" e 3.5 do Qconcursos, a conferir); se o navegador dela aparece como dispositivo novo; se o notebook de teste está compartilhado por link; se existe notebook privado com a Lei 8.112; se ela consegue enviar um prompt ao notebook e devolver resposta e citação abertas.
+**O que ela deve devolver e a sessão deve conferir:** nomes de colunas da exportação do TEC (sem valores); formato do Qconcursos (provavelmente só tela); se o navegador dela aparece como dispositivo novo; se o notebook de teste está compartilhado por link; se existe notebook privado com a Lei 8.112; se ela consegue enviar um prompt ao notebook e devolver resposta e citação abertas.
 
 ```text
 LEVANTAMENTO SOMENTE LEITURA: TEC Concursos, Qconcursos e Gemini Notebook (projeto UFMS-MEU-ESTUDO)
@@ -38,7 +38,6 @@ T5 Estatísticas: a tela mostra numerador e denominador (resoluções, acertos, 
 T6 Aba Atividades: o que lista (por dia, por questão)? Tem exportação?
 T7 Minha evolução: dá série diária ou semanal? Qual métrica?
 T8 Limites: houve lentidão, limite diário de questões, mensagem de limite de plano ou aviso de uso excessivo ou automação, em 16/11 ou agora? Texto literal.
-T9 TERMOS: abra os Termos de Uso e a Política de Privacidade do TEC e cite LITERALMENTE (até 3 linhas por cláusula, com o número e a data ou versão do documento) o que dizem sobre: (a) acesso automatizado, robôs, scripts, extração de dados; (b) compartilhamento de acesso ou credenciais com terceiros; (c) suspensão ou bloqueio de conta; (d) uso dos dados do usuário. Se a página não abrir, diga o erro.
 T10 Existe página de API, parceria, integração ou contato oficial para uso automatizado? Diga o que está escrito, sem enviar nada.
 T11 Dá para criar um segundo usuário, perfil de leitura ou acesso somente leitura?
 T12 Os grupos de comparação expõem dado de outras pessoas? (sim ou não e o tipo de dado)
@@ -50,7 +49,6 @@ Q2 Quais áreas existem para desempenho (Meu Desempenho, Estatísticas, Cadernos
 Q3 Cadernos: dá para ver a lista e o resultado de cada um (total, acertos, erros, data)? Há filtros salvos? Dá para exportar a lista ou o resultado?
 Q4 Simulado: existe relatório? O que contém (nota por bloco, tempo)? Em que formato (tela, PDF)?
 Q5 Há API, aplicativo ou integração oficial? Cite o texto exato.
-Q6 TERMOS: abra o Termo de Adesão e os Termos de Uso e cite LITERALMENTE as cláusulas sobre automação, robôs, scripts e extração de dados (esperado: item 1.3, alínea "e"), volume de requisições (1.3 "d"), compartilhamento de dados de acesso (3.5 e 3.5.1) e suspensão ou bloqueio. Informe a data de atualização do documento. Diga se a redação confere com: "É vedado utilizar mecanismos automatizados, scripts, robôs, crawlers, ferramentas de extração de dados em escala incompatível com o uso regular por um usuário humano" e com "os dados de acesso não podem ser compartilhados com terceiros estranhos a esta relação contratual, em nenhuma hipótese".
 Q7 A plataforma lista dispositivos ou sessões ativas e permite encerrá-las? O navegador da Zapia aparece como dispositivo novo? Chegou aviso?
 Q8 Sinais de risco observados: captcha, limitação de respostas, aviso de uso anômalo (texto literal).
 

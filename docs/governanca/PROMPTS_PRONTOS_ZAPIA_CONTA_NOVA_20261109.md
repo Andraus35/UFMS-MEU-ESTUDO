@@ -78,15 +78,11 @@ Os demais testes ficam NAO_EXECUTADO. Nunca imprima token, chave ou cabeçalho d
 > **Dispensada pelo proprietário em 15/11/2026 (D-22).** Mantida só como referência, caso ele queira enviá-la depois.
 
 ```text
-Olá. Sou assinante do TEC Concursos e gostaria de esclarecer dois pontos sobre a minha própria conta:
+Olá. Sou assinante do TEC Concursos e gostaria de esclarecer um ponto sobre a minha própria conta:
 
 1. Exportação de desempenho: existe exportação do meu desempenho e das estatísticas (CSV ou Excel)?
    Em qual plano? Quais campos o arquivo traz (por exemplo data, caderno, disciplina, assunto, banca,
    total, acertos e erros)? Existe um arquivo de exemplo ou uma descrição do formato?
-2. Leitura por ferramenta pessoal: os Termos de Uso permitem que eu use uma ferramenta de assistência
-   pessoal, somente leitura, com a minha própria sessão, em baixo volume (por exemplo, poucas páginas por
-   sessão, sem resolver questões nem alterar cadernos), para ler os meus cadernos e as minhas
-   estatísticas? Se não, existe API ou alguma forma oficial e autorizada de acesso aos meus dados?
 
 Agradeço uma resposta por escrito, para eu seguir as regras da plataforma.
 ```

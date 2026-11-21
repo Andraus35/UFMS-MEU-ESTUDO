@@ -66,7 +66,7 @@ class PromptTesteExportacaoTests(unittest.TestCase):
     def test_documento_diz_que_nada_foi_executado_e_nao_habilita_leitura_continua(self):
         texto = DOC.replace("**", "")
         for trecho in ("Nada aqui foi executado ainda", "uma única exportação", "não habilita leitura direta contínua",
-                       "S9-R8 e S9-R9 continuam valendo", "mantém o aceite do risco", "rodada 7 de autorrelato"):
+                       "liberada pelo D-27", "rodada 7 de autorrelato"):
             self.assertIn(trecho, texto, trecho)
 
     def test_sem_dado_pessoal_nem_credencial_nem_link_de_conta(self):
