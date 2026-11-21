@@ -801,6 +801,17 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "S16",
+      "title": "Rotina de estudo UFMS 2027 (requisitos do proprietário de 21/11/2026): top 10 por matéria pelos percentuais do guia TEC, hierarquia e origem de cada nó, filtros, entrega diária, comandos de início e encerramento, Notebook e lacunas do guia; separa intenção, especificado, implementado, testado e bloqueado; registra pendências P1 a P5 e conflitos C1 a C3 sem inventar regra; não lista o top 10 nem implanta; liga ao RM-09",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S16_ROTINA_ESTUDO_TOP10_UFMS_2027.md",
+      "depends_on": [
+        "S15"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [

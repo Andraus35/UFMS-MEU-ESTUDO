@@ -108,6 +108,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 
 **RM-09 — S15:** `docs/especificacoes/S15_ORQUESTRACAO_FLUXO_ROTINA_TEMPO.md` unifica o fluxo e a rotina dos agentes com a Zapia e o estudante e define, **como proposta**, a fonte de verdade do tempo (relógio injetado em UTC, fuso `America/Campo_Grande`, dia de estudo, idade máxima da projeção e quem acorda Tutor e Coach); **nada foi implantado, agendado ou testado**; rotina diária só com `AUTORIZO`, flags de escrita `false`, piloto depende de PJ e P9; **RM-09 permanece `planejado`**.
 
+**RM-09 — S16:** `docs/especificacoes/S16_ROTINA_ESTUDO_TOP10_UFMS_2027.md` traduz os requisitos do proprietário de 21/11/2026 (cargos 324 e 523, hierarquia do TEC, top 10 por matéria pelos percentuais do guia, entrega diária, comandos de início e encerramento, Notebook, lacunas) em requisitos S16-R1 a R16, separa intenção, especificado, implementado, testado e bloqueado, e registra as pendências P1 a P5 e os conflitos C1 a C3 **para decisão do proprietário**. **Não lista o top 10, não cria comando e não implanta**; RM-09 permanece `planejado`.
+
 **RM-09 — S10:** `docs/especificacoes/S10_NOTEBOOK_TUTOR.md` especifica o Notebook como ferramenta do Tutor (ponte pela Zapia, rascunho verificado por citação aberta, falha que fecha o efeito); **nada foi testado no Notebook** e **RM-09 permanece `planejado`**.
 
 **RM-09 — N2:** `scripts/notebook_prompt_validator.py` valida offline, **falhando fechado**, o prompt do Tutor ao Notebook (S10-R3; fecha o PR-002); **nada foi enviado ao Google nem à Zapia** e **RM-09 permanece `planejado`**.
