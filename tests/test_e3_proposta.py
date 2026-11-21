@@ -22,11 +22,12 @@ class E3PropostaTests(unittest.TestCase):
 
     def test_operacao_compartilhada_com_parametros_e_limite_fechados(self):
         for trecho in ("pedir_relatorio_desempenho", "compartilhada", "shared", "zapia_relatorio", "modalidade", "cargo", "recorte",
-                       "no máximo 1 pedido por dia e só com atividade concluída", "nunca grava"):
+                       "até 2 pedidos por dia", "um por plataforma", "gemini_notebook", "só com atividade concluída", "nunca grava"):
             self.assertIn(trecho, T, trecho)
 
     def test_decisoes_pedidas(self):
-        for trecho in ("a1", "b1", "b2", "frase de início", "emenda a s7", "flag de escrita"):
+        for trecho in ("decisão a1", "b1 (decidida", "iniciar estudos", "b1b (pendente)", "finalizar estudos", "b2 (decidida", "emenda à s7",
+                       "flag de escrita", "e3-c (pendente)", "compartilha com o coach"):
             self.assertIn(trecho, T, trecho)
 
     def test_o_esquema_e_o_gate_continuam_sem_a_operacao(self):

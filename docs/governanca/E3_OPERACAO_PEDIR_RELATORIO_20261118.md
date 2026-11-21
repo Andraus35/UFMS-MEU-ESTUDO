@@ -26,27 +26,30 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 | Nome | `pedir_relatorio_desempenho` |
 | Perfil | **Compartilhada** por Tutor e Coach (entra em `SHARED`, ao lado de `ler_arquivo_repositorio` e `enviar_mensagem`) |
 | Destino | `zapia_relatorio` (novo, fechado) |
-| Parâmetros (fechados) | `plataforma` (`tec`), `modalidade` (`1` caderno exclusivo FAPEC; `2` guias do TEC), `cargo` (`324` ou `523`), `recorte` (período e filtros, texto curto) |
+| Parâmetros (fechados) | `plataforma` (`tec` ou `gemini_notebook`), `modalidade` (só para `tec`: `1` caderno exclusivo FAPEC; `2` guias do TEC), `cargo` (`324` ou `523`), `recorte` (período e filtros, texto curto) |
 | Proibido | enunciado, gabarito, texto de questão, HTML, captura, credencial e dado pessoal (`forbidden_param_keys`) |
-| Limite | **no máximo 1 pedido por dia e só com atividade concluída** (decisão de 18/11/2026) |
+| Limite | **até 2 pedidos por dia, no máximo 1 por plataforma e só com atividade concluída**: um para o **estudo no TEC** e outro para a **revisão no Gemini Notebook** (decisão do proprietário de 21/11/2026, que substitui o "1 por dia" de 18/11/2026) |
+| Compartilhamento | **O Tutor compartilha com o Coach o resultado do aluno em cada sessão** (decisão de 21/11/2026), cada um na sua função (S2, S3); o **mecanismo** desse compartilhamento (por exemplo, a leitura das projeções do S6-R9 ou uma mensagem) **ainda não está definido** e fica como pendência E3-C |
 | Efeito | **só orientação**: a Zapia devolve o relatório pelo contrato de entrega (S9, L2, S16-R12); **nunca grava** no repositório público; resultado pessoal só pela fila e pelo portão (flag `false`) |
 
-**Decisão pedida (A1):** manter o limite de **1 pedido por dia** mesmo com a Zapia liberada nas plataformas (D-27)? Esse limite é da cadência do **canal de comandos**, não do acesso aos sites.
+**Decisão A1 (21/11/2026):** o limite passa a **até 2 pedidos por dia, um por plataforma** (estudo no TEC e revisão no Gemini Notebook); a cadência é do **canal de comandos**, não do acesso aos sites (D-27).
 
 ## Proposta B — eventos de início e de encerramento
 
 | Campo | `estudo_iniciado` | `estudo_finalizado` |
 |---|---|---|
-| Disparo | O proprietário avisa a Zapia que começou (**frase de início a definir**; ver B1) | A frase literal **"Estudo de hoje finalizado."** |
+| Disparo | O proprietário avisa a Zapia com a frase **"Iniciar estudos"** (decisão B1, 21/11/2026) | A frase de encerramento: o requisito de 21/11/2026 fixou **"Estudo de hoje finalizado."**; na resposta de B1 o proprietário disse **"finalizar estudos"**; **a confirmar** (pendência B1b) qual vale ou se ambas valem |
 | Quem escreve | A Zapia, **só** na fila `entrada` (S6-R2) | A Zapia, **só** na fila `entrada` |
 | Conteúdo mínimo | data e hora (relógio injetado, S15), cargo, matéria e caminho do nó do dia **quando informados** | data e hora, e as **evidências da rodada** (acertos, erros e referências a cadernos ou questões **quando disponíveis**) pelo contrato de entrega; campo ausente = "desconhecido" |
 | Proibido | dado pessoal, credencial, texto de questão | idem |
 | Quem lê | Tutor e Coach, pelas projeções (S6-R9), **cada um na sua função** | idem |
 | Honestidade | O evento **não prova** leitura, envio ou registro por si; só o **recibo do fluxo** prova (S6-R4) | idem |
 
-**Decisões pedidas:**
-- **B1:** qual é a **frase de início** (o requisito só fixou a de encerramento)?
-- **B2:** o evento de início/encerramento entra no **esquema de eventos da S7** como tipos novos? Isso **emenda a S7** e o esquema de ingestão, e cai sob a **flag de escrita** (`false`): enquanto ela estiver falsa, o evento fica **só como texto proposto**.
+**Decisões registradas e pendências:**
+- **B1 (decidida, 21/11/2026):** a frase de **início** é **"Iniciar estudos"**.
+- **B1b (pendente):** a frase de **encerramento**. O requisito diz **"Estudo de hoje finalizado."**; a resposta de B1 diz **"finalizar estudos"**. Não escolho por conta própria: a proposta mantém as duas registradas até a sua confirmação.
+- **B2 (decidida, 21/11/2026):** os eventos entram como **tipos novos no esquema da S7**, **como proposta** (emenda à S7). Enquanto a **flag de escrita** estiver `false`, o evento fica **só como texto proposto**.
+- **E3-C (pendente):** o **mecanismo** pelo qual o Tutor compartilha com o Coach o resultado do aluno em cada sessão.
 
 ## Texto exato proposto para os arquivos de contrato (não aplicado)
 
@@ -54,7 +57,7 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 
 **`scripts/agents_gate.py`:** acrescentar `pedir_relatorio_desempenho` a `SHARED` (o gate exige que Tutor e Coach compartilhem **exatamente** o conjunto `SHARED`).
 
-**`agents/TUTOR.md`, `agents/COACH.md` e `agents/ZAPIA.md`:** acrescentar, em cada lista de operações, `pedir_relatorio_desempenho` (orientação; pede o relatório de desempenho do TEC; no máximo 1 por dia e só com atividade concluída). No `ZAPIA.md`, incluir em "Faz": "Registra, quando o proprietário avisa o início e diz *Estudo de hoje finalizado.*, o evento correspondente na fila e informa Tutor e Coach pelo recibo."
+**`agents/TUTOR.md`, `agents/COACH.md` e `agents/ZAPIA.md`:** acrescentar, em cada lista de operações, `pedir_relatorio_desempenho` (orientação; pede o relatório de desempenho do TEC; até 2 por dia, no máximo 1 por plataforma, e só com atividade concluída). No `ZAPIA.md`, incluir em "Faz": "Registra, quando o proprietário diz *Iniciar estudos* e a frase de encerramento (B1b), o evento correspondente na fila e informa Tutor e Coach pelo recibo."
 
 **`docs/especificacoes/S5_ZAPIA.md` e `S7_PERSISTENCIA_ESCRITOR.md`:** emendas curtas apontando para esta proposta (só se B2 for aprovada).
 
@@ -75,4 +78,4 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 
 ## Aceite
 
-Esta proposta está **aceita pelo contrato** quando `python scripts/doc_cohesion.py --check` passa e `tests/test_e3_proposta.py` confere: a distinção comando × evento, a operação compartilhada, os parâmetros e limites, a frase literal de encerramento, as decisões A1, B1 e B2, o texto proposto para os arquivos de contrato e a **ausência de mudança** neles. **A aplicação depende da aprovação expressa do proprietário.**
+Esta proposta está **aceita pelo contrato** quando `python scripts/doc_cohesion.py --check` passa e `tests/test_e3_proposta.py` confere: a distinção comando × evento, a operação compartilhada, os parâmetros e limites, a frase literal de encerramento, as decisões A1, B1 e B2 e as pendências B1b e E3-C, o texto proposto para os arquivos de contrato e a **ausência de mudança** neles. **A aplicação depende da aprovação expressa do proprietário.**
