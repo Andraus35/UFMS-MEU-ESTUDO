@@ -189,6 +189,62 @@ class DesarmeTests(Base):
         self.assertIn("context_guard_state.py", (raiz / "claude_context_guard_install.py").read_text(encoding="utf-8"))
 
 
+class BranchProtegidaComMergePendenteTests(Base):
+    """HOOKR2: na branch protegida/destacada com merge sem recibo, o hook orienta a preparar o repositório (e não manda só encerrar)."""
+
+    def repo(self, pr_ativo, assunto_do_merge="feat: algo (#7)"):
+        g = ["git", "-C", str(self.proj), "-c", "user.email=a@b.c", "-c", "user.name=t"]
+        subprocess.run([*g, "checkout", "-q", "-B", "main"], check=True)
+        (self.proj / "state").mkdir(exist_ok=True)
+        (self.proj / "state" / "WORKFLOW.json").write_text(json.dumps({"active": {"pr_number": pr_ativo, "task_id": "RM-00"}}), encoding="utf-8")
+        subprocess.run([*g, "add", "-A"], check=True)
+        subprocess.run([*g, "commit", "-q", "-m", assunto_do_merge], check=True)
+        remoto = Path(self.tmp.name) / "remoto.git"
+        subprocess.run(["git", "init", "-q", "--bare", str(remoto)], check=True)
+        subprocess.run([*g, "remote", "add", "origin", str(remoto)], check=True)
+        subprocess.run([*g, "push", "-q", "-u", "origin", "main"], check=True)
+
+    def armado_e_selado(self):
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.assertEqual(self.seal().returncode, 0)
+
+    def texto(self):
+        o = self.run_hook("PostToolUse")
+        return o["hookSpecificOutput"]["additionalContext"] if o else ""
+
+    def test_merge_pendente_de_recibo_em_branch_protegida_orienta_a_preparar_o_repo(self):
+        self.repo(pr_ativo=7)  # o PR registrado (#7) aparece mesclado no histórico da main
+        self.armado_e_selado()
+        t = self.texto()
+        for trecho in ("record_merge_receipt.py", "branch do próximo lote", "origin/main", "HANDOFF", "#7"):
+            self.assertIn(trecho, t, trecho)
+        self.assertNotIn("encerre", t)
+
+    def test_sem_merge_pendente_em_branch_protegida_continua_a_mandar_encerrar(self):
+        self.repo(pr_ativo=99)  # #99 não está mesclado: não há recibo pendente
+        self.armado_e_selado()
+        t = self.texto()
+        self.assertIn("Lote finalizado e persistido", t)
+        self.assertNotIn("record_merge_receipt.py", t)
+
+    def test_sem_workflow_ou_sem_git_nao_quebra_e_cai_no_comportamento_anterior(self):
+        self.armado_e_selado()  # repo sem commits e sem state/WORKFLOW.json
+        t = self.texto()
+        self.assertNotIn("record_merge_receipt.py", t)
+
+    def test_o_aviso_orientado_sai_uma_vez_por_estado(self):
+        self.repo(pr_ativo=7)
+        self.armado_e_selado()
+        self.assertIn("record_merge_receipt.py", self.texto())
+        self.assertEqual(self.texto(), "")
+
+    def test_modulo_existe_e_o_instalador_o_copia(self):
+        raiz = Path(__file__).resolve().parents[1] / "scripts"
+        self.assertTrue((raiz / "context_guard_branch.py").is_file())
+        self.assertIn("context_guard_branch.py", (raiz / "claude_context_guard_install.py").read_text(encoding="utf-8"))
+
+
 class SeloETravaTests(Base):
     def test_selo_recusa_prompt_incompleto_e_curto(self):
         self.transcript(150_000)
