@@ -12,7 +12,7 @@
 - **Revalidar a fonte técnica:** durante esta entrega, o PR #1 foi observado em `4317103ab91fae43c7e07cf5527d6ecbcc5681d7`; isso pode mudar. A matriz v1.7 foi produzida sobre SHA técnico **anterior** `18a81bacd6163e6d510e58c00f2a55e77051b3ca`, de modo que suas conclusões são hipóteses a reconfirmar.
 - **Não habilitar `personal_results_writes_enabled` por dedução.** Visibilidade privada, consentimento, necessidade, autorização, testes e gate de persistência devem ser comprovados separadamente.
 - **O edital vigente prevalece.** Nenhuma regra de corte, equivalência entre específicos ou atualização normativa é considerada verificada apenas porque está num JSON, índice ou resumo.
-- **TEC/Qconcursos:** a IA prescreve filtros, o estudante executa e devolve resultados legítimos. Sem scraping, API não confirmada, IDs inventados ou cópias integrais de questões.
+- **TEC/Qconcursos:** a IA prescreve filtros, o estudante executa e devolve resultados legítimos. Sem API não confirmada, IDs inventados ou cópias integrais de questões.
 - **Sem merge automatizado.** CI verde de integridade não significa aptidão do tutor nem qualidade pedagógica comprovada.
 
 ## 2. Work packages e dependências

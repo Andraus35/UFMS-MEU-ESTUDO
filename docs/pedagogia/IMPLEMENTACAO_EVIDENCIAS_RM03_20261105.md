@@ -37,4 +37,4 @@ A projeção reporta `aggregate_only_no_topic_breakdown`, `attempt_time_unknown`
 - Nenhum dado pessoal foi lido ou gravado; `CURRENT.json` continua sem eventos e E0.
 - A implementação não estima domínio, retenção, esquecimento ou chance de aprovação.
 - E4 depende da veracidade da proveniência/contexto fornecidos; não existe verificação automática da plataforma.
-- Não habilita escrita pessoal, scraping ou API privada do TEC/Qconcursos.
+- Não habilita escrita pessoal ou API privada do TEC/Qconcursos.
