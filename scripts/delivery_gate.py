@@ -58,6 +58,8 @@ _QUESTAO = re.compile(r"enunciado\s*:|enunciado\s+d[aeo]s?\s+quest|gabarito\s+(?
 _DISPONIB = re.compile(r"dispon[ií]ve(?:l|is)|\bh[áa]\s+\d+\s+quest|\bexistem?\s+\d+\s+quest", re.I)
 _PERCENTUAL = re.compile(r"\d+(?:[.,]\d+)?\s*%")
 _DESEMPENHO = re.compile(r"\b(?:acertou|errou|acertos?|erros?|nota)\b\D{0,12}\d+", re.I)
+# contagem ANTES da palavra, atribuída ao aluno por marcador na mesma frase ("você teve 12 acertos"); sem marcador ("os 3 erros comuns") não casa
+_DESEMPENHO_ATRIBUIDO = re.compile(r"\b(?:voc[êe]|seu|sua|seus|suas|teve|tive|fez|obteve|tem)\b[^.!?\n]{0,40}?\b\d+\s*(?:acertos?|erros?|pontos?)\b", re.I)
 _PAGINA = re.compile(r"p[áa]g(?:ina|\.)?\s*(\d{1,3})", re.I)
 _DISPOSITIVO = re.compile(r"\b(?:art(?:igo)?\.?|inciso|item)\s*\d+", re.I)
 _NIVEL = re.compile(r"\bE[0-4]\b")
@@ -166,7 +168,7 @@ def _corpo(corpo, estruturado, declarado, contexto, motivos, avisos):
         motivos.append("instrucao_embutida_no_corpo")
     if _DISPONIB.search(corpo):
         motivos.append("disponibilidade_de_questoes_afirmada")
-    if _PERCENTUAL.search(corpo) or _DESEMPENHO.search(corpo):
+    if _PERCENTUAL.search(corpo) or _DESEMPENHO.search(corpo) or _DESEMPENHO_ATRIBUIDO.search(corpo):
         motivos.append("dado_de_desempenho_nao_verificavel")  # a projeção fechada não traz desempenho: nada o confirma
     for pagina in _PAGINA.findall(corpo):
         if int(pagina) not in declarado["paginas"]:

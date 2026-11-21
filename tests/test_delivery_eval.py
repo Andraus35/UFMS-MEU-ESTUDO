@@ -61,12 +61,10 @@ class SuiteConforme(unittest.TestCase):
         for trecho in ("NÃO GATEÁVEL", "RM-06 e RM-07", "taxa de falso positivo", "origem do comando"):
             self.assertIn(trecho, texto)
 
-    def test_lacuna_conhecida_fica_declarada_e_fixada(self):
-        ids = {x["id"]: x for x in self.rel["lacunas_conhecidas"]}
-        self.assertEqual(set(ids), {"A06"})
-        self.assertIn("deveria recusar", ids["A06"]["lacuna"])
-        caso = next(c for c in e.corpus() if c["id"] == "A06")
-        self.assertEqual(g.verificar_entrega(caso["envelope"], e.contexto_padrao(), "bloqueio", e.AGORA)["decisao"], "ACEITA")
+    def test_sem_lacunas_conhecidas_e_a_contagem_antes_da_palavra_e_recusada(self):
+        self.assertEqual(self.rel["lacunas_conhecidas"], [])
+        por_id = {c["id"]: c for c in e.corpus()}
+        self.assertEqual((por_id["A06"]["decisao"], por_id["A06c"]["decisao"]), ("RECUSADA", "ACEITA"))
 
 
 class SuiteDetectaVerificadorFrouxo(unittest.TestCase):

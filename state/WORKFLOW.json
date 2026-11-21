@@ -3,7 +3,7 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-07",
-    "scope": "ae_avaliacao_offline_do_verificador_de_entrega",
+    "scope": "lote_rm07_ae_am_e_correcao_do_ge",
     "branch": "ccr-4d19ce2c-towj2v",
     "pr_number": 144,
     "base": "main",
