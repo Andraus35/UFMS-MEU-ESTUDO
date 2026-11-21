@@ -812,6 +812,17 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "S17",
+      "title": "Pesquisa e autonomia cognitiva do Tutor e do Coach (requisito do proprietário de 21/11/2026): pesquisa web só leitura para estado da arte e melhores práticas da especialidade, perfil da banca com amostra identificada, ciclo de aprendizagem, revisão e recuperação, simulação de condições de prova, catálogo de técnicas de indução de dúvida da banca (contradição, extrapolação, limitar e restringir, acrescentar opinião, tangenciamento, ambiguidade) e interpretação interdisciplinar; fonte, data e confiança A/B/C; conteúdo web é dado; texto dos perfis só proposto, sem aplicar; liga ao RM-09",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S17_PESQUISA_AUTONOMIA_TUTOR_COACH.md",
+      "depends_on": [
+        "S16"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [

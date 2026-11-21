@@ -24,6 +24,7 @@ Uma página por especificação, em `docs/especificacoes/`, com nome `S<n>_<assu
 | S14 | **Runtime operacional** | cognição livre; leitura e entrega condicionadas por gates determinísticos (enforçada, verificável, não gateável) |
 | S15 | **Orquestração do ciclo: fluxo, rotina e fonte de tempo** | mapa único de quem aciona, decide e executa; relógio, fuso, dia de estudo e quem acorda os agentes (propostas, sem implantar) |
 | S16 | **Rotina de estudo UFMS 2027: top 10 por matéria** | cargos 324 e 523, hierarquia do TEC, entrega diária, comandos de início e fim; pendências e conflitos para o proprietário (sem lista nem implantação) |
+| S17 | **Pesquisa e autonomia cognitiva do Tutor e do Coach** | pesquisa web só leitura, perfil da banca, ciclo de revisão, indução de dúvida e interpretação interdisciplinar; texto dos perfis só proposto |
 
 A S11 e a S14 definem **como provar** e **como operar** o harness; **não o implantam nem o homologam** (RM-01 a RM-07 seguem `implementado_nao_homologado`). O estado de cada item da fila fica só em `state/WORKFLOW.json`.
 
