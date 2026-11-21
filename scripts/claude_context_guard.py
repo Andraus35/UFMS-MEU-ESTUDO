@@ -28,6 +28,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from context_guard_branch import merge_pendente_de_recibo, orientacao  # noqa: E402
 from context_guard_state import desarmar_se_abaixo  # noqa: E402
 
 HOME = Path(os.environ.get("CONTEXT_GUARD_HOME") or Path.home())
@@ -310,11 +311,12 @@ def on_measure(event, payload):
         if not st.get("sealed"):
             out(event, text=instruction(sid, pct, c, cwd))
         else:
-            chave = f"{info['pendente']}|{fatos_do_lote(info)}"
+            merge = merge_pendente_de_recibo(cwd) if info["protegida"] and not info["pendente"] else None  # HOOKR2
+            chave = f"{info['pendente']}|{fatos_do_lote(info)}|{merge['pr'] if merge else ''}"
             if st.get("aviso_chave") != chave:  # depois do selo o aviso sai uma vez por estado do lote, não a cada ferramenta
                 st["aviso_chave"] = chave
                 save_state(sid, st)
-                out(event, text=aviso_selado(info, prompt_path(cwd)))
+                out(event, text=orientacao(merge, prompt_path(cwd)) if merge else aviso_selado(info, prompt_path(cwd)))
         return
     save_state(sid, st)
 

@@ -25,6 +25,8 @@ DEST = HOME / ".claude" / "hooks" / "claude_context_guard.py"
 SRC = Path(__file__).resolve().parent / "claude_context_guard.py"
 SRC_STATE = Path(__file__).resolve().parent / "context_guard_state.py"  # módulo importado pelo hook (HOOKR)
 DEST_STATE = HOME / ".claude" / "hooks" / "context_guard_state.py"
+SRC_BRANCH = Path(__file__).resolve().parent / "context_guard_branch.py"  # módulo importado pelo hook (HOOKR2)
+DEST_BRANCH = HOME / ".claude" / "hooks" / "context_guard_branch.py"
 MARK = "claude_context_guard.py"
 CMD = 'python3 "$HOME/.claude/hooks/claude_context_guard.py" {}'
 EVENTS = {"SessionStart": "startup|resume|clear|compact", "UserPromptSubmit": None, "PostToolUse": None, "Stop": None,
@@ -90,6 +92,7 @@ def main():
         DEST.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(SRC, DEST)
         shutil.copy2(SRC_STATE, DEST_STATE)
+        shutil.copy2(SRC_BRANCH, DEST_BRANCH)
         s = merge(s)
     SETTINGS.write_text(json.dumps(s, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(("REMOVIDO" if mode == "--uninstall" else "INSTALADO") + f": {SETTINGS}")
