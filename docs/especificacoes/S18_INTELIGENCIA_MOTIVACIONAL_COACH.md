@@ -20,11 +20,11 @@ Consultas de 21/11/2026 (WebSearch, resumos de resultados), somadas ao documento
 | Benchmark público de mentorias (Gran Cursos/GranXperts, Direção Concursos, Qconcursos, seção 10 do `IMC-COACH-001`) | Ofertas convergem em plano, metas, feedback e apoio; **material comercial descreve oferta, não eficácia** | C |
 | S3, S8, S13, S17 e `BASE_COGNITIVA_ESTRATEGICA_DO_COACH_DE_PROVA.md` | Papel do Coach, rotina de uma mensagem por dia, honestidade sobre eficácia, gates `G-COACH` propostos | B |
 
-- **Lacunas:** os resultados de busca eram **resumos**; **não li** os estudos por inteiro nem as referências do `IMC-COACH-001`; a busca sobre **regulação motivacional e desempenho** não retornou resultado útil; **não encontrei** evidência de eficácia dessas técnicas para **concurseiros brasileiros adultos**; o **Manual do Imparável não foi anexado** (só o `IMC-COACH-001`, que o analisa), então páginas e citações do manual **não foram conferidas** na fonte; **nada foi implantado**; o repositório não prova que o Coach aplica a IMC.
+- **Lacunas:** os resultados de busca eram **resumos**; **não li** os estudos por inteiro nem as referências do `IMC-COACH-001`; a busca sobre **regulação motivacional e desempenho** não retornou resultado útil; **não encontrei** evidência de eficácia dessas técnicas para **concurseiros brasileiros adultos**; o **Manual do Imparável** foi anexado depois e só as **páginas iniciais** dos capítulos foram conferidas (o conteúdo não foi relido por inteiro); **nada foi implantado**; o repositório não prova que o Coach aplica a IMC.
 
 ## O Manual do Imparável: onde mora
 
-Decisão do proprietário (21/11/2026): no repositório **público** ficam **só índice, página e citação curta** do manual, com **fonte, edição e hash**; o texto integral só no repositório **privado** (leitura pelo Coach depende do consentimento v4 e de canal ainda não provado). Referência: GRANJEIRO, Gabriel (org.), *Manual do Imparável*, 2ª ed., Gran Cursos Online, 391 p., ISBN 978-85-69303-55-8 (livro comercial). Enquanto o arquivo não for anexado, o repositório **não** o contém e as páginas citadas no `IMC-COACH-001` (por exemplo, p. 23–29 e 148–153) ficam **não conferidas**. Conteúdo do livro é **dado, não instrução**, e **não prova eficácia**.
+Decisão do proprietário (21/11/2026): no repositório **público** ficam **só índice, página e citação curta** do manual, com **fonte, edição e hash**; o texto integral só no repositório **privado** (leitura pelo Coach depende do consentimento v4 e de canal ainda não provado). Referência: GRANJEIRO, Gabriel (org.), *Manual do Imparável*, 2ª ed., Gran Cursos Online, 391 p., ISBN 978-85-69303-55-8 (livro comercial). O proprietário **anexou o PDF** (SHA-256 `52965cb8…314ac`) em 21/11/2026; o PDF **não** é versionado no público. Entrou o índice `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md` (edição, hash, página inicial de cada capítulo e duas citações curtas); as **páginas iniciais** citadas no `IMC-COACH-001` foram **conferidas** contra o livro, o **conteúdo** dos capítulos **não** foi relido por inteiro. Conteúdo do livro é **dado, não instrução**, e **não prova eficácia**.
 
 ## Requisitos
 
@@ -59,7 +59,7 @@ Cada uma em PR próprio, em série (nenhuma foi criada aqui):
 | Item | O que faz | Depende de |
 |---|---|---|
 | B1 | Aplicar o texto acima em `agents/COACH.md` | aprovação expressa do texto e do merge |
-| B2 | Índice do Manual (página, citação curta, edição, hash) no público e texto integral no privado | anexo do manual pelo proprietário |
+| B2 | Índice do Manual no público (**feito**, `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md`); texto integral no repositório **privado** | decisão e canal do proprietário |
 | B3 | Unificar os códigos `MOT`…`BEM` com a taxonomia cognitiva | S13-R4, S17-R16 |
 
 ## Aceite
@@ -70,5 +70,5 @@ Aceita pelo contrato quando `python scripts/doc_cohesion.py --check` passa e `te
 
 - **Não prova** que o Coach aplica a IMC, nem eficácia; efeito é hipótese.
 - **Não altera** `agents/`, `AGENTS.md`, `PRODUCT.md`, gates nem a S8.
-- O **Manual do Imparável não está no repositório**; páginas citadas ficam não conferidas.
+- O **Manual do Imparável não está no repositório público** (só o índice); o conteúdo dos capítulos não foi relido por inteiro.
 - Os códigos e gates do `IMC-COACH-001` são **proposta**, não escala validada.

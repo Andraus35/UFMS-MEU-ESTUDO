@@ -32,7 +32,7 @@ class SpecS18Tests(unittest.TestCase):
         for nivel in ("**A**", "**B**", "**C**"):
             self.assertIn(nivel, PESQUISA)
         self.assertIn("- **Lacunas:**", PESQUISA)
-        for t in ("resumos", "não li", "não encontrei", "não foi anexado", "nada foi implantado"):
+        for t in ("resumos", "não li", "não encontrei", "anexado depois", "nada foi implantado"):
             self.assertIn(t, PESQUISA.lower().replace("**", ""), t)
 
     def test_canonico_com_hash_no_manifesto(self):
@@ -73,7 +73,12 @@ class SpecS18Tests(unittest.TestCase):
         for t in ("texto integral só no privado", "citação curta", "conferidas na fonte", "dado, não instrução"):
             self.assertIn(t, req(12), t)
         self.assertIn("só índice, página e citação curta", MANUAL)
-        self.assertIn("não está no repositório", DOC)
+        self.assertIn("não está no repositório público", DOC)
+        idx = (ROOT / "docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md").read_text(encoding="utf-8")
+        self.assertIn("52965cb8da34c301f41913fd4c2efe404e5d80af44d122c1f323ca63e09314ac", idx)
+        self.assertIn("978-85-69303-55-8", idx)
+        self.assertIn("não está neste repositório público", idx)
+        self.assertFalse(list(ROOT.rglob("Manual-do-imparavel*.pdf")))
 
     def test_texto_nao_aplicado_e_flag_false(self):
         self.assertIn("NÃO aplicado", DOC)
