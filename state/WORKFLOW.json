@@ -883,6 +883,20 @@
       "optional_inputs": [
         "reenvio do PDF da Zapia pelo proprietário"
       ]
+    },
+    {
+      "id": "HOOKG",
+      "title": "Hook geral claude-context-guard (pedido do proprietário de 21/11/2026, \"Sim\" a levar o pacote ao repositório como lote próprio): mede a janela de contexto e, aos 50%, injeta a ordem de preparar memória, estado do repositório e o prompt de start da próxima sessão, sela o prompt com validação de forma, bloqueia o fim do turno (no máximo 3 vezes), gera fallback em PreCompact e SessionEnd e entrega o prompt à sessão nova do mesmo projeto; vale para TODOS os projetos como hook de USUÁRIO (~/.claude), instalado pelo proprietário; o pacote (context_guard.py, install.py, testes e README; 26 testes, 16 de 16 mutações mortas) foi entregue a ele no chat e NÃO está no repositório: ele o reenvia ao abrir o lote; versionar o pacote em área que não é contrato (documentação e código sob docs/governanca e scripts), com teste no CI; ativar no projeto (.claude/settings.json) e em sessões na nuvem é arquivo de contrato e exige a aprovação expressa do texto e do merge; limites: percentual é estimativa do usage da última chamada, conteúdo do prompt é do modelo, não foi testado em Claude Code real; conferir primeiro com CONTEXT_GUARD_THRESHOLD=0.01",
+      "roadmap_task": "RM-00",
+      "deliverable": "docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md",
+      "depends_on": [
+        "S19"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "reenvio do pacote claude-context-guard pelo proprietário",
+        "resultado da conferência dele com CONTEXT_GUARD_THRESHOLD=0.01 numa sessão real"
+      ]
     }
   ],
   "owner_priorities": [
