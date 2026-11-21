@@ -187,6 +187,14 @@ class PrivacidadeETextoTests(unittest.TestCase):
         for texto in ("Você acertou 80%.", "acertou 12 de 20", "sua nota foi 7", "erros: 3", "tem 45 % de aproveitamento"):
             self.motivo(texto, "dado_de_desempenho_nao_verificavel")
 
+    def test_contagem_antes_da_palavra_atribuida_ao_aluno_tambem_e_recusada(self):
+        for texto in ("Você teve 12 acertos ontem.", "Seu caderno teve 3 erros.", "Hoje você fez 15 acertos", "Você obteve 8 pontos"):
+            self.motivo(texto, "dado_de_desempenho_nao_verificavel")
+
+    def test_numero_antes_da_palavra_sem_atribuicao_ao_aluno_nao_e_recusado(self):
+        for texto in ("Evite os 3 erros comuns de interpretação.", "Revise 2 erros típicos de concordância."):
+            self.assertNotIn("dado_de_desempenho_nao_verificavel", vai(env(corpo=texto))["motivos"], texto)
+
     def test_palavras_que_contem_nota_ou_erro_nao_sao_desempenho(self):
         for texto in ("Faça 3 anotações curtas.", "O terror 2 não conta aqui.", "Use a anotação 1 como guia."):
             self.assertEqual(vai(env(corpo=texto))["decisao"], "ACEITA", texto)
