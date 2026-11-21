@@ -2,14 +2,14 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-09",
-    "scope": "lote_liberacao_zapia_plataformas_sem_termos_de_uso",
+    "task_id": "RM-08",
+    "scope": "lote_reavaliacao_rm08_bloqueadores_head_vigente",
     "branch": "ccr-d0f3862d-toas04",
-    "pr_number": 149,
+    "pr_number": 150,
     "base": "main",
     "phase": "review"
   },
-  "next_task_after_merge": "RM-08",
+  "next_task_after_merge": "RM-09",
   "rules": {
     "max_open_pull_requests": 1,
     "max_active_work_branches": 1,
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #148 integrado em main no merge commit 8c27b8e4ca96e1d143a45303472931c5a6472fef. Frente única ativa: RM-09 (lote_liberacao_zapia_plataformas_sem_termos_de_uso), branch ccr-d0f3862d-toas04, PR #149. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #149 integrado em main no merge commit 2f908c4d781c9a92c2c86ea7f0412383fae0cb93. Frente única ativa: RM-08 (lote_reavaliacao_rm08_bloqueadores_head_vigente), branch ccr-d0f3862d-toas04, PR #150. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 148,
-    "merge_commit_sha": "8c27b8e4ca96e1d143a45303472931c5a6472fef"
+    "pr_number": 149,
+    "merge_commit_sha": "2f908c4d781c9a92c2c86ea7f0412383fae0cb93"
   },
   "work_queue": [
     {

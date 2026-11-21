@@ -4,10 +4,10 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #148; SHA 8c27b8e4ca96e1d143a45303472931c5a6472fef
-- Frente ativa: **RM-09 / PR #149**; branch `ccr-d0f3862d-toas04`; base main; fase review.
+- Último merge comprovado: PR #149; SHA 2f908c4d781c9a92c2c86ea7f0412383fae0cb93
+- Frente ativa: **RM-08 / PR #150**; branch `ccr-d0f3862d-toas04`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
-- **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
+- **Próxima tarefa: RM-09**; a entrega formal RM-08 está em reavaliação no lote ativo e continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
@@ -115,6 +115,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 **RM-09 — Z1:** `docs/governanca/PROMPT_TESTE_EXPORTACAO_TEC_ZAPIA_20261118.md` é o prompt, a encaminhar pelo proprietário, do teste de a Zapia trazer a exportação do TEC (um passo com efeito, só com a frase dele); **nada foi executado** e o conversor da L2 espera o relatório. **RM-09 permanece `planejado`.**
 
 **RM-08-BASELINE — subescopo de avaliação formal:** reconcilia proveniência e situação atual de GP-3/GQ-D/GQ-C/GQ-O, documenta critérios de entrada e mantém RM-08 bloqueada enquanto faltarem provas. Não altera critérios aprovados, não implementa persistência, não habilita integrações e não homologa GP-4.
+
+**RM-08 — reavaliação de 21/11/2026:** `docs/governanca/RM08_REAVALIACAO_20261121.md` reavalia os bloqueadores no HEAD vigente, lista os insumos que faltam do proprietário e **mantém RM-08 `bloqueado`**; não homologa GP-3, GQ-D, GQ-C, GQ-O nem GP-4.
 
 **RM-08-PREP — subescopo autorizado após o PR #51:** especificação e protótipo offline sintético do fluxo recomendação → simulação de execução humana → resultado sintético → reavaliação. Este subescopo não altera a baseline formal de RM-08 (`bloqueado`), não constitui GP-4 homologado e não autoriza persistência pessoal, replay de dados reais, serviço ou integração externa. A promoção da linha formal de RM-08 exige baseline auditada própria e gates técnicos/independentes aplicáveis.
 
