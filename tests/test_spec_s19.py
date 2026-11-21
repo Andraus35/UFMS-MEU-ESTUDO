@@ -72,11 +72,12 @@ class SpecS19Tests(unittest.TestCase):
         self.assertIn("não é hook", MAPA)
         self.assertIn("e4ee0018", PESQUISA)
 
-    def test_estado_da_conta_e_drive_so_como_hipotese(self):
-        for t in ("outlook", "envio", "sem conector de github", "hipótese", "decisão do proprietário", "s8-r6"):
+    def test_estado_da_conta_e_decisoes_do_proprietario(self):
+        for t in ("só a fila entrada", "drive não entra", "risco aceito", "pro", "50 tarefas", "mais restritivo", "sem conector de github", "s8-r6", "s15-r13"):
             self.assertIn(t, req(12), t)
         self.assertIn("20 tarefas", PESQUISA)
-        self.assertIn("prevalece o mais restritivo", PESQUISA)
+        self.assertIn("vale o mais restritivo", PESQUISA)
+        self.assertIn("**decidida** (21/11/2026)", DOC)
 
     def test_nada_aplicado_e_flag_false(self):
         for perfil in ("TUTOR", "COACH"):
