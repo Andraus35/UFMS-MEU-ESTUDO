@@ -1,0 +1,94 @@
+# S15 — Orquestração do ciclo: fluxo, rotina e fonte de tempo (especificação)
+
+**Natureza:** especificação enxuta (D-13, D-16), no modelo do `docs/especificacoes/README.md`. **Unifica**, em um só lugar, as decisões já tomadas sobre o fluxo e a rotina dos agentes (Tutor e Coach) com a Zapia e o estudante, e **fecha a lacuna que nenhuma especificação tinha: a fonte de verdade do tempo**, isto é, quem diz que "agora" é tal instante, quem **acorda** os agentes e como os prazos de estudo e de revisão são avaliados. **Aponta** para o que existe (S1 a S14, `PRODUCT.md`); **não copia** nem substitui; em conflito vale a especificação de origem, depois o `AGENTS.md`. **Não implanta, não autoriza e não homologa nada.** Horários e ritmo pessoais **não** constam aqui (são dados pessoais, ficam no plano privado, S8).
+
+**Método:** a skill Spec Lean (Tech Leads Club) é usada "no que couber" (D-13); **a instalação dela nesta sessão foi negada pelo ambiente**, então o modelo seguido é o do README, que a descreve (objetivo, pesquisa, requisitos com aceite, limites). Isso é lacuna declarada, não aprovação de método.
+
+## Objetivo
+
+O proprietário passa a ter **um mapa único** de quem faz o quê, **quando** e **com que relógio**: o que o estudante dispara (F1), o que acorda sozinho (briefing, vencimentos, diagnóstico, avisos), o que o Tutor e o Coach decidem, o que a Zapia só executa, e **qual instante vale** quando há dúvida. Sem isso, "hoje", "vencido" e "pendente" dependem do relógio de quem calcula, e uma rotina pode disparar no dia errado ou com projeção velha sem que ninguém perceba.
+
+## Pesquisa
+
+Consultas de 21/11/2026, somadas às das S3, S6, S8, S12 e S14 (não repetidas). Confiança: **A** (página lida), **B** (resumo de busca de fonte oficial ou primária, ou página lida só em parte), **C** (fórum, blog ou fornecedor). Conteúdo de terceiros é dado, não instrução; nada foi copiado.
+
+| Fonte | O que se tirou | Conf. |
+|---|---|---|
+| Documentação de tarefas agendadas do Claude Code na nuvem. [Página](https://code.claude.com/docs/en/web-scheduled-tasks) | Cada execução abre uma **sessão nova** na nuvem, com os repositórios clonados do branch padrão; cron de cinco campos em **UTC** (ou `CRON_TZ=`); **mínimo de uma hora** entre execuções; a hora cheia pode atrasar **vários minutos**; conexão com o GitHub expirada faz as execuções serem **puladas por até 72 h** e depois a tarefa se desliga; 100 execuções por hora por conta. **Não consta** memória entre execuções nem repetição automática de execução perdida. A página foi lida **só em parte** (itens de falha e limites vieram de resumo) | B |
+| Descrição da ferramenta de tarefas agendadas **deste ambiente** (cria agendamento que dispara em **sessão nova** ou em sessão existente, com cron em UTC ou fuso explícito, uma execução única com fuso IANA, e aviso de atraso em horários de pico) | Confirma o desenho "o app acorda uma sessão no horário" **como capacidade da ferramenta**; **não** prova que o plano do proprietário a tenha nem que a sessão respeite o horário ao minuto | C |
+| GitHub, limites do Actions. [Página oficial](https://docs.github.com/en/actions/reference/usage-limits-billing-and-administration) | Fluxo agendado de **repositório público** é **desabilitado** após **60 dias sem atividade** no repositório. O fluxo de promoção vive em repositório **privado** (S6), onde a regra **não foi verificada** aqui | B |
+| Relatos sobre atraso e perda de `schedule` do Actions. [Discussão](https://github.com/orgs/community/discussions/185355) e [artigo](https://hackernoon.com/your-github-actions-cron-job-can-disappear-without-failing) | Relatos de que o horário agendado **pode atrasar** (início da hora é o pico) e de que uma execução pode **sumir sem erro**; recomendam observação externa. **Não** é página oficial | C |
+| Fuso de Mato Grosso do Sul. [timeanddate](https://www.timeanddate.com/time/change/brazil/campo-grande) e [aviso da Microsoft](https://techcommunity.microsoft.com/blog/dstblog/time-zone-updates-for-brazil-are-available/751175) | `America/Campo_Grande`: **UTC−4**, e o horário de verão **foi abolido em 2019** (última mudança em 16/02/2019). Não confirmei a versão exata do tzdata | B |
+| Fronteira do "dia" em repetição espaçada. [Fórum do Anki](https://forums.ankiweb.net/t/next-day-starts-at-midnight-in-the-preferences-but-1am-in-reality-why/1087) | O Anki separa o **instante** do **dia de estudo**: o dia vira numa hora configurável (padrão 4 h), e mexer no fuso ou na hora **pode deslocar revisões em um dia**. É relato de usuários, **não o manual** | C |
+| Registros do projeto: S6-R8, S6-R13, S8-R1 a R9, S11-R3, S12-R5, S14-R13 a R15; rodadas 5 e 5b da Zapia (autorrelato) | O comando já carrega **janela e nonce**; a Zapia só executa de validados; a rotina da Zapia tem cron de **no mínimo 900 s e no máximo 32 execuções por dia**; as datas D+7, D+15 e D+30 vêm só do plano; a pontualidade do cron da Zapia **nunca foi medida** | B |
+
+- **Lacunas:** **nada aqui foi testado**: não sei se o plano do proprietário tem tarefas agendadas na nuvem, nem a pontualidade real delas, do Actions ou do cron da Zapia; a página de tarefas agendadas foi lida só em parte e não diz se a sessão agendada guarda memória (o desenho assume que **não**); a regra de 60 dias do Actions não foi verificada para repositório privado; o tzdata e o manual do Anki não foram lidos; não há estudo sobre horário ótimo de lembrete para estudante de concurso; o fuso e a hora de virada do dia são **propostas** minhas (R2), não decisão do proprietário.
+
+## Mapa das decisões já tomadas (unificação)
+
+Cada linha aponta para a **origem**; a S15 não as reabre.
+
+| Tema | Decisão vigente | Origem |
+|---|---|---|
+| Papéis | **Tutor** ensina, prescreve, revisa e emite o comando de registro; **Coach** acompanha a rotina e decide mensagens e lembretes; **Zapia** é só interface e executora, **não decide nem redige** | D-10, D-12, D-23, S2, S3, S5 |
+| Onde rodam | Tutor e Coach em **sessões do app Claude na nuvem**, efêmeras; todo estado em repositório; sem custódia de chave | D-25, S6-R1 |
+| Canal | Zapia escreve **só** na fila `entrada`; o **fluxo de Actions** é o único escritor do histórico; a Zapia executa **só** de comandos validados | S6-R2, R3, R8 |
+| Ciclo | **F1 a F8**: iniciar, recomendar, resolver, devolver, validar, registrar, reavaliar, revisar; F3 e F4 são ato humano | S11-R4, `PRODUCT.md` fluxo |
+| Método e prazos | Método 4.2; revisão em **7, 15 e 30 dias** vinda **só** de `study_plan.py`; o Tutor ajusta com evidência | D-11, S1-R2, S12-R5 |
+| Rotina diária | **Uma** mensagem por dia, no app, mais no máximo **um** segundo lembrete; só atividade pendente; três dias sem resposta, **uma** pergunta; **só com `AUTORIZO`** | S8-R1, R2, R8, R9 |
+| Limites da Zapia | Cron mínimo de 900 s e 32 execuções por dia (autorrelato); o START vai dentro da tarefa de cada job | S8-R5, R6 |
+| Entrega e gates | Efeitos **só pelo portão**; entrega verificada (envelope, alegações, recibo de START); sombra e bloqueio; registro sem dado pessoal | S14-R5 a R9, R11, R13 |
+| Leitura de resultado pelas sessões | Só **projeção fechada** e só depois do **consentimento v4** | S6-R9, S14 |
+| Persistência | Escrita de resultado **desligada** (duas flags); liga só por PR de janela, com aprovação expressa citando PR e head | S7, S11-R2, R3 |
+| Piloto | Um caderno real, um evento, semáforo; **não** homologa RM-08 nem RM-10 | S11-R1, R13 |
+
+## Fluxo e rotina unificados: quem aciona, quem decide, quem executa
+
+| Gatilho | Quem acorda | Quem decide | Quem executa | Origem |
+|---|---|---|---|---|
+| **A. Comando do estudante** (abre sessão, pede recomendação, devolve resultado) | o próprio estudante | Tutor (ensino e prescrição) | sessão do Tutor; registro pela Zapia e pelo fluxo | F1 a F8 |
+| **B. Briefing diário** | gatilho agendado (R3) | Coach | Zapia envia o comando validado no app | S8-R1 |
+| **C. Segundo lembrete** | gatilho agendado, só se a atividade seguir pendente | Coach | Zapia | S8-R1 |
+| **D. Vencimento de revisão** | gatilho agendado (junto do briefing) | Coach lembra; **Tutor prescreve** a revisão | Zapia (lembrete); sessão do Tutor (conteúdo) | S12-R5 |
+| **E. Diagnóstico ou simulado quinzenal** | gatilho agendado ou pedido do estudante | Tutor, com módulo de prova do Coach | sessão; resultado entra por F4 | S12 |
+| **F. Aviso de renovação de tokens** | gatilho agendado (14 dias antes) | rotina versionada (sem juízo) | Zapia avisa; renovar é ato do proprietário | S14-R15 |
+| **G. Auditoria por amostra** | gatilho por contagem ou data | proprietário (rubrica) | `audit_sample.py` calcula; ele aplica a pausa | S14-R14 |
+
+## Requisitos
+
+| ID | Requisito | Critério de aceite |
+|---|---|---|
+| S15-R1 | **Fonte de verdade do instante.** O "agora" é **sempre** um instante em **UTC** (ISO 8601 com `Z`) lido do **relógio do ambiente que roda o código determinístico do repositório** (runner do fluxo ou processo da sessão) e **injetado** no verificador, no gerador de projeção e na rotina; **o modelo nunca estima nem afirma a data de hoje por conta própria**: usa o `agora_utc` e a `data_local` que o código lhe entrega. Sem relógio injetado, a decisão que depende de tempo (vencimento, lembrete, janela) **não é tomada** e o motivo é relatado; orientação sem prazo segue possível (`AGENTS.md`). | Teste com relógio **injetável**: função recusa data sem fuso, instante no futuro distante e relógio ausente; nenhuma função de prazo lê `datetime.now()` diretamente (teste estático). |
+| S15-R2 | **Fuso e dia de estudo.** Proposta: **fuso fixo `America/Campo_Grande`** (UTC−4, sem horário de verão desde 2019) e **dia de estudo que vira à 00:00 local**; guardado em configuração do plano, **nunca** inferido do aparelho ou do modelo. As datas `vence_em` e as do plano são **datas de calendário nesse fuso**; "vencida" é `data_local > vence_em` e "devida hoje" é `data_local == vence_em`. Dia de descanso e revisão que cai nele seguem S1-R2 e S3-R2. **Escolha do fuso e da hora de virada é decisão do proprietário** (candidata a D-29). | Fixtures: 23:59 e 00:01 locais, virada de mês e de ano, 29/02, instante UTC que muda o dia local, dia de descanso; instante sem fuso é recusado; mudar a hora de virada exige alterar a configuração versionada. |
+| S15-R3 | **Quem acorda os agentes: dois estágios, relógio no primeiro.** (1) **Decidir:** um **gatilho agendado** abre uma sessão do Coach (ou do Tutor) com START; (2) **Executar:** a **Zapia** só envia o que o Coach emitiu e o fluxo validou, **dentro da janela do comando** (S6-R8). Candidatos ao gatilho, a **comparar em teste sem efeito**, nesta ordem de preferência: **(a) tarefa agendada do app Claude na nuvem** (sessão nova, cron em UTC, mínimo de 1 h, atraso de minutos); **(b) `schedule` do Actions** (UTC, sujeito a atraso e a desabilitação por inatividade, **sem** modelo; só serve para rotina determinística como F e G); **(c) job da Zapia** (cron mínimo de 900 s, S8-R5; **não decide**, só executa). **A escolha é do proprietário depois da prova (R4).** Nenhum gatilho **decide** pedagogia: o relógio só **chama**. | Tabela de gatilhos com colunas: o que acorda, fuso do agendamento, atraso conhecido, falha segura, prova pendente; teste de contrato de que nenhum gatilho contém texto pedagógico e de que a Zapia **não** é listada como quem decide. |
+| S15-R4 | **Prova do gatilho, sem efeito.** Antes de qualquer rotina real: uma execução **de teste** de cada candidato que **só escreve um carimbo** (UTC, origem, sem dado pessoal) em local não sensível, repetida em **três dias seguidos**, para **medir pontualidade e perda** (dado que hoje **não existe**). O resultado entra como relato com captura e decide R3. **Nada é criado sem `AUTORIZO`** (S8-R8). | Relatório do teste com atraso observado por execução e execuções perdidas; sem o relatório, a rotina **não** é considerada agendável (R9). |
+| S15-R5 | **Idade máxima da projeção.** A projeção traz `gerado_em`. **Proposta:** para decidir **prazo** (vencimento, lembrete de hoje) a projeção deve ter **no máximo 24 h**; para orientação sem prazo, **72 h**, **com aviso** de defasagem. Projeção mais velha **não** é usada para afirmar o que está pendente: a sessão declara a defasagem e **pede nova projeção** (limites **ajustáveis pelo proprietário**). | Fixtures de projeção com 1 h, 25 h e 80 h: decisão de prazo recusada a partir de 25 h; orientação avisa a partir de 73 h; sem `gerado_em` ou com `gerado_em` no futuro, recusa. |
+| S15-R6 | **Janela e idempotência de cada despertar.** Todo comando de uma rotina leva `gerado_em` UTC, **janela de validade** e chave `rotina-AAAA-MM-DD-<tipo>-<id>` com a data **local** (R2) (S8-R4). Comando **fora da janela** ou de **dia anterior** é recusado; repetir no mesmo dia **não duplica**. | Fixtures: comando atrasado além da janela, repetido, e com data local diferente da do relógio injetado. |
+| S15-R7 | **Despertar perdido é visível e seguro.** Se o gatilho não rodar, **nada é enviado em seu lugar**; a **ausência do recibo do dia** é o sinal (S8-R7, S14-R13); o proprietário vê a lacuna na próxima interação, e **não** se recupera automaticamente com mensagem em dobro (S8-R9). Um despertar atrasado **dentro da janela** ainda vale; fora dela, **pula** o dia. | Teste do decisor: sem leitura do estado, SHA divergente, janela vencida ou relógio ausente → nenhuma ação e relato do motivo. |
+| S15-R8 | **Papéis do despertar (sem cognição no relógio).** O relógio e os gatilhos **só chamam**; quem **decide** é o Tutor ou o Coach, com os gates de S14; a Zapia **executa**. O que o Tutor pode ajustar (intervalos, carga, fase final) continua exigindo **justificativa e evidência** (S1-R6). Nenhum gate avalia o raciocínio (S14-R1). | Teste de contrato: nenhuma regra desta especificação restringe a escolha de assunto, bloco ou explicação. |
+| S15-R9 | **Estado de liberação, hoje.** Nada desta especificação está ligado: (a) rotina diária e lembretes **só com `AUTORIZO`** (S8-R8); (b) **duas flags** de escrita de resultado em `false`, ligadas **só** por PR de janela com aprovação expressa citando PR e head (S11-R3); (c) piloto depende de **PJ** e dos **tokens renovados** (P9, aviso em 04/12/2026); (d) estudo em **E0**, sem resultado gravado; (e) leitura de resultado pelas sessões depende do **consentimento v4**. A S15 **organiza** estas dependências, **não as resolve**. | Tabela "estado de liberação" com a origem de cada ato; teste de que a S15 não contém `AUTORIZO` como se estivesse dado nem altera flag. |
+| S15-R10 | **O estudante sempre pode acionar.** Qualquer pedido do estudante (gatilho A) é atendido **sem esperar** o relógio; o que depende de dado **não gravado** é declarado pendente (nunca inventado) e **não** cria rotina. A rotina diária **pode ser pausada por ele a qualquer momento** (S8-R8). | Cenário de contrato: pedido do estudante com projeção ausente → orientação segura e relato do que falta; pausa documentada. |
+| S15-R11 | **Tempo de estudo e de prova não é o relógio de rotina.** Tempo de simulado (240 minutos, turno do cargo, S12-R8) e tempo declarado de caderno são **dados do estudante ou do edital**, nunca estimados pelo relógio do agente. | Teste: o valor vem de `config/concursos.json` ou do relato, e a ausência é declarada. |
+| S15-R12 | **Cobertura de tempo em teste.** Todo componente que usa tempo (verificador, projeção, rotina, janela, auditoria) é testado com **relógio injetado** nos casos de R2, R5 e R6, e a CI roda esses testes. | Lista dos módulos que usam tempo e teste estático de que nenhum lê o relógio do sistema fora do ponto de injeção. |
+| S15-R13 | **Rastreabilidade.** Cada requisito e cada linha do mapa aponta para a especificação ou decisão de origem; uma decisão nova do proprietário vira `PRODUCT.md` **antes** de virar regra aqui. | Teste: todo identificador citado (S*-R*, D-*) existe no documento de origem. |
+| S15-R14 | **Honestidade sobre o que a S15 garante.** Não garante que o gatilho dispare, que a Zapia entregue, que o estudante veja a mensagem, nem que o horário seja pedagogicamente bom. Garante, **quando implementado e provado**, que decisões de prazo usam **um relógio declarado**, **uma data local única** e **projeção dentro da idade máxima**, e que **falha de despertar não gera efeito**. | O texto termina com a linha **"Não garantido:"**; teste de presença. |
+
+## Tarefas derivadas (fora desta especificação, uma frente por lote)
+
+1. **Relógio injetável e dia de estudo** (R1, R2, R5, R6, R12): módulo offline com `agora_utc`, `data_local`, `devido(vence_em)` e idade da projeção, com fixtures; sem rede e sem modelo.
+2. **Prova do gatilho sem efeito** (R4): roteiro de teste de três dias com carimbo, **só com `AUTORIZO`**; resultado por relato com captura.
+3. **Decisão do proprietário** (R2, R5): fuso, hora de virada do dia e idade máxima da projeção, registradas no `PRODUCT.md` (candidatas a D-29 e D-30) em PR próprio.
+
+## Aceite
+
+- Esta especificação passa em `doc_cohesion`, `product_gate`, `roadmap_gate`, `governance_sync_gate` e `single_flow_gate`, na suíte e na CI **no HEAD**.
+- `tests/test_spec_s15.py` confere: R1 a R14 com critério; pesquisa com links, níveis B e C e linha de lacunas; o mapa e a tabela de gatilhos; a rastreabilidade para as origens; a ausência de decisão pedagógica no relógio; o estado de liberação; a linha "Não garantido:".
+- **O aceite do tempo em produção não é este documento:** depende das tarefas derivadas, da prova do gatilho (R4) e da decisão dele.
+
+## Limites
+
+- Especifica; **não implementa, não agenda, não autoriza e não homologa** (RM-01 a RM-07 seguem `implementado_nao_homologado`; RM-08 e RM-10 bloqueados).
+- Fuso, hora de virada e idade da projeção são **propostas**; nada disso é decisão dele até constar no `PRODUCT.md`.
+- Dados de pontualidade vêm de **relatos e documentação**, não de medição.
+
+**Não garantido:** que o gatilho agendado dispare no horário nem que não perca execuções; que a Zapia entregue ou que o estudante leia a mensagem; que o relógio do ambiente esteja correto (assume-se o do ambiente, sem verificação externa); que a projeção reflita o que o estudante fez fora do registro; que o horário e a frequência sejam pedagogicamente bons; a persistência de resultados (desligada).
