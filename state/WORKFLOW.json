@@ -834,6 +834,17 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "TOP2",
+      "title": "S16 T2: seleção do top 10 por matéria a partir de percentuais fornecidos (S16-R4, R5, R6; P1 a P5, P7, P8): só modalidade 1 e nós terminais, empate no 10º incluído até o teto de 15 (acima, decisão do proprietário sem lista), lista parcial com menos de 10 folhas, PENDENCIA_ABERTA para amostra ausente, não definitiva ou instável, recusa sem nenhum percentual; correspondência com o guia só por mapa explícito; função pura, sem lista embutida",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/top10_materia.py",
+      "depends_on": [
+        "TOP1"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
