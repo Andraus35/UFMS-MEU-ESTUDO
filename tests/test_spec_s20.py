@@ -77,7 +77,8 @@ class SpecS20Tests(unittest.TestCase):
 
     def test_fila_de_gaps_no_workflow_em_serie_e_documentada(self):
         lotes = ["GAP-A", "GAP-B", "GAP-C", "GAP-D", "GAP-E"]
-        self.assertEqual(FILA["GAP-A"]["depends_on"], ["S20"])
+        self.assertEqual(FILA["HOOKR"]["depends_on"], ["S20"])  # correção do hook entra logo depois do S20
+        self.assertEqual(FILA["GAP-A"]["depends_on"], ["HOOKR"])
         for ant, atual in zip(lotes, lotes[1:]):
             self.assertEqual(FILA[atual]["depends_on"], [ant])
         for l in lotes:

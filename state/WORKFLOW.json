@@ -921,12 +921,23 @@
       "optional_inputs": []
     },
     {
+      "id": "HOOKR",
+      "title": "Hook de passagem desarma a sessão quando a medição cai abaixo do limite (pedido do proprietário de 21/11/2026, depois do falso alarme de 52% com janela de 200k): armed_at e sealed ficavam permanentes e o hook de perguntas cedia para sempre; extrair o estado do hook para scripts/context_guard_state.py com desarme por queda abaixo do limite, teste que falha antes (sessão armada por engano volta a perguntar), contraprova de que acima do limite continua armado e de que o hook de perguntas só lê; altera script do hook, não .claude/hooks (contrato) nem settings; uma branch, um PR draft",
+      "roadmap_task": "RM-00",
+      "deliverable": "scripts/context_guard_state.py",
+      "depends_on": [
+        "S20"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "GAP-A",
       "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GA-1 a GA-5: esquema de params por operação, filtros no texto de params do COMANDO, hash do prompt, LEMBRETE com várias atividades e formato único da chave de idempotência",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/command_params_schema.py",
       "depends_on": [
-        "S20"
+        "HOOKR"
       ],
       "blocking_inputs": [],
       "optional_inputs": []

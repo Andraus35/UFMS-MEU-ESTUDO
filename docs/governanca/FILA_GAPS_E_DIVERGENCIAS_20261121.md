@@ -4,7 +4,7 @@
 
 ## Ordem (série, um lote por vez, com merge entre lotes)
 
-`S20` (esta frente) → **GAP-A** → **GAP-B** → **GAP-C** → **GAP-D** → **GAP-E**. O lote **G** (Zapia e proprietário) corre em paralelo **fora do repositório**, porque são atos dele.
+`S20` (esta frente) → **HOOKR** (correção do hook, abaixo) → **GAP-A** → **GAP-B** → **GAP-C** → **GAP-D** → **GAP-E**. O lote **G** (Zapia e proprietário) corre em paralelo **fora do repositório**, porque são atos dele.
 
 ## GAP-A (GA) — Comandos e entrega (entrega: `scripts/command_params_schema.py`)
 
@@ -47,6 +47,12 @@
 |---|---|---|---|---|---|
 | GE-1 | O Coach **não leu** as p. 148 a 153 (conector do Drive truncou; só ficha e sumário): S18-R14 **não é cumprível** com o PDF único | **Alta** (para a S18-R14) | S18-R14, índice do Manual | Derivado **paginado** na pasta privada (decisão do proprietário) e teste de leitura | Coach |
 | GE-2 | Os gates `G-MOT-01` a `22` são **todos não implementados** (14 aplicados só por conduta) | Média | S18-R11 | Implementar os verificáveis, em tarefa própria e com aprovação | Coach |
+
+## HOOKR — Hook de passagem desarma abaixo do limite (entrega: `scripts/context_guard_state.py`)
+
+| ID | Gap | Gravidade | Onde | Correção proposta | Origem |
+|---|---|---|---|---|---|
+| HK-1 | `armed_at` e `sealed` ficam **permanentes** na sessão: depois do falso alarme (janela de 200k), o hook de perguntas **cede para sempre**, mesmo com a medição corrigida (43% de 1M) | Média | `scripts/claude_context_guard.py` (`on_measure`), `.claude/hooks/perguntas_boas_praticas.py` (só lê) | Desarmar quando a medição cair abaixo do limite, com teste que falha antes e contraprova de que acima do limite continua armado | Proprietário (21/11/2026) |
 
 ## G — Zapia e proprietário (fora do repositório)
 
