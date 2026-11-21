@@ -37,7 +37,8 @@ class E12Tests(unittest.TestCase):
 
     def test_config_do_projeto_e_segura_e_aponta_para_o_handoff(self):
         c = json.loads((ROOT / ".claude" / "context-guard.json").read_text(encoding="utf-8"))
-        self.assertEqual(set(c), {"extra_instruction"})  # sem repo_copy, sem mudar limite
+        self.assertEqual(set(c), {"extra_instruction", "window_tokens"})  # sem repo_copy e sem mudar o limite (50%); só a janela real de 1M (HOOKW)
+        self.assertEqual(c["window_tokens"], 1_000_000)
         e = c["extra_instruction"]
         for trecho in ("memory/HANDOFF.md", "bootstrap.py --mode engineering", "next_task.py", "nunca merge", "nunca push forçado",
                        "aprovação expressa", "confirmar no GitHub", "sem pedir permissão", "nunca na `main`"):

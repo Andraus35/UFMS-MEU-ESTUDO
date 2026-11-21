@@ -23,7 +23,7 @@ class Base(unittest.TestCase):
         self.proj = Path(self.tmp.name) / "proj"
         self.proj.mkdir()
         subprocess.run(["git", "-C", str(self.proj), "init", "-q"], check=True)
-        self.env = {**os.environ, "CONTEXT_GUARD_HOME": str(self.home), "HOME": str(self.home)}
+        self.env = {**os.environ, "CONTEXT_GUARD_HOME": str(self.home), "HOME": str(self.home), "CONTEXT_GUARD_WINDOW": "200000"}  # janela pequena só para os testes de mecanismo; o padrão real (1M) tem testes próprios
         self.tr = Path(self.tmp.name) / "t.jsonl"
 
     def tearDown(self):
@@ -90,6 +90,38 @@ class MedirTests(Base):
         self.assertIsNone(self.run_hook("UserPromptSubmit"))
         self.tr.unlink()
         self.assertIsNone(self.run_hook("Stop"))
+
+
+class JanelaPadraoTests(Base):
+    def hook(self, event="UserPromptSubmit", sid="s1"):
+        env = {k: v for k, v in self.env.items() if k != "CONTEXT_GUARD_WINDOW"}
+        payload = {"session_id": sid, "cwd": str(self.proj), "transcript_path": str(self.tr)}
+        r = subprocess.run([sys.executable, str(SCRIPT), event], input=json.dumps(payload), capture_output=True, text=True, env=env)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        return json.loads(r.stdout) if r.stdout.strip() else None
+
+    def test_padrao_e_1m_187k_nao_dispara_e_500k_dispara(self):
+        self.transcript(187_100)  # a tela do proprietário mostrava 19% de 1M; com 200k seria 94% (falso alarme)
+        self.assertIsNone(self.hook())
+        self.transcript(499_999)
+        self.assertIsNone(self.hook())
+        self.transcript(500_000)
+        self.assertIn("COMECE AGORA", self.hook()["hookSpecificOutput"]["additionalContext"])
+
+    def test_config_do_projeto_versionada_fixa_1m(self):
+        cfg = json.loads((Path(__file__).resolve().parents[1] / ".claude" / "context-guard.json").read_text(encoding="utf-8"))
+        self.assertEqual(cfg["window_tokens"], 1_000_000)
+        src = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn('"window_tokens": 1_000_000', src)
+
+    def test_depois_do_selo_o_aviso_nao_repete_a_cada_ferramenta(self):
+        self.transcript(600_000)
+        self.assertIn("COMECE AGORA", self.hook("PostToolUse")["hookSpecificOutput"]["additionalContext"])
+        self.assertEqual(self.seal().returncode, 0)
+        primeiro = self.hook("PostToolUse")
+        self.assertIn("JÁ SELADO", primeiro["hookSpecificOutput"]["additionalContext"])
+        for _ in range(3):
+            self.assertIsNone(self.hook("PostToolUse"))  # mesmo estado do lote: silêncio
 
 
 class SeloETravaTests(Base):
@@ -245,11 +277,11 @@ class AvisoPosSeloTests(Base):
 
     def test_lote_finalizado_manda_nao_propor_novo_lote_e_encerrar(self):
         self.armado_e_selado()
-        for ev in ("UserPromptSubmit", "PostToolUse"):
-            t = self.run_hook(ev)["hookSpecificOutput"]["additionalContext"]
-            self.assertIn("Lote finalizado e persistido", t)
-            self.assertIn("NÃO proponha novo lote", t)
-            self.assertIn("encerre", t)
+        t = self.run_hook("UserPromptSubmit")["hookSpecificOutput"]["additionalContext"]
+        self.assertIn("Lote finalizado e persistido", t)
+        self.assertIn("NÃO proponha novo lote", t)
+        self.assertIn("encerre", t)
+        self.assertIsNone(self.run_hook("PostToolUse"))  # o aviso sai uma vez por estado do lote
         self.assertIs(self.estado()["lote_pendente"], False)
 
     def test_lote_pendente_manda_finalizar_antes_de_encerrar(self):

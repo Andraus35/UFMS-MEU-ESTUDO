@@ -16,7 +16,7 @@ Mede a janela de contexto da sessão e, ao atingir **50%**, faz a sessão prepar
 | (acima do limite, **já selado**) | a cada prompt e ferramenta avisa para **não propor novo lote** e encerrar se o lote está finalizado, ou finalizar o lote pendente antes (correção de 21/11/2026; ver E13); e **faz as perguntas de continuidade do projeto cederem** |
 | `seal` (comando) | aceita o prompt só com `## Primeiro passo`, `## Estado` e `## Pendências` e ao menos 400 caracteres; anexa fatos do git e do contexto; arquiva o prompt anterior |
 
-Prompts ficam em `~/.claude/handoffs/<projeto>-<hash>/NEXT_SESSION_PROMPT.md` (histórico em `history/`). Falha do script é **aberta** (nunca derruba a sessão) e vai para `~/.claude/context-guard/errors.log`. Configuração opcional em `~/.claude/context-guard.json`: `threshold` (0,5), `window_tokens` (200000), `max_stop_blocks` (3), `repo_copy` (cópia do prompt dentro do repositório; nulo por padrão).
+Prompts ficam em `~/.claude/handoffs/<projeto>-<hash>/NEXT_SESSION_PROMPT.md` (histórico em `history/`). Falha do script é **aberta** (nunca derruba a sessão) e vai para `~/.claude/context-guard/errors.log`. Configuração opcional em `~/.claude/context-guard.json`: `threshold` (0,5), `window_tokens` (1000000), `max_stop_blocks` (3), `repo_copy` (cópia do prompt dentro do repositório; nulo por padrão).
 
 ## Onde está e como instalar
 
@@ -27,7 +27,7 @@ Prompts ficam em `~/.claude/handoffs/<projeto>-<hash>/NEXT_SESSION_PROMPT.md` (h
 ## O que está provado e o que não está
 
 - **Provado (testes sintéticos em HOME temporário):** limite exato de 50%, não contar subagente nem `isSidechain`, janela 200k ou 1M, limite configurável, transcript ausente ou corrompido sem quebrar, recusa de prompt sem seção ou curto, bloqueio do `Stop` com teto de 3, fallback só quando houve trabalho, não sobrescrever prompt selado da mesma sessão, isolamento entre projetos, falha aberta, instalador que preserva e remove só o seu. **18 de 18 mutações do código mortas** (as duas que sobreviveram na primeira rodada ganharam teste).
-- **Não provado:** **nenhum teste em Claude Code real**: os testes simulam a entrada dos hooks; o formato exato da entrada de cada evento (por exemplo `source` do `SessionStart` e a injeção de contexto no `PostToolUse`) é o documentado, não observado. O **percentual é estimativa** do `usage` da última chamada (entrada mais cache) com janela de 200k, ou 1M se configurada ou deduzida; não é o número da interface. O **conteúdo** do prompt é redigido pelo modelo: o script exige a forma e confere fatos do git, não a verdade do texto (por isso a sessão nova o lê como "confira o estado real"). **Commit e push não são feitos pelo hook**: a ordem manda fazê-los só se as regras do projeto e do usuário permitirem. **Hooks de usuário não existem em sessões na nuvem.**
+- **Não provado:** **nenhum teste em Claude Code real**: os testes simulam a entrada dos hooks; o formato exato da entrada de cada evento (por exemplo `source` do `SessionStart` e a injeção de contexto no `PostToolUse`) é o documentado, não observado. O **percentual é estimativa** do `usage` da última chamada (entrada mais cache) com janela de **1M** por padrão (corrigido no lote HOOKW de 21/11/2026: o padrão de 200k dava falso alarme, 97% quando a interface mostrava 19%); configurável; não é o número da interface. O **conteúdo** do prompt é redigido pelo modelo: o script exige a forma e confere fatos do git, não a verdade do texto (por isso a sessão nova o lê como "confira o estado real"). **Commit e push não são feitos pelo hook**: a ordem manda fazê-los só se as regras do projeto e do usuário permitirem. **Hooks de usuário não existem em sessões na nuvem.**
 
 ## E12-B — ativação no projeto (este PR; aguarda a aprovação dele)
 
@@ -54,3 +54,6 @@ Prompts ficam em `~/.claude/handoffs/<projeto>-<hash>/NEXT_SESSION_PROMPT.md` (h
 
 - Conferência feita: `Hook conferido: a ordem apareceu aos <limite> e o seal rodou; a sessão nova citou o prompt anterior.` (ou o que **não** funcionou, com o erro de `~/.claude/context-guard/errors.log`, sem dado pessoal).
 - Aprovação da E12-B (altera `.claude/`): `Aprovo o texto e o merge do PR #158, head <sha completo>.`
+
+
+**Lote HOOKW (21/11/2026):** o padrão da janela passou de 200k para 1M (script e `.claude/context-guard.json`), e depois do selo o aviso sai **uma vez por estado do lote**, não a cada ferramenta (antes repetia cerca de 600 tokens por chamada). Testes: `JanelaPadraoTests` (187k não dispara, 500k dispara, config versionada, silêncio após o aviso). **Não provado:** o percentual continua a estimativa da última chamada, 2 a 3 pontos acima da interface.

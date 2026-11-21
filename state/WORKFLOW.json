@@ -2,10 +2,10 @@
   "schema_version": 1,
   "policy": "single_branch_single_pr_single_merge",
   "active": {
-    "task_id": "RM-09",
-    "scope": "lote_s18_imc_coach_inteligencia_motivacional_e_comportamental",
-    "branch": "claude/s18-imc-coach-lote",
-    "pr_number": 160,
+    "task_id": "RM-00",
+    "scope": "lote_hookw_janela_de_contexto_1m_do_claude_context_guard",
+    "branch": "claude/hook-janela-contexto-1m",
+    "pr_number": 161,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #159 integrado em main no merge commit c3762552938d6abba81d059659770cc18e2feb07. Frente única ativa: RM-09 (lote_s18_imc_coach_inteligencia_motivacional_e_comportamental), branch claude/s18-imc-coach-lote, PR #160. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #160 integrado em main no merge commit 0edf7bd2b8bddff2d95df5087d56947e9f9acbdd. Frente única ativa: RM-00 (lote_hookw_janela_de_contexto_1m_do_claude_context_guard), branch claude/hook-janela-contexto-1m, PR #161. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-00",
-    "pr_number": 159,
-    "merge_commit_sha": "c3762552938d6abba81d059659770cc18e2feb07"
+    "task_id": "RM-09",
+    "pr_number": 160,
+    "merge_commit_sha": "0edf7bd2b8bddff2d95df5087d56947e9f9acbdd"
   },
   "work_queue": [
     {
