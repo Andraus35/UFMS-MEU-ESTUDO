@@ -28,10 +28,10 @@ Consultada em 21/11/2026. Confiança: **A** (fonte primária lida), **B** (docum
 | Frente | Intenção (proprietário) | Especificado aqui | Implementado hoje | Observado e testado | Bloqueado ou pendente |
 |---|---|---|---|---|---|
 | Fontes e cargos | Preservar cargo, guia, bloco e caderno de origem; não misturar origens | S16-R1 | `config/topics.csv` e `config/concursos.json` com cargos 324 e 523 e a prova | Testes de configuração | Atribuição de resultado a cargo ou bloco **não** é automática (S16-R1) |
-| Hierarquia do TEC | Caminho completo e origem de cada nó; pai não soma com filho | S16-R2, R3 | O conversor do contrato de entrega confere a árvore (pai ≥ soma dos filhos) | Testes sintéticos do conversor | Sem amostra real do guia |
-| Top 10 por matéria | Somente os 10 de maior percentual por matéria (modalidade 1, FAPEC), aprofundados pelo guia TEC (modalidade 2) | S16-R4 a R6 | Nada | Nada; duas amostras preliminares recebidas (não versionadas) | Específicos do 523 **não definitivos** (137 contra 187); regras P1 a P5 decididas |
+| Hierarquia do TEC | Caminho completo e origem de cada nó; pai não soma com filho | S16-R2, R3 | `scripts/tec_no.py` (T1) e o conversor do contrato de entrega, que confere a árvore (pai ≥ soma dos filhos) | Testes sintéticos | Sem amostra real do guia |
+| Top 10 por matéria | Somente os 10 de maior percentual por matéria (modalidade 1, FAPEC), aprofundados pelo guia TEC (modalidade 2) | S16-R4 a R6 | `scripts/top10_materia.py` (T2), função pura sem lista embutida | Testes sintéticos; duas amostras preliminares recebidas (não versionadas) | Específicos do 523 **não definitivos** (137 contra 187); regras P1 a P5 decididas |
 | Filtros e prática | Caminho exato e filtros por atividade; não presumir acervo | S16-R7 | Prescritor de cadernos offline (RM-05) | Testes sintéticos | Disponibilidade de questões não verificada |
-| Rotina diária | Entrega diária com cargo, matéria, caminho, posição, percentual, material, atividade e filtros | S16-R8, R9 | Plano de estudos determinístico (`scripts/study_plan.py`), sem top 10 | Testes sintéticos | indicação diária sem cronograma imposto (C1 decidido) |
+| Rotina diária | Entrega diária com cargo, matéria, caminho, posição, percentual, material, atividade e filtros | S16-R8, R9 | `scripts/entrega_diaria.py` (T3: entrega e recorte ao top 10) e o plano determinístico (`scripts/study_plan.py`) | Testes sintéticos | indicação diária sem cronograma imposto (C1 decidido) |
 | Início e fim | A Zapia informa Tutor e Coach; comandos "Iniciar estudos" e "finalizar estudos" | S16-R10, R11 | **Nenhum** comando de início ou encerramento no esquema | Nada | Depende de comando novo (E3, aprovação do proprietário em `agents/`) |
 | Desempenho | Evidências da rodada ao Tutor e ao Coach, sem inventar dado | S16-R12 | Contrato de entrega e filtro de dados (L1, L2) | Testes sintéticos | Escrita de resultado pessoal **bloqueada** (flag `false`) |
 | Gemini Notebook | Prompt do Tutor; Zapia executa; Tutor avalia | S16-R13 | Validador do prompt (N2) e S10 | Testes sintéticos; nada no Notebook real | Teste real não feito (N1) |
@@ -85,7 +85,7 @@ Escritos como "quando X, o Y deve Z". Todos **fecham por padrão**: dado ausente
 
 ## Tarefas derivadas
 
-Cada uma em PR próprio, em série, só depois das decisões acima e do C3 (nenhuma foi criada por esta especificação):
+T1 a T3 foram implementadas no lote B (PR #155; offline, sintéticas, sem dado real, sem rede, sem gravação); E3 segue pendente de aprovação:
 
 | Item | O que faz | Depende de |
 |---|---|---|

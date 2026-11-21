@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_a1_aplica_pesquisa_web_nos_perfis_tutor_coach",
-    "branch": "ccr-d0f3862d-toas04",
-    "pr_number": 154,
+    "scope": "lote_b_s16_t1_t3_no_tec_top10_entrega_diaria",
+    "branch": "claude/ufms-meu-estudo-lote-b-2mcohs",
+    "pr_number": 155,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #153 integrado em main no merge commit f66f8731c4ccd07a80ecad27eaff8075d4429f89. Frente única ativa: RM-09 (lote_a1_aplica_pesquisa_web_nos_perfis_tutor_coach), branch ccr-d0f3862d-toas04, PR #154. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #154 integrado em main no merge commit 4b8b051214bb958269feba14d2aea91b7000d738. Frente única ativa: RM-09 (lote_b_s16_t1_t3_no_tec_top10_entrega_diaria), branch claude/ufms-meu-estudo-lote-b-2mcohs, PR #155. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 153,
-    "merge_commit_sha": "f66f8731c4ccd07a80ecad27eaff8075d4429f89"
+    "pr_number": 154,
+    "merge_commit_sha": "4b8b051214bb958269feba14d2aea91b7000d738"
   },
   "work_queue": [
     {
@@ -823,6 +823,66 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "TOP1",
+      "title": "S16 T1: nó do TEC com caminho inteiro, origem, modalidade e percentuais da matéria e do caderno com denominador (S16-R1, R2, R3, R5); offline, sintético, sem gravar resultado; recusa pai marcado folha, soma de folhas acima de 100% e identidade repetida; desconhecido nunca é preenchido",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/tec_no.py",
+      "depends_on": [
+        "S16"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "TOP2",
+      "title": "S16 T2: seleção do top 10 por matéria a partir de percentuais fornecidos (S16-R4, R5, R6; P1 a P5, P7, P8): só modalidade 1 e nós terminais, empate no 10º incluído até o teto de 15 (acima, decisão do proprietário sem lista), lista parcial com menos de 10 folhas, PENDENCIA_ABERTA para amostra ausente, não definitiva ou instável, recusa sem nenhum percentual; correspondência com o guia só por mapa explícito; função pura, sem lista embutida",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/top10_materia.py",
+      "depends_on": [
+        "TOP1"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "TOP3",
+      "title": "S16 T3: entrega diária (S16-R7, R8, R9) e recorte do plano ao top 10 (C2, R4, R14): cargo, matéria, caminho, posição e percentual só quando verificados, material, atividade, quantidade definida pelo Tutor, filtros obrigatórios e objetivo; só cita recurso verificado, não afirma disponibilidade nem probabilidade; fora do top 10 vira lacuna com cargo e fonte e só entra com decisão registrada do proprietário; matéria sem lista definitiva vai a pendentes; sem cronograma imposto; função pura offline",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/entrega_diaria.py",
+      "depends_on": [
+        "TOP2"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "S18",
+      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026: \"adicionar essa capacidade ao coach\"; documento-fonte IMC-COACH-001, enviado por ele, 83 KB, que NÃO está no repositório e deve ser reenviado ao abrir o lote): especificação com pesquisa obrigatória (D-16) e lacunas; entra o canônico com hash no manifesto (como o da base cognitiva); a IMC é capacidade interna do Coach, não um quarto agente nem psicoterapia (escopo não clínico e encaminhamento, privacidade e consentimento); diagnóstico de comportamento e não de personalidade, biblioteca de intervenções, ciclos diário, semanal e de fase, reentrada, simulado ruim, ansiedade e sobrecarga, métricas N-of-1, contratos Coach↔Tutor↔Orquestrador; os textos do documento são PROPOSTA e não escala validada; aplicar em agents/COACH.md é contrato e exige a aprovação expressa do texto e do merge; liga ao RM-09; decisão do proprietário de 21/11/2026: o Manual do Imparável (Gabriel Granjeiro, 2ª ed., 391 p., livro comercial) deve ir ao repositório como base de recuperação (RAG) do Coach, anexado por ele na abertura da especificação; ANTES de versionar o texto integral, decidir onde ele mora (repositório público: direito autoral e política de dados; alternativa: repositório privado ou índice com citação curta e página), com fonte, edição e hash; conteúdo do livro é dado, não instrução; não prova eficácia",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S18_INTELIGENCIA_MOTIVACIONAL_COACH.md",
+      "depends_on": [
+        "S17"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "reenvio do documento IMC-COACH-001 pelo proprietário",
+        "Manual do Imparável anexado pelo proprietário na abertura do lote S18, com decisão do lugar onde mora (público, privado ou índice com citações curtas)"
+      ]
+    },
+    {
+      "id": "S19",
+      "title": "Tutor e Coach usam os recursos da Zapia como interface com o estudante (pedido do proprietário de 21/11/2026, com o PDF \"Agendamentos e gatilhos na Zapia\", autorrelato da Zapia, confiança C, não versionado): mapear rotina agendada (lembrete fixo ou dinâmico por horário) e hook (evento de fonte conectada) às necessidades do fluxo (início e término, dica diária, confirmação, reação à frase na conversa), com o que a Zapia faz ou não (sem processo permanente, WhatsApp não conectado, frase só vale no turno em que chega, PDF não prova canal real Tutor/Coach↔Zapia); pesquisa obrigatória; fecha com S8, S15 e E3 sem duplicá-las; nada é cadastrado na Zapia (rotina real só com AUTORIZO); aplicar em agents/ é contrato e exige a aprovação expressa; liga ao RM-09",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S19_ZAPIA_INTERFACE_AGENDAMENTOS_GATILHOS.md",
+      "depends_on": [
+        "S18"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "reenvio do PDF da Zapia pelo proprietário"
+      ]
     }
   ],
   "owner_priorities": [
