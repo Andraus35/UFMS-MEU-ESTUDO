@@ -238,6 +238,9 @@ def _comando(est, papel, motivos):
         motivos.append("papel_nao_pode_emitir_a_operacao")
     if agent_commands._scan_params(est["params"], schema):
         motivos.append("comando_com_parametro_proibido")
+    texto = est["params"].get("texto")
+    if isinstance(texto, str):  # GA-2: o texto livre dos params passa pelos MESMOS filtros do corpo (identificadores e prompt do Notebook têm validação própria)
+        _corpo(texto, None, {"paginas": set(), "ids": [], "citou": False, "niveis": set()}, {}, motivos, [])
     return op
 
 

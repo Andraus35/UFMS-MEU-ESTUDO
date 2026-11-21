@@ -943,12 +943,23 @@
       "optional_inputs": []
     },
     {
+      "id": "GAP-A2",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md), continuação do GAP-A: GA-3 a GA-5 (hash do prompt obrigatório no validador, LEMBRETE com várias atividades e vínculo com o COMANDO, formato único da chave de idempotência S8-R1 x S15-R6 e janelas) e o fechamento do esquema de params das operações que ficaram sem esquema (ler_arquivo_repositorio, criar_lembrete, consultar_agenda_minima, registrar_plano); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/command_idempotency.py",
+      "depends_on": [
+        "GAP-A"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
       "id": "GAP-B",
       "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GB-1 e GB-2: classificação do dia (S15-R16) como função pura e gerado_em como instante UTC",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/day_classifier.py",
       "depends_on": [
-        "GAP-A"
+        "GAP-A2"
       ],
       "blocking_inputs": [],
       "optional_inputs": []

@@ -4,14 +4,14 @@
 
 ## Ordem (série, um lote por vez, com merge entre lotes)
 
-`S20` (esta frente) → **HOOKR** (correção do hook, abaixo) → **GAP-A** → **GAP-B** → **GAP-C** → **GAP-D** → **GAP-E**. O lote **G** (Zapia e proprietário) corre em paralelo **fora do repositório**, porque são atos dele.
+`S20` (esta frente) → **HOOKR** (correção do hook, abaixo) → **GAP-A** (GA-1 e GA-2, feitos) → **GAP-A2** (GA-3 a GA-5 e esquemas restantes, entrega `scripts/command_idempotency.py`) → **GAP-B** → **GAP-C** → **GAP-D** → **GAP-E**. O lote **G** (Zapia e proprietário) corre em paralelo **fora do repositório**, porque são atos dele.
 
 ## GAP-A (GA) — Comandos e entrega (entrega: `scripts/command_params_schema.py`)
 
 | ID | Gap | Gravidade | Onde | Correção proposta | Origem |
 |---|---|---|---|---|---|
-| GA-1 | O esquema de comandos **não define `params` por operação**; o validador aceitou `registrar_resultado` com parâmetros arbitrários e só barra chaves proibidas | **Alta** | `config/agent_command_schema.json`, `scripts/agent_commands.py` | Esquema fechado de `params` por operação e recusa explícita de `registrar_*` com `personal_results_writes_enabled` falso | Tutor e Coach |
-| GA-2 | `delivery_gate` **aceitou** um COMANDO `enviar_mensagem` com texto "acertou 80% e há 300 questões disponíveis": os filtros de percentual e disponibilidade só rodam no corpo, e o COMANDO exige corpo vazio | **Alta** | `scripts/delivery_gate.py` (`_comando`, `_verificar`) | Aplicar `_corpo` ao texto de `params` e exigir que o COMANDO referencie o hash do LEMBRETE | Coach |
+| GA-1 | **[feito parcialmente no lote GAP-A: `enviar_mensagem` e `enviar_prompt_notebook` fechados; `registrar_*` pessoais recusados com a flag falsa; `ler_arquivo_repositorio`, `criar_lembrete`, `consultar_agenda_minima` e `registrar_plano` seguem SEM esquema fechado]** O esquema de comandos **não define `params` por operação**; o validador aceitou `registrar_resultado` com parâmetros arbitrários e só barra chaves proibidas | **Alta** | `config/agent_command_schema.json`, `scripts/agent_commands.py` | Esquema fechado de `params` por operação e recusa explícita de `registrar_*` com `personal_results_writes_enabled` falso | Tutor e Coach |
+| GA-2 | **[feito no lote GAP-A: o texto de `params.texto` passa pelos filtros do corpo]** `delivery_gate` **aceitou** um COMANDO `enviar_mensagem` com texto "acertou 80% e há 300 questões disponíveis": os filtros de percentual e disponibilidade só rodam no corpo, e o COMANDO exige corpo vazio | **Alta** | `scripts/delivery_gate.py` (`_comando`, `_verificar`) | Aplicar `_corpo` ao texto de `params` e exigir que o COMANDO referencie o hash do LEMBRETE | Coach |
 | GA-3 | `validate_command` aceita prompt **editado e reassinado**; só `conferir_parametros`/`command_box` recusa (`HASH_DIVERGENTE`) | Média | `scripts/agent_commands.py`, `scripts/command_box.py` | Hash do prompt obrigatório no validador | Tutor |
 | GA-4 | O LEMBRETE aceita **um** `atividade_id`, mas o briefing traz bloco e revisão; sem vínculo entre o envelope LEMBRETE e o COMANDO | Média | `scripts/delivery_gate.py` | Lista de atividades e vínculo por hash | Coach |
 | GA-5 | **Dois formatos** de chave de idempotência (S8-R1 `rotina-AAAA-MM-DD-briefing` × S15-R6 `rotina-AAAA-MM-DD-<tipo>-<id>`); janela do comando 120 s × janela de rotina da S15-R6 | Baixa (divergência) | S8, S15, schema | Escolher um formato e reconciliar as janelas | Coach |
