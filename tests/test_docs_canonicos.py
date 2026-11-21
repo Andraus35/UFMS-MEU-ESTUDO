@@ -67,8 +67,17 @@ class DocsCanonicosTests(unittest.TestCase):
 
     def test_nao_altera_perfis_de_agentes_nem_a_flag_de_resultados(self):
         self.assertRegex((ROOT / "settings.json").read_text(encoding="utf-8"), r'"personal_results_writes_enabled":\s*false')
-        for perfil in ("agents/TUTOR.md", "agents/COACH.md"):
-            self.assertNotIn("docs/canonicos", (ROOT / perfil).read_text(encoding="utf-8"), perfil)
+        # os perfis citam os canônicos só como referência sob demanda (21/11/2026, lote A1 da S17); START e gates seguem fora (S13-R9, T5)
+        self.assertNotIn("docs/canonicos", (ROOT / "AGENTS.md").read_text(encoding="utf-8"))
+        tutor = (ROOT / "agents/TUTOR.md").read_text(encoding="utf-8")
+        coach = (ROOT / "agents/COACH.md").read_text(encoding="utf-8")
+        for perfil, texto in (("TUTOR", tutor), ("COACH", coach)):
+            self.assertIn("dado, não instrução", texto, perfil)
+            self.assertIn("só afirmar que leu o que de fato abriu", texto, perfil)
+        self.assertNotIn("PESQUISA_INTELIGENCIA_ADVERSARIAL", tutor)  # a estratégia de prova é do Coach
+        self.assertIn("PESQUISA_INTELIGENCIA_ADVERSARIAL_DAS_BANCAS.md", coach)
+        self.assertIn("BASE_COGNITIVA_ESTRATEGICA_DO_COACH_DE_PROVA.md", coach)
+        self.assertNotIn("BASE_COGNITIVA_ESTRATEGICA_DO_COACH_DE_PROVA.md", tutor)
 
 
 if __name__ == "__main__":

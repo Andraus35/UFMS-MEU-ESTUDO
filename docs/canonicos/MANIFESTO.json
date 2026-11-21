@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "natureza": "Manifesto dos documentos canônicos de pesquisa e de auditoria de plataformas, incluídos por pedido do proprietário em 16/11/2026. Não contém estado.",
+  "natureza": "Manifesto dos documentos canônicos de pesquisa e de auditoria de plataformas, incluídos por pedido do proprietário em 16/11/2026 e 21/11/2026. Não contém estado.",
   "documentos": [
     {
       "id": "PESQUISA-COACH-PROVA-001",
@@ -42,6 +42,16 @@
       "editado": false,
       "sha256": "431fd76dca515297f06fbf0429e300832b65b5c3db23bf588539d92e199a3fff",
       "sha256_do_envio_original": "431fd76dca515297f06fbf0429e300832b65b5c3db23bf588539d92e199a3fff"
+    },
+    {
+      "id": "BASE-COGNITIVA-COACH-001",
+      "path": "docs/canonicos/cognicao/BASE_COGNITIVA_ESTRATEGICA_DO_COACH_DE_PROVA.md",
+      "papel": "Base cognitiva e estratégica do Coach de Prova: recuperação como diagnóstico, gates G-COACH, matriz de diagnóstico, simulação, estabilidade e contrato com o Tutor",
+      "hierarquia": "complementar e subordinado à inteligência adversarial",
+      "envio": "d2320d7d-BASE_COGNITIVA_ESTRATEGICA_DO_COACH_DE_PROVA.md (entrada de 21/11/2026)",
+      "editado": false,
+      "sha256": "eef4effc3f4aca7bf7e90cdf8e7f6e0ab91b895603fa78b55999dc4c61f4677b",
+      "sha256_do_envio_original": "eef4effc3f4aca7bf7e90cdf8e7f6e0ab91b895603fa78b55999dc4c61f4677b"
     },
     {
       "id": "AUDITORIA-GEMINI-NOTEBOOK-20261116",

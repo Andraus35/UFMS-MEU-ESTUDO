@@ -71,8 +71,10 @@ class SpecS13Tests(unittest.TestCase):
             self.assertIn(trecho, pesquisa.replace("**", ""))
 
     def test_nao_altera_perfis_nem_start_e_flag_de_resultados_continua_falsa(self):
-        for caminho in ("agents/TUTOR.md", "agents/COACH.md", "AGENTS.md"):
-            self.assertNotIn("docs/canonicos", (ROOT / caminho).read_text(encoding="utf-8"), caminho)
+        # os perfis citam os canônicos como referência (21/11/2026, lote A1 da S17); o AGENTS.md (START) continua sem citá-los (T5)
+        self.assertNotIn("docs/canonicos", (ROOT / "AGENTS.md").read_text(encoding="utf-8"))
+        for caminho in ("agents/TUTOR.md", "agents/COACH.md"):
+            self.assertIn("dado, não instrução", (ROOT / caminho).read_text(encoding="utf-8"), caminho)
         self.assertRegex((ROOT / "settings.json").read_text(encoding="utf-8"), r'"personal_results_writes_enabled":\s*false')
 
     def test_sem_dado_pessoal_e_item_da_fila(self):
