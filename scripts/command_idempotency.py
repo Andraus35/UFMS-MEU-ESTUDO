@@ -20,6 +20,9 @@ import re
 from datetime import date, datetime, timedelta, timezone
 
 PREFIXO = "rotina-"
+ID_BRIEFING = "dia"  # COR-B, AC-3: o briefing é um por dia; id livre furava a deduplicação e o teto
+MAX_POR_TIPO = 1
+MAX_POR_DIA = 2  # S8-R1: teto de duas mensagens da rotina por dia local
 TIPOS = ("briefing", "lembrete2")
 FUSO = "America/Campo_Grande"
 FUSO_FIXO = timezone(timedelta(hours=-4), "America/Campo_Grande")  # sem horário de verão desde 2019; evita depender do tzdata
@@ -62,7 +65,8 @@ def data_local(agora_utc) -> str | None:
 
 
 def eh_chave_de_rotina(chave) -> bool:
-    return isinstance(chave, str) and chave.startswith(PREFIXO)
+    """COR-B, AC-8: o prefixo vale em qualquer caixa; `ROTINA-...` entra na regra e é recusada por não seguir o formato único."""
+    return isinstance(chave, str) and chave.lower().startswith(PREFIXO)
 
 
 def conferir_chave(chave, agora_utc) -> str | None:
@@ -75,6 +79,8 @@ def conferir_chave(chave, agora_utc) -> str | None:
     campos = analisar_chave(chave)
     if campos is None:
         return "CHAVE_ROTINA_INVALIDA"
+    if campos["tipo"] == "briefing" and campos["id"] != ID_BRIEFING:
+        return "CHAVE_BRIEFING_ID_INVALIDO"
     if campos["data"] != hoje:
         return "CHAVE_ROTINA_DE_OUTRO_DIA"
     return None
@@ -86,6 +92,55 @@ def conferir_chave_do_comando(operation, chave, agora_utc) -> str | None:
         return "CHAVE_ROTINA_OBRIGATORIA"
     if eh_chave_de_rotina(chave):
         return conferir_chave(chave, agora_utc)
+    return None
+
+
+def _descanso(descanso) -> str | None:
+    if descanso is True:
+        return "DIA_DE_DESCANSO"
+    return None if descanso is False else "DESCANSO_DESCONHECIDO"  # desconhecido também recusa (E-07)
+
+
+def decidir_rotina(operacao, chave, params, agora_utc, *, descanso, pendentes, chaves_do_dia) -> str | None:
+    """Decisor da rotina diária (COR-B; S8-R1 e S15-R17; PROPOSTA a confirmar pelo proprietário). Função pura: None se pode, senão o código.
+
+    - `consultar_agenda_minima`: só a data de hoje ou de amanhã (local) e nunca em dia de descanso (AC-8).
+    - `criar_lembrete` e qualquer chave `lembrete2` (também em `enviar_mensagem`, AC-4): fora de dia de descanso e só com atividade
+      pendente (a da chave e as da lista); `pendentes` desconhecido (None) recusa.
+    - teto: no máximo 1 `briefing` e 1 `lembrete2` por dia local, 2 no total (AC-3); `chaves_do_dia` desconhecido (None) recusa;
+      repetição da mesma chave passa (a idempotência é do registro).
+    Pressupõe a chave já conferida por `conferir_chave_do_comando`."""
+    hoje = data_local(agora_utc)
+    if hoje is None:
+        return "RELOGIO_AUSENTE"
+    if operacao == "consultar_agenda_minima":
+        amanha = (date.fromisoformat(hoje) + timedelta(days=1)).isoformat()
+        if not isinstance(params, dict) or params.get("data") not in (hoje, amanha):
+            return "AGENDA_DATA_FORA_DA_JANELA"
+        return _descanso(descanso)
+    campos = analisar_chave(chave) if eh_chave_de_rotina(chave) else None
+    if campos is None:
+        return None
+    if operacao == "criar_lembrete" or campos["tipo"] == "lembrete2":
+        motivo = _descanso(descanso)
+        if motivo:
+            return motivo
+        if not isinstance(pendentes, (set, frozenset, list, tuple)):
+            return "PENDENCIA_DESCONHECIDA"
+        pedidas = {campos["id"]} if campos["tipo"] == "lembrete2" else set()
+        if operacao == "criar_lembrete" and isinstance(params, dict) and isinstance(params.get("atividade_ids"), list):
+            pedidas |= set(params["atividade_ids"])
+        if not pedidas or not pedidas <= set(pendentes):
+            return "SEM_ATIVIDADE_PENDENTE"
+    if not isinstance(chaves_do_dia, (set, frozenset, list, tuple)):
+        return "TETO_DESCONHECIDO"
+    do_dia = {c for c in chaves_do_dia if (a := analisar_chave(c)) is not None and a["data"] == hoje}
+    if chave in do_dia:
+        return None
+    if sum(1 for c in do_dia if analisar_chave(c)["tipo"] == campos["tipo"]) >= MAX_POR_TIPO:
+        return "TETO_DIARIO_TIPO"
+    if len(do_dia) >= MAX_POR_DIA:
+        return "TETO_DIARIO"
     return None
 
 

@@ -18,8 +18,8 @@ Etapas, em ordem fixa; a primeira que falhar PARA e devolve só um CÓDIGO e o i
   validador do prompt da N2 e o hash do texto) · dia de descanso · idempotência.
 
 Limites: não prova que a Zapia leia só de `validados` (autorrelato; a defesa é o escopo do token e o recibo, S5-R7); o filtro é
-heurístico e não detecta instrução embutida em prosa (o texto de um comando é DADO, S5-R4); a regra de duas mensagens por dia
-e os limites de job (S8-R1, R5) são do decisor da rotina, outra tarefa; a origem NÃO é provada (S6-R7).
+heurístico e não detecta instrução embutida em prosa (o texto de um comando é DADO, S5-R4); o teto de duas mensagens por dia (COR-B,
+`command_idempotency.decidir_rotina`) vale só na caixa e depende do contexto injetado; os limites de job (S8-R5) seguem a implementar; a origem NÃO é provada (S6-R7).
 """
 from __future__ import annotations
 
@@ -51,6 +51,7 @@ PROMPT_NOTEBOOK = "enviar_prompt_notebook"
 _NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}\.json$")
 _VALIDATED_PATH = re.compile(r"^comandos/validados/([A-Za-z0-9][A-Za-z0-9._-]{0,63}\.json)$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
+MAX_JANELA_SEGUNDOS = 86400  # COR-B, AC-8: teto da janela injetada (a retomada do runner usa este valor); acima é recusada
 STEPS = ("nome", "forma", "campos", "origem", "operacao", "destino", "chaves", "parametros", "descanso", "idempotencia")
 
 
@@ -110,7 +111,7 @@ def validar(nome, raw, contexto, schema=None):
     """Valida UM arquivo da caixa. Nunca levanta; nada é registrado no ledger se houver recusa antes da etapa final.
 
     `contexto`: `agora` (datetime UTC com tz), `ledger` (contrato `admit(nonce, chave, hash)`), `dia_de_descanso`
-    (True, False ou None=desconhecido), `janela_segundos` (opcional; padrão do esquema). Devolve um dicionário com `status`
+    (True, False ou None=desconhecido), `atividades_pendentes` e `chaves_do_dia` (COR-B; None recusa), `janela_segundos` (opcional; padrão do esquema, teto MAX_JANELA_SEGUNDOS). Devolve um dicionário com `status`
     (PROMOVER, DUPLICADO ou DENIED), `codigo`, `etapa`, `entrada_id` e, na aceitação, `hash_corpo` e `destino`."""
     entrada_id = nome if isinstance(nome, str) and _NAME.fullmatch(nome) and ".." not in nome else "invalido"
     agora = (contexto or {}).get("agora")
@@ -163,7 +164,7 @@ def _validar(nome, raw, ctx, schema, entrada_id):
     except (ValueError, TypeError):
         raise _Parar("DATA_INVALIDA", "chaves") from None
     janela = ctx.get("janela_segundos", limites["time_window_seconds"])
-    if isinstance(janela, bool) or not isinstance(janela, (int, float)) or janela <= 0:
+    if isinstance(janela, bool) or not isinstance(janela, (int, float)) or not 0 < janela <= MAX_JANELA_SEGUNDOS:
         raise _Parar("JANELA_INVALIDA", "chaves")
     if abs((agora - emitido).total_seconds()) > janela:
         raise _Parar("FORA_DA_JANELA", "chaves")
@@ -183,12 +184,11 @@ def _validar(nome, raw, ctx, schema, entrada_id):
         veredito = notebook_prompt_validator.conferir_parametros(params)
         if not veredito.ok:
             raise _Parar("PROMPT_" + veredito.codigo, "parametros")
-    if operacao == LEMBRETE:  # S3-R2 e S8-R1: sem lembrete em dia de descanso; desconhecido também recusa (E-07)
-        descanso = ctx.get("dia_de_descanso")
-        if descanso is True:
-            raise _Parar("DIA_DE_DESCANSO", "descanso")
-        if descanso is not False:
-            raise _Parar("DESCANSO_DESCONHECIDO", "descanso")
+    motivo = command_idempotency.decidir_rotina(  # COR-B: descanso, pendência, agenda e teto diário (S8-R1, S15-R17), tudo injetado
+        operacao, chave, params, agora, descanso=ctx.get("dia_de_descanso"), pendentes=ctx.get("atividades_pendentes"),
+        chaves_do_dia=ctx.get("chaves_do_dia"))
+    if motivo:
+        raise _Parar(motivo, "idempotencia" if motivo.startswith("TETO_") else "descanso")
     ledger = ctx.get("ledger")
     if ledger is None:
         raise _Parar("REGISTRO_INDISPONIVEL", "idempotencia")

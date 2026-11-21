@@ -38,7 +38,7 @@ class Base(unittest.TestCase):
 
     def contexto(self, **sobre):
         c = {"escritas_habilitadas": True, "agora": tcb.AGORA, "execucao": "77", "validador_sha": SHA,
-             "validador_sha_fixado": SHA, "dia_de_descanso": False}
+             "validador_sha_fixado": SHA, "dia_de_descanso": False, "atividades_pendentes": ["UFMS-002"], "chaves_do_dia": []}
         c.update(sobre)
         return c
 
@@ -144,7 +144,7 @@ class PromocaoTest(Base):
         self.assertNotIn("123.456", json.dumps(self.arquivos()["comandos/rejeitadas/p.json"].decode()))
 
     def test_em_ordem_de_nome_e_nome_invalido_e_ignorado(self):
-        a, b = self.entrar("b.json", tcb.comando(nonce="nonce-fake-0000000002", idempotency_key="rotina-2026-11-17-briefing-b")), \
+        a, b = self.entrar("b.json", tcb.comando(nonce="nonce-fake-0000000002", idempotency_key="k-00000002")), \
             self.entrar("a.json", tcb.comando())
         res = self.rodar(a, b, ("../x.json", b"x"), ("a b.json", b"x"))
         # ordem de nome: "../x.json" e "a b.json" (nomes inválidos) ordenam antes de "a.json"; só os válidos tocam a API
@@ -152,12 +152,23 @@ class PromocaoTest(Base):
         self.assertEqual([i["status"] for i in res["itens"][:2]], ["IGNORADA", "IGNORADA"])
         self.assertEqual([i["codigo"] for i in res["itens"][2:]], ["OK", "OK"])
 
+    def test_teto_diario_vale_em_serie_na_mesma_execucao(self):  # COR-B, AC-3
+        def lembrete(nome, ativ, nonce):
+            return self.entrar(nome, tcb.comando(origin="coach", idempotency_key=f"rotina-2026-11-17-lembrete2-{ativ}", nonce=nonce))
+        a, b = lembrete("a.json", "UFMS-002", "nonce-fake-0000000011"), lembrete("b.json", "UFMS-003", "nonce-fake-0000000012")
+        res = self.rodar(a, b, atividades_pendentes=["UFMS-002", "UFMS-003"])
+        self.assertEqual([i["codigo"] for i in res["itens"]], ["OK", "TETO_DIARIO_TIPO"])
+
+    def test_rotina_sem_contexto_de_teto_e_recusada_no_runner(self):
+        res = self.rodar(self.entrar("a.json", tcb.comando()), chaves_do_dia=None)
+        self.assertEqual(self.unico(res)["codigo"], "TETO_DESCONHECIDO")
+
     def test_janela_de_300s_injetada_aceita_atraso_do_actions_e_rejeita_o_velho(self):
         def emitido(segundos):
             return (tcb.AGORA - timedelta(seconds=segundos)).strftime("%Y-%m-%dT%H:%M:%SZ")
         ok = self.entrar("ok.json", tcb.comando(issued_at=emitido(250)))  # 120 s do esquema recusaria
         velho = self.entrar("velho.json", tcb.comando(issued_at=emitido(400), nonce="nonce-fake-0000000002",
-                                                      idempotency_key="rotina-2026-11-17-briefing-velho"))
+                                                      idempotency_key="k-00000004"))
         res = self.rodar(ok, velho)
         self.assertEqual([(i["entrada_id"], i["codigo"]) for i in res["itens"]],
                          [("ok.json", "OK"), ("velho.json", "FORA_DA_JANELA")])
@@ -181,7 +192,7 @@ class PromocaoTest(Base):
 class IdempotenciaDuravelTest(Base):
     def test_nonce_repetido_em_outra_execucao_e_recusado(self):
         self.rodar(self.entrar("a.json", tcb.comando()))
-        e = self.entrar("b.json", tcb.comando(idempotency_key="rotina-2026-11-17-briefing-outra"))  # mesmo nonce
+        e = self.entrar("b.json", tcb.comando(idempotency_key="k-00000003"))  # mesmo nonce
         self.assertEqual(self.unico(cbr.executar([e], self.contexto(), cbr.Caixa(pr.GitHubApi(tpr.TOKEN_ENTRADA, self.gh.transporte), ENTRADA)))["codigo"],
                          "NONCE_REPETIDO")
 
@@ -201,7 +212,7 @@ class IdempotenciaDuravelTest(Base):
 
     def test_duas_entradas_com_o_mesmo_nonce_na_mesma_execucao(self):
         a = self.entrar("a.json", tcb.comando())
-        b = self.entrar("b.json", tcb.comando(idempotency_key="rotina-2026-11-17-briefing-outra"))
+        b = self.entrar("b.json", tcb.comando(idempotency_key="k-00000003"))
         res = self.rodar(a, b)
         self.assertEqual([i["codigo"] for i in res["itens"]], ["OK", "NONCE_REPETIDO"])
 
@@ -303,7 +314,7 @@ class CLITest(Base):
         return codigo, saida.getvalue()
 
     def test_cli_promove_so_com_o_token_da_fila_e_nao_imprime_token(self):
-        bruto = tcb.raw(tcb.comando())
+        bruto = tcb.raw(tcb.comando(idempotency_key="k-00000005"))
         self.entrar("a.json", bruto)
         codigo, texto = self.rodar_cli({"GH_TOKEN": tpr.TOKEN_ENTRADA}, {"a.json": bruto})  # sem DADOS_TOKEN
         self.assertEqual(codigo, 0, texto)
@@ -332,7 +343,7 @@ class CLITest(Base):
 
     def test_cli_sai_com_1_se_falhar_ao_registrar_e_com_1_se_o_validador_divergir(self):
         self.gh.falhar = lambda m, repo, c: 500 if (m == "PUT" and c.startswith("contents/comandos/recibos/")) else None
-        bruto = tcb.raw(tcb.comando())
+        bruto = tcb.raw(tcb.comando(idempotency_key="k-00000005"))
         self.entrar("a.json", bruto)
         self.assertEqual(self.rodar_cli({"GH_TOKEN": tpr.TOKEN_ENTRADA}, {"a.json": bruto})[0], 1)
         (self.validador / ".git" / "HEAD").write_text("c" * 40 + "\n")
