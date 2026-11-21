@@ -21,9 +21,9 @@ class SpecS18Tests(unittest.TestCase):
         pos = [DOC.index(s) for s in ("## Objetivo", "## Pesquisa", "## O Manual do Imparável", "## Requisitos", "## Texto para `agents/COACH.md`", "## Tarefas derivadas", "## Aceite", "## Limites")]
         self.assertEqual(pos, sorted(pos))
 
-    def test_requisitos_r1_a_r13_cada_um_com_criterio(self):
+    def test_requisitos_r1_a_r14_cada_um_com_criterio(self):
         linhas = [l for l in REQUISITOS.splitlines() if re.match(r"\| S18-R\d+ \|", l)]
-        self.assertEqual([re.match(r"\| (S18-R\d+) ", l).group(1) for l in linhas], [f"S18-R{i}" for i in range(1, 14)])
+        self.assertEqual([re.match(r"\| (S18-R\d+) ", l).group(1) for l in linhas], [f"S18-R{i}" for i in range(1, 15)])
         for l in linhas:
             self.assertGreaterEqual(len([c for c in l.split("|") if c.strip()]), 3)
 
@@ -83,6 +83,15 @@ class SpecS18Tests(unittest.TestCase):
         self.assertIn("Coach não o lê", idx)
         self.assertNotRegex(idx, r"drive\.google\.com|15qMFRsz")
         self.assertFalse(list(ROOT.rglob("Manual-do-imparavel*.pdf")))
+
+    def test_leitura_do_manual_pelo_coach_com_limites(self):
+        for t in ("sob demanda", "só em leitura", "25 palavras", "não é o v4", "prova de leitura pendente", "truncada"):
+            self.assertIn(t, req(14), t)
+        coach = (ROOT / "agents/COACH.md").read_text(encoding="utf-8")
+        for t in ("Manual do Imparável", "consentimento do proprietário (21/11/2026)", "até 25 palavras", "nunca copiar o livro para o repositório público nem para a Zapia", "declarar que não leu"):
+            self.assertIn(t, coach, t)
+        idx = (ROOT / "docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md").read_text(encoding="utf-8")
+        self.assertIn("Prova pendente", idx)
 
     def test_texto_aplicado_pela_b1_e_flag_false(self):
         self.assertIn("NÃO aplicado", DOC)

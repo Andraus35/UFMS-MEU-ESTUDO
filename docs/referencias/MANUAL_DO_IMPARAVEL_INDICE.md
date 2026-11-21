@@ -12,6 +12,10 @@
 
 Decisão do proprietário (21/11/2026): o PDF fica numa **pasta privada do Drive do proprietário** (pasta "UFMS-MEU-ESTUDO (privado, acervo do Coach)"), **sem compartilhamento** e **sem link nem ID neste repositório**. Conferido em 21/11/2026 pela leitura de permissões: só o proprietário, como dono, na pasta e no arquivo; o arquivo tem **11.816.916 bytes**, igual ao anexado; o **hash não foi conferido** pelo Drive. A pasta chegou a ficar acessível por link e foi **restringida** pelo proprietário antes deste registro. **Limites:** o Drive é só **guarda**; o **Coach não o lê** (o canal segue só a fila `entrada`, S19-R12) e a leitura depende do consentimento v4 e de canal provado; o estado das permissões pode **mudar depois** e este registro **não prova** que continua restrito.
 
+## Leitura pelo Coach (consentimento do proprietário, 21/11/2026)
+
+O proprietário **consentiu**, no chat, que o **Coach leia o Manual**. **Escopo:** só o livro (obra comercial, **não** é dado pessoal), **somente leitura**, sob demanda, pelo conector do Drive na sessão do Coach, no PDF da pasta privada. **Não é** o consentimento v4 (projeções de resultados pessoais, S6-R9), **não** autoriza ler dado pessoal, **não** envia o livro à Zapia e **não** o copia para o repositório público. **Como ler:** localizar o tema neste índice, abrir o PDF e citar **página e citação curta (até 25 palavras)**; a busca por texto do Drive acha o arquivo mas devolve só a **primeira página** como trecho, e a leitura integral de 391 páginas **pode vir truncada**: se o Coach não abrir o trecho, **declara que não leu**. **Prova pendente:** um teste de leitura (o Coach abre a p. 148 a 153 e cita a abertura do capítulo da ansiedade, conferindo com a citação desta página) **ainda não foi feito**; sem ele, **não** se afirma que o Coach lê o livro.
+
 ## Índice (página inicial do capítulo, conforme o sumário do livro)
 
 | Página | Capítulo | Trecho do `IMC-COACH-001` que o usa |
