@@ -76,6 +76,8 @@ class SpecS19Tests(unittest.TestCase):
         for t in ("só a fila entrada", "drive não entra", "risco aceito", "pro", "50 tarefas", "mais restritivo", "sem conector de github", "s8-r6", "s15-r13"):
             self.assertIn(t, req(12), t)
         self.assertIn("20 tarefas", PESQUISA)
+        for x in ("não abriu as telas autenticadas", "comentário, resposta e edição", "radar, todos pausados", "proteção contra instrução embutida", "envio pelo outlook sem confirmação"):
+            self.assertIn(x, PESQUISA.lower().replace("**", ""), x)
         self.assertIn("vale o mais restritivo", PESQUISA)
         self.assertIn("**decidida** (21/11/2026)", DOC)
 
