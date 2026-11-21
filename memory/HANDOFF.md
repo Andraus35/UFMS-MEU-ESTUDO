@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #157; SHA c9802d6a6d3ed16fe0a4801151642ab4c2514198
-- Frente ativa: **RM-00 / PR #158**; branch `claude/ufms-meu-estudo-lote-b-2mcohs`; base main; fase review.
+- Último merge comprovado: PR #158; SHA f7c59f2ba51ef4f8759a5d1b08ec9aa991170ece
+- Frente ativa: **RM-00 / PR #159**; branch `claude/ufms-meu-estudo-lote-b-2mcohs`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -19,7 +19,7 @@
 
 **RETOMADA DA PRÓXIMA SESSÃO (fim da sessão de 21/11/2026; ler isto primeiro):**
 
-**Estado (21/11/2026, atualizado após o merge do #157).** `main` em `c9802d6` (PR #157 mesclado por "Mesclar" do proprietário, head `b18ad3e` com os dois `validate` verdes: hook geral `claude_context_guard` como ferramenta de usuário, registro E12-A). **PR #158 aberto (draft), lote E12-B = ativação do hook no projeto (RM-00; pedido dele "Sim, abra o PR de ativação"):** `.claude/settings.json` (preserva os dois hooks `Stop` e acrescenta seis entradas do hook), `.claude/context-guard.json` (instrução do projeto) e ajustes no script (caminho do `seal` e config do projeto); **arquivos de contrato: exige a aprovação expressa do texto e do merge, citando PR e head** (frase em `docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md`). **Prova real parcial:** o hook JÁ disparou nesta sessão aos 57% (a `.claude/settings.json` alterada foi lida); não foi testado o `Stop` bloqueando nem a sessão nova recebendo o prompt. Pendência dele: instalar o hook de usuário no celular **não é recomendado** (sessão na nuvem; Termux com hooks é relato não confirmado). Depois do #158: S18 (IMC do Coach, ele reenvia IMC-COACH-001, PDF da Zapia e o manual) e S19. Recibo do #157 já está no estado.
+**Estado (21/11/2026, atualizado após o merge do #158).** `main` em `f7c59f2` (PR #158 mesclado por "Mesclar #158" do proprietário, head `086f513` com os dois `validate` verdes: ativação do hook geral no projeto, E12-B; o hook já disparou na sessão aos 57%). **PR #159 aberto (draft), lote `HOOKP` = hook de perguntas só pergunta o que mudou (RM-00; resposta dele "Sim, propor em PR próprio"):** altera `.claude/hooks/perguntas_boas_praticas.py` (**contrato: exige a aprovação expressa do texto e do merge, citando PR e head**); lê o transcript (sem gravar): mesmo estado já perguntado não bloqueia; estado mudado mostra o antes e o agora; registro em `docs/governanca/E13_HOOK_PERGUNTAS_SO_O_QUE_MUDOU.md`. Fila depois do #159: S18 (ele anexa IMC-COACH-001, PDF da Zapia e manual; respondeu "sem preferência" sobre enviar agora, então o S18 segue esperando), S19, depois o lote D (RM-09 offline, decisão dele). Recibo do #158 já está no estado.
 
 **Respostas do proprietário (21/11/2026, fim da rodada do E12-B; não reabrir):** (1) conferir o CI do head do #158 e **aguardar a aprovação expressa dele** (`Aprovo o texto e o merge do PR #158, head <sha completo>`; contrato, o atalho "Mesclar" não basta); (2) nada mudou nos atos dele: P9 antes da PJ; (3) S18: ele **anexa na abertura do lote, depois do merge do #158** (IMC-COACH-001, PDF da Zapia e Manual do Imparável).
 

@@ -136,6 +136,48 @@ class ScriptTest(unittest.TestCase):
     def test_linhas_invalidas_no_transcript_nao_derrubam(self):
         self.assertBloqueia(self.rodar([usuario(), "nao e json", bash("git push"), "{"]))
 
+    # E13: só o que mudou
+    def feedback(self):
+        motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")]))
+        return "Stop hook feedback:\n" + motivo, motivo
+
+    def test_mesmo_estado_ja_perguntado_nao_bloqueia_de_novo(self):
+        feedback, _ = self.feedback()
+        self.assertIsNone(self.rodar([usuario(feedback), uso("AskUserQuestion"), usuario("outro pedido"), bash("git push")]))
+
+    def test_mesmo_estado_sem_pergunta_depois_bloqueia(self):
+        feedback, _ = self.feedback()
+        self.assertBloqueia(self.rodar([usuario(feedback), usuario("outro pedido"), bash("git push")]))
+
+    def test_pergunta_ANTES_do_aviso_nao_conta(self):
+        feedback, _ = self.feedback()
+        self.assertBloqueia(self.rodar([uso("AskUserQuestion"), usuario(feedback), usuario("outro pedido"), bash("git push")]))
+        self.assertBloqueia(self.rodar([usuario("a"), texto(), uso("AskUserQuestion"), usuario(feedback), usuario("outro pedido"), bash("git push")]))
+
+    def test_estado_mudou_bloqueia_e_mostra_o_que_mudou(self):
+        antigo = "Estado lido agora: ciclo da tarefa RM-00 (PR #1) em 'em_andamento'; próximo item da fila: X — antigo."
+        motivo = self.assertBloqueia(self.rodar([usuario("Stop hook feedback:\nFim de rodada. " + antigo), uso("AskUserQuestion"),
+                                                  usuario("outro pedido"), bash("git push")]))
+        self.assertIn("O que mudou desde a última pergunta:", motivo)
+        self.assertIn("ciclo da tarefa RM-00 (PR #1)", motivo)  # o antes
+        self.assertIn("Estado lido agora:", motivo)  # e o agora (estado real do projeto)
+
+    def test_aviso_em_bloco_de_texto_tambem_e_lido(self):
+        feedback, _ = self.feedback()
+        linha = json.dumps({"type": "user", "message": {"content": [{"type": "text", "text": feedback}]}})
+        self.assertIsNone(self.rodar([linha, uso("AskUserQuestion"), usuario("outro pedido"), bash("git push")]))
+
+    def test_sem_historico_ou_sem_estado_legivel_pergunta_como_antes(self):
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")]))
+        feedback, _ = self.feedback()
+        # projeto sem scripts/next_task.py: não há como comparar, então pergunta
+        self.assertBloqueia(self.rodar([usuario(feedback), uso("AskUserQuestion"), usuario("x"), bash("git push")], projeto=self.dir))
+
+    def test_o_hook_continua_so_lendo(self):
+        fonte = SCRIPT.read_text(encoding="utf-8")
+        for proibido in (".write_text(", "write_bytes(", ".mkdir(", "os.remove", "shutil"):
+            self.assertNotIn(proibido, fonte, proibido)
+
     def test_estado_indisponivel_nao_impede_o_bloqueio(self):
         motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.dir))  # sem scripts/next_task.py
         self.assertNotIn("Estado lido agora:", motivo)
