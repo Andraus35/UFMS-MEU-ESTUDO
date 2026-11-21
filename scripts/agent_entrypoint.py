@@ -23,6 +23,16 @@ ROLE_MODE = {"tutor": "study", "coach": "study",
              "engineer": "engineering", "auditor": "engineering"}
 READ_ACTIONS = frozenset({"start", "inspect"})
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
+# GC-2: de onde veio o SHA confiável. Externas: o orquestrador que controla o cliente ou a CI. "local" (git do próprio checkout) é circular:
+# conferir HEAD == SHA então só prova que o checkout é igual ao SHA que ele mesmo informou.
+ORIGENS_EXTERNAS = frozenset({"orquestrador", "ci"})
+ORIGENS = ORIGENS_EXTERNAS | {"local"}
+LIMITE_SHA = {
+    "orquestrador": "origem declarada pelo ambiente; o broker não prova que o SHA veio de fora do checkout nem que o orquestrador é confiável",
+    "ci": "origem declarada pelo ambiente; o broker não prova que o SHA veio de fora do checkout nem que o orquestrador é confiável",
+    "local": "SHA tirado do git do próprio checkout: confirmação circular, só serve a teste local e a engenharia, nunca ao START de produção",
+    "nao_declarada": "origem do SHA não declarada: tratar como circular; o START de produção exige origem externa declarada",
+}
 
 
 class StartBlocked(ValueError):
@@ -79,9 +89,14 @@ def verify_start(root, trusted_head, mode):
 
 class ReadOnlyAgentBroker:
     """Só oferece START e leitura de contexto. Não expõe ferramentas de escrita."""
-    def __init__(self, root, trusted_head, role):
+    def __init__(self, root, trusted_head, role, *, sha_origin=None, producao=False):
         if role not in ROLES:
             raise StartBlocked("Papel de agente não permitido")
+        if sha_origin not in (None, "") and sha_origin not in ORIGENS:
+            raise StartBlocked("Origem do SHA desconhecida")
+        if producao and sha_origin not in ORIGENS_EXTERNAS:  # GC-2: START de produção não aceita SHA circular nem sem origem
+            raise StartBlocked("START de produção exige SHA de origem externa declarada (orquestrador ou ci)")
+        self._sha_origin = sha_origin or "nao_declarada"
         self._root = Path(root).resolve()
         self._trusted_head = trusted_head
         self._role = role
@@ -104,6 +119,8 @@ class ReadOnlyAgentBroker:
             "role": self._role,
             "action": action,
             "head": self._trusted_head,
+            "sha_origin": self._sha_origin,
+            "sha_limite": LIMITE_SHA[self._sha_origin],
             "mode": self._mode,
             "mandatory": list(current["files"]),
             "sha256": dict(current["hashes"]),
@@ -140,10 +157,12 @@ def main():
     parser.add_argument("--role", choices=sorted(ROLES), required=True)
     parser.add_argument("--check", action="store_true", required=True)
     parser.add_argument("--root", default=".")
+    parser.add_argument("--producao", action="store_true", help="exige origem externa do SHA (UFMS_TRUSTED_HEAD_SHA_ORIGIN=orquestrador|ci)")
     args = parser.parse_args()
     try:
         broker = ReadOnlyAgentBroker(
-            args.root, os.environ.get("UFMS_TRUSTED_HEAD_SHA", ""), args.role)
+            args.root, os.environ.get("UFMS_TRUSTED_HEAD_SHA", ""), args.role,
+            sha_origin=os.environ.get("UFMS_TRUSTED_HEAD_SHA_ORIGIN", ""), producao=args.producao)
         print(json.dumps(broker.request("start"), ensure_ascii=False, sort_keys=True))
     except (StartBlocked, OSError, UnicodeError) as exc:
         print("BLOQUEADO: " + str(exc), file=sys.stderr)

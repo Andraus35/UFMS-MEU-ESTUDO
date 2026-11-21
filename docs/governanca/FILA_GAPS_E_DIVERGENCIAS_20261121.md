@@ -27,9 +27,9 @@
 
 | ID | Gap | Gravidade | Onde | Correção proposta | Origem |
 |---|---|---|---|---|---|
-| GC-1 | O START de estudo exige ler cerca de **115 KB** (ROADMAP e HANDOFF com histórico de engenharia) | Média | `AGENTS.md`, `memory/HANDOFF.md`, `ROADMAP.md` | Resumo de estudo de **uma página**, gerado e com hash | Tutor e Coach |
-| GC-2 | O SHA confiável do START vem do **git local** (circular) quando não há SHA externo | Média | `scripts/agent_entrypoint.py`, `scripts/bootstrap.py` | Exigir SHA externo para o START de produção; declarar o limite | Coach |
-| GC-3 | Divergências documentais: parágrafo "Estado" do HANDOFF defasado; "IMC-COACH-001 será reanexado" (já está no repositório); ROADMAP "próxima RM-08" × frente ativa RM-09; AGENTS.md pede "quantidade sugerida" mas o script só a produz com disponibilidade confirmada; `registrar_acompanhamento` no perfil do Coach com destino inoperante (flags `false`) | Baixa | HANDOFF, ROADMAP, `AGENTS.md`, `agents/COACH.md` | Reconciliar em um lote documental | Tutor e Coach |
+| GC-1 | **[feito no GAP-C: `scripts/study_summary.py`, resumo de até 4 KB gerado de `AGENTS.md` e `state/CURRENT.json`, com hash e verificação de defasagem; é auxílio e NÃO substitui o START de quatro arquivos até o proprietário aprovar a troca em `AGENTS.md`]** O START de estudo exige ler cerca de **115 KB** (ROADMAP e HANDOFF com histórico de engenharia) | Média | `AGENTS.md`, `memory/HANDOFF.md`, `ROADMAP.md` | Resumo de estudo de **uma página**, gerado e com hash | Tutor e Coach |
+| GC-2 | **[feito no GAP-C: o broker declara `sha_origin` (orquestrador, ci, local ou não declarada) e `--producao` exige origem externa; a origem é DECLARADA pelo ambiente, não provada aqui]** O SHA confiável do START vem do **git local** (circular) quando não há SHA externo | Média | `scripts/agent_entrypoint.py`, `scripts/bootstrap.py` | Exigir SHA externo para o START de produção; declarar o limite | Coach |
+| GC-3 | **[feito no que não é contrato: HANDOFF rotulado como histórico, IMC reconciliado, ROADMAP explica próxima RM-08 × frente RM-09; dois itens de contrato ficam como decisão do proprietário, abaixo]** Divergências documentais: parágrafo "Estado" do HANDOFF defasado; "IMC-COACH-001 será reanexado" (já está no repositório); ROADMAP "próxima RM-08" × frente ativa RM-09; AGENTS.md pede "quantidade sugerida" mas o script só a produz com disponibilidade confirmada; `registrar_acompanhamento` no perfil do Coach com destino inoperante (flags `false`) | Baixa | HANDOFF, ROADMAP, `AGENTS.md`, `agents/COACH.md` | Reconciliar em um lote documental | Tutor e Coach |
 
 ## GAP-D (GD) — Tutor e cadernos (entrega: `scripts/tutor_coach_handoff.py`)
 
@@ -68,3 +68,8 @@
 ## Limites
 
 Este registro **não prova** que os achados dos subagentes são corretos; **não corrige** nenhum deles; a Zapia é **autorrelato (C)**. Os lotes GAP-A a GAP-E seguem o fluxo único: uma branch, um PR draft, testes e contraprovas, e merge só por pedido expresso do proprietário.
+
+## Decisões de contrato pendentes do GC-3 (21/11/2026)
+
+- **DECISÃO DO PROPRIETÁRIO PENDENTE (AGENTS.md, quantidade sugerida):** a ordem operacional item 5 pede "quantidade sugerida", mas o script de caderno só a produz com disponibilidade confirmada, e o contrato proíbe inventar disponibilidade. Opções: manter (a quantidade é sugestão do Tutor, sem afirmar disponibilidade) ou reescrever o item. Não alterado: `AGENTS.md` é arquivo de contrato.
+- **DECISÃO DO PROPRIETÁRIO PENDENTE (agents/COACH.md, registrar_acompanhamento):** a operação consta no perfil do Coach, mas seu destino (`repo_privado_dados`) fica inoperante enquanto as flags de gravação estão `false`. Opções: manter (o validador já a recusa com a flag falsa, GAP-A) ou retirá-la do perfil até a janela do piloto. Não alterado: `agents/` é contrato.

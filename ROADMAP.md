@@ -4,14 +4,18 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #171; SHA 5091063b85be5dfeec9b4502508fa6b7c9dfaf17
-- Frente ativa: **RM-09 / PR #172**; branch `ccr-f6ba5d34-22tgo5`; base main; fase review.
+- Último merge comprovado: PR #172; SHA d756176a649ce6135a865ccacb80b7504a509125
+- Frente ativa: **RM-09 / PR #173**; branch `ccr-f6ba5d34-22tgo5`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
+
+## Frente ativa × próxima tarefa
+
+RM-08 é a próxima tarefa FORMAL (bloqueada): faltam resultado real consentido (piloto), persistência provada na janela e reauditoria independente. A frente ativa em RM-09 é a fila de gaps de 21/11/2026 (`work_queue` de `state/WORKFLOW.json`), que avança sem depender desses atos do proprietário. As duas coisas não se contradizem: o checkpoint acima aponta a próxima tarefa formal, e o WORKFLOW diz o lote em andamento.
 
 
 ## Histórico — checkpoints substituídos
