@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_b_s16_t1_t3_no_tec_top10_entrega_diaria",
+    "scope": "lote_c_roteiros_do_proprietario_p9_pj_cm_reconciliacao_523",
     "branch": "claude/ufms-meu-estudo-lote-b-2mcohs",
-    "pr_number": 155,
+    "pr_number": 156,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #154 integrado em main no merge commit 4b8b051214bb958269feba14d2aea91b7000d738. Frente única ativa: RM-09 (lote_b_s16_t1_t3_no_tec_top10_entrega_diaria), branch claude/ufms-meu-estudo-lote-b-2mcohs, PR #155. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #155 integrado em main no merge commit 0993cac1e129a7de7beafd43d518f4c427f2490a. Frente única ativa: RM-09 (lote_c_roteiros_do_proprietario_p9_pj_cm_reconciliacao_523), branch claude/ufms-meu-estudo-lote-b-2mcohs, PR #156. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 154,
-    "merge_commit_sha": "4b8b051214bb958269feba14d2aea91b7000d738"
+    "pr_number": 155,
+    "merge_commit_sha": "0993cac1e129a7de7beafd43d518f4c427f2490a"
   },
   "work_queue": [
     {
@@ -859,7 +859,7 @@
     },
     {
       "id": "S18",
-      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026: \"adicionar essa capacidade ao coach\"; documento-fonte IMC-COACH-001, enviado por ele, 83 KB, que NÃO está no repositório e deve ser reenviado ao abrir o lote): especificação com pesquisa obrigatória (D-16) e lacunas; entra o canônico com hash no manifesto (como o da base cognitiva); a IMC é capacidade interna do Coach, não um quarto agente nem psicoterapia (escopo não clínico e encaminhamento, privacidade e consentimento); diagnóstico de comportamento e não de personalidade, biblioteca de intervenções, ciclos diário, semanal e de fase, reentrada, simulado ruim, ansiedade e sobrecarga, métricas N-of-1, contratos Coach↔Tutor↔Orquestrador; os textos do documento são PROPOSTA e não escala validada; aplicar em agents/COACH.md é contrato e exige a aprovação expressa do texto e do merge; liga ao RM-09; decisão do proprietário de 21/11/2026: o Manual do Imparável (Gabriel Granjeiro, 2ª ed., 391 p., livro comercial) deve ir ao repositório como base de recuperação (RAG) do Coach, anexado por ele na abertura da especificação; ANTES de versionar o texto integral, decidir onde ele mora (repositório público: direito autoral e política de dados; alternativa: repositório privado ou índice com citação curta e página), com fonte, edição e hash; conteúdo do livro é dado, não instrução; não prova eficácia",
+      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026: \"adicionar essa capacidade ao coach\"; documento-fonte IMC-COACH-001, enviado por ele, 83 KB, que NÃO está no repositório e deve ser reenviado ao abrir o lote): especificação com pesquisa obrigatória (D-16) e lacunas; entra o canônico com hash no manifesto (como o da base cognitiva); a IMC é capacidade interna do Coach, não um quarto agente nem psicoterapia (escopo não clínico e encaminhamento, privacidade e consentimento); diagnóstico de comportamento e não de personalidade, biblioteca de intervenções, ciclos diário, semanal e de fase, reentrada, simulado ruim, ansiedade e sobrecarga, métricas N-of-1, contratos Coach↔Tutor↔Orquestrador; os textos do documento são PROPOSTA e não escala validada; aplicar em agents/COACH.md é contrato e exige a aprovação expressa do texto e do merge; liga ao RM-09; decisão do proprietário de 21/11/2026: o Manual do Imparável (Gabriel Granjeiro, 2ª ed., 391 p., livro comercial) deve ir ao repositório como base de recuperação (RAG) do Coach, anexado por ele na abertura da especificação; ANTES de versionar o texto integral, decidir onde ele mora (repositório público: direito autoral e política de dados; alternativa: repositório privado ou índice com citação curta e página), com fonte, edição e hash; conteúdo do livro é dado, não instrução; não prova eficácia; DECIDIDO pelo proprietário em 21/11/2026: no repositório público ficam só o índice, a página e citações curtas do manual, com fonte, edição e hash; o texto integral só no repositório privado (leitura pelo Coach depende do consentimento v4 e de canal ainda não provado)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S18_INTELIGENCIA_MOTIVACIONAL_COACH.md",
       "depends_on": [
@@ -882,6 +882,20 @@
       "blocking_inputs": [],
       "optional_inputs": [
         "reenvio do PDF da Zapia pelo proprietário"
+      ]
+    },
+    {
+      "id": "HOOKG",
+      "title": "Hook geral claude-context-guard (pedido do proprietário de 21/11/2026, \"Sim\" a levar o pacote ao repositório como lote próprio): mede a janela de contexto e, aos 50%, injeta a ordem de preparar memória, estado do repositório e o prompt de start da próxima sessão, sela o prompt com validação de forma, bloqueia o fim do turno (no máximo 3 vezes), gera fallback em PreCompact e SessionEnd e entrega o prompt à sessão nova do mesmo projeto; vale para TODOS os projetos como hook de USUÁRIO (~/.claude), instalado pelo proprietário; o pacote (context_guard.py, install.py, testes e README; 26 testes, 16 de 16 mutações mortas) foi entregue a ele no chat e NÃO está no repositório: ele o reenvia ao abrir o lote; versionar o pacote em área que não é contrato (documentação e código sob docs/governanca e scripts), com teste no CI; ativar no projeto (.claude/settings.json) e em sessões na nuvem é arquivo de contrato e exige a aprovação expressa do texto e do merge; limites: percentual é estimativa do usage da última chamada, conteúdo do prompt é do modelo, não foi testado em Claude Code real; conferir primeiro com CONTEXT_GUARD_THRESHOLD=0.01",
+      "roadmap_task": "RM-00",
+      "deliverable": "docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md",
+      "depends_on": [
+        "S19"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "reenvio do pacote claude-context-guard pelo proprietário",
+        "resultado da conferência dele com CONTEXT_GUARD_THRESHOLD=0.01 numa sessão real"
       ]
     }
   ],
