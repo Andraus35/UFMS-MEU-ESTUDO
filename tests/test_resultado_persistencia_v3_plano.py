@@ -35,12 +35,17 @@ class ResultadoV3PlanoTests(unittest.TestCase):
         self.assertNotIn("causa não foi vista", TEXTO)
 
     def test_hashes_do_start_batem_com_o_repositorio(self):
-        import subprocess, sys
+        import hashlib, subprocess, sys
         saida = subprocess.run([sys.executable, "scripts/bootstrap.py", "--mode", "study"], cwd=ROOT, capture_output=True, text=True)
         hashes = json.loads(saida.stdout)["sha256_dos_arquivos"]
-        # o registro cita os hashes do commit 85dbf66a; AGENTS e CURRENT não mudam com os recibos
-        self.assertIn(f"AGENTS.md {hashes['AGENTS.md'][:12]}", DOC)
+        # o registro cita os hashes do commit 85dbf66a (16/11/2026); o CURRENT não muda com os recibos
         self.assertIn(f"state/CURRENT.json {hashes['state/CURRENT.json'][:12]}", DOC)
+        # o AGENTS.md evolui por decisão do proprietário (ex.: regra de lote, 21/11/2026): o registro é histórico e fixa o hash DAQUELE commit.
+        # Onde há histórico completo, confere-se contra o objeto Git; na CI rasa, fica a conferência do valor registrado.
+        self.assertIn("AGENTS.md 8dfcc59468aa", DOC)
+        antigo = subprocess.run(["git", "show", "85dbf66:AGENTS.md"], cwd=ROOT, capture_output=True)
+        if antigo.returncode == 0:
+            self.assertEqual(hashlib.sha256(antigo.stdout).hexdigest()[:12], "8dfcc59468aa")
 
     def test_documentos_apontam_para_o_registro_e_a_flag_continua_falsa(self):
         for caminho in ("memory/HANDOFF.md", "docs/governanca/ADR013_PERSISTENCIA_PRIVADA_DESENHO_20261107.md"):
