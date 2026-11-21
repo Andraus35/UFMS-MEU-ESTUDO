@@ -484,8 +484,8 @@ class SemRedeNemModeloTests(unittest.TestCase):
                 usados |= {a.name.split(".")[0] for a in no.names}
             elif isinstance(no, ast.ImportFrom):
                 usados.add((no.module or "").split(".")[0])
-        self.assertEqual(usados, {"argparse", "json", "re", "sys", "unicodedata", "datetime", "pathlib", "agent_commands", "notebook_prompt_validator",
-                                  "private_persistence_guard", "session_read_guard"})
+        self.assertEqual(usados, {"argparse", "json", "re", "sys", "unicodedata", "datetime", "pathlib", "agent_commands", "delivery_receipt_binding",
+                                  "notebook_prompt_validator", "private_persistence_guard", "session_read_guard"})  # delivery_receipt_binding: RG, offline
         chamadas = {n.func.id for n in ast.walk(arvore) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)}
         self.assertFalse(chamadas & {"exec", "eval", "__import__", "compile"})
         for funcao in (f for f in ast.walk(arvore) if isinstance(f, ast.FunctionDef)):

@@ -26,6 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import agent_commands
+import delivery_receipt_binding
 import notebook_prompt_validator
 from private_persistence_guard import PersistenceBlocked
 from session_read_guard import check_projection
@@ -368,6 +369,7 @@ def main(argv=None):
     ap.add_argument("--envelope", required=True, help="arquivo JSON com a entrega (nenhuma rede é usada aqui)")
     ap.add_argument("--projecao", help="arquivo JSON com a projeção fechada (opcional)")
     ap.add_argument("--sha-contrato", required=True, help="SHA do contrato fixado em produção (S14-R2)")
+    ap.add_argument("--root-contrato", help="checkout Git do contrato: o recibo esperado é recalculado nele, no SHA fixado (S14-R3); sem isto o recibo fica não conferido")
     ap.add_argument("--modo", choices=MODOS, default="sombra")
     ap.add_argument("--registro", help="arquivo local, FORA do repositório, onde acrescentar o registro da entrega")
     a = ap.parse_args(argv)
@@ -384,6 +386,9 @@ def main(argv=None):
         except (OSError, ValueError):
             extras.append("projecao_ilegivel")  # o envelope válido continua sendo avaliado; só a projeção ficou de fora
     contexto = {"sha_contrato": a.sha_contrato, "edital": carregar_edital(), "projecao": projecao, "motivos_extras": extras}
+    if a.root_contrato:  # RS ligado ao GE: sem papel válido ou com falha ao calcular, fica None (não conferido, fail-closed)
+        papel = envelope.get("papel") if isinstance(envelope, dict) else None
+        contexto["recibo_esperado"] = delivery_receipt_binding.recibo_esperado(a.root_contrato, a.sha_contrato, papel)
     resultado = verificar_entrega(envelope, contexto, a.modo)
     print(json.dumps(resultado, ensure_ascii=False, indent=2))
     if a.registro:
