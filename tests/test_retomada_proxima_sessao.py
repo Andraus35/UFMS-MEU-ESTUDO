@@ -24,8 +24,8 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertEqual(fila["proximo"]["id"], "RS")
-        self.assertEqual(fila["pendentes"], ["E3", "PJ", "RT", "CM", "RS", "AE", "AM"])
+        self.assertEqual(fila["proximo"]["id"], "AE")  # o RS tem a entrega (21/11/2026)
+        self.assertEqual(fila["pendentes"], ["E3", "PJ", "RT", "CM", "AE", "AM"])
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["E3", "PJ"])
         self.assertIn("agents/", " ".join(fila["bloqueados"][0]["aguarda"]))
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
@@ -42,7 +42,7 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
                 self.assertRegex(item["deliverable"], r"^(?:scripts/[a-z0-9_]+\.py|\.claude/settings\.json|\.github/CODEOWNERS|scripts/termux/[a-z0-9_]+\.sh|docs/governanca/E[0-9]+_[A-Z0-9_]+\.md|docs/governanca/PROMPT_[A-Z0-9_]+\.md|\.claude/hooks/[a-z0-9_]+\.py)$")
             self.assertTrue(set(item["depends_on"]) <= ids, item["id"])
             self.assertIn(f"| {item['roadmap_task']} |", roadmap, item["id"])
-        for novo in ("E3", "PJ", "RT", "CM", "RS", "AE", "AM"):  # ainda por fazer; a S11, o PF, o PREL, o GE e o HOOK3 (19 e 20/11/2026), S10, L1, E1 e N2 já têm a entrega
+        for novo in ("E3", "PJ", "RT", "CM", "AE", "AM"):  # ainda por fazer; a S11, o PF, o PREL, o GE, o HOOK3 e o RS (19 a 21/11/2026), S10, L1, E1 e N2 já têm a entrega
             item = next(i for i in WORKFLOW["work_queue"] if i["id"] == novo)
             self.assertFalse((ROOT / item["deliverable"]).exists(), novo)  # ainda por escrever
 
