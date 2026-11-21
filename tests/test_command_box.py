@@ -19,7 +19,7 @@ SCHEMA = agent_commands.load_schema()
 def comando(**mudar):
     base = {"schema_version": SCHEMA["schema_version"], "origin": "tutor", "operation": "enviar_mensagem",
             "destination": "proprietario", "params": {"texto": "Revisão pendente de teste fictício."},
-            "idempotency_key": "rotina-2026-11-17-briefing", "nonce": "nonce-fake-0000000001",
+            "idempotency_key": "rotina-2026-11-17-briefing-dia", "nonce": "nonce-fake-0000000001",
             "issued_at": "2026-11-17T15:00:00Z"}
     base.update(mudar)
     return base
@@ -50,9 +50,10 @@ class CaminhoFelizTest(unittest.TestCase):
             "metodo": "Gere perguntas de recuperação curtas.", "exigencia_fonte": "Cite o trecho; se faltar, diga: não consta nas fontes.",
             "formato_saida": "Lista numerada com a citação."})
         casos = [("tutor", "enviar_prompt_notebook", "notebook_estudo", params_prompt),
-                 ("coach", "criar_lembrete", "agenda_proprietario", {"titulo": "revisar tópico fictício"})]
+                 ("coach", "criar_lembrete", "agenda_proprietario", {"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64})]
         for origem, op, destino, params in casos:
-            r = cb.validar("c.json", raw(comando(origin=origem, operation=op, destination=destino, params=params)), ctx())
+            chave = "rotina-2026-11-17-lembrete2-UFMS-002" if op == "criar_lembrete" else "k-00000001"
+            r = cb.validar("c.json", raw(comando(origin=origem, operation=op, destination=destino, params=params, idempotency_key=chave)), ctx())
             self.assertEqual(r["status"], cb.PROMOVER, (origem, op, r))
 
     def test_repeticao_identica_e_duplicada_e_nao_promove_de_novo(self):
@@ -163,7 +164,7 @@ class RecusasTest(unittest.TestCase):
         self.assertNotIn("Ignore", json.dumps(r))  # nunca ecoa o conteúdo
 
     def test_lembrete_em_dia_de_descanso_ou_desconhecido_e_recusado(self):
-        c = comando(origin="coach", operation="criar_lembrete", destination="agenda_proprietario", params={"titulo": "x"})
+        c = comando(origin="coach", operation="criar_lembrete", destination="agenda_proprietario", params={"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64}, idempotency_key="rotina-2026-11-17-lembrete2-UFMS-002")
         self.assertRecusa("c.json", raw(c), "DIA_DE_DESCANSO", ctx(dia_de_descanso=True))
         self.assertRecusa("c.json", raw(c), "DESCANSO_DESCONHECIDO", ctx(dia_de_descanso=None))
         self.assertRecusa("c.json", raw(c), "DESCANSO_DESCONHECIDO", ctx(dia_de_descanso="nao"))

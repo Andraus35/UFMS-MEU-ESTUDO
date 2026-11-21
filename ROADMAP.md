@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #168; SHA d7184b0ec7d52dcbed5e3e687a61018d1f15e09e
-- Frente ativa: **RM-00 / PR #169**; branch `claude/hookr2-branch-protegida`; base main; fase review.
+- Último merge comprovado: PR #169; SHA 4739648479962941d223c2013facdffc140871b8
+- Frente ativa: **RM-09 / PR #170**; branch `ccr-f6ba5d34-22tgo5`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.

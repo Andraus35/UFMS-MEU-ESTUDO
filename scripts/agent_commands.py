@@ -28,11 +28,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import command_idempotency
     import command_params_schema
     import ed25519_pure
     from agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 except ModuleNotFoundError:  # pragma: no cover - uso como pacote
-    from scripts import command_params_schema, ed25519_pure
+    from scripts import command_idempotency, command_params_schema, ed25519_pure
     from scripts.agents_gate import COACH_ONLY, SHARED, TUTOR_ONLY
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -226,6 +227,9 @@ def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict
         return _deny("CHAVE_IDEMPOTENCIA_INVALIDA")
     if not isinstance(nonce, str) or not re.fullmatch(limits["nonce_pattern"], nonce):
         return _deny("NONCE_INVALIDO")
+    reason = command_idempotency.conferir_chave_do_comando(operation, key, now)  # GA-5: formato único e dia local da chave de rotina
+    if reason:
+        return _deny(reason)
     params = command["params"]
     if not isinstance(params, dict):
         return _deny("PARAMS_NAO_OBJETO")
@@ -237,6 +241,14 @@ def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict
     reason = command_params_schema.validar_params(operation, params)  # GA-1: esquema fechado de params por operação
     if reason:
         return _deny(reason)
+    if operation == "enviar_prompt_notebook":  # GA-3: prompt editado e reassinado não passa: hash e forma canônica conferidos aqui, não só na caixa
+        try:  # importação tardia: o validador do prompt importa este módulo (ciclo)
+            import notebook_prompt_validator
+        except ModuleNotFoundError:  # pragma: no cover - uso como pacote
+            from scripts import notebook_prompt_validator
+        veredito = notebook_prompt_validator.conferir_parametros(params)
+        if not veredito.ok:
+            return _deny("PROMPT_" + veredito.codigo)
     body_hash = params_hash({"operation": operation, "destination": command["destination"], "params": params})
     verdict = ledger.admit(nonce, key, body_hash)  # decide e registra de forma atômica
     if verdict == "nonce_repeated":

@@ -144,7 +144,7 @@ class PromocaoTest(Base):
         self.assertNotIn("123.456", json.dumps(self.arquivos()["comandos/rejeitadas/p.json"].decode()))
 
     def test_em_ordem_de_nome_e_nome_invalido_e_ignorado(self):
-        a, b = self.entrar("b.json", tcb.comando(nonce="nonce-fake-0000000002", idempotency_key="rotina-2026-11-17-b")), \
+        a, b = self.entrar("b.json", tcb.comando(nonce="nonce-fake-0000000002", idempotency_key="rotina-2026-11-17-briefing-b")), \
             self.entrar("a.json", tcb.comando())
         res = self.rodar(a, b, ("../x.json", b"x"), ("a b.json", b"x"))
         # ordem de nome: "../x.json" e "a b.json" (nomes inválidos) ordenam antes de "a.json"; só os válidos tocam a API
@@ -157,31 +157,31 @@ class PromocaoTest(Base):
             return (tcb.AGORA - timedelta(seconds=segundos)).strftime("%Y-%m-%dT%H:%M:%SZ")
         ok = self.entrar("ok.json", tcb.comando(issued_at=emitido(250)))  # 120 s do esquema recusaria
         velho = self.entrar("velho.json", tcb.comando(issued_at=emitido(400), nonce="nonce-fake-0000000002",
-                                                      idempotency_key="rotina-2026-11-17-velho"))
+                                                      idempotency_key="rotina-2026-11-17-briefing-velho"))
         res = self.rodar(ok, velho)
         self.assertEqual([(i["entrada_id"], i["codigo"]) for i in res["itens"]],
                          [("ok.json", "OK"), ("velho.json", "FORA_DA_JANELA")])
         self.assertEqual(cbr.WINDOW_SECONDS, 300)
 
     def test_lembrete_sem_leitor_do_plano_e_recusado_mas_mensagem_passa(self):
-        lembrete = tcb.comando(origin="coach", operation="criar_lembrete", destination="agenda_proprietario", params={"titulo": "x"})
+        lembrete = tcb.comando(origin="coach", operation="criar_lembrete", destination="agenda_proprietario", params={"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64}, idempotency_key="rotina-2026-11-17-lembrete2-UFMS-002")
         e = self.entrar("l.json", lembrete)
         item = self.unico(self.rodar(e, dia_de_descanso=None))
         self.assertEqual(item["codigo"], "DESCANSO_DESCONHECIDO")
         e2 = self.entrar("m.json", tcb.comando(origin="coach"))
         self.assertEqual(self.unico(self.rodar(e2, dia_de_descanso=None))["status"], cb.PROMOVER)
         e3 = self.entrar("l2.json", tcb.comando(**{**lembrete, "nonce": "nonce-fake-0000000009",
-                                                   "idempotency_key": "rotina-2026-11-17-lembrete2"}))
+                                                   "idempotency_key": "rotina-2026-11-17-lembrete2-UFMS-002"}))
         self.assertEqual(self.unico(self.rodar(e3, dia_de_descanso=False))["status"], cb.PROMOVER)
         e4 = self.entrar("l3.json", tcb.comando(**{**lembrete, "nonce": "nonce-fake-0000000010",
-                                                   "idempotency_key": "rotina-2026-11-17-lembrete3"}))
+                                                   "idempotency_key": "rotina-2026-11-17-lembrete2-UFMS-003"}))
         self.assertEqual(self.unico(self.rodar(e4, dia_de_descanso=True))["codigo"], "DIA_DE_DESCANSO")
 
 
 class IdempotenciaDuravelTest(Base):
     def test_nonce_repetido_em_outra_execucao_e_recusado(self):
         self.rodar(self.entrar("a.json", tcb.comando()))
-        e = self.entrar("b.json", tcb.comando(idempotency_key="rotina-2026-11-17-outra"))  # mesmo nonce
+        e = self.entrar("b.json", tcb.comando(idempotency_key="rotina-2026-11-17-briefing-outra"))  # mesmo nonce
         self.assertEqual(self.unico(cbr.executar([e], self.contexto(), cbr.Caixa(pr.GitHubApi(tpr.TOKEN_ENTRADA, self.gh.transporte), ENTRADA)))["codigo"],
                          "NONCE_REPETIDO")
 
@@ -201,7 +201,7 @@ class IdempotenciaDuravelTest(Base):
 
     def test_duas_entradas_com_o_mesmo_nonce_na_mesma_execucao(self):
         a = self.entrar("a.json", tcb.comando())
-        b = self.entrar("b.json", tcb.comando(idempotency_key="rotina-2026-11-17-outra"))
+        b = self.entrar("b.json", tcb.comando(idempotency_key="rotina-2026-11-17-briefing-outra"))
         res = self.rodar(a, b)
         self.assertEqual([i["codigo"] for i in res["itens"]], ["OK", "NONCE_REPETIDO"])
 
@@ -253,7 +253,7 @@ class IdempotenciaDuravelTest(Base):
     def test_mesmo_nome_com_outro_conteudo_nunca_sobrescreve_o_validado(self):
         self.rodar(self.entrar("a.json", tcb.comando()))
         original = self.arquivos()["comandos/validados/a.json"]
-        e = self.entrar("a.json", tcb.comando(nonce="nonce-fake-0000000002", idempotency_key="rotina-2026-11-17-novo"))
+        e = self.entrar("a.json", tcb.comando(nonce="nonce-fake-0000000002", idempotency_key="rotina-2026-11-17-briefing-novo"))
         self.assertEqual(self.unico(self.rodar(e))["codigo"], "NOME_JA_VALIDADO")
         self.assertEqual(self.arquivos()["comandos/validados/a.json"], original)
 
@@ -323,7 +323,7 @@ class CLITest(Base):
 
     def test_cli_nao_conhece_o_plano_entao_lembrete_e_recusado_por_descanso_desconhecido(self):
         lembrete = tcb.raw(tcb.comando(origin="coach", operation="criar_lembrete", destination="agenda_proprietario",
-                                       params={"titulo": "x"}))
+                                       params={"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64}, idempotency_key="rotina-2026-11-17-lembrete2-UFMS-002"))
         self.entrar("l.json", lembrete)
         codigo, texto = self.rodar_cli({"GH_TOKEN": tpr.TOKEN_ENTRADA}, {"l.json": lembrete})
         self.assertEqual(codigo, 0)

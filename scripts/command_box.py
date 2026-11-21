@@ -33,10 +33,12 @@ from pathlib import Path
 
 try:
     import agent_commands
+    import command_idempotency
+    import command_params_schema
     import notebook_prompt_validator
     from core import ROOT
 except ModuleNotFoundError:  # uso como pacote
-    from scripts import agent_commands, notebook_prompt_validator
+    from scripts import agent_commands, command_idempotency, command_params_schema, notebook_prompt_validator
     from scripts.core import ROOT
 
 PROMOVER = "PROMOVER"
@@ -165,10 +167,16 @@ def _validar(nome, raw, ctx, schema, entrada_id):
         raise _Parar("JANELA_INVALIDA", "chaves")
     if abs((agora - emitido).total_seconds()) > janela:
         raise _Parar("FORA_DA_JANELA", "chaves")
+    motivo = command_idempotency.conferir_chave_do_comando(operacao, chave, agora)  # GA-5: a mesma regra do validador
+    if motivo:
+        raise _Parar(motivo, "chaves")
     params = comando["params"]
     if not isinstance(params, dict):
         raise _Parar("PARAMS_NAO_OBJETO", "parametros")
     motivo = agent_commands._scan_params(params, schema)
+    if motivo:
+        raise _Parar(motivo, "parametros")
+    motivo = None if operacao == PROMPT_NOTEBOOK else command_params_schema.validar_params(operacao, params)  # GA-1: o prompt tem validador próprio (N2)
     if motivo:
         raise _Parar(motivo, "parametros")
     if operacao == PROMPT_NOTEBOOK:  # S10-R3 (N2): só prompt que o validador do Tutor aceitou, com o hash do texto validado
