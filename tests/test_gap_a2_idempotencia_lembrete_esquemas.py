@@ -165,9 +165,9 @@ class Ga4VinculoComandoLembreteTests(unittest.TestCase):
     def comando(self, ids, h):
         return tdg.comando("criar_lembrete", params={"atividade_ids": ids, "lembrete_sha256": h})
 
-    def contexto(self, hashes):
-        c = ctx_duas()
-        c["lembretes_verificados"] = hashes
+    def contexto(self, hashes, ids=("UFMS-002", "UFMS-003")):
+        c = ctx_duas()  # COR-A (AC-2): o vínculo guarda corpo e ids de cada lembrete verificado
+        c["lembretes_verificados"] = None if hashes is None else {h: {"corpo": self.TEXTO, "atividade_ids": list(ids)} for h in hashes}
         return c
 
     def test_comando_com_hash_de_lembrete_aceito_e_aceito(self):
@@ -183,7 +183,7 @@ class Ga4VinculoComandoLembreteTests(unittest.TestCase):
 
     def test_comando_com_atividade_fora_da_projecao_e_recusado(self):
         h = ci.hash_lembrete(self.TEXTO, ["UFMS-002", "UFMS-777"])
-        r = tdg.vai(self.comando(["UFMS-002", "UFMS-777"], h), self.contexto({h}))
+        r = tdg.vai(self.comando(["UFMS-002", "UFMS-777"], h), self.contexto({h}, ("UFMS-002", "UFMS-777")))
         self.assertIn("comando_lembrete_atividade_nao_pendente", r["motivos"])
 
     def test_comando_com_params_fora_do_esquema_e_recusado_no_verificador_de_entrega(self):

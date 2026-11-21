@@ -18,7 +18,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import command_idempotency
 import delivery_gate as g
+import notebook_prompt_validator
 
 ROOT = Path(__file__).resolve().parents[1]
 SHA = "f" * 40
@@ -26,7 +28,7 @@ OUTRO_SHA = "e" * 40
 RECIBO = {"sha": SHA, "hashes": {"AGENTS.md": "a" * 64, "ROADMAP.md": "b" * 64}}
 AGORA = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
 TRECHO = "EDITAL PROGEP/UFMS Nº 152, DE 29 DE OUTUBRO DE 2026"
-PROJECAO = {"schema": 1, "gerado_em": "2026-11-20", "niveis": [{"topico": "Língua Portuguesa", "nivel": "E2"}],
+PROJECAO = {"schema": 1, "gerado_em": "2026-11-20T11:00:00Z", "niveis": [{"topico": "Língua Portuguesa", "nivel": "E2"}],
             "pendencias": [{"atividade_id": "UFMS-002", "tipo": "caderno"}], "revisoes": [{"topico": "Língua Inglesa", "vence_em": "2026-11-27"}]}
 PROMPT = {
     "topico": "Lei 8.112/1990: regime disciplinar (arts. 116 a 142)",
@@ -35,6 +37,9 @@ PROMPT = {
     "exigencia_fonte": "Cite o trecho exato da fonte e o artigo; se a resposta não constar nas fontes, diga: não consta nas fontes.",
     "formato_saida": "Lista numerada; para cada pergunta, a resposta esperada em uma linha e a citação.",
 }
+_H404 = command_idempotency.hash_lembrete("Lembrete.", ["UFMS-404"])
+_H002 = command_idempotency.hash_lembrete("Lembrete.", ["UFMS-002"])
+PROMPT_CANONICO = notebook_prompt_validator.preparar(PROMPT)[1]  # COR-A (AT-2): formato único do que a Zapia recebe
 TOKEN_FALSO = "github_pat_" + "ABCDEFGH12345678"  # padrão de segredo SINTÉTICO, montado em pedaços
 CPF_FALSO = "529.982." + "247-25"
 
@@ -107,7 +112,7 @@ def corpus():
         _caso("V05", "R5", "lembrete de atividade pendente pelo Coach", _env("LEMBRETE", papel="coach", corpo="Falta o caderno UFMS-002.",
                                                                            estruturado={"atividade_id": "UFMS-002"}), A, risco="ROTINA_AUTORIZADA"),
         _caso("V06", "R5", "comando enviar_mensagem do Coach", _comando(), A, risco="ROTINA_AUTORIZADA"),
-        _caso("V07", "R5", "prompt ao Notebook válido, do Tutor", _env("PROMPT_NOTEBOOK", corpo="", estruturado=copy.deepcopy(PROMPT)), A, risco="ROTINA_AUTORIZADA"),
+        _caso("V07", "R5", "prompt ao Notebook válido, do Tutor", _env("PROMPT_NOTEBOOK", corpo="", estruturado=copy.deepcopy(PROMPT_CANONICO)), A, risco="ROTINA_AUTORIZADA"),
         _caso("V08", "R17", "orientação continua possível sem projeção e sem edital (a indisponibilidade não impede orientação segura)", _env(), A,
               contexto=lambda: contexto_padrao(projecao=None, edital={})),
     ]
@@ -217,9 +222,25 @@ def corpus():
         _caso("KL2", "R5", "criar_lembrete sem LEMBRETE verificado com o mesmo hash (GA-4)",
               _comando("criar_lembrete", params={"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64}), R, ["comando_sem_vinculo_com_lembrete"]),
         _caso("KL3", "R5", "criar_lembrete com atividade fora das pendências (GA-4)",
-              _comando("criar_lembrete", params={"atividade_ids": ["UFMS-404"], "lembrete_sha256": "a" * 64}), R, ["comando_lembrete_atividade_nao_pendente"],
+              _comando("criar_lembrete", params={"atividade_ids": ["UFMS-404"], "lembrete_sha256": _H404}), R, ["comando_lembrete_atividade_nao_pendente"],
+              contexto=lambda: contexto_padrao(lembretes_verificados={_H404: {"corpo": "Lembrete.", "atividade_ids": ["UFMS-404"]}})),
+        _caso("KL4", "R5", "criar_lembrete com vínculo só por hashes, sem ids verificados (COR-A, AC-2)",
+              _comando("criar_lembrete", params={"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64}), R, ["comando_vinculo_sem_ids_verificados"],
               contexto=lambda: contexto_padrao(lembretes_verificados={"a" * 64})),
-        _caso("K09", "R5", "prompt ao Notebook só do Tutor", _env("PROMPT_NOTEBOOK", papel="coach", corpo="", estruturado=copy.deepcopy(PROMPT)), R,
+        _caso("KL5", "R5", "criar_lembrete cujo registro verificado não reproduz o hash (COR-A, AC-2)",
+              _comando("criar_lembrete", params={"atividade_ids": ["UFMS-002"], "lembrete_sha256": "a" * 64}), R, ["comando_vinculo_hash_nao_confere"],
+              contexto=lambda: contexto_padrao(lembretes_verificados={"a" * 64: {"corpo": "Lembrete.", "atividade_ids": ["UFMS-002"]}})),
+        _caso("KL6", "R5", "criar_lembrete com ids diferentes dos do lembrete verificado (COR-A, AC-2)",
+              _comando("criar_lembrete", params={"atividade_ids": ["UFMS-003"], "lembrete_sha256": _H002}), R, ["comando_lembrete_ids_diferentes_do_lembrete"],
+              contexto=lambda: contexto_padrao(projecao={**PROJECAO, "pendencias": PROJECAO["pendencias"] + [{"atividade_id": "UFMS-003", "tipo": "caderno"}]},
+                                               lembretes_verificados={_H002: {"corpo": "Lembrete.", "atividade_ids": ["UFMS-002"]}})),
+        _caso("KP1", "R5", "comando de prompt ao Notebook com texto livre e hash errado (COR-A, AT-1)",
+              _comando("enviar_prompt_notebook", papel="tutor", params={"prompt": "texto livre", "prompt_sha256": "a" * 64}), R, ["comando_prompt_notebook_invalido"]),
+        _caso("KP2", "R5", "PROMPT_NOTEBOOK com o rascunho de 5 campos, fora do formato único (COR-A, AT-2)",
+              _env("PROMPT_NOTEBOOK", corpo="", estruturado=copy.deepcopy(PROMPT)), R, ["prompt_notebook_forma_nao_canonica"]),
+        _caso("KI1", "R5", "projeção defasada em orientação só avisa (COR-A, AC-1)", _env(corpo="Vamos revisar o assunto de hoje com calma."), L,
+              avisos=["projecao_defasada"], contexto=lambda: contexto_padrao(projecao={**PROJECAO, "gerado_em": "2026-11-17T04:00:00Z"})),
+        _caso("K09", "R5", "prompt ao Notebook só do Tutor", _env("PROMPT_NOTEBOOK", papel="coach", corpo="", estruturado=copy.deepcopy(PROMPT_CANONICO)), R,
               ["prompt_notebook_so_do_tutor"]),
         _caso("K10", "R5", "prompt ao Notebook inválido", _env("PROMPT_NOTEBOOK", corpo="", estruturado={"topico": "x"}), R, ["prompt_notebook_invalido"]),
     ]
