@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #151; SHA 5e0df7b2c3a2ece5bd8d5f7bdb6f5ac13a34eeba
-- Frente ativa: **RM-09 / PR #152**; branch `ccr-d0f3862d-toas04`; base main; fase review.
+- Último merge comprovado: PR #152; SHA 310d4eb18e9d8fa95ae21235200a48d4f1635a67
+- Frente ativa: **RM-09 / PR #153**; branch `ccr-d0f3862d-toas04`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -107,6 +107,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 **RM-09 — L1 (S9):** `scripts/platform_read_guard.py` é a guarda **offline** da leitura direta das plataformas (lista fechada, somente leitura, taxa, bloqueio, saída mínima), testada com páginas sintéticas e mutações; **fecha por padrão e não lê conta alguma**. **RM-09 permanece `planejado`.**
 
 **RM-09 — S15:** `docs/especificacoes/S15_ORQUESTRACAO_FLUXO_ROTINA_TEMPO.md` unifica o fluxo e a rotina dos agentes com a Zapia e o estudante e define, **como proposta**, a fonte de verdade do tempo (relógio injetado em UTC, fuso `America/Campo_Grande`, dia de estudo, idade máxima da projeção e quem acorda Tutor e Coach); **nada foi implantado, agendado ou testado**; rotina diária só com `AUTORIZO`, flags de escrita `false`, piloto depende de PJ e P9; **RM-09 permanece `planejado`**.
+
+**RM-09 — S17:** `docs/especificacoes/S17_PESQUISA_AUTONOMIA_TUTOR_COACH.md` registra o requisito do proprietário de 21/11/2026 de dar pesquisa web (só leitura, com autonomia cognitiva) ao Tutor e ao Coach: perfil da banca, ciclo de aprendizagem e recuperação, simulação de prova, técnicas de indução de dúvida da banca e interpretação interdisciplinar, com fonte, data e confiança A/B/C e conteúdo web como dado. **Texto dos perfis só proposto, sem aplicar** (`agents/` é contrato); não prova acesso à web nem eficácia; RM-09 permanece `planejado`.
 
 **RM-09 — E3 (proposta):** `docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md` propõe, **só como texto para o proprietário aprovar**, a operação compartilhada `pedir_relatorio_desempenho` (Tutor e Coach, até 2 por dia: TEC e Gemini Notebook) e os eventos de início ("Iniciar estudos") e de encerramento ("finalizar estudos") na fila `entrada`, com a Zapia como interface única; a aplicação vem depois da persistência privada; **não altera** `agents/`, o esquema de comandos nem o gate, e depende de duas aprovações expressas (texto e merge); RM-09 permanece `planejado`.
 
