@@ -30,6 +30,13 @@ class E3PropostaTests(unittest.TestCase):
                        "flag de escrita", "e3-c (pendente)", "compartilha com o coach"):
             self.assertIn(trecho, T, trecho)
 
+    def test_zapia_e_a_interface_unica_e_o_fluxo_de_fim_de_sessao(self):
+        for trecho in ("a zapia como interface única", "o comando vai à zapia, não à sessão do claude", "faz perguntas ao proprietário",
+                       "puxa o resultado dos cadernos de acertos e erros", "só ao tutor e ao coach", "segundo suas expertises individuais",
+                       "o mesmo vale para as revisões no gemini notebook", "pendência f1", "pendência f2", "pendência f3",
+                       "não significa funcionamento", "nenhum resultado de estudo é gravado", "nenhuma orquestração"):
+            self.assertIn(trecho, T, trecho)
+
     def test_o_esquema_e_o_gate_continuam_sem_a_operacao(self):
         schema = json.loads((ROOT / "config" / "agent_command_schema.json").read_text(encoding="utf-8"))
         self.assertNotIn("pedir_relatorio_desempenho", schema["destinations"])

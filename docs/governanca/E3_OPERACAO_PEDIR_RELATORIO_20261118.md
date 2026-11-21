@@ -51,6 +51,29 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 - **B2 (decidida, 21/11/2026):** os eventos entram como **tipos novos no esquema da S7**, **como proposta** (emenda à S7). Enquanto a **flag de escrita** estiver `false`, o evento fica **só como texto proposto**.
 - **E3-C (pendente):** o **mecanismo** pelo qual o Tutor compartilha com o Coach o resultado do aluno em cada sessão.
 
+## Decisão do proprietário (21/11/2026): a Zapia como interface única do estudo
+
+**O comando vai à Zapia, não à sessão do Claude.** "Iniciar estudos" e a frase de encerramento são ditas **à Zapia**, que é o elo entre o harness, o Tutor, o Coach, o TEC, o Gemini Notebook e o estudante. A Zapia grava o evento na fila `entrada` (proposta B); nenhuma sessão de Tutor ou Coach recebe a frase do proprietário diretamente.
+
+**Fluxo desejado ao fim de cada sessão de estudo (requisito, não capacidade provada):**
+1. O proprietário diz a frase de encerramento à Zapia.
+2. A Zapia **faz perguntas ao proprietário sobre o que foi estudado**.
+3. A Zapia **entra no TEC** e **puxa o resultado dos cadernos de acertos e erros** (S16-R12, S9).
+4. A Zapia **leva o resultado só ao Tutor e ao Coach**, que o tratam **segundo suas expertises individuais** (S2, S3): o Tutor no diagnóstico e na próxima intervenção pedagógica; o Coach no acompanhamento e na rotina.
+5. **O mesmo vale para as revisões no Gemini Notebook:** a Zapia informa o que foi criado e o estado (material criado, processamento pendente, erro, validação pedagógica; S16-R13) a Tutor e Coach.
+
+**O que este fluxo exige e ainda não existe (nada disso está implantado ou testado):**
+
+| Peça | Situação | Pendência |
+|---|---|---|
+| Perguntas da Zapia ao proprietário ao fim da sessão | Não especificadas | **Quem redige as perguntas:** a Zapia não gera conteúdo pedagógico (S5, `agents/ZAPIA.md`); proposta: o Tutor define um **roteiro fixo e mínimo** e a Zapia só o aplica (pendência F1) |
+| Coleta no TEC pela Zapia | Liberada pelo D-27; sem leitura real provada; contrato de entrega e filtro de dados existem (L1, L2) | **Quais cadernos puxar** (os da sessão, pelos filtros do dia) e a **regra de pontuação** declarada (pendência F2) |
+| Entrega "só a Tutor e Coach" | Canal: fila `entrada` e fluxo (S6); a Zapia entrega, o fluxo grava, os agentes leem as projeções (S6-R9) | **Bloqueado pela flag de escrita (`false`)** e pelo consentimento v4: sem ele o resultado **não é gravado**; o repositório público **nunca** recebe o resultado (pendência F3) |
+| Compartilhamento Tutor → Coach por sessão | Definido como requisito (A1) | Mecanismo (E3-C) |
+| Revisão no Gemini Notebook | Prompt do Tutor (S10); a Zapia executa | Teste real não feito (N1) |
+
+**"Persistido no harness" significa, aqui, texto de especificação e testes de contrato; não significa funcionamento.** Esta proposta, a S16 e o ROADMAP registram o requisito de forma versionada; **nenhum resultado de estudo é gravado**, porque a escrita de resultados pessoais continua bloqueada (flag `false`), e **nenhuma orquestração Zapia–Tutor–Coach é afirmada** sem prova.
+
 ## Texto exato proposto para os arquivos de contrato (não aplicado)
 
 **`config/agent_command_schema.json`:** em `destinations`, acrescentar `"pedir_relatorio_desempenho": "zapia_relatorio"`.
@@ -78,4 +101,4 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 
 ## Aceite
 
-Esta proposta está **aceita pelo contrato** quando `python scripts/doc_cohesion.py --check` passa e `tests/test_e3_proposta.py` confere: a distinção comando × evento, a operação compartilhada, os parâmetros e limites, a frase literal de encerramento, as decisões A1, B1 e B2 e as pendências B1b e E3-C, o texto proposto para os arquivos de contrato e a **ausência de mudança** neles. **A aplicação depende da aprovação expressa do proprietário.**
+Esta proposta está **aceita pelo contrato** quando `python scripts/doc_cohesion.py --check` passa e `tests/test_e3_proposta.py` confere: a distinção comando × evento, a operação compartilhada, os parâmetros e limites, a frase literal de encerramento, as decisões A1, B1 e B2, as pendências B1b e E3-C, a Zapia como interface única e as pendências F1 a F3, o texto proposto para os arquivos de contrato e a **ausência de mudança** neles. **A aplicação depende da aprovação expressa do proprietário.**
