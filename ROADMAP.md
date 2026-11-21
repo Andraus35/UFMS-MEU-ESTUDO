@@ -4,7 +4,7 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #147; SHA c828524d7d31bf93670de09d590233bf52ba6934
+- Último merge comprovado: PR #148; SHA 8c27b8e4ca96e1d143a45303472931c5a6472fef
 - Frente ativa: **RM-09 / PR #149**; branch `ccr-d0f3862d-toas04`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
@@ -105,6 +105,8 @@ Mapa do que impede cada frente pedagógica e do que é autônomo: `docs/pedagogi
 **RM-09 — subescopo offline:** contrato de comandos dos agentes à Zapia (PR-013: `config/agent_command_schema.json`, `scripts/agent_commands.py`) especificações S4 e S5 em `docs/especificacoes/` e perfil `agents/ZAPIA.md` validado por `scripts/agents_gate.py`. Não há prova de autorização, de fluxo com Gemini Notebook, Zapia ou GitHub Projects; **RM-09 permanece `planejado`** e nenhum teste usou conta real.
 
 **RM-09 — L1 (S9):** `scripts/platform_read_guard.py` é a guarda **offline** da leitura direta das plataformas (lista fechada, somente leitura, taxa, bloqueio, saída mínima), testada com páginas sintéticas e mutações; **fecha por padrão e não lê conta alguma**. **RM-09 permanece `planejado`.**
+
+**RM-09 — S15:** `docs/especificacoes/S15_ORQUESTRACAO_FLUXO_ROTINA_TEMPO.md` unifica o fluxo e a rotina dos agentes com a Zapia e o estudante e define, **como proposta**, a fonte de verdade do tempo (relógio injetado em UTC, fuso `America/Campo_Grande`, dia de estudo, idade máxima da projeção e quem acorda Tutor e Coach); **nada foi implantado, agendado ou testado**; rotina diária só com `AUTORIZO`, flags de escrita `false`, piloto depende de PJ e P9; **RM-09 permanece `planejado`**.
 
 **RM-09 — S10:** `docs/especificacoes/S10_NOTEBOOK_TUTOR.md` especifica o Notebook como ferramenta do Tutor (ponte pela Zapia, rascunho verificado por citação aberta, falha que fecha o efeito); **nada foi testado no Notebook** e **RM-09 permanece `planejado`**.
 
