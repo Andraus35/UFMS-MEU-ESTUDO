@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_gap_e_derivado_paginado_do_manual_e_gates_g_mot",
+    "scope": "lote_fila_de_auditoria_tutor_coach_registro_dos_achados_e_fila_de_correcao",
     "branch": "ccr-f6ba5d34-22tgo5",
-    "pr_number": 175,
+    "pr_number": 176,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #174 integrado em main no merge commit eb3f212f0cb9b4cc909fb02aa2153e5b121f2ed1. Frente única ativa: RM-09 (lote_gap_e_derivado_paginado_do_manual_e_gates_g_mot), branch ccr-f6ba5d34-22tgo5, PR #175. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #175 integrado em main no merge commit c4bea57ee077b7381b802dcda8560fdb3e218ac2. Frente única ativa: RM-09 (lote_fila_de_auditoria_tutor_coach_registro_dos_achados_e_fila_de_correcao), branch ccr-f6ba5d34-22tgo5, PR #176. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 174,
-    "merge_commit_sha": "eb3f212f0cb9b4cc909fb02aa2153e5b121f2ed1"
+    "pr_number": 175,
+    "merge_commit_sha": "c4bea57ee077b7381b802dcda8560fdb3e218ac2"
   },
   "work_queue": [
     {
@@ -998,6 +998,61 @@
       "optional_inputs": [
         "decisão do proprietário sobre o derivado paginado do Manual no Drive privado"
       ]
+    },
+    {
+      "id": "COR-A",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AT-1, AT-2, AC-1 e AC-2: entrega integrada (o delivery_gate confere o prompt do Notebook, a idade da projeção e recalcula o hash do lembrete com os ids; formato único do prompt)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E15_COR_A_ENTREGA_INTEGRADA.md",
+      "depends_on": [
+        "GAP-E"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "COR-B",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AC-3, AC-4, AC-8 e o decisor do teto diário (S8-R1, S15-R17): id fixo da chave briefing, descanso e pendência no lembrete2, chave em maiúsculas, teto da janela, data de consultar_agenda_minima",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E16_COR_B_CHAVE_E_LIMITES_DIARIOS.md",
+      "depends_on": [
+        "COR-A"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "COR-C",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AT-3 a AT-7: filtros de conteúdo (URL sem esquema, instrução embutida e homóglifo, texto de questão no prompt, URL e instrução nas mensagens e no handoff, tokens de efeito em inglês na leitura de plataformas)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E17_COR_C_FILTROS_DE_CONTEUDO.md",
+      "depends_on": [
+        "COR-B"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "COR-D",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AC-5, AC-6 e AC-7: gates G-MOT ligados à entrega, fail-closed em tipo não booleano, paráfrases e falsos positivos, léxico de desempenho e disponibilidade (continua heurístico); aplicar em agents/ exige aprovação expressa",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E18_COR_D_GATES_MOT_NA_ENTREGA.md",
+      "depends_on": [
+        "COR-C"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "COR-E",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AT-8 e AC-9: lista de permissão de caminhos de leitura, citação por palavra inteira e hash por página no manifesto do Manual, idade da projeção por data",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E19_COR_E_ENDURECIMENTO_MENOR.md",
+      "depends_on": [
+        "COR-D"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
