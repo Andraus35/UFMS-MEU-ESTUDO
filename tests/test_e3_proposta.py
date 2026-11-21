@@ -17,7 +17,7 @@ class E3PropostaTests(unittest.TestCase):
 
     def test_distingue_comando_de_evento(self):
         for trecho in ("agente → zapia", "proprietário → zapia → agentes", "a zapia só executa", "fila entrada",
-                       "estudo_iniciado", "estudo_finalizado", "estudo de hoje finalizado."):
+                       "estudo_iniciado", "estudo_finalizado", "finalizar estudos"):
             self.assertIn(trecho, T, trecho)
 
     def test_operacao_compartilhada_com_parametros_e_limite_fechados(self):
@@ -26,14 +26,14 @@ class E3PropostaTests(unittest.TestCase):
             self.assertIn(trecho, T, trecho)
 
     def test_decisoes_pedidas(self):
-        for trecho in ("decisão a1", "b1 (decidida", "iniciar estudos", "b1b (pendente)", "finalizar estudos", "b2 (decidida", "emenda à s7",
-                       "flag de escrita", "e3-c (pendente)", "compartilha com o coach"):
+        for trecho in ("decisão a1", "b1 (decidida", "iniciar estudos", "b1b (decidida", "finalizar estudos", "b2 (decidida", "emenda à s7",
+                       "flag de escrita", "e3-c (decidida", "coach lê as projeções", "compartilha com o coach"):
             self.assertIn(trecho, T, trecho)
 
     def test_zapia_e_a_interface_unica_e_o_fluxo_de_fim_de_sessao(self):
         for trecho in ("a zapia como interface única", "o comando vai à zapia, não à sessão do claude", "faz perguntas ao proprietário",
                        "puxa o resultado dos cadernos de acertos e erros", "só ao tutor e ao coach", "segundo suas expertises individuais",
-                       "o mesmo vale para as revisões no gemini notebook", "pendência f1", "pendência f2", "pendência f3",
+                       "o mesmo vale para as revisões no gemini notebook", "f1 (decidida", "f2 (decidida", "f3 (decidida", "ordem de aplicação", "persistência privada primeiro",
                        "não significa funcionamento", "nenhum resultado de estudo é gravado", "nenhuma orquestração"):
             self.assertIn(trecho, T, trecho)
 
