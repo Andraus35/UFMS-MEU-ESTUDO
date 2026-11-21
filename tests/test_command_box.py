@@ -30,7 +30,7 @@ def raw(c):
 
 
 def ctx(**mudar):
-    c = {"agora": AGORA, "ledger": agent_commands.CommandLedger(), "dia_de_descanso": False}
+    c = {"agora": AGORA, "ledger": agent_commands.CommandLedger(), "dia_de_descanso": False, "atividades_pendentes": ["UFMS-002"], "chaves_do_dia": []}
     c.update(mudar)
     return c
 

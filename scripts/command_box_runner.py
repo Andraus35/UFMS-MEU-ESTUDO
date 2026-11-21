@@ -125,7 +125,7 @@ def _recibo(nome, status, codigo, hash_corpo, execucao, validador_sha):
 
 def executar(entradas, contexto, caixa):
     """Processa a caixa EM SÉRIE e em ordem de nome. `contexto`: `escritas_habilitadas`, `agora`, `execucao`, `validador_sha`,
-    `validador_sha_fixado`, opcional `dia_de_descanso`. Resumo só com contagens, códigos e ids."""
+    `validador_sha_fixado`, opcionais `dia_de_descanso`, `atividades_pendentes` e `chaves_do_dia` (COR-B; ausentes recusam lembrete2/criar_lembrete e a chave de rotina). Resumo só com contagens, códigos e ids."""
     resumo = {"flag": contexto.get("escritas_habilitadas") is True, "itens": [], "falhas_de_registro": 0}
     if not resumo["flag"]:
         resumo["estado"] = "FLAG_DESLIGADA"
@@ -137,6 +137,7 @@ def executar(entradas, contexto, caixa):
         return resumo
     ledger = LedgerDuravel(caixa)
     ctx = {"agora": contexto["agora"], "ledger": ledger, "dia_de_descanso": contexto.get("dia_de_descanso"),
+           "atividades_pendentes": contexto.get("atividades_pendentes"), "chaves_do_dia": list(contexto["chaves_do_dia"]) if isinstance(contexto.get("chaves_do_dia"), (list, tuple, set, frozenset)) else None,
            "janela_segundos": contexto.get("janela_segundos", WINDOW_SECONDS)}
     execucao = contexto.get("execucao")
     for nome, bruto in sorted(entradas, key=lambda par: str(par[0])):
@@ -163,13 +164,15 @@ def _processar(nome, bruto, ctx, caixa, ledger, execucao, sha, item):
         # Retomada: já promovido, só finaliza (ledger, recibo, saída da fila). NUNCA confia na existência do arquivo: revalida a
         # parte estática (forma, tabela por origem, destino, filtro, descanso); só dispensa a janela (o comando é antigo de
         # propósito) e a novidade do nonce (já foi consumido pela execução interrompida).
-        rev = command_box.validar(nome, bruto, dict(ctx, ledger=_SemEstado(), janela_segundos=RESUME_WINDOW_SECONDS))
+        chaves = ctx["chaves_do_dia"] + [_campos(bruto)[1]] if ctx["chaves_do_dia"] is not None else None  # a própria chave já ocupava o teto
+        rev = command_box.validar(nome, bruto, dict(ctx, ledger=_SemEstado(), janela_segundos=RESUME_WINDOW_SECONDS, chaves_do_dia=chaves))
         if rev["status"] != command_box.PROMOVER:
             if rev["codigo"] == "ERRO_INTERNO":
                 raise RuntimeError("erro interno transitório")
             return _rejeitar(nome, rev["codigo"], ctx, caixa, item, rev["rejeicao"])
         nonce, chave, corpo = _campos(bruto)
         ledger.confirmar(nonce, chave, corpo)
+        _ocupar_teto(ctx, chave)
         caixa.escrever(RECEIPTS + nome, _recibo(nome, "PROMOVER", "RETOMADA", rev["hash_corpo"], execucao, sha))
         caixa.remover(f"{BOX}/{nome}")
         item.update(status="PROMOVER", codigo="RETOMADA")
@@ -185,8 +188,15 @@ def _processar(nome, bruto, ctx, caixa, ledger, execucao, sha, item):
     if res["status"] == command_box.PROMOVER:
         caixa.escrever(VALIDATED + nome, bytes(bruto))  # os MESMOS bytes que foram validados
     ledger.confirmar(nonce, chave, corpo)
+    _ocupar_teto(ctx, chave)
     caixa.escrever(RECEIPTS + nome, _recibo(nome, res["status"], res["codigo"], res["hash_corpo"], execucao, sha))
     caixa.remover(f"{BOX}/{nome}")
+
+
+def _ocupar_teto(ctx, chave):
+    """A execução é em série: a chave promovida passa a contar no teto diário das entradas seguintes (COR-B, AC-3)."""
+    if ctx.get("chaves_do_dia") is not None and chave not in ctx["chaves_do_dia"]:
+        ctx["chaves_do_dia"].append(chave)
 
 
 def _rejeitar(nome, codigo, ctx, caixa, item, registro=None):
