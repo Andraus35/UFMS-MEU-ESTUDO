@@ -124,6 +124,71 @@ class JanelaPadraoTests(Base):
             self.assertIsNone(self.hook("PostToolUse"))  # mesmo estado do lote: silêncio
 
 
+class DesarmeTests(Base):
+    """HOOKR: sessão armada por engano (falso alarme) volta ao normal quando a medição cai abaixo do limite."""
+
+    def estado(self, sid="s1"):
+        return json.loads((self.home / ".claude" / "context-guard" / "state" / f"{sid}.json").read_text())
+
+    def test_armada_por_engano_desarma_quando_a_medicao_cai_abaixo_do_limite(self):
+        self.transcript(150_000)  # 75% de 200k: arma e sela
+        self.assertIsNotNone(self.run_hook("UserPromptSubmit"))
+        self.assertEqual(self.seal().returncode, 0)
+        self.assertTrue(self.estado()["armed_at"])
+        self.transcript(40_000, users=("faça a tarefa X",))  # 20% de 200k: abaixo do limite
+        self.assertIsNone(self.run_hook("UserPromptSubmit"))
+        st = self.estado()
+        for k in ("armed_at", "sealed", "sealed_at", "stop_blocks", "aviso_chave"):
+            self.assertNotIn(k, st, k)
+        self.assertEqual(st["desarmes"], 1)
+
+    def test_desarmada_o_stop_nao_trava_mais(self):
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.transcript(40_000)
+        self.run_hook("UserPromptSubmit")
+        self.assertIsNone(self.run_hook("Stop"))
+
+    def test_acima_do_limite_continua_armada_e_selada(self):
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.assertEqual(self.seal().returncode, 0)
+        self.transcript(160_000)
+        self.run_hook("PostToolUse")
+        st = self.estado()
+        self.assertTrue(st["armed_at"])
+        self.assertTrue(st["sealed"])
+        self.assertNotIn("desarmes", st)
+
+    def test_sem_medida_nao_desarma(self):
+        self.transcript(150_000)
+        self.run_hook("UserPromptSubmit")
+        self.tr.write_text(json.dumps({"type": "user", "message": {"content": "oi"}}) + "\n", encoding="utf-8")  # sem usage
+        self.run_hook("UserPromptSubmit")
+        self.assertTrue(self.estado()["armed_at"])
+
+    def test_o_hook_de_perguntas_so_le_e_deixa_de_ceder_depois_do_desarme(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("perguntas", Path(__file__).resolve().parents[1] / ".claude" / "hooks" / "perguntas_boas_praticas.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        os.environ["CONTEXT_GUARD_HOME"] = str(self.home)
+        try:
+            self.transcript(150_000)
+            self.run_hook("UserPromptSubmit")
+            self.assertTrue(mod.cede_ao_hook_de_passagem({"session_id": "s1"}))
+            self.transcript(40_000)
+            self.run_hook("UserPromptSubmit")
+            self.assertFalse(mod.cede_ao_hook_de_passagem({"session_id": "s1"}))
+        finally:
+            os.environ.pop("CONTEXT_GUARD_HOME", None)
+
+    def test_modulo_de_estado_existe_e_o_instalador_o_copia(self):
+        raiz = Path(__file__).resolve().parents[1] / "scripts"
+        self.assertTrue((raiz / "context_guard_state.py").is_file())
+        self.assertIn("context_guard_state.py", (raiz / "claude_context_guard_install.py").read_text(encoding="utf-8"))
+
+
 class SeloETravaTests(Base):
     def test_selo_recusa_prompt_incompleto_e_curto(self):
         self.transcript(150_000)

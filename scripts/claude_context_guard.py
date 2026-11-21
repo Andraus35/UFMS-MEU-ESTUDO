@@ -27,6 +27,9 @@ import sys
 import time
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from context_guard_state import desarmar_se_abaixo  # noqa: E402
+
 HOME = Path(os.environ.get("CONTEXT_GUARD_HOME") or Path.home())
 BASE = HOME / ".claude" / "context-guard"
 HANDOFFS = HOME / ".claude" / "handoffs"
@@ -297,6 +300,7 @@ def on_measure(event, payload):
     cwd = payload.get("cwd") or os.getcwd()
     c, rows, pct = measure(payload)
     st = load_state(sid)
+    st, _ = desarmar_se_abaixo(st, pct, float(c["threshold"]), context_tokens(rows) is not None)  # HOOKR: falso alarme não prende a sessão
     st.update({"cwd": cwd, "pct": round(pct, 4), "seen_at": time.time()})
     if pct >= float(c["threshold"]):
         st.setdefault("armed_at", time.time())
