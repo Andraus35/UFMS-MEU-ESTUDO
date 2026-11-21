@@ -20,12 +20,12 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "HOOK3", "RS", "AE", "AM", "RG", "HOOK4", "S15", "S16", "S17", "TOP1", "TOP2", "TOP3"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "HOOK3", "RS", "AE", "AM", "RG", "HOOK4", "S15", "S16", "S17", "TOP1", "TOP2", "TOP3", "S18", "S19"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertIsNone(fila["proximo"])  # RS, AE, AM, RG, HOOK4, S15, S16, S17 e a proposta E3 têm a entrega (21/11/2026): o que resta espera o proprietário (PJ, RT, CM)
-        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM"])
+        self.assertEqual(fila["proximo"]["id"], "S18")  # liberado, a abrir só depois do merge do lote B (S16 T1 a T3); S19 vem depois dele; antes: # RS, AE, AM, RG, HOOK4, S15, S16, S17 e a proposta E3 têm a entrega (21/11/2026): o que resta espera o proprietário (PJ, RT, CM)
+        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "S18", "S19"])
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["PJ"])
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])

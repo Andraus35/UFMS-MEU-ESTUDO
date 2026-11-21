@@ -856,6 +856,32 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "S18",
+      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026: \"adicionar essa capacidade ao coach\"; documento-fonte IMC-COACH-001, enviado por ele, 83 KB, que NÃO está no repositório e deve ser reenviado ao abrir o lote): especificação com pesquisa obrigatória (D-16) e lacunas; entra o canônico com hash no manifesto (como o da base cognitiva); a IMC é capacidade interna do Coach, não um quarto agente nem psicoterapia (escopo não clínico e encaminhamento, privacidade e consentimento); diagnóstico de comportamento e não de personalidade, biblioteca de intervenções, ciclos diário, semanal e de fase, reentrada, simulado ruim, ansiedade e sobrecarga, métricas N-of-1, contratos Coach↔Tutor↔Orquestrador; os textos do documento são PROPOSTA e não escala validada; aplicar em agents/COACH.md é contrato e exige a aprovação expressa do texto e do merge; liga ao RM-09",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S18_INTELIGENCIA_MOTIVACIONAL_COACH.md",
+      "depends_on": [
+        "S17"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "reenvio do documento IMC-COACH-001 pelo proprietário"
+      ]
+    },
+    {
+      "id": "S19",
+      "title": "Tutor e Coach usam os recursos da Zapia como interface com o estudante (pedido do proprietário de 21/11/2026, com o PDF \"Agendamentos e gatilhos na Zapia\", autorrelato da Zapia, confiança C, não versionado): mapear rotina agendada (lembrete fixo ou dinâmico por horário) e hook (evento de fonte conectada) às necessidades do fluxo (início e término, dica diária, confirmação, reação à frase na conversa), com o que a Zapia faz ou não (sem processo permanente, WhatsApp não conectado, frase só vale no turno em que chega, PDF não prova canal real Tutor/Coach↔Zapia); pesquisa obrigatória; fecha com S8, S15 e E3 sem duplicá-las; nada é cadastrado na Zapia (rotina real só com AUTORIZO); aplicar em agents/ é contrato e exige a aprovação expressa; liga ao RM-09",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S19_ZAPIA_INTERFACE_AGENDAMENTOS_GATILHOS.md",
+      "depends_on": [
+        "S18"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "reenvio do PDF da Zapia pelo proprietário"
+      ]
     }
   ],
   "owner_priorities": [
