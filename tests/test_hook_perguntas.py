@@ -70,12 +70,15 @@ class ScriptTest(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.dir = Path(self.tmp.name)
 
-    def rodar(self, linhas, ativo=False, projeto=ROOT, bruto=None):
+    def rodar(self, linhas, ativo=False, projeto=ROOT, bruto=None, sessao=None):
         arquivo = self.dir / "t.jsonl"
         arquivo.write_text("\n".join(linhas) + "\n", encoding="utf-8")
-        entrada = bruto if bruto is not None else json.dumps({"transcript_path": str(arquivo), "stop_hook_active": ativo})
+        dados = {"transcript_path": str(arquivo), "stop_hook_active": ativo}
+        if sessao:
+            dados["session_id"] = sessao
+        entrada = bruto if bruto is not None else json.dumps(dados)
         r = subprocess.run([sys.executable, str(SCRIPT)], input=entrada, capture_output=True, text=True, timeout=30,
-                           env={**os.environ, "CLAUDE_PROJECT_DIR": str(projeto)})
+                           env={**os.environ, "CLAUDE_PROJECT_DIR": str(projeto), "CONTEXT_GUARD_HOME": str(self.dir / "home")})
         self.assertEqual(r.returncode, 0, r.stderr)
         return json.loads(r.stdout) if r.stdout.strip() else None
 
@@ -135,6 +138,87 @@ class ScriptTest(unittest.TestCase):
 
     def test_linhas_invalidas_no_transcript_nao_derrubam(self):
         self.assertBloqueia(self.rodar([usuario(), "nao e json", bash("git push"), "{"]))
+
+    # E13: só o que mudou
+    def feedback(self):
+        motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")]))
+        return "Stop hook feedback:\n" + motivo, motivo
+
+    def test_mesmo_estado_ja_perguntado_nao_bloqueia_de_novo(self):
+        feedback, _ = self.feedback()
+        self.assertIsNone(self.rodar([usuario(feedback), uso("AskUserQuestion"), usuario("outro pedido"), bash("git push")]))
+
+    def test_mesmo_estado_sem_pergunta_depois_bloqueia(self):
+        feedback, _ = self.feedback()
+        self.assertBloqueia(self.rodar([usuario(feedback), usuario("outro pedido"), bash("git push")]))
+
+    def test_pergunta_ANTES_do_aviso_nao_conta(self):
+        feedback, _ = self.feedback()
+        self.assertBloqueia(self.rodar([uso("AskUserQuestion"), usuario(feedback), usuario("outro pedido"), bash("git push")]))
+        self.assertBloqueia(self.rodar([usuario("a"), texto(), uso("AskUserQuestion"), usuario(feedback), usuario("outro pedido"), bash("git push")]))
+
+    def test_estado_mudou_bloqueia_e_mostra_o_que_mudou(self):
+        antigo = "Estado lido agora: ciclo da tarefa RM-00 (PR #1) em 'em_andamento'; próximo item da fila: X — antigo."
+        motivo = self.assertBloqueia(self.rodar([usuario("Stop hook feedback:\nFim de rodada. " + antigo), uso("AskUserQuestion"),
+                                                  usuario("outro pedido"), bash("git push")]))
+        self.assertIn("O que mudou desde a última pergunta:", motivo)
+        self.assertIn("ciclo da tarefa RM-00 (PR #1)", motivo)  # o antes
+        self.assertIn("Estado lido agora:", motivo)  # e o agora (estado real do projeto)
+
+    def test_aviso_em_bloco_de_texto_tambem_e_lido(self):
+        feedback, _ = self.feedback()
+        linha = json.dumps({"type": "user", "message": {"content": [{"type": "text", "text": feedback}]}})
+        self.assertIsNone(self.rodar([linha, uso("AskUserQuestion"), usuario("outro pedido"), bash("git push")]))
+
+    def test_sem_historico_ou_sem_estado_legivel_pergunta_como_antes(self):
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")]))
+        feedback, _ = self.feedback()
+        # projeto sem scripts/next_task.py: não há como comparar, então pergunta
+        self.assertBloqueia(self.rodar([usuario(feedback), uso("AskUserQuestion"), usuario("x"), bash("git push")], projeto=self.dir))
+
+    def test_o_hook_continua_so_lendo(self):
+        fonte = SCRIPT.read_text(encoding="utf-8")
+        for proibido in (".write_text(", "write_bytes(", ".mkdir(", "os.remove", "shutil"):
+            self.assertNotIn(proibido, fonte, proibido)
+
+    # E13: o hook de passagem entre sessões prevalece sobre as perguntas de continuidade
+    def estado_do_guard(self, sessao="sx", **campos):
+        d = self.dir / "home" / ".claude" / "context-guard" / "state"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{sessao}.json").write_text(json.dumps(campos), encoding="utf-8")
+
+    def test_passou_do_limite_com_lote_finalizado_nao_propoe_continuidade(self):
+        self.estado_do_guard(armed_at=1.0, sealed=True, lote_pendente=False)
+        self.assertIsNone(self.rodar([usuario(), bash("git push origin x")], sessao="sx"))
+
+    def test_passou_do_limite_mas_sem_selo_tambem_cede_ao_guard(self):
+        self.estado_do_guard(armed_at=1.0, lote_pendente=False)  # o guard bloqueia por conta própria; as perguntas não competem
+        self.assertIsNone(self.rodar([usuario(), bash("git push")], sessao="sx"))
+
+    def test_lote_pendente_tambem_cede_pois_o_guard_obriga_a_persistir_sem_perguntas(self):
+        self.estado_do_guard(armed_at=1.0, sealed=True, lote_pendente=True)
+        self.assertIsNone(self.rodar([usuario(), bash("git push")], sessao="sx"))
+
+    def test_sem_limite_ultrapassado_ou_sem_estado_ou_ilegivel_pergunta_como_antes(self):
+        self.estado_do_guard(sessao="a", pct=0.2)  # não armado
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="a"))
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="inexistente"))
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")]))  # sem session_id
+        d = self.dir / "home" / ".claude" / "context-guard" / "state"
+        (d / "ruim.json").write_text("{quebrado")
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="ruim"))
+
+    def test_lote_finalizado_sem_o_limite_ter_sido_ultrapassado_nao_cede(self):
+        self.estado_do_guard(lote_pendente=False, pct=0.3)  # sem armed_at: o contexto não passou do limite
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="sx"))
+
+    def test_estado_de_outra_sessao_nao_vale(self):
+        self.estado_do_guard(sessao="outra", armed_at=1.0, sealed=True, lote_pendente=False)
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], sessao="sx"))
+
+    def test_estado_antigo_sem_lote_pendente_mas_armado_cede(self):
+        self.estado_do_guard(armed_at=1.0, sealed=True)
+        self.assertIsNone(self.rodar([usuario(), bash("git push")], sessao="sx"))
 
     def test_estado_indisponivel_nao_impede_o_bloqueio(self):
         motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.dir))  # sem scripts/next_task.py

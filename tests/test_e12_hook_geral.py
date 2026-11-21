@@ -40,7 +40,7 @@ class E12Tests(unittest.TestCase):
         self.assertEqual(set(c), {"extra_instruction"})  # sem repo_copy, sem mudar limite
         e = c["extra_instruction"]
         for trecho in ("memory/HANDOFF.md", "bootstrap.py --mode engineering", "next_task.py", "nunca merge", "nunca push forçado",
-                       "aprovação expressa", "confirmar no GitHub"):
+                       "aprovação expressa", "confirmar no GitHub", "sem pedir permissão", "nunca na `main`"):
             self.assertIn(trecho, e, trecho)
 
     def test_doc_declara_riscos_da_ativacao(self):
@@ -58,7 +58,7 @@ class E12Tests(unittest.TestCase):
         for proibido in ("urllib", "requests", "socket", "http.client", "os.system", "shell=True", "git\", \"push", "git\", \"commit"):
             self.assertNotIn(proibido, CODE, proibido)
         usados = set(re.findall(r'git\((?:cwd|root|[a-z_]+), "([a-z-]+)"', CODE)) | set(re.findall(r'git\(cwd, "([a-z-]+)"', CODE))
-        self.assertTrue(usados <= {"rev-parse", "status", "log"}, usados)  # só leitura: nunca commit, push, reset ou checkout
+        self.assertTrue(usados <= {"rev-parse", "status", "log", "symbolic-ref"}, usados)  # só leitura: nunca commit, push, reset ou checkout
         self.assertTrue(usados, "o teste não achou nenhuma chamada git")
 
     def test_valores_padrao_do_enunciado(self):
