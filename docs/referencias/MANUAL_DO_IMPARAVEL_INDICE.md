@@ -8,6 +8,10 @@
 - **Arquivo conferido:** `Manual-do-imparavel-Gabriel-Granjeiro-2021.pdf` (anexado pelo proprietário em 21/11/2026), **SHA-256** `52965cb8da34c301f41913fd4c2efe404e5d80af44d122c1f323ca63e09314ac`. O PDF **não** é versionado aqui.
 - **Conferência:** o número de página abaixo é o **impresso**, que coincide com a ordem das páginas do PDF; as páginas iniciais foram conferidas contra o cabeçalho de cada capítulo (extração de texto, 21/11/2026). O **conteúdo** de cada capítulo **não** foi relido por inteiro nesta conferência.
 
+## Onde mora o texto integral
+
+Decisão do proprietário (21/11/2026): o PDF fica numa **pasta privada do Drive do proprietário** (pasta "UFMS-MEU-ESTUDO (privado, acervo do Coach)"), **sem compartilhamento** e **sem link nem ID neste repositório**. Conferido em 21/11/2026 pela leitura de permissões: só o proprietário, como dono, na pasta e no arquivo; o arquivo tem **11.816.916 bytes**, igual ao anexado; o **hash não foi conferido** pelo Drive. A pasta chegou a ficar acessível por link e foi **restringida** pelo proprietário antes deste registro. **Limites:** o Drive é só **guarda**; o **Coach não o lê** (o canal segue só a fila `entrada`, S19-R12) e a leitura depende do consentimento v4 e de canal provado; o estado das permissões pode **mudar depois** e este registro **não prova** que continua restrito.
+
 ## Índice (página inicial do capítulo, conforme o sumário do livro)
 
 | Página | Capítulo | Trecho do `IMC-COACH-001` que o usa |

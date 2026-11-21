@@ -59,7 +59,7 @@ Cada uma em PR próprio, em série (nenhuma foi criada aqui):
 | Item | O que faz | Depende de |
 |---|---|---|
 | B1 | Aplicar o texto acima em `agents/COACH.md` | **feita no lote B1**; o merge exige a aprovação expressa do texto e do merge |
-| B2 | Índice do Manual no público (**feito**, `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md`); texto integral no repositório **privado** | decisão e canal do proprietário |
+| B2 | Índice do Manual no público (**feito**, `docs/referencias/MANUAL_DO_IMPARAVEL_INDICE.md`); texto integral em **pasta privada do Drive do proprietário** (**feito**, 21/11/2026, só guarda; o Coach não o lê) | leitura pelo Coach: consentimento v4 e canal provado |
 | B3 | Unificar os códigos `MOT`…`BEM` com a taxonomia cognitiva | S13-R4, S17-R16 |
 
 ## Aceite

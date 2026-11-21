@@ -78,6 +78,10 @@ class SpecS18Tests(unittest.TestCase):
         self.assertIn("52965cb8da34c301f41913fd4c2efe404e5d80af44d122c1f323ca63e09314ac", idx)
         self.assertIn("978-85-69303-55-8", idx)
         self.assertIn("não está neste repositório público", idx)
+        self.assertIn("pasta privada do Drive do proprietário", idx)
+        self.assertIn("sem link nem ID neste repositório", idx)
+        self.assertIn("Coach não o lê", idx)
+        self.assertNotRegex(idx, r"drive\.google\.com|15qMFRsz")
         self.assertFalse(list(ROOT.rglob("Manual-do-imparavel*.pdf")))
 
     def test_texto_aplicado_pela_b1_e_flag_false(self):
