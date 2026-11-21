@@ -5,23 +5,67 @@ validador aceitava `registrar_resultado` com parâmetros arbitrários e só barr
   - `enviar_mensagem`: só `texto` (string);  `enviar_prompt_notebook`: só `prompt` e `prompt_sha256` (conferidos pelo `notebook_prompt_validator`).
   - `registrar_resultado`, `registrar_exportacao_desempenho` e `registrar_acompanhamento` são RECUSADOS enquanto `personal_results_writes_enabled`
     for falso; sem a flag legível, também (fail-closed).
-  - `ler_arquivo_repositorio`, `criar_lembrete`, `consultar_agenda_minima` e `registrar_plano` AINDA NÃO têm esquema fechado: pendência declarada
-    em `SEM_ESQUEMA_FECHADO` (a forma deles não está especificada com campos); fecham no lote seguinte.
+  - GAP-A2: `ler_arquivo_repositorio` (`caminho` relativo seguro), `consultar_agenda_minima` (`data`), `criar_lembrete` (`atividade_ids` e
+    `lembrete_sha256`, vínculo com o LEMBRETE, GA-4) e `registrar_plano` (`plano` só com as chaves do plano) fecharam: PROPOSTA de forma, a
+    confirmar pelo proprietário (as especificações não fixavam os campos). `registrar_plano` é registro pessoal: recusado com a flag falsa.
 Sem efeito externo: só lê `settings.json`. Não prova que a Zapia use o validador.
 """
 from __future__ import annotations
 
 import json
+import re
+from datetime import date
 from pathlib import Path
+
+try:
+    import command_idempotency
+except ImportError:  # pragma: no cover - importação por pacote
+    from scripts import command_idempotency
 
 ROOT = Path(__file__).resolve().parents[1]
 FLAG = "personal_results_writes_enabled"
-REGISTRO_PESSOAL = ("registrar_resultado", "registrar_exportacao_desempenho", "registrar_acompanhamento")
+REGISTRO_PESSOAL = ("registrar_resultado", "registrar_exportacao_desempenho", "registrar_acompanhamento", "registrar_plano")
 ESQUEMAS = {
     "enviar_mensagem": {"texto": str},
     "enviar_prompt_notebook": {"prompt": str, "prompt_sha256": str},
+    "ler_arquivo_repositorio": {"caminho": str},
+    "consultar_agenda_minima": {"data": str},
+    "criar_lembrete": {"atividade_ids": list, "lembrete_sha256": str},
+    "registrar_plano": {"plano": dict},
 }
-SEM_ESQUEMA_FECHADO = ("ler_arquivo_repositorio", "criar_lembrete", "consultar_agenda_minima", "registrar_plano")
+SEM_ESQUEMA_FECHADO: tuple = ()  # GAP-A2: nenhuma operação fica sem esquema
+CHAVES_DO_PLANO = frozenset({"parameters", "days", "unscheduled_reviews", "topics_not_reached", "note"})
+OBRIGATORIAS_DO_PLANO = frozenset({"parameters", "days"})
+MAX_CAMINHO = 200
+
+
+def _caminho_invalido(caminho: str) -> bool:
+    if not caminho or len(caminho) > MAX_CAMINHO or "\\" in caminho or "\x00" in caminho or caminho.startswith(("/", "~")):
+        return True
+    return any(parte in ("", "..") or parte.startswith(".") for parte in caminho.split("/"))  # sem "..", oculto (.git, .env) nem segmento vazio
+
+
+def _validar_conteudo(operation: str, params: dict) -> str | None:
+    if operation == "ler_arquivo_repositorio" and _caminho_invalido(params["caminho"]):
+        return "PARAMS_CAMINHO_INVALIDO"
+    if operation == "consultar_agenda_minima":
+        dia = params["data"]
+        try:
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", dia):
+                raise ValueError
+            date.fromisoformat(dia)
+        except ValueError:
+            return "PARAMS_DATA_INVALIDA"
+    if operation == "criar_lembrete":
+        if not command_idempotency.lista_de_atividades_valida(params["atividade_ids"]):
+            return "PARAMS_LISTA_INVALIDA"
+        if not command_idempotency.HEX64.fullmatch(params["lembrete_sha256"]):
+            return "PARAMS_HASH_INVALIDO"
+    if operation == "registrar_plano":
+        chaves = set(params["plano"])
+        if not OBRIGATORIAS_DO_PLANO <= chaves <= CHAVES_DO_PLANO:
+            return "PARAMS_PLANO_INVALIDO"
+    return None
 
 
 def flag_resultados_pessoais(root: Path = ROOT):
@@ -71,4 +115,4 @@ def validar_params(operation: str, params) -> str | None:
             return "PARAMS_CAMPO_OBRIGATORIO_AUSENTE"
         if not isinstance(params[campo], tipo):
             return "PARAMS_TIPO_INVALIDO"
-    return None
+    return _validar_conteudo(operation, params)

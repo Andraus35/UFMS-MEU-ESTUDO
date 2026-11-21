@@ -49,10 +49,8 @@ class Ga1EsquemaDeParamsTests(unittest.TestCase):
         self.assertEqual(cps.validar_params("enviar_prompt_notebook", {**ok, "x": 1}), "PARAMS_CAMPO_DESCONHECIDO")
         self.assertEqual(cps.validar_params("enviar_prompt_notebook", {"prompt": "t"}), "PARAMS_CAMPO_OBRIGATORIO_AUSENTE")
 
-    def test_operacoes_sem_esquema_fechado_estao_declaradas_como_pendencia(self):
-        self.assertEqual(set(cps.SEM_ESQUEMA_FECHADO), {"ler_arquivo_repositorio", "criar_lembrete", "consultar_agenda_minima", "registrar_plano"})
-        for op in cps.SEM_ESQUEMA_FECHADO:
-            self.assertIsNone(cps.validar_params(op, {"qualquer": 1}))  # pendência declarada, ainda sem esquema
+    def test_pendencia_de_esquema_fechou_no_gap_a2(self):
+        self.assertEqual(tuple(cps.SEM_ESQUEMA_FECHADO), ())  # as quatro operações restantes fecharam no GAP-A2
 
 
 class Ga2FiltroNoTextoDoComandoTests(unittest.TestCase):

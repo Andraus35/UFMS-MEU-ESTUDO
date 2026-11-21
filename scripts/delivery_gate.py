@@ -26,6 +26,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import agent_commands
+import command_idempotency
+import command_params_schema
 import delivery_receipt_binding
 import notebook_prompt_validator
 from private_persistence_guard import PersistenceBlocked
@@ -49,8 +51,10 @@ CAMPOS_CADERNO = {"atividade_id", "plataforma", "filtros", "assunto", "dificulda
 # S7-R1 e S6: quem pode assinar cada operação de comando
 ORIGEM_DA_OPERACAO = {"registrar_resultado": ("tutor",), "registrar_exportacao_desempenho": ("tutor",), "registrar_plano": ("tutor",),
                       "registrar_acompanhamento": ("coach",), "enviar_mensagem": ("tutor", "coach"),
-                      "ler_arquivo_repositorio": ("tutor", "coach"), "enviar_prompt_notebook": ("tutor",)}
-RISCO_DA_OPERACAO = {"enviar_mensagem": "ROTINA_AUTORIZADA", "ler_arquivo_repositorio": "ORIENTACAO", "enviar_prompt_notebook": "ROTINA_AUTORIZADA"}
+                      "ler_arquivo_repositorio": ("tutor", "coach"), "enviar_prompt_notebook": ("tutor",),
+                      "criar_lembrete": ("coach",), "consultar_agenda_minima": ("coach",)}  # GAP-A2: as duas operações da agenda entram na tabela
+RISCO_DA_OPERACAO = {"enviar_mensagem": "ROTINA_AUTORIZADA", "ler_arquivo_repositorio": "ORIENTACAO", "enviar_prompt_notebook": "ROTINA_AUTORIZADA",
+                     "criar_lembrete": "ROTINA_AUTORIZADA", "consultar_agenda_minima": "ROTINA_AUTORIZADA"}
 
 TIPOS_COM_EFEITO = ("COMANDO", "LEMBRETE", "PROMPT_NOTEBOOK")
 PREFIXOS_DE_ID = ("UFMS", "TEC", "QC", "CAD", "CADERNO")  # prefixos dos ids de atividade do projeto; outro hífen-número (COVID-19) não é id
@@ -214,16 +218,26 @@ def _caderno(est, contexto, motivos, avisos):
         avisos.append("assunto_fora_da_lista_de_topicos")
 
 
+def _ids_do_lembrete(est):
+    """Lista de atividades do LEMBRETE (GA-4): `atividade_ids` (1 a 5, sem repetição) ou a forma antiga `atividade_id`; None se malformado."""
+    if isinstance(est, dict) and set(est) == {"atividade_ids"} and command_idempotency.lista_de_atividades_valida(est["atividade_ids"]):
+        return list(est["atividade_ids"])
+    if isinstance(est, dict) and set(est) == {"atividade_id"} and isinstance(est["atividade_id"], str):
+        return [est["atividade_id"]]
+    return None
+
+
 def _lembrete(est, corpo, contexto, motivos):
     proj = contexto.get("projecao")
     if len(corpo) > MAX_LEMBRETE:
         motivos.append("lembrete_acima_do_limite")
     pend = {i["atividade_id"] for i in proj.get("pendencias", [])} if isinstance(proj, dict) else None
-    if not (isinstance(est, dict) and set(est) == {"atividade_id"} and isinstance(est["atividade_id"], str) and pend is not None and est["atividade_id"] in pend):
+    ids = _ids_do_lembrete(est)
+    if not (ids is not None and pend is not None and set(ids) <= pend):  # toda atividade da lista tem de estar pendente
         motivos.append("lembrete_sem_atividade_pendente")  # S8-R2: só lembra atividade pendente
 
 
-def _comando(est, papel, motivos):
+def _comando(est, papel, contexto, motivos):
     schema = agent_commands.load_schema()
     if papel == "zapia":
         motivos.append("zapia_nao_emite_comando")  # a Zapia só executa o comando válido (S5-R3)
@@ -238,10 +252,25 @@ def _comando(est, papel, motivos):
         motivos.append("papel_nao_pode_emitir_a_operacao")
     if agent_commands._scan_params(est["params"], schema):
         motivos.append("comando_com_parametro_proibido")
+    if command_params_schema.validar_params(op, est["params"]):
+        motivos.append("comando_com_params_fora_do_esquema")  # GA-1: o mesmo esquema fechado do validador
+    elif op == "criar_lembrete":
+        _vinculo_lembrete(est["params"], contexto, motivos)
     texto = est["params"].get("texto")
     if isinstance(texto, str):  # GA-2: o texto livre dos params passa pelos MESMOS filtros do corpo (identificadores e prompt do Notebook têm validação própria)
         _corpo(texto, None, {"paginas": set(), "ids": [], "citou": False, "niveis": set()}, {}, motivos, [])
     return op
+
+
+def _vinculo_lembrete(params, contexto, motivos):
+    """GA-4: o COMANDO `criar_lembrete` referencia o hash de um LEMBRETE já verificado e só lista atividades pendentes."""
+    verificados = contexto.get("lembretes_verificados")
+    if not (isinstance(verificados, (set, frozenset, list, tuple)) and params["lembrete_sha256"] in verificados):
+        motivos.append("comando_sem_vinculo_com_lembrete")
+    proj = contexto.get("projecao")
+    pend = {i["atividade_id"] for i in proj.get("pendencias", [])} if isinstance(proj, dict) else None
+    if pend is None or not set(params["atividade_ids"]) <= pend:
+        motivos.append("comando_lembrete_atividade_nao_pendente")
 
 
 def _prompt_notebook(est, papel, motivos):
@@ -290,7 +319,7 @@ def _verificar(env, contexto):
     elif tipo == "LEMBRETE":
         _lembrete(est, env["corpo"], contexto, motivos)
     elif tipo == "COMANDO":
-        op = _comando(est, papel, motivos)
+        op = _comando(est, papel, contexto, motivos)
     elif tipo == "PROMPT_NOTEBOOK":
         _prompt_notebook(est, papel, motivos)
     elif tipo == "ORIENTACAO" and est is not None:
@@ -342,8 +371,11 @@ def verificar_entrega(envelope, contexto, modo="sombra", agora=None):
         decisao = AVISO
     else:
         decisao = ACEITA
-    return {"decisao": decisao, "modo_efetivo": modo_efetivo, "tipo": tipo, "classe_de_risco": _risco(tipo, op),
-            "motivos": motivos, "avisos": avisos, "gerado_em": agora.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+    resultado = {"decisao": decisao, "modo_efetivo": modo_efetivo, "tipo": tipo, "classe_de_risco": _risco(tipo, op),
+                 "motivos": motivos, "avisos": avisos, "gerado_em": agora.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+    if tipo == "LEMBRETE" and not motivos:  # GA-4: o hash que o COMANDO `criar_lembrete` deve citar (texto e conjunto de atividades)
+        resultado["lembrete_sha256"] = command_idempotency.hash_lembrete(envelope["corpo"], _ids_do_lembrete(envelope.get("estruturado")))
+    return resultado
 
 
 def montar_registro(resultado, envelope):

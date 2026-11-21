@@ -39,7 +39,7 @@ def run(command, ledger=None, now=NOW, flags=None):
 class CommandSchemaTests(unittest.TestCase):
     def test_comando_valido_e_aceito_para_cada_perfil(self):
         self.assertEqual(run(make())["decision"], ac.ACCEPTED)
-        self.assertEqual(run(make("coach", "criar_lembrete", params={"atividade": "revisao-GER-PORT"}))["decision"], ac.ACCEPTED)
+        self.assertEqual(run(make("coach", "criar_lembrete", params={"atividade_ids": ["GER-PORT"], "lembrete_sha256": "a" * 64}, key="rotina-2026-11-08-lembrete2-GER-PORT", nonce="n-0000000000000099"))["decision"], ac.ACCEPTED)
 
     def test_cpf_valido_de_teste_realmente_valido(self):
         self.assertTrue(ac._cpf_valid(VALID_CPF))
@@ -70,7 +70,7 @@ class CommandSchemaTests(unittest.TestCase):
     def test_operacoes_compartilhadas_servem_aos_dois(self):
         for op in SHARED:
             for origin in ("tutor", "coach"):
-                self.assertEqual(run(make(origin, op, params={"texto": "x"} if op == "enviar_mensagem" else {"a": "b"}))["decision"], ac.ACCEPTED, (origin, op))
+                self.assertEqual(run(make(origin, op, params={"texto": "x"} if op == "enviar_mensagem" else {"caminho": "edital/INDEX.md"}))["decision"], ac.ACCEPTED, (origin, op))
 
     def test_destino_nao_designado(self):
         self.assertEqual(run(make(destination="qualquer_pessoa"))["code"], "DESTINO_NAO_DESIGNADO")
