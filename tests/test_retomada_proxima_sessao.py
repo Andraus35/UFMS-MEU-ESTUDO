@@ -20,11 +20,11 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "HOOK3", "RS", "AE", "AM", "RG", "HOOK4"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "HOOK3", "RS", "AE", "AM", "RG", "HOOK4", "S15"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertIsNone(fila["proximo"])  # RS, AE, AM, RG e HOOK4 têm a entrega (21/11/2026): o que resta espera o proprietário (E3, PJ, RT, CM)
+        self.assertIsNone(fila["proximo"])  # RS, AE, AM, RG, HOOK4 e S15 têm a entrega (21/11/2026): o que resta espera o proprietário (E3, PJ, RT, CM)
         self.assertEqual(fila["pendentes"], ["E3", "PJ", "RT", "CM"])
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["E3", "PJ"])
         self.assertIn("agents/", " ".join(fila["bloqueados"][0]["aguarda"]))
