@@ -57,6 +57,19 @@ def _check_resolution(resolution, duplicate):
             "recommendation_id": resolution["recommendation_id"]}
 
 
+def _meta(question_target, availability, count):
+    """GD-2: a META pretendida (do Tutor) é separada da DISPONIBILIDADE (da plataforma); só se compara com disponibilidade confirmada."""
+    confirmado = availability["status"] == "confirmed" and type(count) is int
+    disponivel = count if confirmado else None
+    if question_target is None:
+        status = "sem_meta"
+    elif not confirmado:
+        status = "pretendida_sem_disponibilidade_confirmada"
+    else:
+        status = "dentro_da_disponibilidade" if question_target <= count else "acima_da_disponibilidade"
+    return {"pretendida": question_target, "disponivel": disponivel, "status": status}
+
+
 def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
                        platform, platform_capabilities=None, availability=None,
                        question_target=None, execution_mode="independent",
@@ -193,6 +206,7 @@ def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
         "filters": filters,
         "questions_suggested": suggested_count,
         "question_target_requested": question_target,
+        "meta": _meta(question_target, availability, count),
         "availability_status": availability_status,
         "availability_evidence_ref": availability.get("evidence_ref"),
         "execution_mode": execution_mode,
