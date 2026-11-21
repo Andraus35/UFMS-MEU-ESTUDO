@@ -79,7 +79,8 @@ def motivo():
         "Fim de rodada com entrega: sem esperar indicação, faça agora as perguntas automatizadas da PRÓXIMA rodada com "
         "AskUserQuestion (1 a 4), na sequência: (1) PENDÊNCIAS da entrega (CI, merge, decisões e atos do proprietário que "
         "bloqueiam o começo); (2) ROADMAP: o próximo item RM e o que o bloqueia; (3) FILA: o próximo item de "
-        "state/WORKFLOW.json e as decisões de escopo, insumo e autorização de merge que ele exige. Uma tarefa por vez. Cada "
+        "state/WORKFLOW.json e as decisões de escopo, insumo e autorização de merge que ele exige. Um lote por vez: micro "
+        "tarefas coesas da mesma frente no mesmo PR; se o próximo trabalho for de outra frente, o merge vem antes (AGENTS.md). Cada "
         "pergunta traz a opção recomendada de melhores práticas para o repositório e para o projeto primeiro, marcada "
         "'(Recomendado)', com justificativa; não repita o que já foi respondido. Ao receber as respostas, registre no HANDOFF "
         "(se o fluxo permitir) e comece a próxima rodada dentro do que foi autorizado. " + estado_da_fila()).strip()
