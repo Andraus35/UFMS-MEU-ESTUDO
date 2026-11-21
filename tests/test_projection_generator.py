@@ -67,7 +67,7 @@ def tentativa(topico="GER-LEG", n="1", data="2026-11-10", conjunto="CJ-1"):
 class CaminhoFelizTests(unittest.TestCase):
     def test_historico_vazio_e_e0_sem_itens(self):
         p = gerar([])
-        self.assertEqual(p, {"schema": 1, "gerado_em": "2026-11-20", "niveis": [], "pendencias": [], "revisoes": []})
+        self.assertEqual(p, {"schema": 1, "gerado_em": "2026-11-20T12:00:00Z", "niveis": [], "pendencias": [], "revisoes": []})
         g.check_projection(p)
 
     def test_projecao_na_lista_fechada_com_pendencia_e_revisao(self):

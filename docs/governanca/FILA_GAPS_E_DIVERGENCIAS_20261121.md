@@ -20,8 +20,8 @@
 
 | ID | Gap | Gravidade | Onde | Correção proposta | Origem |
 |---|---|---|---|---|---|
-| GB-1 | A classificação do dia (S15-R16: `DESCANSO`, `SEM_PLANO`, `REVISAO_VENCIDA`, `DEVIDO_HOJE`…) **não existe em código**; o Coach classifica à mão | Média | S15-R16, `scripts/` | Função pura com relógio injetado e testes | Coach |
-| GB-2 | `session_read_guard.py` aceita `gerado_em` só como **data**, mas a S15-R5 exige idade máxima de 24 h (instante UTC): projeção com timestamp é recusada | Média | `scripts/session_read_guard.py` | Aceitar instante UTC ou rever a S15 | Coach |
+| GB-1 | **[feito no GAP-B: `scripts/day_classifier.py`, função pura com relógio injetado e entrada desconhecida que não classifica]** A classificação do dia (S15-R16: `DESCANSO`, `SEM_PLANO`, `REVISAO_VENCIDA`, `DEVIDO_HOJE`…) **não existe em código**; o Coach classifica à mão | Média | S15-R16, `scripts/` | Função pura com relógio injetado e testes | Coach |
+| GB-2 | **[feito no GAP-B: `check_projection` aceita instante UTC (e a data legada), `conferir_idade` aplica 24 h para prazo e 72 h para orientação, o gerador emite instante UTC]** `session_read_guard.py` aceitava `gerado_em` só como **data**, mas a S15-R5 exige idade máxima de 24 h (instante UTC): projeção com timestamp é recusada | Média | `scripts/session_read_guard.py` | Aceitar instante UTC ou rever a S15 | Coach |
 
 ## GAP-C (GC) — START e documentos (entrega: `scripts/study_summary.py`)
 

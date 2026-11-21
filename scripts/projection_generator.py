@@ -12,7 +12,7 @@ Ordem (qualquer falha bloqueia com `PersistenceBlocked`, sem devolver nada parci
 
 Limites: o nível é a qualidade da INFORMAÇÃO (E0 a E4), nunca domínio nem chance de aprovação; o nível de cada tópico é derivado só
 das tentativas daquele tópico (tópico sem tentativa fica fora da lista = E0). Os vencimentos de revisão são os já gravados nos
-eventos (padrão 7, 15 e 30 dias, PRODUCT D-11) e saem em data UTC; o gerador NÃO os calcula. `gerado_em` também é a data UTC.
+eventos (padrão 7, 15 e 30 dias, PRODUCT D-11) e saem em data UTC; o gerador NÃO os calcula. `gerado_em` agora é o INSTANTE UTC (GB-2).
 Registro real com envelope ausente ou malformado conta como sintético e SAI da projeção (fail-closed de `descartar_sinteticos`):
 a projeção pode subestimar, nunca inventar. `core.rebuild` guarda só os 10 últimos cadernos pendentes. Nada aqui liga a leitura por
 sessão: isso é a C6.
@@ -57,6 +57,11 @@ def _nivel_do_topico(eventos, topico):
     return derive_evidence_level(recorte)["level"]
 
 
+def formatar_gerado_em(agora) -> str:
+    """Instante UTC (AAAA-MM-DDTHH:MM:SSZ): a idade da projeção é medida em horas (S15-R5, GB-2)."""
+    return agora.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def gerar_projecao(registros, topicos, consentimento, agora=None):
     """Projeção fechada a partir de `registros` ({"evento", "envelope"}); levanta PersistenceBlocked ao menor problema."""
     agora = agora or datetime.now(timezone.utc)
@@ -72,7 +77,7 @@ def gerar_projecao(registros, topicos, consentimento, agora=None):
     nome = {t["topic_id"]: t["titulo"] for t in topicos}
     projecao = {
         "schema": 1,
-        "gerado_em": agora.astimezone(timezone.utc).strftime("%Y-%m-%d"),
+        "gerado_em": formatar_gerado_em(agora),
         "niveis": [{"topico": nome[l["topic_id"]], "nivel": _nivel_do_topico(eventos, l["topic_id"])} for l in linhas if l["attempted"] > 0],
         "pendencias": [{"atividade_id": cid, "tipo": "caderno"} for cid in atual["pending_cadernos"]],
         "revisoes": [{"topico": nome[t], "vence_em": due} for due, t in sorted((_data_utc(d), t) for t, d in atual["pending_reviews"].items())],

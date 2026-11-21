@@ -13,7 +13,7 @@ O que confere:
 """
 import hashlib
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from private_persistence_guard import CONSENT_SCOPE, PersistenceBlocked
 
@@ -27,6 +27,8 @@ TIPOS_PENDENCIA = {"caderno", "revisao", "simulado"}
 _ID = re.compile(r"^[A-Za-z0-9._-]{1,64}$")
 _TOPICO = re.compile(r"^[\wÀ-ÿ .,;:()/-]{1,120}$")
 _DATA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_INSTANTE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+LIMITE_PRAZO_H, LIMITE_ORIENTACAO_H = 24, 72  # S15-R5, propostas ajustáveis pelo proprietário
 _PROIBIDO = re.compile(r"@|https?:|www\.|\bgithub_pat_|\bghp_|\bsk-|cookie|senha|token|\bcpf\b|enunciado|alternativa|gabarito", re.I)
 MAX_ITENS = 500
 
@@ -70,6 +72,56 @@ def _texto_seguro(valor, rotulo):
     return valor
 
 
+def _tipo_gerado_em(valor):
+    """"instante" (AAAA-MM-DDTHH:MM:SSZ real), "data" (AAAA-MM-DD real) ou None."""
+    if not isinstance(valor, str):
+        return None
+    try:
+        if _INSTANTE.fullmatch(valor):
+            datetime.strptime(valor, "%Y-%m-%dT%H:%M:%SZ")
+            return "instante"
+        if _DATA.fullmatch(valor):
+            datetime.strptime(valor, "%Y-%m-%d")
+            return "data"
+    except ValueError:
+        return None
+    return None
+
+
+def conferir_idade(proj, agora_utc, uso, *, limite_prazo_h=LIMITE_PRAZO_H, limite_orientacao_h=LIMITE_ORIENTACAO_H):
+    """Idade da projeção (S15-R5), com relógio injetado. `uso` "prazo": recusa acima do limite (padrão 24 h) e recusa data sem hora;
+    "orientacao": avisa acima de 72 h, nunca recusa por idade. Sem `gerado_em` ou no futuro: recusa nos dois usos. Devolve
+    {"decisao": OK|AVISO|RECUSA, "codigo", "horas"}."""
+    def r(decisao, codigo=None, horas=None):
+        return {"decisao": decisao, "codigo": codigo, "horas": horas}
+
+    if not isinstance(agora_utc, datetime) or agora_utc.tzinfo is None:
+        return r("RECUSA", "RELOGIO_AUSENTE")
+    if uso not in ("prazo", "orientacao"):
+        return r("RECUSA", "USO_DESCONHECIDO")
+    valor = proj.get("gerado_em") if isinstance(proj, dict) else None
+    tipo = _tipo_gerado_em(valor)
+    if tipo is None:
+        return r("RECUSA", "PROJECAO_SEM_GERADO_EM")
+    agora = agora_utc.astimezone(timezone.utc)
+    if tipo == "data":
+        if uso == "prazo":
+            return r("RECUSA", "PROJECAO_SEM_INSTANTE")  # só a data: não dá para provar 24 h
+        gerado = datetime.strptime(valor, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        if gerado.date() > agora.date():
+            return r("RECUSA", "PROJECAO_NO_FUTURO")
+        horas = (agora - gerado - timedelta(hours=24)).total_seconds() / 3600  # a data vale até o fim do dia: idade mínima possível
+        horas = max(horas, 0.0)
+    else:
+        gerado = datetime.strptime(valor, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        if gerado > agora:
+            return r("RECUSA", "PROJECAO_NO_FUTURO")
+        horas = (agora - gerado).total_seconds() / 3600
+    if uso == "prazo":
+        return r("RECUSA", "PROJECAO_VELHA_PARA_PRAZO", horas) if horas > limite_prazo_h else r("OK", None, horas)
+    return r("AVISO", "PROJECAO_DEFASADA", horas) if horas > limite_orientacao_h else r("OK", None, horas)
+
+
 def check_projection(proj):
     """A projeção segue a lista fechada e nunca traz texto de questão, identificador de conta, URL ou segredo."""
     if not isinstance(proj, dict):
@@ -79,7 +131,7 @@ def check_projection(proj):
         raise PersistenceBlocked("PROJECAO: campo desconhecido no topo (" + ",".join(sorted(map(str, extra))) + ")")
     if proj.get("schema") != 1:
         raise PersistenceBlocked("PROJECAO: schema inválido")
-    if not isinstance(proj.get("gerado_em"), str) or not _DATA.fullmatch(proj["gerado_em"]):
+    if _tipo_gerado_em(proj.get("gerado_em")) is None:  # data (legado) ou instante UTC (GB-2, S15-R5)
         raise PersistenceBlocked("PROJECAO: gerado_em inválido")
     for secao, campos in ITENS.items():
         itens = proj.get(secao, [])
