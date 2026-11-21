@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_gap_a2_comandos_idempotencia_lembrete_e_esquemas_de_params",
+    "scope": "lote_gap_b_classificacao_do_dia_e_gerado_em_utc",
     "branch": "ccr-f6ba5d34-22tgo5",
-    "pr_number": 171,
+    "pr_number": 172,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #169 integrado em main no merge commit 4739648479962941d223c2013facdffc140871b8. Frente única ativa: RM-09 (lote_gap_a2_comandos_idempotencia_lembrete_e_esquemas_de_params), branch ccr-f6ba5d34-22tgo5, PR #171. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #171 integrado em main no merge commit 5091063b85be5dfeec9b4502508fa6b7c9dfaf17. Frente única ativa: RM-09 (lote_gap_b_classificacao_do_dia_e_gerado_em_utc), branch ccr-f6ba5d34-22tgo5, PR #172. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
-    "task_id": "RM-00",
-    "pr_number": 169,
-    "merge_commit_sha": "4739648479962941d223c2013facdffc140871b8"
+    "task_id": "RM-09",
+    "pr_number": 171,
+    "merge_commit_sha": "5091063b85be5dfeec9b4502508fa6b7c9dfaf17"
   },
   "work_queue": [
     {
