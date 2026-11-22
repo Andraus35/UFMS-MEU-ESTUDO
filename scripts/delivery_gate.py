@@ -29,6 +29,7 @@ import agent_commands
 import command_idempotency
 import command_params_schema
 import delivery_receipt_binding
+import gates_mot
 import notebook_prompt_validator
 from private_persistence_guard import PersistenceBlocked
 from session_read_guard import check_projection, conferir_idade
@@ -61,8 +62,11 @@ FORMATO_PROMPT = ("prompt", "prompt_sha256")  # AT-2: formato ÚNICO do que a Za
 PREFIXOS_DE_ID = ("UFMS", "TEC", "QC", "CAD", "CADERNO")  # prefixos dos ids de atividade do projeto; outro hífen-número (COVID-19) não é id
 _URL = re.compile(r"https?://|\bwww\.", re.I)
 _QUESTAO = re.compile(r"enunciado\s*:|enunciado\s+d[aeo]s?\s+quest|gabarito\s+(?:é|e|oficial|da)\b|alternativa\s+[a-e]\s+(?:é|e|est[áa]|correta|incorreta)\b", re.I)
-_DISPONIB = re.compile(r"dispon[ií]ve(?:l|is)|\bh[áa]\s+\d+\s+quest|\bexistem?\s+\d+\s+quest", re.I)
-_PERCENTUAL = re.compile(r"\d+(?:[.,]\d+)?\s*%")
+_DISPONIB = re.compile(r"dispon[ií]ve(?:l|is)|\bh[áa]\s+\d+\s+quest|\bexistem?\s+\d+\s+quest"
+                       r"|\b(?:h[áa]|existem?|temos|tem)\s+(?:\w+\s+){0,2}?(?:cadernos?|quest(?:[õo]es|[ãa]o))\s+(?:prontos?|suficientes?|dispon\w+|de sobra)\b", re.I)  # AC-7
+# AC-7: também "40٪", "quarenta por cento", "taxa de 0.4", "12 de 20 acertos" e "12/20" (fração fora de data: o segundo número passa de 12)
+_PERCENTUAL = re.compile(r"\d+(?:[.,]\d+)?\s*[%٪％]|\bpor\s+cento\b|\b(?:taxa|aproveitamento|índice|indice)\s+de\s+\d*[.,]?\d+\b"
+                         r"|\b\d+\s+de\s+\d+\s*(?:acertos?|erros?|quest(?:[õo]es|[ãa]o))\b|(?<![\d/])(?:[0-9]|[1-9]\d{1,2})/(?:1[3-9]|[2-9]\d|\d{3})(?![\d/])", re.I)
 _DESEMPENHO = re.compile(r"\b(?:acertou|errou|acertos?|erros?|nota)\b\D{0,12}\d+", re.I)
 # contagem ANTES da palavra, atribuída ao aluno por marcador na mesma frase ("você teve 12 acertos"); sem marcador ("os 3 erros comuns") não casa
 _DESEMPENHO_ATRIBUIDO = re.compile(r"\b(?:voc[êe]|seu|sua|seus|suas|teve|tive|fez|obteve|tem)\b[^.!?\n]{0,40}?\b\d+\s*(?:acertos?|erros?|pontos?)\b", re.I)
@@ -176,6 +180,8 @@ def _corpo(corpo, estruturado, declarado, contexto, motivos, avisos):
         motivos.append("disponibilidade_de_questoes_afirmada")
     if _PERCENTUAL.search(corpo) or _DESEMPENHO.search(corpo) or _DESEMPENHO_ATRIBUIDO.search(corpo):
         motivos.append("dado_de_desempenho_nao_verificavel")  # a projeção fechada não traz desempenho: nada o confirma
+    if any(f["gate"] != "FORMA" for f in gates_mot.verificar_mensagem(corpo)["falhas"]):
+        motivos.append("frase_proibida_gmot")  # AC-5: os gates lexicais G-MOT agora valem na entrega (heurística; não pega toda paráfrase)
     for pagina in _PAGINA.findall(corpo):
         if int(pagina) not in declarado["paginas"]:
             motivos.append("pagina_citada_sem_alegacao")
@@ -265,6 +271,8 @@ def _comando(est, papel, contexto, motivos):
     elif op == "enviar_prompt_notebook" and not notebook_prompt_validator.conferir_parametros(est["params"]).ok:
         motivos.append("comando_prompt_notebook_invalido")  # AT-1: o mesmo hash, forma canônica e filtros do validador e da caixa
     texto = est["params"].get("texto")
+    if isinstance(texto, str) and len(texto) > MAX_LEMBRETE:
+        motivos.append("mensagem_acima_do_limite")  # AC-7: o mesmo teto de 500 caracteres do LEMBRETE
     if isinstance(texto, str):  # GA-2: o texto livre dos params passa pelos MESMOS filtros do corpo (identificadores e prompt do Notebook têm validação própria)
         _corpo(texto, None, {"paginas": set(), "ids": [], "citou": False, "niveis": set()}, {}, motivos, [])
     return op
