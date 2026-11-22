@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_ZAPIA-F1b_sonda_provada_e_teste_f1_entrega",
-    "branch": "ccr-9c6a8507-2f8tri",
-    "pr_number": 184,
+    "scope": "lote_ZAPIA-F2a_rotina_de_teste_da_zapia_S20-R6",
+    "branch": "ccr-ae23a584-dzxoku",
+    "pr_number": 185,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #183 integrado em main no merge commit 62053944c8dac7dd1d91415368a28f0d368bfeec. Frente única ativa: RM-09 (lote_ZAPIA-F1b_sonda_provada_e_teste_f1_entrega), branch ccr-9c6a8507-2f8tri, PR #184. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #184 integrado em main no merge commit 73c0978c1f5a97cfdedf892f762a8b1f6f7f1fa3. Frente única ativa: RM-09 (lote_ZAPIA-F2a_rotina_de_teste_da_zapia_S20-R6), branch ccr-ae23a584-dzxoku, PR #185. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 183,
-    "merge_commit_sha": "62053944c8dac7dd1d91415368a28f0d368bfeec"
+    "pr_number": 184,
+    "merge_commit_sha": "73c0978c1f5a97cfdedf892f762a8b1f6f7f1fa3"
   },
   "work_queue": [
     {
@@ -1066,6 +1066,19 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "ZAPIA-F2a",
+      "title": "Rotina de teste da Zapia, execução única (S20-R6, S15-R4, S8-R8; pedido do proprietário de 22/11/2026, depois do F1 provado): roteiro com a frase AUTORIZO já dada, instrução da rotina que lê comandos/validados e recibos e entrega pela regra do F1, teste sem efeito antes, e verificador offline do carimbo de disparo (hora agendada x hora da entrega, teto de 2 por dia, sem reenvio em laço); o item só conta como feito quando existir o registro da prova real do disparo (E23), depois do roteiro; não prova pontualidade em 3 dias nem notificação espontânea além do disparo único; a promoção pelo fluxo (flag e PJ) fica fora",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E23_ZAPIA_ROTINA_TESTE_PROVA_REAL.md",
+      "depends_on": [
+        "ZAPIA-F1"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "captura do disparo da rotina e do relato do proprietário"
+      ]
     }
   ],
   "owner_priorities": [
