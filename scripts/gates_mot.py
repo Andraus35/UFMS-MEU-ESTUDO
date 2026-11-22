@@ -16,6 +16,11 @@ import re
 import unicodedata
 from datetime import date
 
+try:
+    import content_filters
+except ModuleNotFoundError:  # uso como pacote
+    from scripts import content_filters
+
 TIPOS = frozenset({"motivacao", "conhecimento", "recuperacao", "capacidade", "oportunidade", "custo", "bem_estar"})
 INCERTEZAS = frozenset({"baixa", "media", "alta"})
 ORIGENS = frozenset({"estudante", "harness", "ia"})
@@ -40,23 +45,24 @@ def _norm(texto: str) -> str:
 
 _LEXICAIS = {
     "G-MOT-04": (r"\bescala (?:psicometrica )?validada\b", r"\bdiagnostico psicologico\b", r"\bteste psicologico\b"),
-    "G-MOT-05": (r"\bvoce e (?:uma pessoa |do tipo |um tipo )?(?:preguicos\w*|fraco|fraca|desorganizad\w*|procrastinador\w*|indisciplinad\w*|incapaz)\b",
+    "G-MOT-05": (r"\bvoce e (?:uma pessoa |do tipo |um tipo |um |uma )?(?:preguicos\w*|fraco|fraca|desorganizad\w*|procrastinador\w*|indisciplinad\w*|incapaz)\b",
                  r"\bseu perfil e (?:preguicos\w*|fraco|desorganizad\w*|procrastinador\w*)\b"),
     "G-MOT-08": (r"\b(?:tenha|ter) vergonha\b", r"\be uma vergonha\b", r"\bvoce nao tem escolha\b", r"\bvoce e obrigad[oa] a\b"),
     "G-MOT-09": (r"\bvai (?:fracassar|reprovar|perder tudo)\b", r"\bvoce vai se arrepender\b", r"\boutros candidatos estao estudando mais\b"),
     "G-MOT-10": (r"\bcompense\w* (?:todas|todo|integralmente|tudo)\b", r"\brecupere (?:todas as|todo o) horas?\b", r"\bdivida de (?:horas|estudo)\b"),
     "G-MOT-11": (r"\bdurma menos\b", r"\bpule (?:o |a )?(?:almoco|refeicao|refeicoes|jantar)\b", r"\bcorte (?:o )?sono\b",
-                 r"\b(?:abandone|pare) (?:o )?(?:tratamento|medicacao|exercicio)\b"),
+                 r"\b(?:abandone|pare|interrompa|suspenda|largue|deixe de tomar) (?:de tomar )?(?:o |a |os |as |seu |sua |seus |suas )?(?:tratamento|medicacao|remedios?|exercicio)\b"),
     "G-MOT-12": (r"\blargue (?:o )?emprego\b", r"\bpeca demissao\b", r"\babandone (?:os |seus )?(?:filhos|dependentes)\b"),
-    "G-MOT-15": (r"\bvoce (?:tem|esta com|sofre de|apresenta) (?:ansiedade|depressao|burnout|transtorno\w*)\b",
+    "G-MOT-15": (r"\bvoce (?:tem|esta com|sofre de|apresenta) (?:ansiedade|depressao|burnout|transtorno\w*|tdah|toc|bipolaridade|autismo|panico|fobia)\b",
                  r"\bdiagnostico de (?:ansiedade|depressao|burnout)\b", r"\bseu quadro e de (?:ansiedade|depressao|burnout)\b"),
     "G-MOT-16": (r"\bso eu (?:te )?entendo\b", r"\bnao precisa de (?:mais )?ninguem\b", r"\bfale so comigo\b"),
     "G-MOT-21": (r"\bgarant\w+ (?:sua |a )?(?:aprovacao|nomeacao)\b", r"\bvoce (?:vai|ira|sera) (?:passar|(?:ser )?aprovad\w+|(?:ser )?nomead\w+)\b",
-                 r"\baprovacao (?:esta|e) garantida\b"),
+                 r"\baprovacao (?:esta |e |ja e |fica )?garantida\b", r"\bgaranto que voce\b", r"\bgarantia de (?:aprovacao|nomeacao)\b"),
 }
 LEXICAIS = tuple(sorted(_LEXICAIS))
 _COMPILADOS = {g: tuple(re.compile(p) for p in ps) for g, ps in _LEXICAIS.items()}
-_NEGACAO = re.compile(r"\b(?:nao|nunca|jamais)\b[^.,;:!?]{0,15}$")
+# AC-5: negação ou ressalva na mesma oração, janela de 40 caracteres ("não quero que você durma menos", "ninguém pode garantir aprovação")
+_NEGACAO = re.compile(r"\b(?:nao|nunca|jamais|ninguem|nenhum|nenhuma|sem)\b[^.,;:!?]{0,40}$")
 
 
 def cobertura() -> dict:
@@ -119,7 +125,12 @@ def verificar_intervencao(i) -> dict:
         falha("G-MOT-02", "MOTIVACAO_SEM_DESCARTAR_CAPACIDADE_E_OPORTUNIDADE")
     if not (_texto_ok(iv.get("comportamento_alvo")) and _texto_ok(iv.get("indicador"))):
         falha("G-MOT-06", "INTERVENCAO_SEM_ALVO_OU_INDICADOR")
+    elif not verificar_mensagem(iv["comportamento_alvo"] + ". " + iv["indicador"])["ok"] or content_filters.tem_url(iv["comportamento_alvo"] + " " + iv["indicador"]) \
+            or content_filters.instrucao_embutida(iv["comportamento_alvo"] + " " + iv["indicador"]):
+        falha("G-MOT-06", "ALVO_OU_INDICADOR_COM_CONTEUDO_PROIBIDO")  # AC-6: o alvo não é texto livre sem filtro
     base_ef = ef.get("base")
+    if type(ef.get("declarada")) is not bool:
+        falha("G-MOT-07", "EFICACIA_DECLARADA_NAO_BOOLEANA")  # AC-6: "true" em texto não pode passar como "sem eficácia declarada"
     if ef.get("declarada") is True:
         if not (isinstance(base_ef, list) and all(b in BASES for b in base_ef)) or not (set(base_ef) - BASES_FRACAS - {"resultado_de_ia"}):
             falha("G-MOT-07", "EFICACIA_SEM_BASE_ALEM_DE_SATISFACAO_RELATO_OU_ANTES_DEPOIS")
@@ -127,9 +138,13 @@ def verificar_intervencao(i) -> dict:
             falha("G-MOT-18", "RESULTADO_DE_IA_COMO_EVIDENCIA_DE_APRENDIZAGEM")
     if h["tipo"] in ("conhecimento", "recuperacao") and i["encaminhado_ao_tutor"] is not True:
         falha("G-MOT-13", "LACUNA_DE_CONHECIMENTO_NAO_ENCAMINHADA_AO_TUTOR")
-    if so.get("intenso_ou_persistente") is True and so.get("encaminhado") is not True:
+    if type(so.get("intenso_ou_persistente")) is not bool:
+        falha("G-MOT-14", "SOFRIMENTO_CAMPO_NAO_BOOLEANO")  # AC-6: tipo errado ("sim") não pode passar como "sem sofrimento"
+    elif so["intenso_ou_persistente"] and so.get("encaminhado") is not True:
         falha("G-MOT-14", "SOFRIMENTO_SEM_ENCAMINHAMENTO_HUMANO")
-    if ap.get("usado") is True and ap.get("consentimento") is not True:
+    if type(ap.get("usado")) is not bool:
+        falha("G-MOT-17", "APOIO_SOCIAL_CAMPO_NAO_BOOLEANO")
+    elif ap["usado"] and ap.get("consentimento") is not True:
         falha("G-MOT-17", "APOIO_SOCIAL_SEM_CONSENTIMENTO")
     tentativas = iv.get("tentativas_sem_efeito")
     if type(tentativas) is not int or tentativas < 0 or (tentativas >= TENTATIVAS_PARA_REVISAO and iv.get("revisada") is not True):
