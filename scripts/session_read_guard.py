@@ -110,8 +110,7 @@ def conferir_idade(proj, agora_utc, uso, *, limite_prazo_h=LIMITE_PRAZO_H, limit
         gerado = datetime.strptime(valor, "%Y-%m-%d").replace(tzinfo=timezone.utc)
         if gerado.date() > agora.date():
             return r("RECUSA", "PROJECAO_NO_FUTURO")
-        horas = (agora - gerado - timedelta(hours=24)).total_seconds() / 3600  # a data vale até o fim do dia: idade mínima possível
-        horas = max(horas, 0.0)
+        horas = (agora - gerado).total_seconds() / 3600  # COR-E, AC-9: só a data, vale a idade MÁXIMA possível (desde 00:00 UTC), nunca a mínima
     else:
         gerado = datetime.strptime(valor, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
         if gerado > agora:
