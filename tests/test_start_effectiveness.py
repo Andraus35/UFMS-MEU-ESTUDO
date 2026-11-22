@@ -14,7 +14,7 @@ from bootstrap import run
 BASIC = ("AGENTS.md", "ROADMAP.md", "memory/HANDOFF.md", "state/CURRENT.json")
 ENGINEERING = ("AGENTS.md", "ROADMAP.md", "PRODUCT.md", "memory/HANDOFF.md", "state/CURRENT.json", "state/WORKFLOW.json")
 FIXTURES = ENGINEERING + ("settings.json", "config/concursos.json",
-                         "hooks/before_write.py", "hooks/after_write.py", "hooks/checkpoint.py")
+                         "hooks/before_write.py", "hooks/after_write.py", "hooks/checkpoint.py", "docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md")
 
 
 class StartEffectivenessTests(unittest.TestCase):

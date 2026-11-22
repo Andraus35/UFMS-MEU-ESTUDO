@@ -142,7 +142,7 @@ class StartDeEngenhariaTests(unittest.TestCase):
         temp = tempfile.TemporaryDirectory()
         root = Path(temp.name)
         for rel in ENGINEERING_FILES + ("settings.json", "config/concursos.json", "hooks/before_write.py",
-                                         "hooks/after_write.py", "hooks/checkpoint.py"):
+                                         "hooks/after_write.py", "hooks/checkpoint.py", "docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md"):
             target = root / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / rel, target)
