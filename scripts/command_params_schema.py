@@ -40,6 +40,16 @@ OBRIGATORIAS_DO_PLANO = frozenset({"parameters", "days"})
 MAX_CAMINHO = 200
 
 
+# COR-E, AT-8 (PROPOSTA a confirmar pelo proprietário): lista de permissão do que o Tutor e o Coach podem pedir para ler no repositório público.
+# Fora dela (state/, scripts/, .github/, .claude/, settings.json, tests/): recusado, mesmo que o caminho seja seguro.
+PREFIXOS_PERMITIDOS = ("edital/", "docs/", "config/", "rules/", "agents/")
+ARQUIVOS_PERMITIDOS = frozenset({"AGENTS.md", "ROADMAP.md", "PRODUCT.md", "README.md", "memory/HANDOFF.md"})
+
+
+def _caminho_fora_da_lista(caminho: str) -> bool:
+    return caminho not in ARQUIVOS_PERMITIDOS and not caminho.startswith(PREFIXOS_PERMITIDOS)
+
+
 def _caminho_invalido(caminho: str) -> bool:
     if not caminho or len(caminho) > MAX_CAMINHO or "\\" in caminho or "\x00" in caminho or caminho.startswith(("/", "~")):
         return True
@@ -54,6 +64,8 @@ def _validar_conteudo(operation: str, params: dict) -> str | None:
             return "PARAMS_INSTRUCAO_EMBUTIDA"
     if operation == "ler_arquivo_repositorio" and _caminho_invalido(params["caminho"]):
         return "PARAMS_CAMINHO_INVALIDO"
+    if operation == "ler_arquivo_repositorio" and _caminho_fora_da_lista(params["caminho"]):
+        return "PARAMS_CAMINHO_FORA_DA_LISTA"
     if operation == "consultar_agenda_minima":
         dia = params["data"]
         try:

@@ -31,8 +31,10 @@ def normalizar_pagina(texto: str) -> str:
     return re.sub(r"\s+", " ", unicodedata.normalize("NFC", texto)).strip()
 
 
-def hash_pagina(texto: str) -> str:
-    return hashlib.sha256(normalizar_pagina(texto).encode("utf-8")).hexdigest()
+def hash_pagina(texto: str, pagina: int) -> str:
+    """COR-E, AC-9: o hash leva o NÚMERO da página (`<n>\\n<texto normalizado>`): duas páginas de texto idêntico (folha em branco, repetição)
+    não compartilham hash, então uma não vale pela outra."""
+    return hashlib.sha256(f"{pagina}\n{normalizar_pagina(texto)}".encode("utf-8")).hexdigest()
 
 
 def _inteiro(v) -> bool:
@@ -43,7 +45,7 @@ def montar_manifesto(textos: dict, fonte: str, edicao: str) -> dict:
     """Roda no ambiente PRIVADO, onde está o texto. `textos`: {página: texto}, páginas de 1 a N sem lacuna. O manifesto NÃO leva texto."""
     if not isinstance(textos, dict) or not textos or not all(_inteiro(p) and isinstance(t, str) for p, t in textos.items()):
         raise ValueError("textos deve ser {pagina:int, texto:str} não vazio")
-    paginas = [{"pagina": p, "sha256": hash_pagina(textos[p]), "palavras": len(normalizar_pagina(textos[p]).split())} for p in sorted(textos)]
+    paginas = [{"pagina": p, "sha256": hash_pagina(textos[p], p), "palavras": len(normalizar_pagina(textos[p]).split())} for p in sorted(textos)]
     return {"fonte": fonte, "edicao": edicao, "total_paginas": len(paginas), "paginas": paginas}
 
 
@@ -121,7 +123,7 @@ def prova_de_leitura(m, abertas, exigidas) -> dict:
             r["fora_do_manifesto"].append(p)
         elif p not in abertas or not isinstance(abertas[p], str):
             r["faltando"].append(p)
-        elif hash_pagina(abertas[p]) != paginas[p]["sha256"]:
+        elif hash_pagina(abertas[p], p) != paginas[p]["sha256"]:
             r["divergentes"].append(p)  # truncada, alterada ou de outra edição
     r["ok"] = not (r["faltando"] or r["divergentes"] or r["fora_do_manifesto"])
     return r
@@ -137,6 +139,12 @@ def _palavras(texto: str) -> list[str]:
     return normalizar_pagina(texto).split()
 
 
+def _sequencia_de_palavras(citacao: str, pagina: str) -> bool:
+    """COR-E, AC-9: a citação é uma sequência CONTÍGUA de PALAVRAS INTEIRAS da página (pontuação não conta; fragmento no meio de palavra não casa)."""
+    c, p = re.findall(r"\w+", citacao), re.findall(r"\w+", pagina)
+    return bool(c) and any(p[i:i + len(c)] == c for i in range(len(p) - len(c) + 1))
+
+
 def conferir_citacao(m, pagina, texto_da_pagina, citacao) -> dict:
     """Citação de 2 a 25 palavras, literal na página aberta, com a página conferida pelo hash do manifesto."""
     def r(ok, codigo=None):
@@ -147,7 +155,7 @@ def conferir_citacao(m, pagina, texto_da_pagina, citacao) -> dict:
     item = _por_numero(m).get(pagina) if _inteiro(pagina) else None
     if item is None:
         return r(False, "PAGINA_FORA_DO_MANIFESTO")
-    if not isinstance(texto_da_pagina, str) or hash_pagina(texto_da_pagina) != item["sha256"]:
+    if not isinstance(texto_da_pagina, str) or hash_pagina(texto_da_pagina, pagina) != item["sha256"]:
         return r(False, "PAGINA_DIVERGE_DO_MANIFESTO")
     if not isinstance(citacao, str) or not citacao.strip():
         return r(False, "CITACAO_VAZIA")
@@ -156,6 +164,6 @@ def conferir_citacao(m, pagina, texto_da_pagina, citacao) -> dict:
         return r(False, "CITACAO_ACIMA_DE_25_PALAVRAS")
     if n < MIN_PALAVRAS_CITACAO:
         return r(False, "CITACAO_CURTA_DEMAIS")
-    if normalizar_pagina(citacao) not in normalizar_pagina(texto_da_pagina):
+    if not _sequencia_de_palavras(citacao, texto_da_pagina):
         return r(False, "CITACAO_FORA_DA_PAGINA")
     return r(True)
