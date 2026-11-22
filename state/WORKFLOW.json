@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_COR-D_gates_MOT_na_entrega_e_desempenho",
+    "scope": "lote_ZAPIA-F1_ligacao_tutor_coach_zapia_offline",
     "branch": "ccr-9c6a8507-2f8tri",
-    "pr_number": 181,
+    "pr_number": 182,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #180 integrado em main no merge commit 5b0525f965939b075e3699d7597586df300edbf8. Frente única ativa: RM-09 (lote_COR-D_gates_MOT_na_entrega_e_desempenho), branch ccr-9c6a8507-2f8tri, PR #181. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #181 integrado em main no merge commit c70ab4032edfe3129597f450be5a5005b6c66656. Frente única ativa: RM-09 (lote_ZAPIA-F1_ligacao_tutor_coach_zapia_offline), branch ccr-9c6a8507-2f8tri, PR #182. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 180,
-    "merge_commit_sha": "5b0525f965939b075e3699d7597586df300edbf8"
+    "pr_number": 181,
+    "merge_commit_sha": "c70ab4032edfe3129597f450be5a5005b6c66656"
   },
   "work_queue": [
     {
@@ -1042,6 +1042,19 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "ZAPIA-F1",
+      "title": "Ligação do Tutor e do Coach à Zapia, F0/F1 offline (pedido do proprietário de 22/11/2026: automatizada, notificação na Zapia em nome dos agentes, sem passar à COR-E enquanto não estiver garantida, testada e validada); decisões D1 conector de GitHub a pedir, D2 rotina da Zapia, D3 fluxo do repositório privado; scripts/zapia_entrega.py (regra do lado da Zapia como código testável, recibo de volta, verificador) com teste ponta a ponta simulado e mutações, e o roteiro da prova real; NÃO prova a Zapia real: depende do conector (D1 não confirmado), da frase AUTORIZO e da janela PJ; o item só conta como feito quando existir o registro da prova real (E21), escrito depois do roteiro docs/governanca/ROTEIRO_ZAPIA_IDA_F1_20261122.md; a parte offline está em docs/governanca/E20_ZAPIA_ENTREGA_F1.md; a COR-E fica atrás deste item por decisão do proprietário",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E21_ZAPIA_F1_PROVA_REAL.md",
+      "depends_on": [
+        "COR-D"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "resposta da Zapia sobre o conector de GitHub (passo 1 do roteiro)"
+      ]
     },
     {
       "id": "COR-E",
