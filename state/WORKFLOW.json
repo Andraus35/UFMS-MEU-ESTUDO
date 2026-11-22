@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_COR-C_filtros_de_conteudo",
+    "scope": "lote_COR-D_gates_MOT_na_entrega_e_desempenho",
     "branch": "ccr-9c6a8507-2f8tri",
-    "pr_number": 180,
+    "pr_number": 181,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #179 integrado em main no merge commit cd3c298ad1dcd5f6a7c6ff7aa0f104cff1843d64. Frente única ativa: RM-09 (lote_COR-C_filtros_de_conteudo), branch ccr-9c6a8507-2f8tri, PR #180. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #180 integrado em main no merge commit 5b0525f965939b075e3699d7597586df300edbf8. Frente única ativa: RM-09 (lote_COR-D_gates_MOT_na_entrega_e_desempenho), branch ccr-9c6a8507-2f8tri, PR #181. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 179,
-    "merge_commit_sha": "cd3c298ad1dcd5f6a7c6ff7aa0f104cff1843d64"
+    "pr_number": 180,
+    "merge_commit_sha": "5b0525f965939b075e3699d7597586df300edbf8"
   },
   "work_queue": [
     {
