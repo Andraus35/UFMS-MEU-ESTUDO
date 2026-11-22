@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_COR-D_gates_MOT_na_entrega_e_desempenho",
+    "scope": "lote_ZAPIA-F1_ligacao_tutor_coach_zapia_offline",
     "branch": "ccr-9c6a8507-2f8tri",
-    "pr_number": 181,
+    "pr_number": 182,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #180 integrado em main no merge commit 5b0525f965939b075e3699d7597586df300edbf8. Frente única ativa: RM-09 (lote_COR-D_gates_MOT_na_entrega_e_desempenho), branch ccr-9c6a8507-2f8tri, PR #181. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #181 integrado em main no merge commit c70ab4032edfe3129597f450be5a5005b6c66656. Frente única ativa: RM-09 (lote_ZAPIA-F1_ligacao_tutor_coach_zapia_offline), branch ccr-9c6a8507-2f8tri, PR #182. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 180,
-    "merge_commit_sha": "5b0525f965939b075e3699d7597586df300edbf8"
+    "pr_number": 181,
+    "merge_commit_sha": "c70ab4032edfe3129597f450be5a5005b6c66656"
   },
   "work_queue": [
     {
