@@ -13,6 +13,10 @@
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
 
+## LEITURA OBRIGATÓRIA: capacidades da Zapia (decisão do proprietário de 22/11/2026)
+
+Toda sessão lê `docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md` (o `bootstrap.py` imprime o resumo e o hash). **PROVADO:** a Zapia lê e escreve no repositório privado `entrada` por **HTTP com token** (sonda de 22/11/2026); **não precisa de conector de GitHub**. Chamada: `curl` restrito, uma por vez, só `-X`, `-H`, `-d`. **NÃO PROVADO:** F1 real, promoção pelo fluxo, rotina agendada (autorizada por ele em 22/11, a criar por ele na Zapia) e notificação espontânea. Não afirme além disso.
+
 ## Ponto de retomada da próxima sessão
 
 > **Aviso de defasagem do checkpoint.** O bloco "Checkpoint vigente" acima registra a frente ativa e o PR **no momento do último commit de estado**. Depois que esse PR é mesclado, o bloco fica **defasado** até o recibo do merge, que só entra no primeiro commit da próxima tarefa (`record_merge_receipt.py`). Por isso, antes de afirmar o estado de um PR ou frente, **confirme**: rode `python scripts/next_task.py` (ele lê o histórico Git e diz se o PR registrado já foi mesclado) ou consulte o PR por API. Se o HEAD for o commit de merge do PR registrado como "em revisão", o PR **já foi mesclado** e o recibo está pendente.

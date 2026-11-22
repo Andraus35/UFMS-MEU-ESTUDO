@@ -15,6 +15,26 @@ except ModuleNotFoundError:
     from scripts.core import ROOT, load_json
 
 
+CAPACIDADES_ZAPIA = "docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md"
+
+
+def capacidades_zapia(root):
+    """Leitura obrigatória das capacidades PROVADAS da Zapia (decisão do proprietário de 22/11/2026). Fecha por padrão: arquivo ou marcas ausentes
+    impedem o START. Só mostra o resumo e o hash; não prova leitura por LLM."""
+    caminho = Path(root) / CAPACIDADES_ZAPIA
+    if not caminho.is_file():
+        raise ValueError("START sem " + CAPACIDADES_ZAPIA)
+    texto = caminho.read_text(encoding="utf-8")
+    if "<!-- RESUMO-START -->" not in texto or "<!-- RESUMO-END -->" not in texto:
+        raise ValueError("capacidades da Zapia sem as marcas do resumo")
+    resumo = texto.split("<!-- RESUMO-START -->", 1)[1].split("<!-- RESUMO-END -->", 1)[0]
+    linhas = [linha.strip() for linha in resumo.splitlines() if linha.strip()]
+    if not linhas:
+        raise ValueError("resumo das capacidades da Zapia vazio")
+    return {"arquivo": CAPACIDADES_ZAPIA, "sha256": hashlib.sha256(caminho.read_bytes()).hexdigest(), "leitura": "OBRIGATORIA em toda sessao",
+            "resumo": linhas}
+
+
 def run(root=ROOT, mode="study"):
     root = Path(root)
     if mode not in ("study", "engineering"):
@@ -52,6 +72,7 @@ def run(root=ROOT, mode="study"):
         "last_event": state["event_cursor"],
         "next": ("Consultar estado remoto do PR registrado: se aberto, continuar a tarefa; se mesclado, aguardar a próxima tarefa."
                  if flow else "Orientar estudos com arquivos relevantes recuperados sob demanda"),
+        "capacidades_zapia": capacidades_zapia(root),
         "warning": "Leitura local nao comprova HEAD remoto ou passagem obrigatoria de agentes externos",
     }
     if flow:
