@@ -24,8 +24,8 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertEqual(fila["proximo"]["id"], "ZAPIA-F1")  # S20, HOOKR, GAP-A, GAP-A2 e GAP-B têm a entrega (21/11/2026); a fila de gaps (GAP-A a GAP-E) está completa; PJ, RT e CM esperam o proprietário
-        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "ZAPIA-F1"])  # HOOKG tem a entrega (E12, 21/11/2026)
+        self.assertIsNone(fila["proximo"])  # ZAPIA-F1 tem a entrega (E21, 22/11/2026); S20, HOOKR, GAP-A, GAP-A2 e GAP-B têm a entrega (21/11/2026); a fila de gaps (GAP-A a GAP-E) está completa; PJ, RT e CM esperam o proprietário
+        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM"])  # HOOKG tem a entrega (E12, 21/11/2026)
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["PJ"])
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])

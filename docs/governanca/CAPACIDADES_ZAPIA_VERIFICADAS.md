@@ -7,7 +7,8 @@
 - **Formato de chamada que a ferramenta dela aceita:** `curl` restrito, **uma chamada simples por vez**, sem `;`, sem `&&`, sem pipe, **só as flags `-X`, `-H` e `-d`** (bloqueadas: `-sS`, `--fail-with-body`). Ela para no primeiro bloqueio e relata o erro literal (falha segura).
 - **A credencial precisa estar preenchida no formulário seguro dela.** Estado `Requested, not filled in by the user` = vazia: ela para antes de tocar o GitHub. O token nunca vai ao chat.
 - **A Zapia é um modelo: NÃO executa o Python do repositório**; o código do repositório é a especificação e o verificador do que ela devolve. Ela tem Python próprio e HTTP, sem Git.
-- **NÃO PROVADO (não afirme):** o teste F1 de entrega de comando validado no GitHub real; a promoção do comando pelo fluxo (flag do fluxo e janela PJ); a **rotina agendada** da Zapia; a **notificação espontânea** (ela só respondeu dentro da conversa); o canal WhatsApp/Gmail. Autoria do commit = conta do proprietário (não distingue a Zapia dele).
+- **PROVADO (22/11/2026, teste F1, confiança B):** com um par sintético colocado à mão em `entrada`, a Zapia **leu o comando e o recibo, conferiu o hash, mostrou a notificação "Coach (origem declarada): ..." no chat e gravou o recibo de volta** (conferido por código; notificação por relato e captura do proprietário). Registro: `docs/governanca/E21_ZAPIA_F1_PROVA_REAL.md`. Só dentro da conversa, disparada por ele.
+- **NÃO PROVADO (não afirme):** a promoção do comando pelo fluxo (flag do fluxo e janela PJ); a **rotina agendada** da Zapia; a **notificação espontânea** (ela só respondeu dentro da conversa); o canal WhatsApp/Gmail. Autoria do commit = conta do proprietário (não distingue a Zapia dele).
 - **Substitui (não repita):** "a Zapia não tem conector de GitHub, logo não lê o repositório" (S20 P4, D1(c) como "conector a pedir"), "não lê o repositório sozinha" (R14) e "token escopo desconhecido" no que diz respeito à LEITURA/ESCRITA em `entrada`. O mecanismo é HTTP com token e funciona.
 <!-- RESUMO-END -->
 
@@ -21,7 +22,7 @@
 
 ## Como reproduzir e o que vem depois
 
-`scripts/termux/sonda_zapia_do_zero.sh` e `sonda_conferir.sh` (sonda de leitura); `scripts/termux/prova_f1_zapia.sh` com `scripts/zapia_f1_prep.py` e `scripts/zapia_entrega.py` (teste F1 de entrega, **ainda não rodado no GitHub real**). Registro técnico: `docs/governanca/E22_SONDA_DE_LEITURA_ZAPIA_20261122.md`. A rotina da Zapia (D2) foi **autorizada** pelo proprietário em 22/11/2026 com a frase `AUTORIZO rotina automática agora`; **criá-la e provar seu disparo é ato dele na Zapia** e só passa a constar como PROVADO aqui depois de relato com captura e conferência por código (o S20-R6 pede teste sem efeito antes: o F1).
+`scripts/termux/sonda_zapia_do_zero.sh` e `sonda_conferir.sh` (sonda de leitura); `scripts/termux/prova_f1_zapia.sh` com `scripts/zapia_f1_prep.py` e `scripts/zapia_entrega.py` (teste F1 de entrega, **rodado em 22/11/2026**, ver E21). Registro técnico: `docs/governanca/E22_SONDA_DE_LEITURA_ZAPIA_20261122.md`. A rotina da Zapia (D2) foi **autorizada** pelo proprietário em 22/11/2026 com a frase `AUTORIZO rotina automática agora`; **criá-la e provar seu disparo é ato dele na Zapia** e só passa a constar como PROVADO aqui depois de relato com captura e conferência por código (o S20-R6 pede teste sem efeito antes: o F1).
 
 ## Regra de atualização
 
