@@ -19,8 +19,9 @@ from pathlib import Path
 
 try:
     import command_idempotency
+    import content_filters
 except ImportError:  # pragma: no cover - importação por pacote
-    from scripts import command_idempotency
+    from scripts import command_idempotency, content_filters
 
 ROOT = Path(__file__).resolve().parents[1]
 FLAG = "personal_results_writes_enabled"
@@ -46,6 +47,11 @@ def _caminho_invalido(caminho: str) -> bool:
 
 
 def _validar_conteudo(operation: str, params: dict) -> str | None:
+    if operation == "enviar_mensagem":  # COR-C, AT-5: o validador e a caixa não podem ser mais permissivos que o verificador de entrega
+        if content_filters.tem_url(params["texto"]):
+            return "PARAMS_URL"
+        if content_filters.instrucao_embutida(params["texto"]) or content_filters.mistura_de_scripts(params["texto"]):
+            return "PARAMS_INSTRUCAO_EMBUTIDA"
     if operation == "ler_arquivo_repositorio" and _caminho_invalido(params["caminho"]):
         return "PARAMS_CAMINHO_INVALIDO"
     if operation == "consultar_agenda_minima":

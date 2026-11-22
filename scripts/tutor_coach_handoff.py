@@ -19,8 +19,9 @@ from pathlib import Path
 
 try:
     import agent_commands
+    import content_filters
 except ModuleNotFoundError:  # pragma: no cover - uso como pacote
-    from scripts import agent_commands
+    from scripts import agent_commands, content_filters
 
 ROOT = Path(__file__).resolve().parents[1]
 ORIGENS = ("oficial", "banco", "adaptado", "sintetico")
@@ -55,12 +56,19 @@ def _res(ok, codigo=None, campo=None, **extra):
     return {"ok": ok, "codigo": codigo, "campo": campo, **extra}
 
 
-def _texto_livre_ok(valor) -> str | None:
-    """None se o texto livre é curto e limpo; senão o código de recusa."""
+def _texto_livre_ok(valor, *, sem_resultado_pessoal=False) -> str | None:
+    """None se o texto livre é curto e limpo; senão o código de recusa. COR-C, AT-6: sem URL, instrução embutida nem homóglifo;
+    `sem_resultado_pessoal` (objetivo) recusa também contagem de acertos e erros de alguém."""
     if not isinstance(valor, str) or not valor.strip() or len(valor) > MAX_TEXTO or valor != valor.strip():
         return "TEXTO_LIVRE_INVALIDO"
     if agent_commands.scan_text(valor, html=True) or agent_commands.texto_de_questao(valor):
         return "TEXTO_DE_QUESTAO_OU_DADO_PESSOAL"
+    if content_filters.tem_url(valor):
+        return "TEXTO_COM_URL"
+    if content_filters.instrucao_embutida(valor) or content_filters.mistura_de_scripts(valor):
+        return "TEXTO_COM_INSTRUCAO_EMBUTIDA"
+    if sem_resultado_pessoal and content_filters.desempenho_individual(valor):
+        return "TEXTO_COM_RESULTADO_PESSOAL"
     return None
 
 
@@ -115,7 +123,7 @@ def validar_registro(registro) -> dict:
         if motivo:
             return _res(False, motivo, "codigos_erro")
     for campo in ("objetivo",):
-        motivo = _texto_livre_ok(registro[campo])
+        motivo = _texto_livre_ok(registro[campo], sem_resultado_pessoal=True)
         if motivo:
             return _res(False, motivo, campo)
     reteste = registro["reteste"]

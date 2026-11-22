@@ -41,6 +41,10 @@ SEGMENTOS_COM_EFEITO = frozenset({
     "logout", "sair", "excluir", "apagar", "remover", "deletar", "criar", "novo", "nova", "editar", "salvar",
     "resolver", "responder", "enviar", "configuracoes", "configuracao", "conta", "perfil", "assinatura", "checkout",
     "pagamento", "senha", "exportar", "download", "baixar",
+    # COR-C, AT-7: os mesmos efeitos em inglês (URL e parâmetro), que a lista só em português deixava passar
+    "delete", "remove", "create", "add", "new", "edit", "update", "save", "submit", "send", "post", "reply", "answer", "resolve",
+    "logout", "signout", "settings", "account", "profile", "subscription", "purchase", "buy", "pay", "payment", "password",
+    "export", "upload", "import", "publish", "reset", "cancel", "confirm", "unsubscribe",
 })
 _ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,79}")
 _CONTROLE = re.compile(r"[\x00-\x20\x7f\\]")

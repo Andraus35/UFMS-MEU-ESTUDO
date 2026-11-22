@@ -2,6 +2,12 @@
 import hashlib
 import json
 
+try:
+    import agent_commands
+    import content_filters
+except ModuleNotFoundError:  # uso como pacote
+    from scripts import agent_commands, content_filters
+
 INTERVENTIONS = {
     "diagnostic", "guided_learning", "fixation", "active_retrieval",
     "spaced_review", "focused_correction", "interleaving", "transfer", "simulation",
@@ -97,6 +103,9 @@ def prescribe_notebook(queue_snapshot, *, candidate_id, intervention, objective,
         raise ValueError("Intervenção inválida")
     if not isinstance(objective, str) or not objective.strip():
         raise ValueError("Objetivo ausente")
+    if (agent_commands.scan_text(objective, html=True) or content_filters.tem_url(objective)  # COR-C, AT-6: plano interno também é dado
+            or content_filters.instrucao_embutida(objective) or content_filters.mistura_de_scripts(objective)):
+        raise ValueError("Objetivo com dado pessoal, URL ou instrução embutida")
     if platform not in PLATFORMS:
         raise ValueError("Plataforma não reconhecida; não presumir integração")
     if execution_mode not in {"independent", "guided"}:

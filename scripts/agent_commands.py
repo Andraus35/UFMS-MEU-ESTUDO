@@ -137,6 +137,12 @@ _GABARITO = re.compile(r"\bgabarito\s*:", re.I)
 _ASSERTIVA_INCORRETA = re.compile(r"\b(?:marque|assinale|indique)\s+(?:a|o)\s+(?:assertiva|afirmativa|alternativa|op[cç][aã]o)\s+(?:correta|incorreta|certa|errada)\b", re.I)
 
 
+def comando_de_questao(texto) -> bool:
+    """Só o comando de prova ("julgue o item a seguir", "assinale a alternativa correta", "Gabarito:"), sem a contagem de alternativas
+    entre parênteses de `texto_de_questao` (que recusa "os incisos (a) e (b)"). Usado no prompt do Notebook (COR-C, AT-4)."""
+    return isinstance(texto, str) and bool(_ENUNCIADO_IMPERATIVO.search(texto) or _ASSERTIVA_INCORRETA.search(texto) or _GABARITO.search(texto))
+
+
 def texto_de_questao(texto) -> bool:
     """GD-3: heurística de TEXTO DE QUESTÃO em prosa curta (comando de prova, alternativas entre parênteses, "Gabarito:"). Orientação comum
     ("releia o enunciado", "revise as alternativas") não casa. É heurística: reduz, não elimina; não prova ausência de questão."""
