@@ -24,9 +24,10 @@ from dataclasses import dataclass
 
 try:
     import agent_commands
+    import content_filters
     import platform_read_guard
 except ModuleNotFoundError:  # pragma: no cover - uso como pacote
-    from scripts import agent_commands, platform_read_guard
+    from scripts import agent_commands, content_filters, platform_read_guard
 
 CAMPOS = ("topico", "lacuna", "metodo", "exigencia_fonte", "formato_saida")
 LIMITES = {"topico": 120, "lacuna": 400, "metodo": 400, "exigencia_fonte": 300, "formato_saida": 300}
@@ -102,17 +103,19 @@ def _checa_texto(campo, valor):
         return _recusa("CAMPO_LONGO_DEMAIS", campo)
     if _INVISIVEIS.search(valor) or _CONTROLE.search(valor):
         return _recusa("CARACTERE_INVISIVEL", campo)
-    if _URL.search(valor):
+    if content_filters.mistura_de_scripts(valor):
+        return _recusa("CARACTERE_MISTO", campo)  # COR-C, AT-4: palavra com letra latina e cirílica/grega juntas (homóglifo)
+    if _URL.search(valor) or content_filters.tem_url(valor):  # COR-C, AT-3: também sem esquema, ofuscada e domínio nu
         return _recusa("URL_PROIBIDA", campo)
     if _TAG.search(valor):
         return _recusa("HTML_BRUTO", campo)
     if _DESEMPENHO.search(_norm(valor)):
         return _recusa("DESEMPENHO_INDIVIDUAL", campo)
-    if len(_ALTERNATIVA.findall(valor)) >= 2 or len(_ALTERNATIVA_NA_LINHA.findall(valor)) >= 3:
-        return _recusa("QUESTAO_INTEGRAL", campo)
+    if len(_ALTERNATIVA.findall(valor)) >= 2 or len(_ALTERNATIVA_NA_LINHA.findall(valor)) >= 3 or agent_commands.comando_de_questao(valor):
+        return _recusa("QUESTAO_INTEGRAL", campo)  # COR-C, AT-4: texto de questão em prosa também recusado
     if _QUEBRA.search(valor):
         return _recusa("CAMPO_MULTILINHA", campo)  # um campo por linha: o texto montado se confere de volta sem ambiguidade
-    if _INSTRUCAO_EXTRA.search(_norm(valor).replace("-", " ").replace("_", " ").replace(".", " ")):
+    if _INSTRUCAO_EXTRA.search(_norm(valor).replace("-", " ").replace("_", " ").replace(".", " ")) or content_filters.instrucao_embutida(valor):
         return _recusa("INSTRUCAO_EMBUTIDA", campo)
     # segredo, dado pessoal, HTML bruto e instrução embutida, no texto original e no texto sem ofuscação de letras
     motivo = platform_read_guard.classificar_texto(valor) or platform_read_guard.classificar_texto(_norm(valor))
@@ -137,6 +140,8 @@ def instrucao_embutida(texto: str) -> bool:
     (inclui os padrões de esquecer, revelar e modo de desenvolvedor), reaproveitado pelo conversor da L2."""
     if not isinstance(texto, str):
         return False
+    if content_filters.instrucao_embutida(texto):
+        return True
     norm = _norm(texto)
     if _INSTRUCAO_EXTRA.search(norm.replace("-", " ").replace("_", " ").replace(".", " ")):
         return True
