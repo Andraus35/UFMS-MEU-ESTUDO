@@ -24,6 +24,7 @@ Hoje o Coach só pode pedir à Zapia: `enviar_mensagem` (só `texto`), `criar_le
 |---|---|---|---|
 | `F1_ENTREGA_UNICA` | `coach` ou `tutor` | rotina de teste de execução única: entregar o `enviar_mensagem` já promovido | proposto agora |
 | `ROTINA_ESTUDO_DIARIA` | `tutor` | **dois dias seguidos**: a Zapia usa a rotina agendada **nativa** dela para disparar a notificação do estudo do dia (matéria, assunto, quantidade de questões) | **proposto agora** (pedido do proprietário, 23/11/2026) |
+| `ROTINA_ESTUDO_SEMANAL` | `tutor` | seguimento do teste de 2 dias (escolha dele, 23/11/2026): **um pedido por semana**, a Zapia agenda 7 dias, um comando validado novo por dia | **fora desta aprovação** |
 | `BRIEFING_DIARIO` | `coach` | rotina diária do Coach (S8, F3) | **fora desta aprovação** |
 | `RELATORIO_TEC_AGENDADO` | `tutor` | pedir o relatório de desempenho do TEC no horário (E3, depende dela) | **fora desta aprovação** |
 | `REVISAO_NOTEBOOK_AGENDADA` | `tutor` | entregar um `enviar_prompt_notebook` já validado no horário (S10) | **fora desta aprovação** |
