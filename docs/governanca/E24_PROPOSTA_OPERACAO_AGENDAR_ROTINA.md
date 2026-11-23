@@ -36,36 +36,44 @@ A caixa recusa modelo que não pertença à origem do comando (`ORIGEM_FORA_DO_M
 ### Modelo `ROTINA_ESTUDO_DIARIA` (Tutor, 2 dias)
 
 - **Params fechados:** `modelo`, `agendado_utc_d1`, `agendado_utc_d2`, `comando_sha256_d1`, `comando_sha256_d2`. Cada dia aponta para **um `enviar_mensagem` já promovido**, gerado por `scripts/entrega_diaria.py` a partir de matéria, assunto e quantidade escolhidos **pelo Tutor**. **Nenhum conteúdo pedagógico vai nos params do agendamento**, e a Zapia **não redige** o texto (`ZAPIA.md`: ela executa, não decide).
-- **Mesma regra de instrução:** o passo a passo da Zapia (usar o recurso nativo de rotina agendada, `AUTORIZO` por turno, uma mensagem por dia, parar sem laço) vem do **modelo versionado**.
+- **Mesma regra de instrução:** o passo a passo da Zapia (usar o recurso nativo de rotina agendada, sem `AUTORIZO` por mensagem (autorização permanente, ver abaixo), uma mensagem por dia, parar sem laço) vem do **modelo versionado**.
 - **Prova em 2 dias (indício, não a prova de 3 dias da S15-R4):** a Zapia grava o recibo de volta com `entregue_em` do relógio e `rotina_id_relatado` (id da rotina como o app a mostra; **autorrelato**). `scripts/zapia_disparo.py` (modo `--dia2-nome` e `--dia2-agendado`) confere cada dia (hash, carimbo não anterior ao agendado e até 900 s depois, entrega única, teto diário), o id relatado nos dois dias, a distância de 20 h a 28 h entre os agendamentos e dias de entrega diferentes.
 - **O que o verificador NÃO distingue:** entrega manual feita logo depois do horário. Só a **captura da lista de rotinas do app** e a notificação recebida **sem você estar na conversa** separam rotina nativa de entrega manual. "Necessariamente usar o agendamento nativo" **não é garantível por código**: é verificável só pelo recibo e pela sua captura.
 - **Rascunho sintético do conteúdo do dia 1** (marcadores, sem questões nem disponibilidade afirmada): "Estudo de DIA_1 (cargo CARGO_523) / Matéria: MATERIA_X / Caminho: MATERIA_X > ASSUNTO_A / Posição e percentual: não verificado / Atividade: resolver caderno · N1 questões (definidas pelo Tutor; existência no acervo não verificada) / Objetivo: OBJETIVO_1". O dia 2 repete com `ASSUNTO_B` e `N2`. Limite do texto: 600 caracteres e comando válido por 24 h, então **o comando de cada dia é emitido dentro de 24 h do disparo**.
 
-## Onde entra o `AUTORIZO` (S8-R8, S20-R6)
+## Autorização: o `AUTORIZO` por mensagem sai (decisão do proprietário, 23/11/2026)
 
-O comando é um **pedido**, não uma criação. Fluxo proposto: (1) o Coach emite `agendar_rotina`; (2) a caixa valida e o fluxo promove; (3) a Zapia, ao ler o recibo, **mostra ao proprietário** o pedido ("o Coach pede uma rotina única às HH:MM; hash X") e **espera a frase `AUTORIZO` dele naquele turno**; (4) só então cria a rotina no app dela, de execução única, a partir do modelo; (5) grava um **recibo de volta** (hash do pedido, id da rotina como a Zapia a relata, horário criado, sem token). **Sem `AUTORIZO` não há criação**, e a Zapia para sem insistir nem reenviar (S20-R9). O campo do comando **não** substitui a frase.
+**Decisão dele:** excluir a necessidade de o proprietário ou o estudante dizer `AUTORIZO` nas automações entre agentes, Zapia e Gemini. **Isso emenda S5-R9, S8-R8, S19-R4, S20-R6, o texto de `PRODUCT.md` que cita a frase e os perfis** (`agents/ZAPIA.md`, `AGENTS.md` na parte de rotina autorizada); **a emenda é outro PR, com aprovação expressa do texto**. **Até ela ser mesclada, a frase continua valendo** (o roteiro de teste mantém o `AUTORIZO`).
+
+**(PROPOSTA)** O que o substitui, para a autorização não sumir sem deixar rastro:
+1. **Autorização permanente e registrada:** a aprovação expressa do proprietário ao texto desta proposta e ao merge da aplicação **é** a autorização, por escrito no repositório, com **escopo fechado** (só os modelos listados na tabela e só as operações do esquema).
+2. **Travas determinísticas, sem pessoa no meio:** a caixa valida a forma e a janela de 15 min a 24 h; **1 pedido por dia por origem**; teto de **2 notificações por dia** ao estudante (regra do F1); limites de job (900 s, 32 por dia, S8-R5); comando com **recibo de mesmo hash**; instrução só de **modelo versionado**; filtros de conteúdo (sem URL, instrução embutida, texto de questão, dado pessoal).
+3. **Parada e revogação:** o proprietário pausa ou apaga a rotina quando quiser; **chave de parada versionada** (por exemplo, flag em `config/settings.json`, falsa desliga a emissão), a decidir na aplicação.
+4. **Recibo de volta obrigatório** com o id da rotina como o app a mostra; sem recibo, o verificador marca a rotina como **não provada** e a emissão seguinte do mesmo modelo é bloqueada.
+
+Fluxo: (1) o agente emite `agendar_rotina`; (2) a caixa valida e o fluxo promove; (3) a Zapia lê o recibo e cria a rotina **sem pedir frase**; (4) grava o recibo de volta (hash do pedido, id relatado, horário, sem token). **Limite que o repositório não controla:** a própria Zapia ou o app podem pedir confirmação por regra deles; isso é da plataforma e não é removido por este texto.
 
 ## O que a aplicação mudaria (lote seguinte, com aprovação)
 
 1. `config/agent_command_schema.json`: destino `zapia_rotina` e a operação (compartilhada).
 2. `scripts/command_params_schema.py`: esquema fechado (`modelo` enum, `agendado_utc`, `comando_sha256`), sem campo extra.
 3. `scripts/command_box.py`: limites (15 min a 24 h, 1 por dia por origem, recibo de mesmo hash do alvo) e a tabela modelo-origem.
-4. `agents/TUTOR.md`, `agents/COACH.md` e `agents/ZAPIA.md`: lista de operações e a regra do `AUTORIZO` por turno.
+4. `agents/TUTOR.md`, `agents/COACH.md` e `agents/ZAPIA.md`: lista de operações e a regra da autorização permanente e das travas.
 5. `scripts/agents_gate.py`: `SHARED` ganha a operação (mesma lista nos dois perfis).
 6. Testes com contraprovas (ALTA e MEDIA): modelo fora da origem (Tutor pedindo modelo do Coach e o inverso), campo extra, modelo fora da lista, horário fora da janela, hash sem recibo, segundo pedido no dia da mesma origem, texto livre.
 7. Modelo da instrução em `docs/governanca/` com hash no manifesto.
 
 ## Riscos declarados
 
-- **Autoescalonamento:** o agente pediria a própria rotina. Mitigação: só pedido estruturado e **`AUTORIZO` humano obrigatório**.
+- **Autoescalonamento:** o agente pediria a própria rotina. Sem a frase por turno, a mitigação passa a ser só **pedido estruturado, escopo fechado, travas e parada** (seção de autorização): **o risco aumenta** e é aceito por decisão do proprietário.
 - **A Zapia é um modelo** e pode não obedecer ou não conseguir criar rotina por esse caminho (autorrelato dela até a prova). O recibo de volta e o verificador (`zapia_disparo.py`) medem o resultado, não a intenção.
 - **A origem do comando não é provada** na nuvem (S4-R2 segue não atendida): quem escreve em `entrada` é a conta do proprietário.
-- **`AUTORIZO` vale por turno:** se o pedido chegar quando o proprietário não está na conversa, a Zapia só o **apresenta**; não cria.
+- **Sem confirmação humana por rotina:** um erro do agente chega ao aluno como notificação indevida (limitada pelo teto de 2 por dia) e só é visto no recibo de volta ou quando o proprietário notar; por isso o recibo e a parada são obrigatórios.
 - A rotina de teste F2a **pode ser provada antes**, pelo roteiro atual (o proprietário cria a rotina à mão), **sem** esta operação.
 
 ## O que esta proposta NÃO é
 
-Não é a aplicação, não altera contrato, não cria rotina nem lembrete na Zapia, não prova que a Zapia crie rotina por comando e não dispensa o `AUTORIZO`. A decisão de **criar rotina diária recorrente** (F3) é outro modelo e outra aprovação.
+Não é a aplicação, não altera contrato, não cria rotina nem lembrete na Zapia, não prova que a Zapia crie rotina por comando e **não aplica** a dispensa do `AUTORIZO` (só a emenda aprovada aplica). A decisão de **criar rotina diária recorrente** (F3) é outro modelo e outra aprovação.
 
 ## Para o proprietário aprovar
 
@@ -73,5 +81,5 @@ Não é a aplicação, não altera contrato, não cria rotina nem lembrete na Za
 2. **Compartilhada** (Tutor e Coach), cada modelo preso à sua origem.
 3. A **tolerância** de 15 min a 24 h e **1 por dia**.
 4. Os **dois primeiros modelos** `F1_ENTREGA_UNICA` e `ROTINA_ESTUDO_DIARIA` e a instrução vir de **modelo versionado**, nunca do comando.
-5. O **`AUTORIZO` por turno** como condição de criação.
+5. A **autorização permanente** (aprovação desta proposta) no lugar do `AUTORIZO` por mensagem, com as travas e a parada, e a **emenda** de S5-R9, S8-R8, S19-R4, S20-R6, `PRODUCT.md` e perfis em PR próprio.
 6. Depois: aprovar o **merge** da aplicação, citando PR e head.

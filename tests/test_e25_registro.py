@@ -12,7 +12,7 @@ class RegistroTeste(unittest.TestCase):
         for trecho in ("Não é contrato", "Tutor e Coach dão prompts e instruções à Zapia", "recurso nativo de rotina agendada", "tanto o Tutor quanto o Coach emitem",
                        "não é garantível por código", "AUTORIZO rotina automática agora", "24 h, 5 d, 10 d, 20 d e 30 d", "top 10 de assuntos",
                        "dia 1 do ciclo da matéria", "ciclo independente", "Tutor decide caso a caso", "exclusivamente no Gemini Notebook",
-                       "cadernos de acertos e erros feitos no TEC", "D-11", "Mesclar #184", "(PROPOSTA)", "citando PR e head", "E24", "sem levar o mesmo enunciado", "reformular a questão", "arredondada para cima", "ROTINA_ESTUDO_SEMANAL", "um pedido por semana"):
+                       "cadernos de acertos e erros feitos no TEC", "D-11", "Mesclar #184", "(PROPOSTA)", "citando PR e head", "E24", "sem levar o mesmo enunciado", "reformular a questão", "arredondada para cima", "ROTINA_ESTUDO_SEMANAL", "um pedido por semana", "Fim do `AUTORIZO` nas automações", "decidida, ainda não aplicada", "não** deve dispensar a frase antes disso"):
             self.assertIn(trecho, t, trecho)
 
     def test_nao_registra_preferencia_inferida(self):

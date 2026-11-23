@@ -41,6 +41,14 @@ Frente **nova**: abre só depois do merge do #185 (regra de lote do `AGENTS.md`)
 - Perguntas automatizadas ao fim de cada rodada, com opção recomendada; ele pediu **linguagem de estudante** nas explicações de fundamento.
 - Pedido de comandos **para o Termux** quando o ato é dele (ex.: apagar branch, rodar roteiros).
 
+## D2. Fim do `AUTORIZO` nas automações (decisão dele, 23/11/2026)
+
+- **Decisão:** "excluir a necessidade do criador ou estudante dar `AUTORIZO` nas automações entre agentes e Zapia e Gemini". Vale para a criação de rotinas, lembretes e hooks na Zapia e para o fluxo de comandos Tutor e Coach para a Zapia e o Gemini Notebook.
+- **Estado:** **decidida, ainda não aplicada.** O `AUTORIZO` continua exigido por S5-R9, S8-R8, S19-R4, S20-R6, `PRODUCT.md` e `AGENTS.md` até uma **emenda aprovada e mesclada** (PR próprio, aprovação expressa do texto e do merge). O construtor **não** deve dispensar a frase antes disso.
+- **(PROPOSTA)** Substituição: autorização permanente registrada (a aprovação da E24 e da emenda), escopo fechado, travas determinísticas, parada e recibo de volta (detalhe na E24). **Risco aceito por ele:** sem confirmação humana por rotina, uma automação errada só aparece no recibo ou na notificação.
+- **O que a emenda toca:** S5, S6, S8, S14, S15, S19, S20, `PRODUCT.md`, `agents/ZAPIA.md` e `AGENTS.md` (seção de rotina autorizada); a flag de parada, se adotada, é arquivo de contrato.
+- **O que não muda:** consentimento v4, flags de resultado pessoal, janela PJ, merge por pedido expresso e os limites do contrato (dado pessoal e credencial continuam fora; o `AUTORIZO` não era a barreira de privacidade).
+
 ## E. Como o construtor usa este registro
 
 1. Ler este arquivo junto do START (o `memory/HANDOFF.md` aponta para ele).
