@@ -33,10 +33,11 @@ try:
     import agendar_rotina
     import agent_commands
     import command_box
+    import command_idempotency
     import promotion_runner as pr
     from core import ROOT
 except ModuleNotFoundError:  # uso como pacote
-    from scripts import agendar_rotina, agent_commands, command_box
+    from scripts import agendar_rotina, agent_commands, command_box, command_idempotency
     from scripts import promotion_runner as pr
     from scripts.core import ROOT
 
@@ -63,6 +64,66 @@ class Caixa(pr.FilaEntrada):
         if not (isinstance(obj, dict) and obj.get("type") == "file" and isinstance(obj.get("content"), str)):
             raise pr.ApiError(0)
         return pr._decodifica(obj["content"])
+
+
+    def listar(self, diretorio):
+        """Nomes dos arquivos comuns de uma pasta (404 = pasta ausente = vazia); resposta fora do formato propaga como falha de API."""
+        try:
+            _, obj = self.api.chamar("GET", self._base + diretorio.rstrip("/"))
+        except pr.ApiError as erro:
+            if erro.status == 404:
+                return []
+            raise
+        if not isinstance(obj, list):
+            raise pr.ApiError(0)
+        nomes = []
+        for e in obj:
+            if not (isinstance(e, dict) and isinstance(e.get("name"), str)):
+                raise pr.ApiError(0)
+            if e.get("type") == "file" and command_box._NAME.fullmatch(e["name"]) and ".." not in e["name"]:
+                nomes.append(e["name"])
+        return sorted(nomes)
+
+
+def ler_contexto_agendar(caixa, agora):
+    """ZAPIA-CTX: lê da caixa o que o `agendar_rotina` precisa (E28), sem dado pessoal.
+
+    `hashes_promovidos`: hash do corpo de cada `validados/<nome>` que tem recibo `PROMOVER` do MESMO nome e cujo hash gravado no
+    recibo confere com o recalculado sobre os bytes de `validados/` (`command_box.selecionar_executaveis`; hash do comando inteiro) (recibo ausente, ilegível ou divergente não promove).
+    `agendamentos_do_dia`: origem de cada `agendar_rotina` em `validados/` emitido NO DIA LOCAL (Campo Grande) de `agora`; conta
+    mesmo sem recibo (na dúvida, recusa a mais). Falha de API propaga: o runner a trata como transitória (nada é recusado nem promovido).
+    Pedido ilegível em `validados/` não conta como promovido e não ocupa o teto (não há como saber a origem)."""
+    hoje = command_idempotency.data_local(agora)
+    if hoje is None:
+        return {}
+    recibos_presentes = set(caixa.listar(RECEIPTS))
+    listagem, recibos, do_dia = {}, {}, []
+    for nome in caixa.listar(VALIDATED):
+        bruto = caixa.ler(VALIDATED + nome)
+        if bruto is None:
+            continue
+        listagem[VALIDATED + nome] = bytes(bruto)
+        try:
+            comando = json.loads(bytes(bruto).decode("utf-8"))
+        except Exception:
+            continue
+        if isinstance(comando, dict) and comando.get("operation") == "agendar_rotina":
+            try:
+                dia = command_idempotency.data_local(agent_commands._parse_time(comando["issued_at"]))
+            except Exception:
+                dia = hoje  # emissão ilegível: conta (recusa a mais)
+            if dia == hoje:
+                do_dia.append(comando.get("origin"))
+        if nome in recibos_presentes:
+            try:
+                recibo = json.loads(bytes(caixa.ler(RECEIPTS + nome)).decode("utf-8"))
+            except Exception:
+                continue
+            if isinstance(recibo, dict) and recibo.get("status") == command_box.PROMOVER:
+                recibos[nome] = recibo.get("hash_corpo")
+    executaveis = command_box.selecionar_executaveis(listagem, recibos)
+    hashes = sorted({command_box.command_hash(c) for c in executaveis.values()})
+    return {"hashes_promovidos": hashes, "agendamentos_do_dia": do_dia}
 
 
 class _SemEstado:
@@ -169,7 +230,8 @@ def _processar(nome, bruto, ctx, caixa, ledger, execucao, sha, item):
         # parte estática (forma, tabela por origem, destino, filtro, descanso); só dispensa a janela (o comando é antigo de
         # propósito) e a novidade do nonce (já foi consumido pela execução interrompida).
         chaves = ctx["chaves_do_dia"] + [_campos(bruto)[1]] if ctx["chaves_do_dia"] is not None else None  # a própria chave já ocupava o teto
-        rev = command_box.validar(nome, bruto, dict(ctx, ledger=_SemEstado(), janela_segundos=RESUME_WINDOW_SECONDS, chaves_do_dia=chaves))
+        rev = command_box.validar(nome, bruto, dict(ctx, ledger=_SemEstado(), janela_segundos=RESUME_WINDOW_SECONDS, chaves_do_dia=chaves,
+                                                    agendamentos_do_dia=_sem_o_proprio(ctx, bruto)))
         if rev["status"] != command_box.PROMOVER:
             if rev["codigo"] == "ERRO_INTERNO":
                 raise RuntimeError("erro interno transitório")
@@ -196,6 +258,18 @@ def _processar(nome, bruto, ctx, caixa, ledger, execucao, sha, item):
     _ocupar_agendamento(ctx, bruto, res)
     caixa.escrever(RECEIPTS + nome, _recibo(nome, res["status"], res["codigo"], res["hash_corpo"], execucao, sha))
     caixa.remover(f"{BOX}/{nome}")
+
+
+def _sem_o_proprio(ctx, bruto):
+    """Retomada: o pedido já promovido consta em `agendamentos_do_dia` (lido de `validados/`); tira UMA ocorrência dele para não ser recusado pelo próprio teto."""
+    do_dia = ctx.get("agendamentos_do_dia")
+    if do_dia is None:
+        return None
+    comando = json.loads(bytes(bruto).decode("utf-8"))
+    do_dia = list(do_dia)
+    if comando.get("operation") == "agendar_rotina" and comando.get("origin") in do_dia:
+        do_dia.remove(comando["origin"])
+    return do_dia
 
 
 def _ocupar_teto(ctx, chave):
@@ -259,6 +333,7 @@ def main(argv=None, transporte=None, ambiente=None, agora=None):
         contexto = {"escritas_habilitadas": True, "agora": agora or datetime.now(timezone.utc), "execucao": a.execucao,
                     "validador_sha": pr.ler_head_sha(validador), "validador_sha_fixado": a.validador_sha,
                     "agendar_rotina_habilitada": agendar_rotina.flag_habilitada(validador)}
+        contexto.update(ler_contexto_agendar(caixa, contexto["agora"]))  # ZAPIA-CTX: sem isso todo agendar_rotina é recusado
         resumo = executar(ler_caixa(a.comandos), contexto, caixa)
     except Exception as erro:  # nunca imprime a exceção: só a classe
         print(json.dumps({"estado": "ERRO", "codigo": type(erro).__name__}))
