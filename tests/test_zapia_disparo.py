@@ -132,5 +132,95 @@ class Preparo(unittest.TestCase):
         self.assertTrue((tmp / "b" / "validados" / "f1-teste.json").exists())
 
 
+class RotinaIdTeste(unittest.TestCase):
+    def test_campo_opcional_aceito_e_f1_sem_ele_continua_valendo(self):
+        self.assertIsNone(ze.conferir_entrega(entrega(rotina_id_relatado="rot-123"), {NOME: H}, NOME))
+        self.assertIsNone(ze.conferir_entrega(entrega(), {NOME: H}, NOME))
+
+    def test_id_invalido_e_recusado(self):
+        for ruim in ("", "a b", "x" * 65, "<script>", None, 5, ["a"]):
+            self.assertEqual(ze.conferir_entrega(entrega(rotina_id_relatado=ruim), {NOME: H}, NOME), "ROTINA_ID_INVALIDO", repr(ruim))
+
+    def test_outro_campo_extra_continua_recusado(self):
+        self.assertEqual(ze.conferir_entrega(entrega(rotina_id_relatado="r1", extra="x"), {NOME: H}, NOME), "ENTREGA_FORA_DO_FORMATO")
+
+
+AG2 = datetime(2026, 11, 24, 12, 0, 0, tzinfo=timezone.utc)
+N1, N2 = "dia1.json", "dia2.json"
+
+
+class DoisDias(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        (self.tmp / "comandos" / "recibos").mkdir(parents=True)
+        (self.tmp / "comandos" / "entregas").mkdir(parents=True)
+
+    def par(self, nome, h, quando, **extra):
+        (self.tmp / "comandos" / "recibos" / nome).write_bytes(ze._canonico({"entrada_id": nome, "hash_corpo": h, "status": "PROMOVER"}))
+        (self.tmp / "comandos" / "entregas" / nome).write_bytes(entrega(quando, h=h, nome=nome, **extra))
+
+    def feliz(self, **kw):
+        self.par(N1, "1" * 64, "2026-11-23T12:02:00Z", rotina_id_relatado="rot-a")
+        self.par(N2, "2" * 64, "2026-11-24T12:01:00Z", rotina_id_relatado=kw.get("id2", "rot-a"))
+
+    def rodar(self, ag2=AG2):
+        return zd.conferir_dois_dias(self.tmp, (N1, AG), (N2, ag2))
+
+    def test_dois_dias_seguidos_passam_e_dizem_que_e_so_indicio(self):
+        self.feliz()
+        r = self.rodar()
+        self.assertTrue(r["ok"]); self.assertTrue(r["mesma_rotina"]); self.assertIn("indicio", r["limite"]); self.assertIn("3 dias", r["limite"])
+
+    def test_duas_rotinas_unicas_tambem_passam_e_marcam_mesma_rotina_falso(self):
+        self.feliz(id2="rot-b")
+        self.assertFalse(self.rodar()["mesma_rotina"])
+
+    def test_sem_rotina_id_falha(self):
+        self.par(N1, "1" * 64, "2026-11-23T12:02:00Z")
+        self.par(N2, "2" * 64, "2026-11-24T12:01:00Z", rotina_id_relatado="rot-a")
+        self.assertEqual(self.rodar()["codigo"], "SEM_ROTINA_ID_RELATADO")
+
+    def test_dias_nao_seguidos_falham(self):
+        self.feliz()
+        self.assertEqual(self.rodar(AG2 + timedelta(days=1))["codigo"], "ENTREGA_ANTES_DO_AGENDADO")
+
+    def test_agendamentos_a_menos_de_20h_falham(self):
+        self.par(N1, "1" * 64, "2026-11-23T12:02:00Z", rotina_id_relatado="a")
+        self.par(N2, "2" * 64, "2026-11-23T18:01:00Z", rotina_id_relatado="a")
+        r = zd.conferir_dois_dias(self.tmp, (N1, AG), (N2, AG + timedelta(hours=6)))
+        self.assertEqual(r["codigo"], "DIAS_NAO_SEGUIDOS")
+
+    def test_agendamentos_a_mais_de_28h_falham(self):
+        self.par(N1, "1" * 64, "2026-11-23T12:02:00Z", rotina_id_relatado="a")
+        self.par(N2, "2" * 64, "2026-11-24T18:01:00Z", rotina_id_relatado="a")
+        r = zd.conferir_dois_dias(self.tmp, (N1, AG), (N2, AG + timedelta(hours=30)))
+        self.assertEqual(r["codigo"], "DIAS_NAO_SEGUIDOS")
+
+    def test_duas_entregas_no_mesmo_dia_utc_falham(self):
+        a1, a2 = datetime(2026, 11, 23, 1, 0, 0, tzinfo=timezone.utc), datetime(2026, 11, 23, 22, 0, 0, tzinfo=timezone.utc)
+        self.par(N1, "1" * 64, "2026-11-23T01:02:00Z", rotina_id_relatado="a")
+        self.par(N2, "2" * 64, "2026-11-23T22:01:00Z", rotina_id_relatado="a")
+        self.assertEqual(zd.conferir_dois_dias(self.tmp, (N1, a1), (N2, a2))["codigo"], "ENTREGAS_NO_MESMO_DIA")
+
+    def test_mesmo_comando_nos_dois_dias_falha(self):
+        self.par(N1, "1" * 64, "2026-11-23T12:02:00Z", rotina_id_relatado="a")
+        self.par(N2, "1" * 64, "2026-11-24T12:01:00Z", rotina_id_relatado="a")
+        self.assertEqual(self.rodar()["codigo"], "MAIS_DE_UMA_ENTREGA_DO_MESMO_HASH")
+
+    def test_falha_de_um_dia_reprova_o_conjunto(self):
+        self.par(N1, "1" * 64, "2026-11-23T11:00:00Z", rotina_id_relatado="a")
+        self.par(N2, "2" * 64, "2026-11-24T12:01:00Z", rotina_id_relatado="a")
+        r = self.rodar()
+        self.assertEqual((r["codigo"], r["dia"]), ("ENTREGA_ANTES_DO_AGENDADO", "dia1"))
+
+    def test_cli_dois_dias(self):
+        self.feliz()
+        base = ["--raiz", str(self.tmp), "--nome", N1, "--agendado", "2026-11-23T12:00:00Z"]
+        self.assertEqual(zd.main(base + ["--dia2-nome", N2, "--dia2-agendado", "2026-11-24T12:00:00Z"]), 0)
+        self.assertEqual(zd.main(base + ["--dia2-nome", N2, "--dia2-agendado", "2026-11-24T10:00:00Z"]), 1)
+        self.assertEqual(zd.main(base + ["--dia2-nome", N2]), 2)
+
+
 if __name__ == "__main__":
     unittest.main()

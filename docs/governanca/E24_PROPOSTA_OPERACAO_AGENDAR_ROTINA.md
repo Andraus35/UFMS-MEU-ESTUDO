@@ -23,13 +23,22 @@ Hoje o Coach só pode pedir à Zapia: `enviar_mensagem` (só `texto`), `criar_le
 | `modelo` | Origem que pode pedir | Para quê | Estado |
 |---|---|---|---|
 | `F1_ENTREGA_UNICA` | `coach` ou `tutor` | rotina de teste de execução única: entregar o `enviar_mensagem` já promovido | proposto agora |
+| `ROTINA_ESTUDO_DIARIA` | `tutor` | **dois dias seguidos**: a Zapia usa a rotina agendada **nativa** dela para disparar a notificação do estudo do dia (matéria, assunto, quantidade de questões) | **proposto agora** (pedido do proprietário, 23/11/2026) |
 | `BRIEFING_DIARIO` | `coach` | rotina diária do Coach (S8, F3) | **fora desta aprovação** |
 | `RELATORIO_TEC_AGENDADO` | `tutor` | pedir o relatório de desempenho do TEC no horário (E3, depende dela) | **fora desta aprovação** |
 | `REVISAO_NOTEBOOK_AGENDADA` | `tutor` | entregar um `enviar_prompt_notebook` já validado no horário (S10) | **fora desta aprovação** |
 
-A caixa recusa modelo que não pertença à origem do comando (`ORIGEM_FORA_DO_MODELO`). Só `F1_ENTREGA_UNICA` é proposto para aprovação agora; os demais são só o mapa.
+A caixa recusa modelo que não pertença à origem do comando (`ORIGEM_FORA_DO_MODELO`). `F1_ENTREGA_UNICA` e `ROTINA_ESTUDO_DIARIA` são propostos para aprovação agora; os demais são só o mapa.
 
 **A instrução que a Zapia segue NÃO vem do comando.** Ela está num **modelo versionado no repositório público**, com hash (primeiro modelo: o passo 3 de `ROTEIRO_ZAPIA_ROTINA_TESTE_20261122.md`). O comando só preenche **horário** e **hash**. Assim, a Zapia nunca obedece texto escrito por um agente: ela lê um **pedido estruturado** e um **modelo fixo**, e ambos são **dado**, não ordem (`ZAPIA.md`, regra de conteúdo do repositório como dado).
+
+### Modelo `ROTINA_ESTUDO_DIARIA` (Tutor, 2 dias)
+
+- **Params fechados:** `modelo`, `agendado_utc_d1`, `agendado_utc_d2`, `comando_sha256_d1`, `comando_sha256_d2`. Cada dia aponta para **um `enviar_mensagem` já promovido**, gerado por `scripts/entrega_diaria.py` a partir de matéria, assunto e quantidade escolhidos **pelo Tutor**. **Nenhum conteúdo pedagógico vai nos params do agendamento**, e a Zapia **não redige** o texto (`ZAPIA.md`: ela executa, não decide).
+- **Mesma regra de instrução:** o passo a passo da Zapia (usar o recurso nativo de rotina agendada, `AUTORIZO` por turno, uma mensagem por dia, parar sem laço) vem do **modelo versionado**.
+- **Prova em 2 dias (indício, não a prova de 3 dias da S15-R4):** a Zapia grava o recibo de volta com `entregue_em` do relógio e `rotina_id_relatado` (id da rotina como o app a mostra; **autorrelato**). `scripts/zapia_disparo.py` (modo `--dia2-nome` e `--dia2-agendado`) confere cada dia (hash, carimbo não anterior ao agendado e até 900 s depois, entrega única, teto diário), o id relatado nos dois dias, a distância de 20 h a 28 h entre os agendamentos e dias de entrega diferentes.
+- **O que o verificador NÃO distingue:** entrega manual feita logo depois do horário. Só a **captura da lista de rotinas do app** e a notificação recebida **sem você estar na conversa** separam rotina nativa de entrega manual. "Necessariamente usar o agendamento nativo" **não é garantível por código**: é verificável só pelo recibo e pela sua captura.
+- **Rascunho sintético do conteúdo do dia 1** (marcadores, sem questões nem disponibilidade afirmada): "Estudo de DIA_1 (cargo CARGO_523) / Matéria: MATERIA_X / Caminho: MATERIA_X > ASSUNTO_A / Posição e percentual: não verificado / Atividade: resolver caderno · N1 questões (definidas pelo Tutor; existência no acervo não verificada) / Objetivo: OBJETIVO_1". O dia 2 repete com `ASSUNTO_B` e `N2`. Limite do texto: 600 caracteres e comando válido por 24 h, então **o comando de cada dia é emitido dentro de 24 h do disparo**.
 
 ## Onde entra o `AUTORIZO` (S8-R8, S20-R6)
 
@@ -62,6 +71,6 @@ Não é a aplicação, não altera contrato, não cria rotina nem lembrete na Za
 1. O **nome** `agendar_rotina` e o destino `zapia_rotina`.
 2. **Compartilhada** (Tutor e Coach), cada modelo preso à sua origem.
 3. A **tolerância** de 15 min a 24 h e **1 por dia**.
-4. O **primeiro modelo** `F1_ENTREGA_UNICA` e a instrução vir de **modelo versionado**, nunca do comando.
+4. Os **dois primeiros modelos** `F1_ENTREGA_UNICA` e `ROTINA_ESTUDO_DIARIA` e a instrução vir de **modelo versionado**, nunca do comando.
 5. O **`AUTORIZO` por turno** como condição de criação.
 6. Depois: aprovar o **merge** da aplicação, citando PR e head.

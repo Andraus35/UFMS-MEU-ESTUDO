@@ -34,3 +34,13 @@ Passa se: o recibo de volta confere com o hash (F1), o carimbo `entregue_em` é 
 ## Depois
 
 Limpe os três arquivos de teste (`comandos/validados/`, `comandos/recibos/`, `comandos/entregas/` com o nome `f1-rotina.json`). Remova ou desative a rotina na Zapia (ela é de execução única; confira que não ficou recorrente). Qualquer falha de conector, disparo ou notificação **para o processo**: sem envio substituto e sem laço (S20-R9).
+
+## Variante de 2 dias (indício, a pedido do proprietário de 23/11/2026)
+
+Repita os passos 2 e 3 para **o dia seguinte**, com outro nome de par (por exemplo `f1-rotina-d2.json`), outro comando sintético (gerado no dia 2, por causa das 24 h) e outro horário agendado, **20 h a 28 h depois** do primeiro. Na instrução da Zapia acrescente: "grave também em `rotina_id_relatado` o identificador da rotina como o app a mostra (letras, números, `.`, `_`, `:` e `-`, até 64)" e "use o recurso **nativo** de rotina agendada do app; se não conseguir, pare e diga". Anexe a **captura da lista de rotinas do app**. Conferência:
+
+```
+python scripts/zapia_disparo.py --raiz <pasta> --nome f1-rotina.json --agendado <D1> --dia2-nome f1-rotina-d2.json --dia2-agendado <D2>
+```
+
+Passa só com os dois dias consistentes e o id relatado nos dois. **É indício, não a prova de 3 dias (S15-R4)**, e não distingue entrega manual logo após o horário: quem distingue é a captura do app e a notificação recebida sem você estar na conversa.

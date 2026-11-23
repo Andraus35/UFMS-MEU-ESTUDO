@@ -33,6 +33,8 @@ IDADE_MAXIMA = timedelta(hours=24)
 TETO_POR_DIA = 2
 MAX_NOTIFICACAO = 600
 CAMPOS_ENTREGA = {"entrada_id", "hash_corpo", "status", "entregue_em", "origem_declarada"}
+CAMPO_ROTINA = "rotina_id_relatado"  # opcional: id da rotina como a Zapia o relata (autorrelato); o F1 sem ele continua valendo
+_ID_ROTINA = __import__("re").compile(r"^[A-Za-z0-9._:-]{1,64}$")
 ENTREGUE = "ENTREGUE"
 
 
@@ -118,8 +120,10 @@ def conferir_entrega(entrega_bytes, recibos, nome) -> str | None:
         e = json.loads(bytes(entrega_bytes).decode("utf-8"))
     except (UnicodeDecodeError, ValueError, TypeError):
         return "ENTREGA_ILEGIVEL"
-    if not isinstance(e, dict) or set(e) != CAMPOS_ENTREGA:
+    if not isinstance(e, dict) or set(e) not in (CAMPOS_ENTREGA, CAMPOS_ENTREGA | {CAMPO_ROTINA}):
         return "ENTREGA_FORA_DO_FORMATO"
+    if CAMPO_ROTINA in e and not (isinstance(e[CAMPO_ROTINA], str) and _ID_ROTINA.match(e[CAMPO_ROTINA])):
+        return "ROTINA_ID_INVALIDO"
     if e["entrada_id"] != nome or e["status"] != ENTREGUE or e["origem_declarada"] not in ORIGENS:
         return "ENTREGA_INCONSISTENTE"
     esperado = (recibos or {}).get(nome)

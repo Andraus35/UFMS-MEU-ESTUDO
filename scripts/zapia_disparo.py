@@ -89,14 +89,50 @@ def conferir_pasta_unica(raiz, nome, agendado, tolerancia=TOLERANCIA_PADRAO) -> 
     return {"ok": True, "codigo": None, "entregas": len(entregas)}
 
 
+def conferir_dois_dias(raiz, dia1, dia2, tolerancia=TOLERANCIA_PADRAO) -> dict:
+    """Verificador de 2 dias seguidos (indício, NÃO a prova de 3 dias da S15-R4). `dia1` e `dia2` são (nome, agendado). Cada dia passa em
+    `conferir_pasta_unica`; as duas entregas trazem `rotina_id_relatado` (autorrelato); os agendamentos distam entre 20 h e 28 h; hash repetido já cai em
+    `conferir_pasta_unica` (MAIS_DE_UMA_ENTREGA_DO_MESMO_HASH) e os dias de entrega diferem. NÃO distingue rotina nativa de entrega manual logo após o horário: isso exige a captura da lista de rotinas do app."""
+    resultados = []
+    for rotulo, (nome, agendado) in (("dia1", dia1), ("dia2", dia2)):
+        r = conferir_pasta_unica(raiz, nome, agendado, tolerancia)
+        if not r["ok"]:
+            return {"ok": False, "codigo": r["codigo"], "dia": rotulo}
+        resultados.append(r)
+    raiz = Path(raiz)
+    entregas = []
+    for nome, _ in (dia1, dia2):
+        e = json.loads((raiz / "comandos" / "entregas" / nome).read_text(encoding="utf-8"))
+        if zapia_entrega.CAMPO_ROTINA not in e:
+            return {"ok": False, "codigo": "SEM_ROTINA_ID_RELATADO", "dia": nome}
+        entregas.append(e)
+    distancia = dia2[1].astimezone(timezone.utc) - dia1[1].astimezone(timezone.utc)
+    if not (timedelta(hours=20) <= distancia <= timedelta(hours=28)):
+        return {"ok": False, "codigo": "DIAS_NAO_SEGUIDOS"}
+    if entregas[0]["entregue_em"][:10] == entregas[1]["entregue_em"][:10]:
+        return {"ok": False, "codigo": "ENTREGAS_NO_MESMO_DIA"}
+    mesma = entregas[0][zapia_entrega.CAMPO_ROTINA] == entregas[1][zapia_entrega.CAMPO_ROTINA]
+    return {"ok": True, "codigo": None, "mesma_rotina": mesma, "limite": "indicio de 2 dias; autorrelato; nao distingue entrega manual; S15-R4 pede 3 dias"}
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Confere o disparo único da rotina de teste da Zapia (S20-R6). Offline.")
     p.add_argument("--raiz", required=True, help="checkout do repositório `entrada`")
     p.add_argument("--nome", default="f1-rotina.json")
     p.add_argument("--agendado", required=True, help="horário agendado em UTC, AAAA-MM-DDTHH:MM:SSZ (o que você anotou ao criar a rotina)")
     p.add_argument("--tolerancia", type=int, default=int(TOLERANCIA_PADRAO.total_seconds()), help="segundos depois do agendado (proposta: 900)")
+    p.add_argument("--dia2-nome", help="modo 2 dias: nome da entrega do dia seguinte")
+    p.add_argument("--dia2-agendado", help="modo 2 dias: horário agendado do dia seguinte (UTC)")
     a = p.parse_args(argv)
     agendado = _parse_utc(a.agendado)
+    if a.dia2_nome or a.dia2_agendado:
+        agendado2 = _parse_utc(a.dia2_agendado) if a.dia2_agendado else None
+        if agendado is None or agendado2 is None or not a.dia2_nome:
+            print(json.dumps({"ok": False, "codigo": "AGENDAMENTO_INVALIDO"}))
+            return 2
+        r = conferir_dois_dias(a.raiz, (a.nome, agendado), (a.dia2_nome, agendado2), timedelta(seconds=a.tolerancia))
+        print(json.dumps(r, ensure_ascii=False))
+        return 0 if r["ok"] else 1
     if agendado is None:
         print(json.dumps({"ok": False, "codigo": "AGENDAMENTO_INVALIDO"}))
         return 2
