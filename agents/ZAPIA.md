@@ -39,6 +39,7 @@ Cada comando segue `config/agent_command_schema.json` e a validação de `script
 
 - `ler_arquivo_repositorio` (orientação; só leitura)
 - `enviar_mensagem` (orientação; só ao proprietário)
+- `agendar_rotina` (rotina autorizada de forma permanente pela E26; cria a rotina nativa do app a partir do modelo versionado de `config/rotina_instrucoes.json`, com URLs completos e literais, sem traduzir; o pedido não traz texto livre; relata cada chamada e devolve o recibo com o id da rotina)
 - `registrar_resultado` (sensível; só no repositório privado de dados, com a flag de escrita habilitada)
 - `registrar_exportacao_desempenho` (sensível; mesmas condições)
 - `registrar_plano` (sensível; mesmas condições)

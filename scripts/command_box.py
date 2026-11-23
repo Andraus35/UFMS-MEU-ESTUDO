@@ -32,13 +32,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import agendar_rotina
     import agent_commands
     import command_idempotency
     import command_params_schema
     import notebook_prompt_validator
     from core import ROOT
 except ModuleNotFoundError:  # uso como pacote
-    from scripts import agent_commands, command_idempotency, command_params_schema, notebook_prompt_validator
+    from scripts import agendar_rotina, agent_commands, command_idempotency, command_params_schema, notebook_prompt_validator
     from scripts.core import ROOT
 
 PROMOVER = "PROMOVER"
@@ -184,6 +185,10 @@ def _validar(nome, raw, ctx, schema, entrada_id):
         veredito = notebook_prompt_validator.conferir_parametros(params)
         if not veredito.ok:
             raise _Parar("PROMPT_" + veredito.codigo, "parametros")
+    if operacao == agendar_rotina.OPERACAO:  # ZAPIA-APL (E24, E26): modelo preso à origem, janela, teto por origem, alvo promovido e chave de parada
+        motivo = agendar_rotina.decidir(origem, params, emitido, ctx)
+        if motivo:
+            raise _Parar(motivo, "parametros")
     motivo = command_idempotency.decidir_rotina(  # COR-B: descanso, pendência, agenda e teto diário (S8-R1, S15-R17), tudo injetado
         operacao, chave, params, agora, descanso=ctx.get("dia_de_descanso"), pendentes=ctx.get("atividades_pendentes"),
         chaves_do_dia=ctx.get("chaves_do_dia"))

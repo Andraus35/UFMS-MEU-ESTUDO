@@ -46,6 +46,7 @@ Operações permitidas (formato definido em PR-013 do `PRODUCT.md`):
 
 - `ler_arquivo_repositorio`
 - `enviar_mensagem` (motivacional e organizacional)
+- `agendar_rotina` (pedido estruturado de rotina agendada à Zapia: só os modelos do Coach, E24)
 - `criar_lembrete`
 - `consultar_agenda_minima`
 - `registrar_acompanhamento`

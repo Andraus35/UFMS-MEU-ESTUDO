@@ -50,6 +50,14 @@ Frente **nova**: abre só depois do merge do #185 (regra de lote do `AGENTS.md`)
 - **Limites que a plataforma impõe:** Zapia, TEC (login por código de e-mail, CAPTCHA) e Gemini podem manter confirmação própria; o repositório não os remove (E26).
 - **O que não muda:** consentimento v4, flags de resultado pessoal, janela PJ, merge por pedido expresso e os limites do contrato (dado pessoal e credencial continuam fora; o `AUTORIZO` não era a barreira de privacidade).
 
+## F. Poller e aplicação (decisões dele, 23/11/2026, depois do E23)
+
+- **Prova real da rotina agendada (E23, mesclado):** as rotinas nativas dispararam sozinhas; a de 01:00 (URLs completos e literais) leu, conferiu, notificou e gravou o recibo; a de 00:30 falhou por caminho traduzido (`commands`). Faltam a captura do aparelho e a lista de rotinas do app.
+- **Aplicação (ZAPIA-APL, PR #187):** operação `agendar_rotina` compartilhada, quatro modelos (`F1_ENTREGA_UNICA`, `ROTINA_ESTUDO_DIARIA`, `ROTINA_ESTUDO_SEMANAL`, `BRIEFING_DIARIO`), chave de parada em `settings.json` (ligada), modelos de instrução com hash. **Escolhas dele:** abrir já; chave de parada em `settings.json`; os quatro modelos.
+- **Sugestão da Zapia aceita como direção:** um cron (poller) que lê o repositório periodicamente, valida o pedido e cria a rotina de execução única com o recurso nativo. **Ainda não provado** que uma rotina crie outra (a Zapia diz o mesmo). **Cadência escolhida: de hora em hora, das 06h às 22h** (17 execuções por dia, dentro da cota relatada de 32).
+- **Antecedência mínima do pedido: 90 minutos** (hoje 15 min no código; muda E24/E27 e o teste da janela no lote seguinte, arquivo de contrato).
+- **Ordem:** merge do #187; depois `ZAPIA-F3` (teste de rotina que cria rotina, com pedido sintético manual, recibo `CRIADA`, verificador e o pin do hash do modelo na instrução do poller); `ZAPIA-CTX` (contexto do runner real) segue na fila.
+
 ## E. Como o construtor usa este registro
 
 1. Ler este arquivo junto do START (o `memory/HANDOFF.md` aponta para ele).

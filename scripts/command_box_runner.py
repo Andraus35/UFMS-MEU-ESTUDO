@@ -30,12 +30,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import agendar_rotina
     import agent_commands
     import command_box
     import promotion_runner as pr
     from core import ROOT
 except ModuleNotFoundError:  # uso como pacote
-    from scripts import agent_commands, command_box
+    from scripts import agendar_rotina, agent_commands, command_box
     from scripts import promotion_runner as pr
     from scripts.core import ROOT
 
@@ -138,7 +139,10 @@ def executar(entradas, contexto, caixa):
     ledger = LedgerDuravel(caixa)
     ctx = {"agora": contexto["agora"], "ledger": ledger, "dia_de_descanso": contexto.get("dia_de_descanso"),
            "atividades_pendentes": contexto.get("atividades_pendentes"), "chaves_do_dia": list(contexto["chaves_do_dia"]) if isinstance(contexto.get("chaves_do_dia"), (list, tuple, set, frozenset)) else None,
-           "janela_segundos": contexto.get("janela_segundos", WINDOW_SECONDS)}
+           "janela_segundos": contexto.get("janela_segundos", WINDOW_SECONDS),
+           "agendar_rotina_habilitada": contexto.get("agendar_rotina_habilitada"),  # ZAPIA-APL: chave de parada; ausente recusa
+           "hashes_promovidos": list(contexto["hashes_promovidos"]) if isinstance(contexto.get("hashes_promovidos"), (list, tuple, set, frozenset)) else None,
+           "agendamentos_do_dia": list(contexto["agendamentos_do_dia"]) if isinstance(contexto.get("agendamentos_do_dia"), (list, tuple, set, frozenset)) else None}
     execucao = contexto.get("execucao")
     for nome, bruto in sorted(entradas, key=lambda par: str(par[0])):
         item = {"entrada_id": nome if isinstance(nome, str) and command_box._NAME.fullmatch(nome) and ".." not in nome else "invalido"}
@@ -189,6 +193,7 @@ def _processar(nome, bruto, ctx, caixa, ledger, execucao, sha, item):
         caixa.escrever(VALIDATED + nome, bytes(bruto))  # os MESMOS bytes que foram validados
     ledger.confirmar(nonce, chave, corpo)
     _ocupar_teto(ctx, chave)
+    _ocupar_agendamento(ctx, bruto, res)
     caixa.escrever(RECEIPTS + nome, _recibo(nome, res["status"], res["codigo"], res["hash_corpo"], execucao, sha))
     caixa.remover(f"{BOX}/{nome}")
 
@@ -197,6 +202,17 @@ def _ocupar_teto(ctx, chave):
     """A execução é em série: a chave promovida passa a contar no teto diário das entradas seguintes (COR-B, AC-3)."""
     if ctx.get("chaves_do_dia") is not None and chave not in ctx["chaves_do_dia"]:
         ctx["chaves_do_dia"].append(chave)
+
+
+def _ocupar_agendamento(ctx, bruto, res):
+    """Execução em série: o pedido `agendar_rotina` promovido passa a contar no teto por origem e o comando promovido vira alvo válido (ZAPIA-APL)."""
+    if res["status"] != command_box.PROMOVER:
+        return
+    comando = json.loads(bytes(bruto).decode("utf-8"))
+    if comando.get("operation") == "agendar_rotina" and ctx.get("agendamentos_do_dia") is not None:
+        ctx["agendamentos_do_dia"].append(comando.get("origin"))
+    if ctx.get("hashes_promovidos") is not None and res.get("hash_corpo") not in ctx["hashes_promovidos"]:
+        ctx["hashes_promovidos"].append(res["hash_corpo"])
 
 
 def _rejeitar(nome, codigo, ctx, caixa, item, registro=None):
@@ -241,7 +257,8 @@ def main(argv=None, transporte=None, ambiente=None, agora=None):
         t = transporte or pr.transporte_urllib
         caixa = Caixa(pr.GitHubApi(ambiente.get("GH_TOKEN", ""), t), a.entrada_repo)
         contexto = {"escritas_habilitadas": True, "agora": agora or datetime.now(timezone.utc), "execucao": a.execucao,
-                    "validador_sha": pr.ler_head_sha(validador), "validador_sha_fixado": a.validador_sha}
+                    "validador_sha": pr.ler_head_sha(validador), "validador_sha_fixado": a.validador_sha,
+                    "agendar_rotina_habilitada": agendar_rotina.flag_habilitada(validador)}
         resumo = executar(ler_caixa(a.comandos), contexto, caixa)
     except Exception as erro:  # nunca imprime a exceção: só a classe
         print(json.dumps({"estado": "ERRO", "codigo": type(erro).__name__}))

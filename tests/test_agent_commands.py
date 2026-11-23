@@ -36,6 +36,10 @@ def run(command, ledger=None, now=NOW, flags=None):
     return ac.validate_command(command, keys=KEYS, now=now, ledger=ledger or ac.CommandLedger(), schema=SCHEMA, flags=flags)
 
 
+PARAMS_SHARED = {"enviar_mensagem": {"texto": "x"}, "ler_arquivo_repositorio": {"caminho": "edital/INDEX.md"},
+                 "agendar_rotina": {"modelo": "F1_ENTREGA_UNICA", "agendado_utc": "2026-11-24T14:00:00Z", "comandos_sha256": ["a" * 64]}}
+
+
 class CommandSchemaTests(unittest.TestCase):
     def test_comando_valido_e_aceito_para_cada_perfil(self):
         self.assertEqual(run(make())["decision"], ac.ACCEPTED)
@@ -70,7 +74,7 @@ class CommandSchemaTests(unittest.TestCase):
     def test_operacoes_compartilhadas_servem_aos_dois(self):
         for op in SHARED:
             for origin in ("tutor", "coach"):
-                self.assertEqual(run(make(origin, op, params={"texto": "x"} if op == "enviar_mensagem" else {"caminho": "edital/INDEX.md"}))["decision"], ac.ACCEPTED, (origin, op))
+                self.assertEqual(run(make(origin, op, params=PARAMS_SHARED[op]))["decision"], ac.ACCEPTED, (origin, op))
 
     def test_destino_nao_designado(self):
         self.assertEqual(run(make(destination="qualquer_pessoa"))["code"], "DESTINO_NAO_DESIGNADO")

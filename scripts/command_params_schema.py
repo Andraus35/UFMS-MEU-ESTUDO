@@ -18,10 +18,11 @@ from datetime import date
 from pathlib import Path
 
 try:
+    import agendar_rotina
     import command_idempotency
     import content_filters
 except ImportError:  # pragma: no cover - importação por pacote
-    from scripts import command_idempotency, content_filters
+    from scripts import agendar_rotina, command_idempotency, content_filters
 
 ROOT = Path(__file__).resolve().parents[1]
 FLAG = "personal_results_writes_enabled"
@@ -33,6 +34,7 @@ ESQUEMAS = {
     "consultar_agenda_minima": {"data": str},
     "criar_lembrete": {"atividade_ids": list, "lembrete_sha256": str},
     "registrar_plano": {"plano": dict},
+    "agendar_rotina": {"modelo": str, "agendado_utc": str, "comandos_sha256": list},  # ZAPIA-APL: forma fechada; o resto é do agendar_rotina.decidir
 }
 SEM_ESQUEMA_FECHADO: tuple = ()  # GAP-A2: nenhuma operação fica sem esquema
 CHAVES_DO_PLANO = frozenset({"parameters", "days", "unscheduled_reviews", "topics_not_reached", "note"})
@@ -79,6 +81,10 @@ def _validar_conteudo(operation: str, params: dict) -> str | None:
             return "PARAMS_LISTA_INVALIDA"
         if not command_idempotency.HEX64.fullmatch(params["lembrete_sha256"]):
             return "PARAMS_HASH_INVALIDO"
+    if operation == "agendar_rotina":
+        motivo = agendar_rotina.validar_forma(params)
+        if motivo:
+            return motivo
     if operation == "registrar_plano":
         chaves = set(params["plano"])
         if not OBRIGATORIAS_DO_PLANO <= chaves <= CHAVES_DO_PLANO:

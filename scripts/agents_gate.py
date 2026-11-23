@@ -17,7 +17,7 @@ try:
 except ModuleNotFoundError:
     from scripts.core import ROOT
 
-SHARED = frozenset({"ler_arquivo_repositorio", "enviar_mensagem"})
+SHARED = frozenset({"ler_arquivo_repositorio", "enviar_mensagem", "agendar_rotina"})
 TUTOR_ONLY = frozenset({"registrar_resultado", "registrar_exportacao_desempenho", "registrar_plano",
                         "enviar_prompt_notebook"})
 COACH_ONLY = frozenset({"criar_lembrete", "consultar_agenda_minima", "registrar_acompanhamento"})
