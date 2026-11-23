@@ -10,7 +10,7 @@ class RegistroTeste(unittest.TestCase):
         t = DOC.read_text(encoding="utf-8")
         for trecho in ("ctx_leitura_real.py", "zapia_poller.py", "prova_f3_zapia.sh", "90 min", "não provado", "SINTETICO_MANUAL", "autorrelato",
                        "captura da lista de rotinas do app", "pin", "Se a Zapia NÃO conseguir criar rotina de dentro de rotina", "refuta a hipótese",
-                       "não foi executado com o `gh` real", "Promoção pelo fluxo", "pontualidade em vários dias", "pedido expresso", "S20-R9"):
+                       "não foi executado com o `gh` real", "Promoção pelo fluxo", "pontualidade em vários dias", "pedido expresso", "S20-R9", "REFUTADO", "I cannot create a routine from inside a routine"):
             self.assertIn(trecho, t, trecho)
 
 

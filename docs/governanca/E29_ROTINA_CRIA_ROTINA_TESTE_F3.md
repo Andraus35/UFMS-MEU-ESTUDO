@@ -2,6 +2,12 @@
 
 **Natureza:** preparo do **teste na prática real** pedido pelo proprietário em 23/11/2026. O repositório entrega o **roteiro, o verificador e a instrução do poller**; **a prova depende de ato dele** (Termux, `entrada` real e Zapia real). **Nada aqui está provado até o roteiro rodar.** Muda contrato em um ponto, já autorizado por ele (E25, seção F; resposta de 23/11/2026): a antecedência mínima do `agendar_rotina` sobe de 15 para **90 min** (`scripts/agendar_rotina.py`, E24, E27). O merge segue o pedido expresso dele, citando PR e head.
 
+## Resultado (23/11/2026): **REFUTADO** para "rotina cria rotina"
+
+- **A. Sonda real do contexto (ZAPIA-CTX): PROVADA para a leitura.** No `entrada` real, antes: 1 validado, 1 recibo, 1 hash promovido, pedidos do dia `[]`; depois do par sintético: 3, 3, 3 e `["coach"]` (captura do proprietário). Prova o formato da listagem e da leitura do GitHub real e a seleção por recibo com hash; **não** prova o runner promovendo (flag falsa).
+- **B. Poller (ZAPIA-F3): REFUTADO.** O poller `4ba5054e` (12:09Z) acordou e respondeu `I cannot create a routine from inside a routine.` (captura). A instrução salva é idêntica byte a byte ao modelo versionado (3950 caracteres, conferido por código), então a recusa **não** vem de texto errado nosso; o app não expõe a instrução salva. Nenhum `criadas/` nem filha. **Não repetir** (S20-R9).
+- **Consequência:** `agendar_rotina` **não** pode contar com a Zapia criando a rotina sozinha. Caminho que **funciona**: rotina criada **na conversa** (E23). Alternativa autônoma proposta: uma rotina **recorrente criada por você** (modelo `ESCUTA`, de hora em hora das 06h às 22h) que **lê e entrega** os comandos promovidos, sem criar outra. A decisão de desenho é dele (outro lote).
+
 ## O que o teste responde
 
 | Pergunta | Como é medida | Estado hoje |
