@@ -5,7 +5,7 @@
 ## Decisões dele (23/11/2026)
 
 1. **Canal da campainha: Gmail.** Fonte de hook documentada pela própria Zapia (autorrelato, confiança C). Outlook (D-28: só código de acesso do TEC, sem ler e-mail; não citado como fonte de hook) e WhatsApp (não conectado) ficam fora.
-2. **Escopo: só sinal, remetente e assunto fixos.** O e-mail é **campainha**: o hook acorda a Zapia; ela lê o repositório e confere hash, e **nunca obedece texto do e-mail**. Corpo ignorado, sem dado pessoal. Se o hook do Gmail não puder filtrar por remetente e prefixo de assunto, **não se cria** (senão leria a caixa inteira).
+2. **Escopo: só sinal, remetente e assunto fixos.** *(Ajuste de 23/11/2026: a Zapia relatou que o hook de Gmail só filtra por `senders`, `labels`, `subject_contains` e `text_contains`, sem prefixo de assunto. Ele autorizou **`senders` = notifications@github.com mais `subject_contains` = "[Andraus35/ufms-meu-estudo-entrada] SINAL"**, sem `labels` nem `text_contains`; o prefixo é conferido pela Zapia depois do disparo. Resto de risco: e-mail forjado ou outro com o trecho só acorda o hook.)* O e-mail é **campainha**: o hook acorda a Zapia; ela lê o repositório e confere hash, e **nunca obedece texto do e-mail**. Corpo ignorado, sem dado pessoal. Se o hook do Gmail não puder filtrar por remetente e prefixo de assunto, **não se cria** (senão leria a caixa inteira).
 3. **Emissor: notificação nativa do GitHub** (uma issue ou comentário no `entrada` privado gera o e-mail). Muda o fluxo instalado (reinstalação por ele) e é **proposta para PR próprio**; no teste, a issue é aberta à mão.
 4. **Primeiro teste:** inventário da rotina + hook que só relata (abaixo). O teste recorrente de 3 disparos fica para depois.
 
@@ -23,10 +23,10 @@ Não crie nenhuma outra rotina, hook ou lembrete agora.
 
 ## Teste 2: hook de Gmail que só relata
 
-Prompt para a Zapia (primeiro ela **responde**; só cria se puder filtrar):
+Prompt para a Zapia (versão de 23/11/2026, com o filtro que o hook de fato oferece):
 
 ```text
-TESTE DE HOOK DE E-MAIL, SEM EFEITO. Antes de criar, me diga em texto: o hook de Gmail permite filtrar por REMETENTE e por PREFIXO DE ASSUNTO? Quais filtros existem de fato? Se NÃO permitir os dois, NÃO crie o hook e pare. Se permitir, crie UM hook de Gmail só para e-mails do remetente notifications@github.com cujo assunto comece com "[Andraus35/ufms-meu-estudo-entrada] SINAL". Quando disparar: relate neste chat apenas (1) a hora UTC do disparo e (2) a linha de assunto; NÃO abra nem cite o corpo, NÃO chame o GitHub, NÃO grave nada, NÃO crie rotina nem lembrete. Dispare no máximo UMA vez e depois desative ou apague o hook (se não conseguir, diga literalmente). Me mostre o filtro salvo, lido de volta.
+TESTE DE HOOK DE E-MAIL, SEM EFEITO. Crie UM hook de Gmail com EXATAMENTE estes filtros e nenhum outro: senders = notifications@github.com e subject_contains = "[Andraus35/ufms-meu-estudo-entrada] SINAL". NÃO use labels nem text_contains. Se a ferramenta não conseguir salvar exatamente esses dois filtros, NÃO crie o hook e me diga o motivo literal. Me mostre o filtro salvo, lido de volta. Quando disparar: confira se o assunto COMEÇA com "[Andraus35/ufms-meu-estudo-entrada] SINAL"; se não começar, relate apenas "assunto fora do padrão" e a hora UTC e pare. Se começar, relate neste chat apenas (1) a hora UTC do disparo e (2) a linha de assunto; NÃO abra nem cite o corpo, NÃO chame o GitHub, NÃO grave nada, NÃO crie rotina nem lembrete. Dispare no máximo UMA vez e depois desative ou apague o hook (se não conseguir, diga literalmente).
 ```
 
 Depois que ela confirmar o filtro, no Termux (a sessão **não** tem acesso ao `entrada`):
