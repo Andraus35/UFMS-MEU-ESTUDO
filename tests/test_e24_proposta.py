@@ -11,7 +11,7 @@ class PropostaTeste(unittest.TestCase):
     def test_a_proposta_traz_os_pontos_para_aprovacao(self):
         t = DOC.read_text(encoding="utf-8")
         for trecho in ("proposta de texto", "nada aqui está aplicado", "`agendar_rotina`", "zapia_rotina", "Compartilhada por Tutor e Coach", "ORIGEM_FORA_DO_MODELO", "REVISAO_NOTEBOOK_AGENDADA", "RELATORIO_TEC_AGENDADO", "ROTINA_ESTUDO_DIARIA", "rotina_id_relatado", "não é garantível por código", "Nenhum conteúdo pedagógico vai nos params", "F1_ENTREGA_UNICA",
-                       "AUTORIZO", "por turno", "autorização permanente", "chave de parada", "Recibo de volta obrigatório", "a frase continua valendo", "modelo versionado", "15 min e 24 h", "1 pedido por dia por origem", "Autoescalonamento",
+                       "AUTORIZO", "por turno", "autorização permanente", "chave de parada", "Recibo de volta obrigatório", "a frase continua valendo", "modelo versionado", "90 min e 24 h", "1 pedido por dia por origem", "Autoescalonamento",
                        "Não está provado", "duas aprovações expressas", "recibo de volta"):
             self.assertIn(trecho, t, trecho)
 

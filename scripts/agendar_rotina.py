@@ -5,7 +5,7 @@ Função pura, sem rede, arquivo próprio (só lê `settings.json` e `config/rot
 - **Params fechados, sem texto livre:** `modelo` (lista fechada), `agendado_utc` (primeiro disparo, UTC) e `comandos_sha256` (hashes de comandos JÁ
   promovidos; 1 para `F1_ENTREGA_UNICA`, 0 para os modelos de escuta diária).
 - **Cada modelo pertence a uma origem** (`MODELOS`): a caixa recusa o cruzado (`ORIGEM_FORA_DO_MODELO`).
-- **Limites determinísticos** (a autorização é permanente, E26, não há frase por mensagem): primeiro disparo entre 15 min e 24 h depois do `issued_at`;
+- **Limites determinísticos** (a autorização é permanente, E26, não há frase por mensagem): primeiro disparo entre 90 min e 24 h depois do `issued_at`;
   no máximo 1 pedido por dia por origem; cada hash tem de ser de comando já promovido; **chave de parada** versionada
   (`automation.agendar_rotina_enabled` em `settings.json`): falsa, ausente ou ilegível recusa (`ROTINA_PARADA`).
 - **A instrução que a Zapia segue NÃO vem do comando:** vem dos modelos versionados de `config/rotina_instrucoes.json`, com hash conferido por `check`,
@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OPERACAO = "agendar_rotina"
 DESTINO = "zapia_rotina"
 FLAG = "agendar_rotina_enabled"
-ANTECEDENCIA_MINIMA = timedelta(minutes=15)
+ANTECEDENCIA_MINIMA = timedelta(minutes=90)  # decisão do proprietário de 23/11/2026 (E25, seção F; antes 15 min)
 ANTECEDENCIA_MAXIMA = timedelta(hours=24)
 MAX_POR_DIA_POR_ORIGEM = 1
 INSTRUCOES = "config/rotina_instrucoes.json"
