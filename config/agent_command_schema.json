@@ -35,7 +35,8 @@
     "registrar_acompanhamento": "repo_privado_dados",
     "enviar_prompt_notebook": "notebook_estudo",
     "criar_lembrete": "agenda_proprietario",
-    "consultar_agenda_minima": "agenda_proprietario"
+    "consultar_agenda_minima": "agenda_proprietario",
+    "agendar_rotina": "zapia_rotina"
   },
   "limits": {
     "max_command_bytes": 16384,

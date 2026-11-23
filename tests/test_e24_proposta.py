@@ -20,12 +20,12 @@ class PropostaTeste(unittest.TestCase):
         self.assertIn("A instrução que a Zapia segue NÃO vem do comando", t)
         self.assertIn("nada de texto livre", t)
 
-    def test_nao_foi_aplicada_ao_contrato(self):
+    def test_foi_aplicada_ao_contrato_pelo_lote_zapia_apl(self):
+        """A E24 era proposta; a aplicação (ZAPIA-APL) a levou ao esquema, aos perfis e ao gate. O texto da E24 segue como origem do desenho."""
         esquema = json.loads((ROOT / "config" / "agent_command_schema.json").read_text(encoding="utf-8"))
-        self.assertNotIn("agendar_rotina", esquema["destinations"])
-        self.assertNotIn("zapia_rotina", esquema["destinations"].values())
-        for rel in ("agents/COACH.md", "agents/ZAPIA.md", "scripts/command_params_schema.py", "scripts/agents_gate.py", "scripts/command_box.py"):
-            self.assertNotIn("agendar_rotina", (ROOT / rel).read_text(encoding="utf-8"), rel)
+        self.assertEqual(esquema["destinations"]["agendar_rotina"], "zapia_rotina")
+        for rel in ("agents/TUTOR.md", "agents/COACH.md", "agents/ZAPIA.md", "scripts/command_params_schema.py", "scripts/agents_gate.py", "scripts/command_box.py"):
+            self.assertIn("agendar_rotina", (ROOT / rel).read_text(encoding="utf-8"), rel)
 
 
 if __name__ == "__main__":

@@ -34,9 +34,10 @@ class EmendaTeste(unittest.TestCase):
         self.assertIn("**Mantém** `AUTORIZO` para ler e-mail (E-07)", t)
         self.assertLessEqual(len(t.encode("utf-8")), 38 * 1024)
 
-    def test_agents_e_esquema_nao_mudaram_e_a_operacao_segue_so_proposta(self):
+    def test_agents_md_nao_cita_a_frase_e_a_operacao_foi_aplicada_pelo_lote_apl(self):
+        self.assertNotIn("AUTORIZO", (ROOT / "AGENTS.md").read_text(encoding="utf-8"))  # a E26 não precisou mudar o AGENTS.md
         for rel in ("agents/ZAPIA.md", "agents/TUTOR.md", "agents/COACH.md", "scripts/command_params_schema.py", "scripts/agents_gate.py"):
-            self.assertNotIn("agendar_rotina", (ROOT / rel).read_text(encoding="utf-8"), rel)
+            self.assertIn("agendar_rotina", (ROOT / rel).read_text(encoding="utf-8"), rel)  # ZAPIA-APL
 
 
 if __name__ == "__main__":

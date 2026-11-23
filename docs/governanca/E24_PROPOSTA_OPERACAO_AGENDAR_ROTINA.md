@@ -1,5 +1,7 @@
 # E24 — Proposta: operação `agendar_rotina` para o Coach pedir à Zapia uma rotina agendada (texto para aprovação) (22/11/2026)
 
+> **Estado (23/11/2026):** aplicada pelo lote ZAPIA-APL (`E27_APLICACAO_AGENDAR_ROTINA.md`); o texto abaixo é a origem do desenho.
+
 **Natureza:** **proposta de texto** para o proprietário aprovar; **nada aqui está aplicado**. Este documento **não altera** `agents/`, `config/agent_command_schema.json`, `scripts/command_params_schema.py`, `scripts/agents_gate.py`, `AGENTS.md` nem `PRODUCT.md`. A aplicação é um **lote seguinte**, só depois de **duas aprovações expressas**: do texto abaixo e do merge, citando PR e head. Origem: decisão de desenho do proprietário (22/11/2026; emitir por Tutor e Coach, 23/11/2026): "o Coach dá, via repositório, os horários e instruções à Zapia, para ela criar no app dela os agendamentos, porque no harness Tutor e Coach instruem a Zapia, e não o contrário". Insumo: leitura offline do Coach (sub-agente somente leitura, 22/11/2026) e o lote ZAPIA-F2a (roteiro e verificador do disparo).
 
 ## O problema

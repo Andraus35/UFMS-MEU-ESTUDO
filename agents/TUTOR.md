@@ -46,6 +46,7 @@ Operações permitidas (formato definido em PR-013 do `PRODUCT.md`):
 
 - `ler_arquivo_repositorio`
 - `enviar_mensagem` (conteúdo didático)
+- `agendar_rotina` (pedido estruturado de rotina agendada à Zapia: só os modelos de estudo do Tutor, E24)
 - `registrar_resultado`
 - `registrar_exportacao_desempenho`
 - `registrar_plano`

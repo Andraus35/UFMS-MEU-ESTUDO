@@ -45,6 +45,9 @@
     "adaptive_blocks": true,
     "require_result_evidence": true
   },
+  "automation": {
+    "agendar_rotina_enabled": true
+  },
   "storage": {
     "repository_must_be_private_for_personal_results": true,
     "personal_results_writes_enabled": false,
