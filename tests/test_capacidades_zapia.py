@@ -23,6 +23,13 @@ class RegistroTeste(unittest.TestCase):
                        "AUTORIZO rotina automática agora"):
             self.assertIn(trecho, t, trecho)
 
+    def test_o_resumo_traz_a_prova_da_rotina_as_licoes_e_o_que_nao_esta_provado(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("PROVADO (23/11/2026, E23", "dispararam sozinhas", "traduziu `comandos` para `commands`", "github_ufms_repo_token", "em inglês",
+                       "relato de cada chamada", "de hora em hora, das 06h às 22h", "uma rotina crie outra", "ZAPIA-F3", "sem a frase `AUTORIZO`"):
+            self.assertIn(trecho, r, trecho)
+        self.assertNotIn("a **rotina agendada** da Zapia;", r)  # a versão antiga do NÃO PROVADO, superada pelo E23
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)
