@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #183; SHA 62053944c8dac7dd1d91415368a28f0d368bfeec
-- Frente ativa: **RM-09 / PR #184**; branch `ccr-9c6a8507-2f8tri`; base main; fase review.
+- Último merge comprovado: PR #184; SHA 73c0978c1f5a97cfdedf892f762a8b1f6f7f1fa3
+- Frente ativa: **RM-09 / PR #185**; branch `ccr-ae23a584-dzxoku`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -20,6 +20,8 @@ Toda sessão lê `docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md` (o `bootstra
 ## Ponto de retomada da próxima sessão
 
 > **Aviso de defasagem do checkpoint.** O bloco "Checkpoint vigente" acima registra a frente ativa e o PR **no momento do último commit de estado**. Depois que esse PR é mesclado, o bloco fica **defasado** até o recibo do merge, que só entra no primeiro commit da próxima tarefa (`record_merge_receipt.py`). Por isso, antes de afirmar o estado de um PR ou frente, **confirme**: rode `python scripts/next_task.py` (ele lê o histórico Git e diz se o PR registrado já foi mesclado) ou consulte o PR por API. Se o HEAD for o commit de merge do PR registrado como "em revisão", o PR **já foi mesclado** e o recibo está pendente.
+
+**LEITURA OBRIGATÓRIA (23/11/2026): decisões e necessidades do proprietário da sessão de 22 e 23/11 (agendamento pela Zapia, Tutor e Coach emitem, ciclo de revisão 24 h/5 d/10 d/20 d/30 d da S21, regras de trabalho):** `docs/governanca/E25_REGISTRO_DE_DECISOES_DO_PROPRIETARIO_20261122_23.md` (registro, não contrato; ler antes do F2a e da S21).
 
 **PONTO DE RETOMADA (22/11/2026, ligação Tutor/Coach↔Zapia):** lote `ZAPIA-F1b` no **PR #184** (draft; #178 a #183 mesclados, COR-A a COR-E feitas). **PROVADO (relato do proprietário com capturas, conferido por código):** a Zapia, por HTTP com a credencial "zapia token", **leu um arquivo privado de `entrada` e gravou o valor aleatório de volta** (sonda de leitura; `docs/governanca/E22_SONDA_DE_LEITURA_ZAPIA_20261122.md`); a integração **não precisa de conector de GitHub**. Formato de chamada real: `curl` restrito, uma chamada simples por vez, sem `;`, só `-X`, `-H`, `-d`. A credencial precisa estar preenchida no formulário seguro dela. **FALTA:** rodar no GitHub real o **teste F1** (`bash scripts/termux/prova_f1_zapia.sh`, dentro do clone; par sintético manual, recibo `SINTETICO_MANUAL`), depois escrever `E21_ZAPIA_F1_PROVA_REAL.md` (só então o item `ZAPIA-F1` conta como feito); depois a rotina da Zapia (exige a frase `AUTORIZO`), a promoção pelo fluxo (flag e PJ) e a notificação espontânea (F3). A **COR-E (#183) foi mesclada**; a fila de correção está completa. Decisões do proprietário de 22/11: D1 = HTTP com token (não conector), D2 = rotina da Zapia, D3 = fluxo do repositório privado. P9: token regenerado e preenchido no formulário seguro em 22/11.
 

@@ -1,5 +1,7 @@
 # S14 — Runtime operacional do harness (especificação)
 
+**Emenda E26 (23/11/2026):** a exigência da frase `AUTORIZO` por mensagem, onde este documento a citar para rotina, lembrete, hook ou comando entre agentes, Zapia, TEC e Gemini, foi **excluída** pela decisão do proprietário; ao **fim** há a seção "Emenda do AUTORIZO (E26)", que **vale onde divergir**. Registro: `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16), segundo a Spec Lean da Tech Leads Club **no que couber**: plano com portas sem volta, requisitos pareados a uma prova e verificação por quem não escreveu. Trata do **harness em produção** (Tutor, Coach, Zapia, canal e rotinas), não da sua construção. **Aponta** para S2, S3, S5, S6, S7, S8, S9, S10, S11 e S12 e **não os copia**. É texto de engenharia: **não habilita** nada, **não** altera flag e **não** contém dado pessoal.
 
 **Regra do proprietário (19/11/2026), nas palavras dele:** o **LLM é livre na cognição probabilística**, mas **condicionado nas leituras e nas entregas por gates e mecanismos determinísticos**. Isto é coerente com a autonomia cognitiva do `AGENTS.md` (o Tutor e o Coach decidem abordagem, conteúdo e revisão) e com a sua exigência de que **efeito externo** passe por gate. Esta especificação **não restringe o raciocínio**: restringe **o que entra** (leitura) e **o que sai** (entrega e efeito).
@@ -113,3 +115,7 @@ Uma por vez, **fora deste PR**, cada uma um item de `work_queue` com testes e co
 - **Não prova** nada contra o app Claude, a Zapia ou o portão reais; as afirmações do proprietário sobre o que fez continuam **relato**.
 - **Nenhum gate avalia a qualidade da cognição**: ela é **livre por desenho** e controlada por avaliação offline e por amostra, **sem garantia**.
 - **Não garantido:** que o modelo siga o contrato no chat direto; a veracidade de um resultado bem-formado; a conduta da Zapia; a utilidade pedagógica (RM-10); a produção como um todo.
+
+## Emenda do AUTORIZO (E26, 23/11/2026)
+
+O `AUTORIZO` por mensagem **deixa de ser exigido** para criar, alterar ou ligar rotina, lembrete ou hook e para os comandos de Tutor e Coach à Zapia, ao TEC e ao Gemini Notebook por ela (decisão do proprietário, 23/11/2026). Vale no lugar dele a **autorização permanente** (a aprovação do texto da E26), com escopo fechado, as travas determinísticas (caixa, tetos, recibo de mesmo hash, teste sem efeito automático, parada) e os limites declarados em `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`. **Continua exigindo `AUTORIZO`:** leitura de e-mail (E-07). Onde este documento disser que a frase é condição, vale esta emenda. Plataformas (Zapia, TEC, Gemini) podem manter regras próprias de confirmação ou login; isso não é removido.
