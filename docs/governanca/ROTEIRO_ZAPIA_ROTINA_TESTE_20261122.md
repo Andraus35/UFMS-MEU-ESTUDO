@@ -1,5 +1,7 @@
 # Roteiro da rotina de teste da Zapia, execução única (S20-R6, S15-R4, S8-R8) (22/11/2026)
 
+> **E26 (23/11/2026):** com a emenda mesclada, a frase `AUTORIZO` deste roteiro **deixa de ser exigida**; até o merge, continua valendo.
+
 **Quem executa:** o proprietário (a sessão não tem acesso à Zapia e não cria rotina). **Pré-requisito provado:** o F1 (E21): a Zapia lê comando e recibo em `entrada` por HTTP com o token dela, confere o hash, mostra a notificação e grava o recibo de volta. **Objetivo:** provar, **uma vez**, que a Zapia **acorda sozinha** na hora marcada e faz esse mesmo caminho, sem você colar prompt. **Sem dado pessoal.** Resultado: autorrelato dela **mais** conferência por código nosso (`scripts/zapia_disparo.py`); confiança B só onde o carimbo confere.
 
 **Não prova:** pontualidade em vários dias (S15-R4 pede três dias, é outro lote), promoção pelo fluxo (flag e PJ: aqui o par continua colocado à mão e marcado `SINTETICO_MANUAL`), rotina diária do Coach (F3) nem notificação fora da conversa se o aparelho bloquear. O horário da Zapia é a palavra dela até o código conferir.

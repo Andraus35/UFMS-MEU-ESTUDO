@@ -43,7 +43,7 @@ A caixa recusa modelo que não pertença à origem do comando (`ORIGEM_FORA_DO_M
 
 ## Autorização: o `AUTORIZO` por mensagem sai (decisão do proprietário, 23/11/2026)
 
-**Decisão dele:** excluir a necessidade de o proprietário ou o estudante dizer `AUTORIZO` nas automações entre agentes, Zapia e Gemini. **Isso emenda S5-R9, S8-R8, S19-R4, S20-R6, o texto de `PRODUCT.md` que cita a frase e os perfis** (`agents/ZAPIA.md`, `AGENTS.md` na parte de rotina autorizada); **a emenda é outro PR, com aprovação expressa do texto**. **Até ela ser mesclada, a frase continua valendo** (o roteiro de teste mantém o `AUTORIZO`).
+**Decisão dele:** excluir a necessidade de o proprietário ou o estudante dizer `AUTORIZO` nas automações entre agentes, Zapia e Gemini. **Isso emenda S5-R9, S8-R8, S19-R4, S20-R6, o texto de `PRODUCT.md` que cita a frase e os perfis** (`agents/ZAPIA.md`, `AGENTS.md` na parte de rotina autorizada); **a emenda é a E26** (`docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`), no mesmo PR #185, e **entra em vigor com o merge dele**. **Até o merge da E26, a frase continua valendo** (o roteiro de teste mantém o `AUTORIZO`).
 
 **(PROPOSTA)** O que o substitui, para a autorização não sumir sem deixar rastro:
 1. **Autorização permanente e registrada:** a aprovação expressa do proprietário ao texto desta proposta e ao merge da aplicação **é** a autorização, por escrito no repositório, com **escopo fechado** (só os modelos listados na tabela e só as operações do esquema).

@@ -1,5 +1,7 @@
 # S6 — Execução e canal de comandos do Tutor e do Coach (especificação)
 
+**Emenda E26 (23/11/2026):** a exigência da frase `AUTORIZO` por mensagem, onde este documento a citar para rotina, lembrete, hook ou comando entre agentes, Zapia, TEC e Gemini, foi **excluída** pela decisão do proprietário; ao **fim** há a seção "Emenda do AUTORIZO (E26)", que **vale onde divergir**. Registro: `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16), segundo a Spec Lean da Tech Leads Club **no que couber**: plano com portas sem volta, requisitos pareados a uma prova e verificação por quem não escreveu. Responde ao **OPEN-09**: **onde** o Tutor e o Coach rodam, **como leem** o harness e **como** o que eles decidem chega à Zapia e ao repositório **de forma automatizada**, sem passo manual e com tudo no repositório. **Aponta** para o que existe (`docs/especificacoes/S4_OPERACAO.md`, `docs/especificacoes/S5_ZAPIA.md`, `docs/especificacoes/S7_PERSISTENCIA_ESCRITOR.md`, `scripts/agent_entrypoint.py`, `scripts/agent_commands.py`); não copia. **Só especificação:** a flag `personal_results_writes_enabled` continua **falsa**, nada é gravado e nenhum código é criado. Não contém estado nem dado pessoal.
 
 **Decisões do proprietário (17/11/2026), nas palavras dele:** "Não quero nada manual e local quero tudo automatizado e em repositório". Escolheu: (1) **sessões do app Claude na nuvem, como hoje**; (2) **fila no repositório privado e validação por GitHub Actions** como prova de origem; (3) **a Zapia entrega o dado na fila e o fluxo de Actions grava**; (4) **esperar a automação** para o simulado diagnóstico. As decisões (1) a (3) **emendam o D-18** (que supunha o computador do proprietário e chaves locais) **e o D-02** (que fazia a Zapia gravar direto no histórico); a emenda formal do `PRODUCT.md` é a tarefa E1.
@@ -108,3 +110,7 @@ Para **este** PR (só especificação):
 - **O simulado diagnóstico espera a automação** (decisão do proprietário, 17/11/2026): enquanto isso nenhum resultado fica em arquivo local nem em repositório.
 - Não contém horário, ritmo, plano nem resultado do proprietário; não habilita a escrita de resultados nem toca em `scripts/tool_gateway.py`.
 - A Spec Lean foi aplicada **no que couber** (D-13): sem sub-agente verificador e sem os artefatos `.specs/` da skill.
+
+## Emenda do AUTORIZO (E26, 23/11/2026)
+
+O `AUTORIZO` por mensagem **deixa de ser exigido** para criar, alterar ou ligar rotina, lembrete ou hook e para os comandos de Tutor e Coach à Zapia, ao TEC e ao Gemini Notebook por ela (decisão do proprietário, 23/11/2026). Vale no lugar dele a **autorização permanente** (a aprovação do texto da E26), com escopo fechado, as travas determinísticas (caixa, tetos, recibo de mesmo hash, teste sem efeito automático, parada) e os limites declarados em `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`. **Continua exigindo `AUTORIZO`:** leitura de e-mail (E-07). Onde este documento disser que a frase é condição, vale esta emenda. Plataformas (Zapia, TEC, Gemini) podem manter regras próprias de confirmação ou login; isso não é removido.

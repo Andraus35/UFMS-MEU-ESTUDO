@@ -1,5 +1,7 @@
 # S15 — Orquestração do ciclo: fluxo, rotina e fonte de tempo (especificação)
 
+**Emenda E26 (23/11/2026):** a exigência da frase `AUTORIZO` por mensagem, onde este documento a citar para rotina, lembrete, hook ou comando entre agentes, Zapia, TEC e Gemini, foi **excluída** pela decisão do proprietário; ao **fim** há a seção "Emenda do AUTORIZO (E26)", que **vale onde divergir**. Registro: `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16), no modelo do `docs/especificacoes/README.md`. **Unifica**, em um só lugar, as decisões já tomadas sobre o fluxo e a rotina dos agentes (Tutor e Coach) com a Zapia e o estudante, e **fecha a lacuna que nenhuma especificação tinha: a fonte de verdade do tempo**, isto é, quem diz que "agora" é tal instante, quem **acorda** os agentes e como os prazos de estudo e de revisão são avaliados. **Aponta** para o que existe (S1 a S14, `PRODUCT.md`); **não copia** nem substitui; em conflito vale a especificação de origem, depois o `AGENTS.md`. **Não implanta, não autoriza e não homologa nada.** Horários e ritmo pessoais **não** constam aqui (são dados pessoais, ficam no plano privado, S8).
 
 **Método:** a skill Spec Lean (Tech Leads Club) é usada "no que couber" (D-13); **a instalação dela nesta sessão foi negada pelo ambiente**, então o modelo seguido é o do README, que a descreve (objetivo, pesquisa, requisitos com aceite, limites). Isso é lacuna declarada, não aprovação de método.
@@ -114,3 +116,7 @@ Cada linha aponta para a **origem**; a S15 não as reabre.
 - Dados de pontualidade vêm de **relatos e documentação**, não de medição.
 
 **Não garantido:** que o gatilho agendado dispare no horário nem que não perca execuções; que a Zapia entregue ou que o estudante leia a mensagem; que o relógio do ambiente esteja correto (assume-se o do ambiente, sem verificação externa); que a projeção reflita o que o estudante fez fora do registro; que o horário e a frequência sejam pedagogicamente bons; a persistência de resultados (desligada).
+
+## Emenda do AUTORIZO (E26, 23/11/2026)
+
+O `AUTORIZO` por mensagem **deixa de ser exigido** para criar, alterar ou ligar rotina, lembrete ou hook e para os comandos de Tutor e Coach à Zapia, ao TEC e ao Gemini Notebook por ela (decisão do proprietário, 23/11/2026). Vale no lugar dele a **autorização permanente** (a aprovação do texto da E26), com escopo fechado, as travas determinísticas (caixa, tetos, recibo de mesmo hash, teste sem efeito automático, parada) e os limites declarados em `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`. **Continua exigindo `AUTORIZO`:** leitura de e-mail (E-07). Onde este documento disser que a frase é condição, vale esta emenda. Plataformas (Zapia, TEC, Gemini) podem manter regras próprias de confirmação ou login; isso não é removido.

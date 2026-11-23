@@ -1,5 +1,7 @@
 # S8 — Rotina diária do Coach e lembretes (especificação)
 
+**Emenda E26 (23/11/2026):** a exigência da frase `AUTORIZO` por mensagem, onde este documento a citar para rotina, lembrete, hook ou comando entre agentes, Zapia, TEC e Gemini, foi **excluída** pela decisão do proprietário; ao **fim** há a seção "Emenda do AUTORIZO (E26)", que **vale onde divergir**. Registro: `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16). Fecha o que o `docs/especificacoes/S3_COACH.md` deixou para a operação ("não escolhe canal, horário nem frequência das mensagens") e liga o PR-007 ao que as rodadas 5 e 5b da Zapia provaram sobre jobs, limites e idempotência. O **conteúdo** da mensagem é do Coach (S3); a **Zapia só executa** por comando assinado (S4, S5). **Horários, ritmo e plano do proprietário são dados pessoais e não constam aqui:** ficam no plano dele (repositório privado, quando a persistência for habilitada).
 
 ## Objetivo
@@ -49,3 +51,7 @@ Consultas de 15/11/2026, somadas às de `docs/especificacoes/S3_COACH.md` (lembr
 - **Decisões do proprietário (17/11/2026):** (1) sem atividade ou sem plano, **envia mensagem curta** dizendo que não há atividade; (2) **há um segundo lembrete**, mais tarde no dia, só de atividade ainda pendente; (3) **só o app**: Calendar e Tasks ficam conectados e **sem uso** na rotina; (4) após três dias sem resposta, **uma única pergunta** sobre ajustar a cadência. Nenhum job foi criado: a Zapia só cria rotina com a frase `AUTORIZO` e depois de um teste sem efeito (S8-R8).
 - Não contém horário, ritmo nem plano do proprietário.
 - Não habilita a escrita de resultados nem toca em `scripts/tool_gateway.py`.
+
+## Emenda do AUTORIZO (E26, 23/11/2026)
+
+O `AUTORIZO` por mensagem **deixa de ser exigido** para criar, alterar ou ligar rotina, lembrete ou hook e para os comandos de Tutor e Coach à Zapia, ao TEC e ao Gemini Notebook por ela (decisão do proprietário, 23/11/2026). Vale no lugar dele a **autorização permanente** (a aprovação do texto da E26), com escopo fechado, as travas determinísticas (caixa, tetos, recibo de mesmo hash, teste sem efeito automático, parada) e os limites declarados em `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`. **Continua exigindo `AUTORIZO`:** leitura de e-mail (E-07). Onde este documento disser que a frase é condição, vale esta emenda. Plataformas (Zapia, TEC, Gemini) podem manter regras próprias de confirmação ou login; isso não é removido.

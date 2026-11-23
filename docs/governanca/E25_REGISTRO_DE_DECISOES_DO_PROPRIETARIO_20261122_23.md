@@ -44,9 +44,10 @@ Frente **nova**: abre só depois do merge do #185 (regra de lote do `AGENTS.md`)
 ## D2. Fim do `AUTORIZO` nas automações (decisão dele, 23/11/2026)
 
 - **Decisão:** "excluir a necessidade do criador ou estudante dar `AUTORIZO` nas automações entre agentes e Zapia e Gemini". Vale para a criação de rotinas, lembretes e hooks na Zapia e para o fluxo de comandos Tutor e Coach para a Zapia e o Gemini Notebook.
-- **Estado:** **decidida, ainda não aplicada.** O `AUTORIZO` continua exigido por S5-R9, S8-R8, S19-R4, S20-R6, `PRODUCT.md` e `AGENTS.md` até uma **emenda aprovada e mesclada** (PR próprio, aprovação expressa do texto e do merge). O construtor **não** deve dispensar a frase antes disso.
+- **Estado:** **decidida e emendada na E26** (`E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`, D-31 do `PRODUCT.md` e seção "Emenda do AUTORIZO (E26)" em S5, S6, S8, S14, S15, S19 e S20), **no PR #185; só entra em vigor com o merge dele** (pedido expresso do proprietário, citando PR e head). Antes disso o `AUTORIZO` continua exigido (S5-R9, S8-R8, S19-R4, S20-R6). O construtor **não** deve dispensar a frase antes do merge.
 - **(PROPOSTA)** Substituição: autorização permanente registrada (a aprovação da E24 e da emenda), escopo fechado, travas determinísticas, parada e recibo de volta (detalhe na E24). **Risco aceito por ele:** sem confirmação humana por rotina, uma automação errada só aparece no recibo ou na notificação.
-- **O que a emenda toca:** S5, S6, S8, S14, S15, S19, S20, `PRODUCT.md`, `agents/ZAPIA.md` e `AGENTS.md` (seção de rotina autorizada); a flag de parada, se adotada, é arquivo de contrato.
+- **O que a emenda toca:** S5, S6, S8, S14, S15, S19, S20 e `PRODUCT.md` (D-31); `AGENTS.md` e `agents/` não citam a frase e não mudam; a chave de parada versionada, se adotada, é arquivo de contrato e vai no lote de aplicação.
+- **Limites que a plataforma impõe:** Zapia, TEC (login por código de e-mail, CAPTCHA) e Gemini podem manter confirmação própria; o repositório não os remove (E26).
 - **O que não muda:** consentimento v4, flags de resultado pessoal, janela PJ, merge por pedido expresso e os limites do contrato (dado pessoal e credencial continuam fora; o `AUTORIZO` não era a barreira de privacidade).
 
 ## E. Como o construtor usa este registro

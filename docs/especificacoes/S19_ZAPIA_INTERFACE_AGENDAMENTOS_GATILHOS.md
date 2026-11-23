@@ -1,5 +1,7 @@
 # S19 — A Zapia como interface do Tutor e do Coach: rotina agendada e hook (especificação)
 
+**Emenda E26 (23/11/2026):** a exigência da frase `AUTORIZO` por mensagem, onde este documento a citar para rotina, lembrete, hook ou comando entre agentes, Zapia, TEC e Gemini, foi **excluída** pela decisão do proprietário; ao **fim** há a seção "Emenda do AUTORIZO (E26)", que **vale onde divergir**. Registro: `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`.
+
 **Natureza:** especificação enxuta (D-13, D-16), no modelo do `docs/especificacoes/README.md`. Registra o pedido do proprietário de 21/11/2026: mapear os recursos da Zapia (**rotina agendada**, com lembrete fixo ou dinâmico por horário, e **hook**, disparado por evento de fonte conectada) às necessidades do fluxo de estudo. **Fecha com** S5, S8, S15 e a proposta E3 (`docs/governanca/E3_OPERACAO_PEDIR_RELATORIO_20261118.md`) **sem duplicá-las**: aponta para elas. **Nada é cadastrado na Zapia** (rotina real só com `AUTORIZO`, S8-R8) e **nada é aplicado** em `agents/`, `AGENTS.md`, `PRODUCT.md`, no esquema de comandos nem em gates. Não contém estado nem dado pessoal.
 
 ## Objetivo
@@ -76,3 +78,7 @@ Aceita pelo contrato quando `python scripts/doc_cohesion.py --check` passa e `te
 - **Não prova** hook, WhatsApp, canal real nem eficácia pedagógica; o PDF da Zapia é **autorrelato (C)**, sem prova em conta real e sem números de limite.
 - **Não altera** `agents/`, `AGENTS.md`, `PRODUCT.md`, esquema de comandos nem gates; **não cadastra** nada na Zapia.
 - A evidência de lembretes vem de **saúde e de um estudo com estudantes**, não de concurseiros adultos.
+
+## Emenda do AUTORIZO (E26, 23/11/2026)
+
+O `AUTORIZO` por mensagem **deixa de ser exigido** para criar, alterar ou ligar rotina, lembrete ou hook e para os comandos de Tutor e Coach à Zapia, ao TEC e ao Gemini Notebook por ela (decisão do proprietário, 23/11/2026). Vale no lugar dele a **autorização permanente** (a aprovação do texto da E26), com escopo fechado, as travas determinísticas (caixa, tetos, recibo de mesmo hash, teste sem efeito automático, parada) e os limites declarados em `docs/governanca/E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md`. **Continua exigindo `AUTORIZO`:** leitura de e-mail (E-07). Onde este documento disser que a frase é condição, vale esta emenda. Plataformas (Zapia, TEC, Gemini) podem manter regras próprias de confirmação ou login; isso não é removido.
