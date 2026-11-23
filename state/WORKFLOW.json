@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_ZAPIA-APL_aplicacao_agendar_rotina",
-    "branch": "ccr-ae23a584-dzxoku",
-    "pr_number": 187,
+    "scope": "lote_ZAPIA-CTX_contexto_runner_agendar_rotina",
+    "branch": "ccr-2d3cbada-gekgiv",
+    "pr_number": 188,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #186 integrado em main no merge commit de0e466f956a650ce27126abf1d5258433e6ad0a. Frente única ativa: RM-09 (lote_ZAPIA-APL_aplicacao_agendar_rotina), branch ccr-ae23a584-dzxoku, PR #187. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #187 integrado em main no merge commit 2f1002e189abad037078d2b274c91fbebb48a325. Frente única ativa: RM-09 (lote_ZAPIA-CTX_contexto_runner_agendar_rotina), branch ccr-2d3cbada-gekgiv, PR #188. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 186,
-    "merge_commit_sha": "de0e466f956a650ce27126abf1d5258433e6ad0a"
+    "pr_number": 187,
+    "merge_commit_sha": "2f1002e189abad037078d2b274c91fbebb48a325"
   },
   "work_queue": [
     {
@@ -1103,6 +1103,19 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": []
+    },
+    {
+      "id": "ZAPIA-F3",
+      "title": "Teste 'rotina cria rotina' (E25, seção D; decisão do proprietário de 23/11/2026): poller de execução única criado pela Zapia a partir de um pedido promovido, com pedido sintético manual, recibo CRIADA, verificador e pin do hash do modelo na instrução do poller; cadência proposta de hora em hora das 06h às 22h; NÃO provado que uma rotina crie outra; a antecedência mínima de 90 min (E25) muda E24 e E27 em contrato e exige aprovação expressa; o merge segue o pedido expresso do proprietário",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E29_ROTINA_CRIA_ROTINA_TESTE_F3.md",
+      "depends_on": [
+        "ZAPIA-CTX"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "captura da lista de rotinas e da notificação do app, no ato do proprietário"
+      ]
     }
   ],
   "owner_priorities": [

@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #186; SHA de0e466f956a650ce27126abf1d5258433e6ad0a
-- Frente ativa: **RM-09 / PR #187**; branch `ccr-ae23a584-dzxoku`; base main; fase review.
+- Último merge comprovado: PR #187; SHA 2f1002e189abad037078d2b274c91fbebb48a325
+- Frente ativa: **RM-09 / PR #188**; branch `ccr-2d3cbada-gekgiv`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -22,6 +22,8 @@ Toda sessão lê `docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md` (o `bootstra
 > **Aviso de defasagem do checkpoint.** O bloco "Checkpoint vigente" acima registra a frente ativa e o PR **no momento do último commit de estado**. Depois que esse PR é mesclado, o bloco fica **defasado** até o recibo do merge, que só entra no primeiro commit da próxima tarefa (`record_merge_receipt.py`). Por isso, antes de afirmar o estado de um PR ou frente, **confirme**: rode `python scripts/next_task.py` (ele lê o histórico Git e diz se o PR registrado já foi mesclado) ou consulte o PR por API. Se o HEAD for o commit de merge do PR registrado como "em revisão", o PR **já foi mesclado** e o recibo está pendente.
 
 **LEITURA OBRIGATÓRIA (23/11/2026): decisões e necessidades do proprietário da sessão de 22 e 23/11 (agendamento pela Zapia, Tutor e Coach emitem, ciclo de revisão 24 h/5 d/10 d/20 d/30 d da S21, regras de trabalho):** `docs/governanca/E25_REGISTRO_DE_DECISOES_DO_PROPRIETARIO_20261122_23.md` (registro, não contrato; ler antes do F2a e da S21).
+
+**PONTO DE RETOMADA (23/11/2026, depois do #187):** #187 mesclado (`2f1002e`). **PR #188 (draft, lote ZAPIA-CTX, sem contrato)**: o runner real lê a caixa e alimenta `hashes_promovidos` e `agendamentos_do_dia` (`docs/governanca/E28_RUNNER_CONTEXTO_AGENDAR_ROTINA.md`; só GitHub falso; sem leitor de descanso, pendências e chaves do lembrete; sem paginação). Merge só com a frase dele citando PR e head. Próximo: **ZAPIA-F3** (rotina cria rotina; **não provado**; a antecedência mínima de 90 min muda E24/E27 em contrato).
 
 **PONTO DE RETOMADA ATUAL (23/11/2026, fim da sessão):** #185 (E23-E26) e #186 (E23) mesclados; **PR #187 (draft, lote ZAPIA-APL, contrato)** aplica `agendar_rotina` (E27); merge só com a frase dele citando PR e head (confirmar o head atual no GitHub). Próximos, nesta ordem: **ZAPIA-CTX** (runner real alimenta `hashes_promovidos` e `agendamentos_do_dia`; hoje todo `agendar_rotina` é recusado no fluxo real) e **ZAPIA-F3** (teste 'rotina cria rotina' com poller de execução única, recibo `CRIADA` e verificador; **não provado**). Decisões dele de 23/11: poller recorrente de hora em hora das 06h às 22h (17 por dia); antecedência mínima do pedido sobe de 15 para 90 min (muda E24/E27, contrato); F3 abre depois do merge do #187. Registro completo: `docs/governanca/E25_REGISTRO_DE_DECISOES_DO_PROPRIETARIO_20261122_23.md` (seção F).
 
