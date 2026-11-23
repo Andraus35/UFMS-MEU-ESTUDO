@@ -10,8 +10,8 @@ DOC = ROOT / "docs" / "governanca" / "E24_PROPOSTA_OPERACAO_AGENDAR_ROTINA.md"
 class PropostaTeste(unittest.TestCase):
     def test_a_proposta_traz_os_pontos_para_aprovacao(self):
         t = DOC.read_text(encoding="utf-8")
-        for trecho in ("proposta de texto", "nada aqui está aplicado", "`agendar_rotina`", "zapia_rotina", "Só o Coach", "F1_ENTREGA_UNICA",
-                       "AUTORIZO", "por turno", "modelo versionado", "15 min e 24 h", "1 pedido por dia", "Autoescalonamento",
+        for trecho in ("proposta de texto", "nada aqui está aplicado", "`agendar_rotina`", "zapia_rotina", "Compartilhada por Tutor e Coach", "ORIGEM_FORA_DO_MODELO", "REVISAO_NOTEBOOK_AGENDADA", "RELATORIO_TEC_AGENDADO", "F1_ENTREGA_UNICA",
+                       "AUTORIZO", "por turno", "modelo versionado", "15 min e 24 h", "1 pedido por dia por origem", "Autoescalonamento",
                        "Não está provado", "duas aprovações expressas", "recibo de volta"):
             self.assertIn(trecho, t, trecho)
 

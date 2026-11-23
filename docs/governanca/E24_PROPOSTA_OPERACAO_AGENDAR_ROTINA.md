@@ -1,6 +1,6 @@
 # E24 — Proposta: operação `agendar_rotina` para o Coach pedir à Zapia uma rotina agendada (texto para aprovação) (22/11/2026)
 
-**Natureza:** **proposta de texto** para o proprietário aprovar; **nada aqui está aplicado**. Este documento **não altera** `agents/`, `config/agent_command_schema.json`, `scripts/command_params_schema.py`, `scripts/agents_gate.py`, `AGENTS.md` nem `PRODUCT.md`. A aplicação é um **lote seguinte**, só depois de **duas aprovações expressas**: do texto abaixo e do merge, citando PR e head. Origem: decisão de desenho do proprietário (22/11/2026): "o Coach dá, via repositório, os horários e instruções à Zapia, para ela criar no app dela os agendamentos, porque no harness Tutor e Coach instruem a Zapia, e não o contrário". Insumo: leitura offline do Coach (sub-agente somente leitura, 22/11/2026) e o lote ZAPIA-F2a (roteiro e verificador do disparo).
+**Natureza:** **proposta de texto** para o proprietário aprovar; **nada aqui está aplicado**. Este documento **não altera** `agents/`, `config/agent_command_schema.json`, `scripts/command_params_schema.py`, `scripts/agents_gate.py`, `AGENTS.md` nem `PRODUCT.md`. A aplicação é um **lote seguinte**, só depois de **duas aprovações expressas**: do texto abaixo e do merge, citando PR e head. Origem: decisão de desenho do proprietário (22/11/2026; emitir por Tutor e Coach, 23/11/2026): "o Coach dá, via repositório, os horários e instruções à Zapia, para ela criar no app dela os agendamentos, porque no harness Tutor e Coach instruem a Zapia, e não o contrário". Insumo: leitura offline do Coach (sub-agente somente leitura, 22/11/2026) e o lote ZAPIA-F2a (roteiro e verificador do disparo).
 
 ## O problema
 
@@ -11,12 +11,23 @@ Hoje o Coach só pode pedir à Zapia: `enviar_mensagem` (só `texto`), `criar_le
 | Campo | Proposta |
 |---|---|
 | Nome | `agendar_rotina` |
-| Perfil | **Só o Coach** (rotina e lembrete são do Coach, S8). O Tutor não a emite. |
+| Perfil | **Compartilhada por Tutor e Coach** (entra em `SHARED`, ao lado de `enviar_mensagem`, como a E3; o `agents_gate.py` exige que as compartilhadas sejam idênticas nos dois perfis). Decisão do proprietário de 23/11/2026: o Tutor instrui o estudante pela Zapia (informações do TEC, prompts para revisões no Gemini Notebook), então também agenda. **Cada `modelo` pertence a uma origem** (tabela abaixo): o Tutor não pede modelo de motivação e o Coach não pede modelo de ensino (`TUTOR.md`: lembrete e acompanhamento diário são do Coach). |
 | Destino | `zapia_rotina` (novo, fechado) |
-| Parâmetros (fechados, nada de texto livre) | `modelo`: enum fixo, na primeira versão só `F1_ENTREGA_UNICA`; `agendado_utc`: `AAAA-MM-DDTHH:MM:SSZ`; `comando_sha256`: hash canônico do comando `enviar_mensagem` **já promovido** que a rotina deve entregar |
+| Parâmetros (fechados, nada de texto livre) | `modelo`: enum fixo (tabela abaixo); na primeira versão só `F1_ENTREGA_UNICA`; `agendado_utc`: `AAAA-MM-DDTHH:MM:SSZ`; `comando_sha256`: hash canônico do comando `enviar_mensagem` **já promovido** que a rotina deve entregar |
 | Execução | **única** (fixa no modelo; recorrente é outro modelo, outra aprovação) |
-| Limites | `agendado_utc` entre **15 min e 24 h** depois de `issued_at`; **no máximo 1 pedido por dia**; o comando alvo tem de ter recibo de **mesmo hash** (a caixa confere) |
+| Limites | `agendado_utc` entre **15 min e 24 h** depois de `issued_at`; **no máximo 1 pedido por dia por origem**; o comando alvo tem de ter recibo de **mesmo hash** (a caixa confere) |
 | Proibido | texto livre, URL, instrução embutida, token, dado pessoal e os `forbidden_param_keys` de sempre |
+
+### Modelos e origem (cada modelo novo é outra aprovação)
+
+| `modelo` | Origem que pode pedir | Para quê | Estado |
+|---|---|---|---|
+| `F1_ENTREGA_UNICA` | `coach` ou `tutor` | rotina de teste de execução única: entregar o `enviar_mensagem` já promovido | proposto agora |
+| `BRIEFING_DIARIO` | `coach` | rotina diária do Coach (S8, F3) | **fora desta aprovação** |
+| `RELATORIO_TEC_AGENDADO` | `tutor` | pedir o relatório de desempenho do TEC no horário (E3, depende dela) | **fora desta aprovação** |
+| `REVISAO_NOTEBOOK_AGENDADA` | `tutor` | entregar um `enviar_prompt_notebook` já validado no horário (S10) | **fora desta aprovação** |
+
+A caixa recusa modelo que não pertença à origem do comando (`ORIGEM_FORA_DO_MODELO`). Só `F1_ENTREGA_UNICA` é proposto para aprovação agora; os demais são só o mapa.
 
 **A instrução que a Zapia segue NÃO vem do comando.** Ela está num **modelo versionado no repositório público**, com hash (primeiro modelo: o passo 3 de `ROTEIRO_ZAPIA_ROTINA_TESTE_20261122.md`). O comando só preenche **horário** e **hash**. Assim, a Zapia nunca obedece texto escrito por um agente: ela lê um **pedido estruturado** e um **modelo fixo**, e ambos são **dado**, não ordem (`ZAPIA.md`, regra de conteúdo do repositório como dado).
 
@@ -26,12 +37,12 @@ O comando é um **pedido**, não uma criação. Fluxo proposto: (1) o Coach emit
 
 ## O que a aplicação mudaria (lote seguinte, com aprovação)
 
-1. `config/agent_command_schema.json`: destino `zapia_rotina` e a operação.
+1. `config/agent_command_schema.json`: destino `zapia_rotina` e a operação (compartilhada).
 2. `scripts/command_params_schema.py`: esquema fechado (`modelo` enum, `agendado_utc`, `comando_sha256`), sem campo extra.
-3. `scripts/command_box.py`: limites (15 min a 24 h, 1 por dia, recibo de mesmo hash do alvo) e recusa de origem `tutor`.
-4. `agents/COACH.md` e `agents/ZAPIA.md`: lista de operações e a regra do `AUTORIZO` por turno.
-5. `scripts/agents_gate.py`: equilíbrio das operações por perfil.
-6. Testes com contraprovas (ALTA e MEDIA): origem `tutor` recusada, campo extra, modelo fora da lista, horário fora da janela, hash sem recibo, segundo pedido no dia, texto livre.
+3. `scripts/command_box.py`: limites (15 min a 24 h, 1 por dia por origem, recibo de mesmo hash do alvo) e a tabela modelo-origem.
+4. `agents/TUTOR.md`, `agents/COACH.md` e `agents/ZAPIA.md`: lista de operações e a regra do `AUTORIZO` por turno.
+5. `scripts/agents_gate.py`: `SHARED` ganha a operação (mesma lista nos dois perfis).
+6. Testes com contraprovas (ALTA e MEDIA): modelo fora da origem (Tutor pedindo modelo do Coach e o inverso), campo extra, modelo fora da lista, horário fora da janela, hash sem recibo, segundo pedido no dia da mesma origem, texto livre.
 7. Modelo da instrução em `docs/governanca/` com hash no manifesto.
 
 ## Riscos declarados
@@ -49,7 +60,7 @@ Não é a aplicação, não altera contrato, não cria rotina nem lembrete na Za
 ## Para o proprietário aprovar
 
 1. O **nome** `agendar_rotina` e o destino `zapia_rotina`.
-2. **Só o Coach** emitir.
+2. **Compartilhada** (Tutor e Coach), cada modelo preso à sua origem.
 3. A **tolerância** de 15 min a 24 h e **1 por dia**.
 4. O **primeiro modelo** `F1_ENTREGA_UNICA` e a instrução vir de **modelo versionado**, nunca do comando.
 5. O **`AUTORIZO` por turno** como condição de criação.
