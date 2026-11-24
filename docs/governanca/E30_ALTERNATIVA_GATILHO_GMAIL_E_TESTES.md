@@ -41,6 +41,14 @@ gh issue close -R Andraus35/ufms-meu-estudo-entrada <numero>
 
 **Atenção:** o GitHub pode não enviar e-mail de ação do próprio autor; se nada chegar, confira em Configurações → Notificações o item "incluir minhas próprias atualizações" (verifique no seu aparelho; **não confirmei** o padrão).
 
+## Andamento do teste 2 (24/11/2026, autorrelato da Zapia, sem disparo ainda)
+
+- **Hook criado, mas na conta errada:** o primeiro hook (`4ca435fa`) apontava para outra conta Gmail, que a leitura dela voltou **desativada**; ele **nunca receberia** o evento. Foi apagado.
+- **Hook recriado (`5b91c690`)** na conta Gmail **conectada hoje**, caixa de entrada, com **só** `senders` = `notifications@github.com` e `subject_contains` = `[Andraus35/ufms-meu-estudo-entrada] SINAL` (lidos de volta; `labels` e `text_contains` ausentes; ativo; sem disparo). Autorrelato B, sem captura da tela dela.
+- **O e-mail do GitHub não chegou no primeiro teste:** as notificações por e-mail não estavam ligadas para as ações do próprio autor. Estado em 24/11: destino das notificações = o mesmo Gmail do hook; a opção de incluir as próprias atualizações e o acompanhamento do repositório são ajustes dele (aparelho).
+- **Regra de ordem:** antes de criar issue com `SINAL` no título, o e-mail de teste (`TESTE-NOTIF`, sem `SINAL`) precisa chegar na Caixa de entrada, para não gastar o único disparo do hook.
+- **Ainda não provado:** que o hook acorde, que o e-mail do GitHub case com o filtro, o atraso e a desativação ao fim.
+
 ## Riscos declarados
 
 - **Leitura de e-mail:** mesmo com filtro, o hook roda sobre a caixa dele. Só vale com o filtro **lido de volta** e a emenda do D-28 aprovada. Antes dela, o teste 2 é **autorizado por ele só como teste único e sem efeito**, com desativação ao fim.
