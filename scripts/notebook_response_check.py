@@ -39,6 +39,49 @@ def _limpo(texto: str) -> bool:
                 or npv.instrucao_embutida(texto) or content_filters.mistura_de_scripts(texto))
 
 
+_EXTERNO = re.compile(r"\b\d+\b|\b(?:um|dois|tres|quatro|cinco|seis|sete|oito|nove|dez)\b|\binciso\b|\bparagrafo\b|§|\blei\s+n\b|\b(?:anos?|meses|dias)\b")
+_MNEMONICO = re.compile(r"(?:\b[A-Z]\.){3,}")  # acrônimo com pontos, como L.I.M.P.E.
+_ITEM_DE_LISTA = re.compile(r"(?m)^\s*\d+[.)]\s")
+
+
+def avaliar(resposta_bytes, fonte_texto: str, prompt_texto: str = "") -> dict:
+    """Conferência em TRÊS PARTES da resposta (pesquisa de 25/11/2026: medir a abstenção separada da sustentação das afirmações; heurística).
+
+    (a) `disse_nao_consta`: a resposta traz a recusa "não consta nas fontes"? (b) `conteudo_externo`: quantas palavras de valor factual (número, número por
+    extenso, inciso, parágrafo, "lei n", anos, meses, dias) aparecem na resposta e NÃO estão na fonte nem no prompt, e se há mnemônico com pontos; numeração
+    de lista não conta. (c) `citacao_nao_vazia`. Devolve só booleanos e contagem, NUNCA o texto do Notebook. Limites: lista fixa de marcadores, sem
+    semântica; não acha conteúdo externo escrito com palavras comuns; é triagem para o Tutor, não prova de fidelidade."""
+    try:
+        r = json.loads(bytes(resposta_bytes).decode("utf-8"))
+        texto, citacao = r["texto_literal"], r["citacao_trecho"]
+    except (UnicodeDecodeError, ValueError, TypeError, KeyError, AttributeError):
+        return {"avaliavel": False}
+    if not isinstance(texto, str) or not isinstance(citacao, str):
+        return {"avaliavel": False}
+    conhecido = _norm(fonte_texto) + " " + _norm(prompt_texto or "")
+    sem_lista = _ITEM_DE_LISTA.sub("", texto)
+    externos = [m for m in _EXTERNO.findall(_norm(sem_lista)) if m not in conhecido]
+    return {"avaliavel": True, "disse_nao_consta": SEM_FONTE in _norm(texto), "conteudo_externo_n": len(externos),
+            "mnemonico": bool(_MNEMONICO.search(texto)), "citacao_nao_vazia": bool(citacao.strip())}
+
+
+def codigos_da_avaliacao(av: dict, contraprova: bool) -> list:
+    """Códigos finos: separam o 'disse que não consta' do 'mas completou com conteúdo de fora' e da citação solta."""
+    if not av.get("avaliavel"):
+        return ["RESPOSTA_NAO_AVALIAVEL"]
+    cod = []
+    if contraprova:
+        if not av["disse_nao_consta"]:
+            cod.append("CONTRAPROVA_SEM_ABSTENCAO")
+        if av["disse_nao_consta"] and (av["conteudo_externo_n"] or av["mnemonico"]):
+            cod.append("ABSTENCAO_COM_CONTEUDO_EXTERNO")
+        if av["citacao_nao_vazia"]:
+            cod.append("ABSTENCAO_COM_CITACAO")
+    elif av["conteudo_externo_n"] or av["mnemonico"]:
+        cod.append("CONTEUDO_EXTERNO_NA_RESPOSTA")
+    return cod
+
+
 def conferir(resposta_bytes, esperado: dict, fonte_texto: str, contraprova: bool = False, ancora_gabarito: str | None = None):
     """`esperado`: {nome, hash_corpo, fonte_nome}. Devolve None se a resposta pode seguir ao Tutor, senão um código.
 

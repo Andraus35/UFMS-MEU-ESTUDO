@@ -48,7 +48,7 @@ class RegistroTeste(unittest.TestCase):
     def test_o_resumo_guarda_a_parada_do_hook_na_conferencia_do_hash(self):
         r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
         for trecho in ("issue #8", "PAROU na conferência do SHA-256", "O arquivo do `entrada` está íntegro", "a32afe90", "ensure_ascii=False",
-                       "relatar o hash que ela calculou", "consome o disparo"):
+                       "não manda mais a Zapia calcular hash", "pula", "consome o disparo"):
             self.assertIn(trecho, r, trecho)
 
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):

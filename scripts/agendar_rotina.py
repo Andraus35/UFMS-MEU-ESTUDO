@@ -215,7 +215,7 @@ def renderizar_hook_entrega(*, repo, credencial, hash_alvo, root: Path = ROOT) -
     return re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), carregar_instrucoes(root)[HOOK_ENTREGA]["template"])
 
 
-def renderizar_hook_notebook(*, repo, credencial, comandos, fonte_arquivo, fonte_sha256, fonte_nome, root: Path = ROOT) -> str:
+def renderizar_hook_notebook(*, repo, credencial, comandos, fonte_arquivo, fonte_nome, root: Path = ROOT) -> str:
     """Instrução do hook de Gmail que executa no Gemini Notebook o prompt de comandos `enviar_prompt_notebook` já promovidos (E41), do modelo `HOOK_NOTEBOOK`.
     `comandos`: lista de pares (nome do arquivo, hash_corpo). O e-mail é só a campainha; a execução depende do hash de cada comando e do hash da fonte.
     O texto renderizado precisa caber nos 4000 caracteres que a ferramenta de hook da Zapia aceita (`LIMITE_TAREFA_HOOK`). Falha fechada em qualquer parâmetro fora do padrão."""
@@ -224,14 +224,14 @@ def renderizar_hook_notebook(*, repo, credencial, comandos, fonte_arquivo, fonte
             or not all(isinstance(c, (list, tuple)) and len(c) == 2 and isinstance(c[0], str) and re.fullmatch(r"[A-Za-z0-9._-]{1,60}", c[0])
                        and isinstance(c[1], str) and _HEX64.fullmatch(c[1]) for c in comandos)
             or len({c[0] for c in comandos}) != len(comandos)
-            or not re.fullmatch(r"[A-Za-z0-9._-]{1,60}", fonte_arquivo or "") or not _HEX64.fullmatch(fonte_sha256 or "")
+            or not re.fullmatch(r"[A-Za-z0-9._-]{1,60}", fonte_arquivo or "")
             or not re.fullmatch(r"[A-Za-zÀ-ÿ0-9 ,.()-]{1,120}", fonte_nome or "")):
         raise ValueError("parâmetro inválido")
     erros = check(root)
     if erros:
         raise ValueError("modelos de instrução inconsistentes: " + "; ".join(erros))
     valores = {"REPO": repo, "CREDENCIAL": credencial, "COMANDOS": "; ".join(f"{n}={h}" for n, h in comandos), "FONTE_ARQUIVO": fonte_arquivo,
-               "FONTE_SHA256": fonte_sha256, "FONTE_NOME": fonte_nome}
+               "FONTE_NOME": fonte_nome}
     texto = re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), carregar_instrucoes(root)[HOOK_NOTEBOOK]["template"])
     if len(texto) > LIMITE_TAREFA_HOOK:
         raise ValueError(f"a instrução tem {len(texto)} caracteres; a ferramenta de hook da Zapia aceita no máximo {LIMITE_TAREFA_HOOK}")
@@ -249,10 +249,9 @@ def main(argv=None) -> int:
     p.add_argument("--origem", choices=("tutor", "coach"))
     p.add_argument("--poller", action="store_true", help="imprime a instrução do poller de teste (ZAPIA-F3); exige --agendado e --ref")
     p.add_argument("--hook-entrega", action="store_true", help="imprime a instrução do hook de Gmail de entrega (E31); exige --hash")
-    p.add_argument("--hook-notebook", action="store_true", help="imprime a instrução do hook de Gmail que executa no Notebook (E41); exige --comando NOME=HASH (até 5), --fonte-arquivo, --fonte-sha256 e --fonte-nome")
+    p.add_argument("--hook-notebook", action="store_true", help="imprime a instrução do hook de Gmail que executa no Notebook (E41); exige --comando NOME=HASH (até 5), --fonte-arquivo e --fonte-nome")
     p.add_argument("--comando", action="append", default=[], help="NOME=HASH_CORPO (hook do Notebook)")
     p.add_argument("--fonte-arquivo")
-    p.add_argument("--fonte-sha256")
     p.add_argument("--fonte-nome")
     p.add_argument("--ref", help="commit (40 hex) do repositório público onde o poller lê o modelo filho")
     a = p.parse_args(argv)
@@ -262,7 +261,7 @@ def main(argv=None) -> int:
         return 1 if erros else 0
     if a.hook_notebook:
         try:
-            print(renderizar_hook_notebook(repo=a.repo, credencial=a.credencial, comandos=[tuple(c.split("=", 1)) for c in a.comando if "=" in c], fonte_arquivo=a.fonte_arquivo or "", fonte_sha256=a.fonte_sha256 or "",
+            print(renderizar_hook_notebook(repo=a.repo, credencial=a.credencial, comandos=[tuple(c.split("=", 1)) for c in a.comando if "=" in c], fonte_arquivo=a.fonte_arquivo or "",
                                            fonte_nome=a.fonte_nome or ""))
         except ValueError as erro:
             print("FALHA: " + str(erro))
