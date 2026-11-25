@@ -1,4 +1,4 @@
-"""ZAPIA-APL (E24, E26): operação `agendar_rotina` aplicada ao contrato. Contraprovas em ALTA e MEDIA: modelo preso à origem, janela de 15 min a 24 h,
+"""ZAPIA-APL (E24, E26): operação `agendar_rotina` aplicada ao contrato. Contraprovas em ALTA e MEDIA: modelo preso à origem, janela de 90 min a 24 h,
 teto por origem, alvo promovido, chave de parada, forma fechada, modelos de instrução com hash e URLs literais. Offline, dados fictícios.
 NÃO prova que a Zapia crie a rotina (autorrelato até o recibo e o verificador)."""
 import json
@@ -27,7 +27,7 @@ H1, H2 = "a" * 64, "b" * 64
 HOJE = "2026-11-23"
 
 
-def params(modelo="F1_ENTREGA_UNICA", quando="2026-11-23T13:00:00Z", hashes=None):
+def params(modelo="F1_ENTREGA_UNICA", quando="2026-11-23T14:00:00Z", hashes=None):
     if hashes is None:
         hashes = [H1] if ar.MODELOS[modelo]["hashes"] else []
     return {"modelo": modelo, "agendado_utc": quando, "comandos_sha256": hashes}
@@ -105,9 +105,9 @@ class DecidirTeste(unittest.TestCase):
         self.assertEqual(self.decidir("tutor", params("BRIEFING_DIARIO")), "ORIGEM_FORA_DO_MODELO")
         self.assertEqual(self.decidir("zapia"), "ORIGEM_FORA_DO_MODELO")
 
-    def test_janela_de_15_minutos_a_24_horas(self):
+    def test_janela_de_90_minutos_a_24_horas(self):
         base = AGORA
-        casos = [(timedelta(minutes=14, seconds=59), "AGENDAMENTO_FORA_DA_JANELA"), (timedelta(minutes=15), None), (timedelta(hours=24), None),
+        casos = [(timedelta(minutes=89, seconds=59), "AGENDAMENTO_FORA_DA_JANELA"), (timedelta(minutes=90), None), (timedelta(minutes=15), "AGENDAMENTO_FORA_DA_JANELA"), (timedelta(hours=24), None),
                  (timedelta(hours=24, seconds=1), "AGENDAMENTO_FORA_DA_JANELA"), (timedelta(seconds=-1), "AGENDAMENTO_FORA_DA_JANELA"), (timedelta(0), "AGENDAMENTO_FORA_DA_JANELA")]
         for delta, esperado in casos:
             q = (base + delta).strftime("%Y-%m-%dT%H:%M:%SZ")

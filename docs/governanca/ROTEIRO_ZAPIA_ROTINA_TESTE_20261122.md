@@ -8,7 +8,7 @@
 
 ## Passo 0: anotar o horário agendado
 
-Escolha um horário **daqui a pelo menos 15 minutos**, em UTC (Campo Grande = UTC-4: 10:00 local = 14:00Z). Anote `AGENDADO=AAAA-MM-DDTHH:MM:SSZ`. Esse é o valor que o verificador usa; **não o altere depois**.
+Escolha um horário **daqui a pelo menos 15 minutos (para o pedido `agendar_rotina`, 90 minutos desde 23/11/2026)**, em UTC (Campo Grande = UTC-4: 10:00 local = 14:00Z). Anote `AGENDADO=AAAA-MM-DDTHH:MM:SSZ`. Esse é o valor que o verificador usa; **não o altere depois**.
 
 ## Passo 1: teste sem efeito (S20-R6 exige antes)
 

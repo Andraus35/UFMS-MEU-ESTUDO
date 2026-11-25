@@ -9,7 +9,7 @@ DOC = ROOT / "docs" / "governanca" / "E27_APLICACAO_AGENDAR_ROTINA.md"
 class RegistroTeste(unittest.TestCase):
     def test_diz_o_que_foi_aplicado_e_o_que_nao_esta_feito(self):
         t = DOC.read_text(encoding="utf-8")
-        for trecho in ("`agendar_rotina`", "compartilhada por Tutor e Coach", "zapia_rotina", "agendar_rotina_enabled", "ROTINA_PARADA", "15 min e 24 h",
+        for trecho in ("`agendar_rotina`", "compartilhada por Tutor e Coach", "zapia_rotina", "agendar_rotina_enabled", "ROTINA_PARADA", "90 min e 24 h",
                        "1 pedido por dia por origem", "ALVO_NAO_PROMOVIDO", "config/rotina_instrucoes.json", "URLs completos e literais", "nunca `commands`",
                        "O que NÃO está feito", "todo `agendar_rotina` é recusado", "ZAPIA-CTX", "A Zapia não executa este Python", "Origem não provada",
                        "pedido expresso", "proposta de 7 dias"):

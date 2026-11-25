@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_ZAPIA-CTX_contexto_runner_agendar_rotina",
+    "scope": "lote_ZAPIA-F3_teste_real_rotina_cria_rotina",
     "branch": "ccr-2d3cbada-gekgiv",
-    "pr_number": 188,
+    "pr_number": 189,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #187 integrado em main no merge commit 2f1002e189abad037078d2b274c91fbebb48a325. Frente única ativa: RM-09 (lote_ZAPIA-CTX_contexto_runner_agendar_rotina), branch ccr-2d3cbada-gekgiv, PR #188. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #188 integrado em main no merge commit 38de806f564472109e1355b3ecedbf1ddb9a23ac. Frente única ativa: RM-09 (lote_ZAPIA-F3_teste_real_rotina_cria_rotina), branch ccr-2d3cbada-gekgiv, PR #189. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 187,
-    "merge_commit_sha": "2f1002e189abad037078d2b274c91fbebb48a325"
+    "pr_number": 188,
+    "merge_commit_sha": "38de806f564472109e1355b3ecedbf1ddb9a23ac"
   },
   "work_queue": [
     {

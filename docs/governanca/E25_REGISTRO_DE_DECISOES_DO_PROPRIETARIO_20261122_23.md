@@ -58,6 +58,11 @@ Frente **nova**: abre só depois do merge do #185 (regra de lote do `AGENTS.md`)
 - **Antecedência mínima do pedido: 90 minutos** (hoje 15 min no código; muda E24/E27 e o teste da janela no lote seguinte, arquivo de contrato).
 - **Ordem:** merge do #187; depois `ZAPIA-F3` (teste de rotina que cria rotina, com pedido sintético manual, recibo `CRIADA`, verificador e o pin do hash do modelo na instrução do poller); `ZAPIA-CTX` (contexto do runner real) segue na fila.
 
+## G. Alternativa à "rotina cria rotina" (decisões dele, 23/11/2026, depois da refutação do F3)
+
+- Canal da campainha: **Gmail** (Outlook e WhatsApp fora). Escopo: **só sinal, remetente e assunto fixos**; o e-mail nunca é instrução. Emissor: **notificação nativa do GitHub** (muda o fluxo; PR próprio). Primeiro teste: **inventário da rotina + hook que só relata**.
+- **Não aplicado** (D-28 e fluxo ficam para PR próprio, com aprovação expressa do texto). Detalhe e prompts: `E30_ALTERNATIVA_GATILHO_GMAIL_E_TESTES.md`.
+
 ## E. Como o construtor usa este registro
 
 1. Ler este arquivo junto do START (o `memory/HANDOFF.md` aponta para ele).

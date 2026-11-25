@@ -5,7 +5,7 @@ Função pura, sem rede, arquivo próprio (só lê `settings.json` e `config/rot
 - **Params fechados, sem texto livre:** `modelo` (lista fechada), `agendado_utc` (primeiro disparo, UTC) e `comandos_sha256` (hashes de comandos JÁ
   promovidos; 1 para `F1_ENTREGA_UNICA`, 0 para os modelos de escuta diária).
 - **Cada modelo pertence a uma origem** (`MODELOS`): a caixa recusa o cruzado (`ORIGEM_FORA_DO_MODELO`).
-- **Limites determinísticos** (a autorização é permanente, E26, não há frase por mensagem): primeiro disparo entre 15 min e 24 h depois do `issued_at`;
+- **Limites determinísticos** (a autorização é permanente, E26, não há frase por mensagem): primeiro disparo entre 90 min e 24 h depois do `issued_at`;
   no máximo 1 pedido por dia por origem; cada hash tem de ser de comando já promovido; **chave de parada** versionada
   (`automation.agendar_rotina_enabled` em `settings.json`): falsa, ausente ou ilegível recusa (`ROTINA_PARADA`).
 - **A instrução que a Zapia segue NÃO vem do comando:** vem dos modelos versionados de `config/rotina_instrucoes.json`, com hash conferido por `check`,
@@ -28,10 +28,11 @@ ROOT = Path(__file__).resolve().parents[1]
 OPERACAO = "agendar_rotina"
 DESTINO = "zapia_rotina"
 FLAG = "agendar_rotina_enabled"
-ANTECEDENCIA_MINIMA = timedelta(minutes=15)
+ANTECEDENCIA_MINIMA = timedelta(minutes=90)  # decisão do proprietário de 23/11/2026 (E25, seção F; antes 15 min)
 ANTECEDENCIA_MAXIMA = timedelta(hours=24)
 MAX_POR_DIA_POR_ORIGEM = 1
 INSTRUCOES = "config/rotina_instrucoes.json"
+POLLER = "POLLER"  # instrução do poller de teste (ZAPIA-F3): lê um pedido promovido e cria a rotina filha; não é um modelo de pedido
 _UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 CAMPOS = ("modelo", "agendado_utc", "comandos_sha256")
@@ -142,7 +143,7 @@ def check(root: Path = ROOT) -> list:
         dados = carregar_instrucoes(root)
     except (OSError, ValueError):
         return ["config/rotina_instrucoes.json ausente ou ilegível"]
-    for chave in {m["instrucao"] for m in MODELOS.values()}:
+    for chave in {m["instrucao"] for m in MODELOS.values()} | {POLLER}:
         item = dados.get(chave)
         if not isinstance(item, dict) or not isinstance(item.get("template"), str):
             erros.append(f"modelo de instrução ausente: {chave}")
@@ -150,8 +151,9 @@ def check(root: Path = ROOT) -> list:
         t = item["template"]
         if item.get("sha256") != hash_texto(t):
             erros.append(f"{chave}: hash não confere com o texto")
+        finais = "criadas" if chave == POLLER else "entregas"
         for url in ("https://api.github.com/repos/{REPO}/contents/comandos/recibos", "https://api.github.com/repos/{REPO}/contents/comandos/validados",
-                    "https://api.github.com/repos/{REPO}/contents/comandos/entregas"):
+                    "https://api.github.com/repos/{REPO}/contents/comandos/" + finais):
             if url not in t:
                 erros.append(f"{chave}: URL literal ausente: {url}")
         if "commands/" in t:
@@ -183,6 +185,20 @@ def renderizar(modelo, *, repo, credencial, agendado_utc, hashes=(), origem=None
     return re.sub(r"\{([A-Z_]+)\}", lambda m: valores.get(m.group(1), m.group(0)), t)
 
 
+def renderizar_poller(*, repo, credencial, agendado_utc, ref, publico="Andraus35/UFMS-MEU-ESTUDO", root: Path = ROOT) -> str:
+    """Instrução do poller de teste (ZAPIA-F3), do modelo versionado `POLLER`, com o commit do repositório público e o hash do modelo filho FIXADOS (pin).
+    A rotina filha usa o modelo `UNICA`; o poller só a cria se o modelo lido no commit `ref` tiver exatamente o hash fixado aqui."""
+    if parse_utc(agendado_utc) is None or not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", repo) or not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", publico) \
+            or not re.fullmatch(r"[A-Za-z0-9_]{1,64}", credencial) or not re.fullmatch(r"[0-9a-f]{40}", ref or ""):
+        raise ValueError("parâmetro inválido")
+    erros = check(root)
+    if erros:
+        raise ValueError("modelos de instrução inconsistentes: " + "; ".join(erros))
+    dados = carregar_instrucoes(root)
+    valores = {"REPO": repo, "CREDENCIAL": credencial, "AGENDADO_UTC": agendado_utc, "REF": ref, "PUBLICO": publico, "UNICA_SHA256": dados["UNICA"]["sha256"]}
+    return re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), dados[POLLER]["template"])
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Operação agendar_rotina: confere os modelos de instrução ou renderiza a instrução de uma rotina.")
     p.add_argument("--check", action="store_true")
@@ -192,11 +208,20 @@ def main(argv=None) -> int:
     p.add_argument("--agendado", help="primeiro disparo em UTC, AAAA-MM-DDTHH:MM:SSZ")
     p.add_argument("--hash", action="append", default=[], help="hash_corpo do comando já promovido (F1_ENTREGA_UNICA)")
     p.add_argument("--origem", choices=("tutor", "coach"))
+    p.add_argument("--poller", action="store_true", help="imprime a instrução do poller de teste (ZAPIA-F3); exige --agendado e --ref")
+    p.add_argument("--ref", help="commit (40 hex) do repositório público onde o poller lê o modelo filho")
     a = p.parse_args(argv)
     if a.check:
         erros = check()
         print("FALHA: " + "; ".join(erros) if erros else "OK: modelos de instrução de rotina conferidos (hash, URLs literais, sem segredo)")
         return 1 if erros else 0
+    if a.poller:
+        try:
+            print(renderizar_poller(repo=a.repo, credencial=a.credencial, agendado_utc=a.agendado or "", ref=a.ref or ""))
+        except ValueError as erro:
+            print("FALHA: " + str(erro))
+            return 2
+        return 0
     if a.instrucao:
         try:
             print(renderizar(a.instrucao, repo=a.repo, credencial=a.credencial, agendado_utc=a.agendado or "", hashes=a.hash, origem=a.origem))
