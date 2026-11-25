@@ -4,14 +4,16 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #197; SHA ef7047858c240bff52c665a5fca01624665925ab
-- Frente ativa: **RM-09 / PR #198**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
+- Último merge comprovado: PR #198; SHA b330f82967586e6f029aa802a34ce2366637f586
+- Frente ativa: **RM-09 / PR #199**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
+
+**PRÉ-VOO DO PILOTO (25/11/2026, E39):** coleta somente leitura em scripts/termux/coleta_preflight.sh (ato dele, no Termux) e achado: o pré-voo de abertura fica VERMELHO até reinstalar o fluxo no HEAD atual da main (SHA fixado a4f8084 defasado); reinstalar por último, sem merge no meio. Registro em `docs/governanca/E39_PREVOO_E_PRONTIDAO_PARA_A_JANELA_20261125.md`. Nada ligado, nenhuma janela aberta.
 
 **APROVAÇÕES DE 25/11/2026 (E38):** texto da E3 aprovado como está (falta o merge que aplica, depois da janela do piloto), frase "finalizar estudos" confirmada, gabarito e resposta do aluno em campos separados; variável FLUXO_SHA256 do entrada definida por ele (relato com captura); **anexo do entrada ainda por revogar (ato dele)**. Registro em `docs/governanca/E38_REGISTRO_DE_APROVACOES_E3_E_FRASE_20261125.md`. **S22 mesclada (#197): especificação das tarefas agendadas do Claude como gatilho; nada criado, agendado ou testado.**
 
