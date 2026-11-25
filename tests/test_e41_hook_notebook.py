@@ -113,6 +113,8 @@ class KitTest(unittest.TestCase):
                 self.assertIn(info["hash_corpo"], texto)
             self.assertIn(hashlib.sha256((Path(d) / "fonte-n1.txt").read_bytes()).hexdigest(), texto)
             self.assertIn("comandos/fontes/n1.txt", texto)
+            self.assertIsNone(meta["itens"]["n1-fonte.json"]["ancora_gabarito"])
+            self.assertIn("eficiência", meta["itens"]["n1-questao.json"]["ancora_gabarito"])
 
 
 if __name__ == "__main__":
