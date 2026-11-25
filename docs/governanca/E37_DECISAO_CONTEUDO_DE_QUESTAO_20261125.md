@@ -28,4 +28,4 @@
 
 - Regra vigente **em código** segue sendo a antiga até a aplicação aprovada.
 - Não há prova de que a Zapia consiga trazer enunciado e gabarito sem trazer comentário do professor; isso depende de teste real na janela do piloto.
-- Direito autoral e termos do TEC: o proprietário afirma que o conteúdo é público das bancas; a sessão não verificou os termos de uso do TEC.
+- Direito autoral: o proprietário afirma que o conteúdo é público das bancas; a sessão não verificou a situação jurídica da cópia que o TEC exibe.
