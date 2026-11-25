@@ -20,12 +20,15 @@ env:
   VALIDADOR_REPO: Andraus35/UFMS-MEU-ESTUDO
   VALIDADOR_SHA: __VALIDADOR_SHA__
   VALIDADOR_GATE_SHA256: __VALIDADOR_GATE_SHA256__
+  VALIDADOR_EMISSOR_SHA256: __VALIDADOR_EMISSOR_SHA256__
 jobs:
   promover:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
+    outputs:
+      promovidos: ${{ steps.contar.outputs.promovidos }}
     steps:
       - name: Obter a fila no SHA do evento
         env:
@@ -74,4 +77,34 @@ jobs:
           EXECUCAO: ${{ github.run_id }}
         run: |
           set -euo pipefail
-          python "$RUNNER_TEMP/validador/scripts/command_box_runner.py" --comandos fila_repo/comandos --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA" --entrada-repo "$REPO" --validador-dir "$RUNNER_TEMP/validador"
+          python "$RUNNER_TEMP/validador/scripts/command_box_runner.py" --comandos fila_repo/comandos --execucao "$EXECUCAO" --validador-sha "$VALIDADOR_SHA" --entrada-repo "$REPO" --validador-dir "$RUNNER_TEMP/validador" | tee "$RUNNER_TEMP/resumo_caixa.json"
+      - name: Contar os comandos promovidos (sem texto de comando)
+        id: contar
+        run: |
+          set -euo pipefail
+          python "$RUNNER_TEMP/validador/scripts/sinal_emissor.py" --contar "$RUNNER_TEMP/resumo_caixa.json" >> "$GITHUB_OUTPUT"
+  campainha:
+    needs: promover
+    if: needs.promover.outputs.promovidos != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Campainha, obter o validador do público fixado por SHA
+        run: |
+          set -euo pipefail
+          git init -q "$RUNNER_TEMP/validador"
+          cd "$RUNNER_TEMP/validador"
+          git fetch -q --depth 1 "https://github.com/$VALIDADOR_REPO.git" "$VALIDADOR_SHA"
+          git checkout -q FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$VALIDADOR_SHA"
+          atual="$(sha256sum scripts/sinal_emissor.py | cut -d' ' -f1)"
+          test "$atual" = "$VALIDADOR_EMISSOR_SHA256"
+      - name: Campainha, abrir a issue-sinal (título fixo, corpo vazio)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python "$RUNNER_TEMP/validador/scripts/sinal_emissor.py" --emitir --entrada-repo "$REPO" --validador-dir "$RUNNER_TEMP/validador"

@@ -220,6 +220,7 @@ class CaminhoFelizTest(Base):
         self.assertNotIn(b"__VALIDADOR", instalado)
         self.assertIn(f"VALIDADOR_SHA: {self.head}".encode(), instalado)  # o SHA fixado é o da main pública
         self.assertIn(("VALIDADOR_GATE_SHA256: " + sha256((self.clone / "scripts/promotion_gate.py").read_bytes())).encode(), instalado)
+        self.assertIn(("VALIDADOR_EMISSOR_SHA256: " + sha256((self.clone / "scripts/sinal_emissor.py").read_bytes())).encode(), instalado)
         self.assertEqual(e["variables"][ENTRADA]["FLUXO_SHA256"], sha256(instalado))
         self.assertIn("DESABILITADA", r.stdout)
 

@@ -30,6 +30,7 @@ ROOT="$(cd "$HERE/../.." && pwd)"
 MODEL="$ROOT/config/modelos_fluxo/promover.yml"
 CHECK="$ROOT/scripts/promotion_workflow_check.py"
 GATE="$ROOT/scripts/promotion_gate.py"
+EMISSOR="$ROOT/scripts/sinal_emissor.py"
 API="https://api.github.com"
 PEND=0
 PEND_LISTA=""
@@ -188,11 +189,13 @@ set +e; MAIN_SHA="$(ler "repos/$PUBLIC_REPO/commits/main" --jq '.sha')"; MRC=$?;
 [ "$MRC" -eq 0 ] || falha "não consegui ler a main pública."
 [ "$HEAD_SHA" = "$MAIN_SHA" ] || falha "o seu clone ($HEAD_SHA) não é a main pública ($MAIN_SHA): rode git pull. O SHA fixado é o da main revisada."
 GATE_HASH="$(sha256sum "$GATE" | cut -d' ' -f1)"
-python - "$MODEL" "$TMP/promover.yml" "$HEAD_SHA" "$GATE_HASH" <<'PY'
+EMISSOR_HASH="$(sha256sum "$EMISSOR" | cut -d' ' -f1)"
+python - "$MODEL" "$TMP/promover.yml" "$HEAD_SHA" "$GATE_HASH" "$EMISSOR_HASH" <<'PY'
 import sys
-modelo, saida, sha, gate = sys.argv[1:5]
+modelo, saida, sha, gate, emissor = sys.argv[1:6]
 t = open(modelo, encoding="utf-8").read()
-for marcador, valor in (("__VALIDADOR_SHA__", sha), ("__VALIDADOR_GATE_SHA256__", gate)):
+for marcador, valor in (("__VALIDADOR_SHA__", sha), ("__VALIDADOR_GATE_SHA256__", gate),
+                        ("__VALIDADOR_EMISSOR_SHA256__", emissor)):
     if t.count(marcador) != 1:
         sys.exit("o modelo não tem o marcador %s exatamente uma vez" % marcador)
     t = t.replace(marcador, valor)

@@ -12,12 +12,13 @@ import promotion_workflow_check as chk  # noqa: E402
 MODELO = (ROOT / chk.MODELO).read_text(encoding="utf-8")
 SHA = "a" * 40
 HASH = "b" * 64
-INSTANCIADO = MODELO.replace(chk.PLACEHOLDER_SHA, SHA).replace(chk.PLACEHOLDER_GATE, HASH)
+INSTANCIADO = (MODELO.replace(chk.PLACEHOLDER_SHA, SHA).replace(chk.PLACEHOLDER_GATE, HASH)
+               .replace(chk.PLACEHOLDER_EMISSOR, "c" * 64))
 
 
 def muta(antigo, novo, base=MODELO):
-    assert base.count(antigo) == 1, antigo
-    return base.replace(antigo, novo)
+    assert base.count(antigo) >= 1, antigo  # a campainha repete passos do validador: muta só a 1ª ocorrência (job promover)
+    return base.replace(antigo, novo, 1)
 
 
 PASSO_PROMOCAO = "      - name: Promover com o portão"
@@ -72,6 +73,18 @@ class ModeloTest(unittest.TestCase):
         r = subprocess.run([sys.executable, str(ROOT / "scripts/promotion_workflow_check.py"), "--check"],
                            capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+
+def muta_job(job, antigo, novo, base=MODELO):
+    """Muta SÓ dentro de um job (`promover` ou `campainha`)."""
+    inicio = base.index("\n  %s:\n" % job)
+    fim = base.find("\n  ", base.index("\n", inicio + 1))
+    # fim = próximo job de coluna 2
+    m = re.search(r"\n  [A-Za-z_][\w-]*:\n", base[inicio + 1:])
+    fim = inicio + 1 + m.start() if m else len(base)
+    segmento = base[inicio:fim]
+    assert segmento.count(antigo) == 1, antigo
+    return base[:inicio] + segmento.replace(antigo, novo) + base[fim:]
 
 
 class ContraprovasTest(unittest.TestCase):
@@ -215,6 +228,87 @@ class ContraprovasTest(unittest.TestCase):
         fonte = (ROOT / "scripts/promotion_workflow_check.py").read_text(encoding="utf-8")
         for proibido in ("import requests", "urllib", "socket", "subprocess", "os.environ", "open(", ".write_text("):
             self.assertNotIn(proibido, fonte)
+
+
+class CampainhaTest(unittest.TestCase):
+    """ZAPIA-EMISSOR (E34): a campainha é um job próprio, só `issues: write`, só depois de promover, título fixo e corpo vazio."""
+
+    def assertViola(self, texto, codigo):
+        achados = chk.verificar(texto)
+        self.assertTrue(any(a == codigo or a.startswith(codigo + ":") for a in achados), (codigo, achados))
+
+    def test_modelo_tem_os_dois_jobs_e_a_campainha_so_com_issues(self):
+        jobs = chk._jobs(MODELO)
+        self.assertEqual(set(jobs), {"promover", "campainha"})
+        self.assertEqual(chk._permissoes_do_job(jobs["campainha"]), {"issues": "write"})
+        self.assertEqual(chk._permissoes_do_job(jobs["promover"]), {"contents": "write"})
+
+    def test_issues_write_no_job_de_promocao_recusado(self):
+        t = muta_job("promover", "      contents: write\n", "      contents: write\n      issues: write\n")
+        self.assertViola(t, "PERMISSAO_NAO_PERMITIDA")
+
+    def test_campainha_com_contents_ou_permissao_extra_recusada(self):
+        for extra in ("contents: write", "contents: read", "pull-requests: write", "actions: write", "workflows: write"):
+            t = muta_job("campainha", "      issues: write\n", "      issues: write\n      %s\n" % extra)
+            self.assertTrue(chk.verificar(t), extra)
+
+    def test_campainha_com_issues_read_ou_sem_permissao_recusada(self):
+        self.assertViola(muta_job("campainha", "issues: write", "issues: read"), "PERMISSAO_NAO_PERMITIDA")
+        sem = muta_job("campainha", "    permissions:\n      issues: write\n", "")
+        self.assertViola(sem, "PERMISSAO_DO_JOB_INCOMPLETA")
+
+    def test_campainha_ausente_ou_job_extra_recusado(self):
+        sem = MODELO[:MODELO.index("\n  campainha:")] + "\n"
+        self.assertTrue({"CAMPAINHA_AUSENTE", "JOBS_INESPERADOS"} <= set(chk.verificar(sem)))
+        extra = MODELO + "  outro:\n    runs-on: ubuntu-latest\n    timeout-minutes: 5\n    steps:\n      - name: x\n        run: echo oi\n"
+        self.assertViola(extra, "JOBS_INESPERADOS")
+
+    def test_campainha_sem_needs_ou_sem_condicao_recusada(self):
+        self.assertViola(muta("    needs: promover\n", ""), "CAMPAINHA_SEM_NEEDS")
+        self.assertViola(muta("    if: needs.promover.outputs.promovidos != '0'\n", ""), "CAMPAINHA_SEM_CONDICAO_DE_PROMOCAO")
+        self.assertViola(muta("promovidos != '0'", "promovidos != '9'"), "CAMPAINHA_SEM_CONDICAO_DE_PROMOCAO")
+        self.assertViola(muta("promovidos != '0'", "promovidos != '0' || true"), "CAMPAINHA_SEM_CONDICAO_DE_PROMOCAO")
+
+    def test_campainha_sem_conferencia_do_emissor_recusada(self):
+        self.assertViola(muta('          test "$atual" = "$VALIDADOR_EMISSOR_SHA256"\n', ""), "CAMPAINHA_SEM_CONFERENCIA_DO_EMISSOR")
+        self.assertViola(muta("sha256sum scripts/sinal_emissor.py", "sha256sum scripts/outro.py"), "CAMPAINHA_SEM_CONFERENCIA_DO_EMISSOR")
+
+    def test_hash_do_emissor_ausente_ou_invalido_recusado(self):
+        self.assertViola(muta("  VALIDADOR_EMISSOR_SHA256: __VALIDADOR_EMISSOR_SHA256__\n", ""), "EMISSOR_HASH_INVALIDO")
+        self.assertIn("EMISSOR_HASH_INVALIDO", chk.verificar(MODELO, instanciado=True))
+        self.assertIn("EMISSOR_HASH_INVALIDO", chk.verificar(INSTANCIADO.replace("c" * 64, "xyz"), instanciado=True))
+
+    def test_campainha_com_texto_livre_ou_gh_curl_recusada(self):
+        base = "--emitir --entrada-repo \"$REPO\""
+        for novo in ('--titulo "$X"', '--body "$X"', "--nome x"):
+            self.assertViola(muta(base, base + " " + novo), "CAMPAINHA_COM_TEXTO_LIVRE")
+        self.assertViola(muta_job("campainha", 'python "$RUNNER_TEMP/validador/scripts/sinal_emissor.py" --emitir',
+                                  'gh issue create --title x\n          python "$RUNNER_TEMP/validador/scripts/sinal_emissor.py" --emitir'),
+                         "CAMPAINHA_COM_TEXTO_LIVRE")
+
+    def test_campainha_sem_emissor_ou_com_etapa_extra_recusada(self):
+        self.assertViola(muta("--emitir", "--outro"), "CAMPAINHA_SEM_EMISSOR")
+        extra = MODELO + "      - name: Extra\n        run: |\n          echo oi\n"
+        self.assertViola(extra, "CAMPAINHA_COM_ETAPAS_EXTRAS")
+
+    def test_campainha_com_segredo_ou_fila_recusada(self):
+        self.assertViola(muta_job("campainha", "          REPO: ${{ github.repository }}\n",
+                                  "          REPO: ${{ github.repository }}\n          X: ${{ secrets.DADOS_TOKEN }}\n"),
+                         "CAMPAINHA_COM_SEGREDO_OU_FILA")
+
+    def test_expressao_nova_fora_da_lista_recusada_na_campainha(self):
+        t = muta_job("campainha", "GH_TOKEN: ${{ github.token }}", "GH_TOKEN: ${{ github.event.issue.title }}")
+        self.assertViola(t, "EXPRESSAO_NAO_PERMITIDA")
+
+    def test_contagem_e_saida_do_job_exigidas(self):
+        self.assertViola(muta("      promovidos: ${{ steps.contar.outputs.promovidos }}\n", "      promovidos: 1\n"),
+                         "PROMOVER_SEM_SAIDA_DE_CONTAGEM")
+        self.assertViola(muta('>> "$GITHUB_OUTPUT"', ""), "CONTAGEM_FORA_DO_CONTRATO")
+        self.assertViola(muta(' | tee "$RUNNER_TEMP/resumo_caixa.json"', ""), "CAIXA_SEM_RESUMO_PARA_CONTAGEM")
+
+    def test_timeout_por_job(self):
+        self.assertViola(muta_job("campainha", "    timeout-minutes: 5\n", ""), "SEM_TIMEOUT")
+        self.assertViola(muta_job("promover", "    timeout-minutes: 10\n", ""), "SEM_TIMEOUT")
 
 
 if __name__ == "__main__":
