@@ -34,6 +34,7 @@
 
 - **Squash:** depois de cada merge por squash, o push normal da branch da sessão é recusado; integrar com `git merge -s ours origin/<branch>` e empurrar (o push forçado é negado).
 - **Orçamento do HANDOFF:** 61 440 bytes (`tests/test_handoff_orcamento.py`); arquivar blocos antigos em `docs/governanca/ARQUIVO_HANDOFF_BLOCOS_*.md`. Todo item novo de `work_queue` exige atualizar `tests/test_retomada_proxima_sessao.py`.
+- **Limite do START: 64 KB por arquivo** (`scripts/agent_entrypoint.py`; `tests/test_agent_entrypoint.py` falha acima de 65 536 bytes). O `state/WORKFLOW.json` está em **cerca de 64,7 KB, quase no teto**: cada item novo da fila deve ter **título curto** (detalhe no documento de entrega) e, antes de acrescentar, **encurtar títulos de itens já entregues**; o `memory/HANDOFF.md` tem orçamento próprio de 61 440 bytes.
 - **Suíte completa:** cerca de 170 s; rodar em segundo plano e esperar (o tempo limite do comando mata a execução em primeiro plano).
 - **Arquivos de contrato** (`AGENTS.md`, `PRODUCT.md`, `agents/`, esquema de comandos, `scripts/agents_gate.py`, `.claude/`, `.github/`): só com aprovação expressa do texto e do merge.
 - **Hooks e Gmail:** filtros só `senders`/`labels`/`subject_contains`/`text_contains`; conta do hook = a conectada hoje; **fechar issue com `SINAL` gera outro e-mail que casa com o filtro**; ler de volta conta, filtros e texto salvo e comparar **por código** com o modelo.

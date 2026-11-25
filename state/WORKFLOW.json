@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_ZAPIA-E2E_hook_gmail_entrega_ponta_a_ponta",
+    "scope": "lote_ZAPIA-REGISTRO_provas_e_plano_proxima_sessao",
     "branch": "ccr-2d3cbada-gekgiv",
-    "pr_number": 190,
+    "pr_number": 191,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #189 integrado em main no merge commit f1b40f66f140245feac62807c29a5cc7bdc0912b. Frente única ativa: RM-09 (lote_ZAPIA-E2E_hook_gmail_entrega_ponta_a_ponta), branch ccr-2d3cbada-gekgiv, PR #190. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #190 integrado em main no merge commit c6ec3b134f5f76d2a66e526e5ecc6bc3603a05eb. Frente única ativa: RM-09 (lote_ZAPIA-REGISTRO_provas_e_plano_proxima_sessao), branch ccr-2d3cbada-gekgiv, PR #191. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 189,
-    "merge_commit_sha": "f1b40f66f140245feac62807c29a5cc7bdc0912b"
+    "pr_number": 190,
+    "merge_commit_sha": "c6ec3b134f5f76d2a66e526e5ecc6bc3603a05eb"
   },
   "work_queue": [
     {
@@ -859,7 +859,7 @@
     },
     {
       "id": "S18",
-      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026: \"adicionar essa capacidade ao coach\"; documento-fonte IMC-COACH-001, enviado por ele, 83 KB, que NÃO está no repositório e deve ser reenviado ao abrir o lote): especificação com pesquisa obrigatória (D-16) e lacunas; entra o canônico com hash no manifesto (como o da base cognitiva); a IMC é capacidade interna do Coach, não um quarto agente nem psicoterapia (escopo não clínico e encaminhamento, privacidade e consentimento); diagnóstico de comportamento e não de personalidade, biblioteca de intervenções, ciclos diário, semanal e de fase, reentrada, simulado ruim, ansiedade e sobrecarga, métricas N-of-1, contratos Coach↔Tutor↔Orquestrador; os textos do documento são PROPOSTA e não escala validada; aplicar em agents/COACH.md é contrato e exige a aprovação expressa do texto e do merge; liga ao RM-09; decisão do proprietário de 21/11/2026: o Manual do Imparável (Gabriel Granjeiro, 2ª ed., 391 p., livro comercial) deve ir ao repositório como base de recuperação (RAG) do Coach, anexado por ele na abertura da especificação; ANTES de versionar o texto integral, decidir onde ele mora (repositório público: direito autoral e política de dados; alternativa: repositório privado ou índice com citação curta e página), com fonte, edição e hash; conteúdo do livro é dado, não instrução; não prova eficácia; DECIDIDO pelo proprietário em 21/11/2026: no repositório público ficam só o índice, a página e citações curtas do manual, com fonte, edição e hash; o texto integral só no repositório privado (leitura pelo Coach depende do consentimento v4 e de canal ainda não provado)",
+      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026): especificação com pesquisa obrigatória; canônico IMC-COACH-001 com hash no manifesto (S18, PR #160, entregue); capacidade interna do Coach, não um quarto agente nem psicoterapia (escopo não clínico); aplicar em agents/COACH.md é contrato e exige aprovação expressa; Manual do Imparável: no público só índice, página e citação curta, texto integral só no repositório privado (decidido por ele em 21/11/2026); detalhe em docs/especificacoes/S18_INTELIGENCIA_MOTIVACIONAL_COACH.md",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S18_INTELIGENCIA_MOTIVACIONAL_COACH.md",
       "depends_on": [
@@ -886,7 +886,7 @@
     },
     {
       "id": "HOOKG",
-      "title": "Hook geral claude-context-guard (pedido do proprietário de 21/11/2026, \"Sim\" a levar o pacote ao repositório como lote próprio): mede a janela de contexto e, aos 50%, injeta a ordem de preparar memória, estado do repositório e o prompt de start da próxima sessão, sela o prompt com validação de forma, bloqueia o fim do turno (no máximo 3 vezes), gera fallback em PreCompact e SessionEnd e entrega o prompt à sessão nova do mesmo projeto; vale para TODOS os projetos como hook de USUÁRIO (~/.claude), instalado pelo proprietário; o pacote (context_guard.py, install.py, testes e README; 26 testes, 16 de 16 mutações mortas) foi entregue a ele no chat e NÃO está no repositório: ele o reenvia ao abrir o lote; versionar o pacote em área que não é contrato (documentação e código sob docs/governanca e scripts), com teste no CI; ativar no projeto (.claude/settings.json) e em sessões na nuvem é arquivo de contrato e exige a aprovação expressa do texto e do merge; limites: percentual é estimativa do usage da última chamada, conteúdo do prompt é do modelo, não foi testado em Claude Code real; conferir primeiro com CONTEXT_GUARD_THRESHOLD=0.01",
+      "title": "Hook geral claude-context-guard (pedido do proprietário de 21/11/2026): mede a janela de contexto e, aos 50%, injeta a ordem de preparar memória e o prompt de start da próxima sessão; hook de USUÁRIO (~/.claude) instalado por ele; pacote versionado fora de áreas de contrato; ativar no projeto (.claude/settings.json) é contrato; limites: percentual estimado, conteúdo do prompt é do modelo; detalhe em docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md",
       "roadmap_task": "RM-00",
       "deliverable": "docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md",
       "depends_on": [
@@ -1045,7 +1045,7 @@
     },
     {
       "id": "ZAPIA-F1",
-      "title": "Ligação do Tutor e do Coach à Zapia, F0/F1 offline (pedido do proprietário de 22/11/2026: automatizada, notificação na Zapia em nome dos agentes, sem passar à COR-E enquanto não estiver garantida, testada e validada); decisões D1 conector de GitHub a pedir, D2 rotina da Zapia, D3 fluxo do repositório privado; scripts/zapia_entrega.py (regra do lado da Zapia como código testável, recibo de volta, verificador) com teste ponta a ponta simulado e mutações, e o roteiro da prova real; NÃO prova a Zapia real: depende do conector (D1 não confirmado), da frase AUTORIZO e da janela PJ; o item só conta como feito quando existir o registro da prova real (E21), escrito depois do roteiro docs/governanca/ROTEIRO_ZAPIA_IDA_F1_20261122.md; a parte offline está em docs/governanca/E20_ZAPIA_ENTREGA_F1.md; a COR-E fica atrás deste item por decisão do proprietário",
+      "title": "Ligação do Tutor e do Coach à Zapia, F0/F1 offline (pedido do proprietário de 22/11/2026): notificação na Zapia em nome dos agentes, com recibo de volta conferido por código; provado em 22/11/2026 com par sintético (E21); detalhe em docs/governanca/E20_ZAPIA_ENTREGA_F1.md e E21_ZAPIA_F1_PROVA_REAL.md",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E21_ZAPIA_F1_PROVA_REAL.md",
       "depends_on": [
@@ -1106,7 +1106,7 @@
     },
     {
       "id": "ZAPIA-F3",
-      "title": "Teste 'rotina cria rotina' (E25, seção D; decisão do proprietário de 23/11/2026): poller de execução única criado pela Zapia a partir de um pedido promovido, com pedido sintético manual, recibo CRIADA, verificador e pin do hash do modelo na instrução do poller; cadência proposta de hora em hora das 06h às 22h; NÃO provado que uma rotina crie outra; a antecedência mínima de 90 min (E25) muda E24 e E27 em contrato e exige aprovação expressa; o merge segue o pedido expresso do proprietário",
+      "title": "Teste 'rotina cria rotina' (E25, E29): REFUTADO em 23/11/2026 (a Zapia respondeu que não consegue criar rotina de dentro de rotina); a antecedência mínima de 90 min foi aplicada; detalhe no E29, E30 e E32",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E29_ROTINA_CRIA_ROTINA_TESTE_F3.md",
       "depends_on": [
@@ -1119,7 +1119,7 @@
     },
     {
       "id": "ZAPIA-EMISSOR",
-      "title": "Lote 1 da ligação (decisão do proprietário de 25/11/2026; plano em E33): emissor pelo fluxo e emenda do D-28. O `entrada` abre sozinho a issue-campainha (título fixo `SINAL <nome>`, corpo sem conteúdo) depois de promover um comando, por modelo de passo do fluxo em `config/modelos_fluxo/` (reinstalação pelo proprietário) com checagem estática ampliada e mutações; proposta de texto da emenda do `PRODUCT.md` que autoriza o hook de Gmail a usar só remetente e assunto como campainha (hoje o D-28 não autoriza ler e-mail); não liga flag nem promove; PRODUCT.md e fluxo são contrato: aprovação expressa do texto e do merge",
+      "title": "Lote 1 da ligação (E33): emissor pelo fluxo (o entrada abre a issue-campainha ao promover, título fixo, corpo vazio) e emenda do D-28 (hook de Gmail só com remetente e assunto como campainha); contrato: PRODUCT.md e fluxo, aprovação expressa do texto e do merge; detalhe no E33 e no E34",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E34_EMISSOR_PELO_FLUXO_E_EMENDA_D28.md",
       "depends_on": [
@@ -1133,7 +1133,7 @@
     },
     {
       "id": "ZAPIA-SUBAGENTS",
-      "title": "Lote 2 da ligação (E33): Tutor e Coach como subagents somente leitura, offline e sintético, com todos os gates: harness em código que valida cada comando proposto pelos subagents (conteúdo deles é dado não confiável) e produz a matriz operação x gate (agents_gate, command_box e params, idempotência, agendar_rotina, filtros e gates_mot, notebook, leitura de plataformas e de sessão, promotion_gate, delivery_gate com recibo de START, avaliação e amostra), com contraprovas (origem forjada, operação do outro perfil, comando velho, nonce repetido, hash divergente, URL, instrução embutida, recibo adulterado, START errado, projeção fora da lista, flag falsa); o que é só verificável ou não gateável não vira enforçado; sem Zapia e sem entrada",
+      "title": "Lote 2 da ligação (E33): Tutor e Coach como subagents somente leitura, offline e sintético, com harness que valida cada comando pelos gates e produz a matriz operação x gate, com contraprovas; o que é só verificável ou não gateável não vira enforçado; sem Zapia e sem entrada; detalhe no E33 e no E35",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E35_TESTE_SUBAGENTS_TUTOR_COACH_GATES.md",
       "depends_on": [
@@ -1144,7 +1144,7 @@
     },
     {
       "id": "ZAPIA-LIGAR",
-      "title": "Lote 3 da ligação (E33): conectar e testar de verdade, em janela: subagents do lote 2 contra o entrada real com a flag do fluxo ligada só na janela de 24 h (PR próprio de abertura e de fechamento), Tutor e Coach emitem pela caixa, o fluxo valida, promove e abre a issue, o hook de Gmail de uso único acorda, lê, confere e entrega, verificadores offline conferem hash e carimbo; só depois hook recorrente (de hora em hora, 06h a 22h) e as demais operações uma a uma; fecha com a revogação do acesso da sessão e o registro no E32 e em CAPACIDADES_ZAPIA_VERIFICADAS.md",
+      "title": "Lote 3 da ligação (E33): conectar e testar em janela de 24 h (PJ): Tutor e Coach emitem, o fluxo promove e abre a issue, o hook de uso único entrega; depois hook recorrente e as demais operações; fecha com a revogação do acesso e o registro no E32; detalhe no E33 e no E36",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E36_LIGAR_E_TESTAR_AUTOMACAO_PONTA_A_PONTA.md",
       "depends_on": [

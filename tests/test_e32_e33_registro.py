@@ -29,7 +29,7 @@ class PlanoE33Teste(unittest.TestCase):
         t = E33.read_text(encoding="utf-8")
         for trecho in ("ZAPIA-EMISSOR", "ZAPIA-SUBAGENTS", "ZAPIA-LIGAR", "emenda do D-28", "somente leitura", "offline e sintético", "matriz operação × gate", "agents_gate", "command_box",
                        "delivery_gate", "start_receipt", "promotion_gate", "P9", "janela do piloto (PJ)", "o \"Mesclar\" não vale", "merge -s ours", "61 440", "rm", "repetir `add_repo`",
-                       "um lote por vez", "não gateável", "Contraprovas mínimas", "origem forjada"):
+                       "um lote por vez", "não gateável", "Contraprovas mínimas", "origem forjada", "Limite do START: 64 KB", "título curto"):
             self.assertIn(trecho, t, trecho)
 
     def test_a_fila_tem_os_tres_lotes_com_entrega_dependencia_e_bloqueio_do_piloto(self):
