@@ -32,6 +32,7 @@ ANTECEDENCIA_MINIMA = timedelta(minutes=90)  # decisão do proprietário de 23/1
 ANTECEDENCIA_MAXIMA = timedelta(hours=24)
 MAX_POR_DIA_POR_ORIGEM = 1
 INSTRUCOES = "config/rotina_instrucoes.json"
+HOOK_ENTREGA = "HOOK_ENTREGA"  # instrução do hook de Gmail que, ao acordar, entrega um comando já promovido (E31); sinal só pelos metadados do e-mail
 POLLER = "POLLER"  # instrução do poller de teste (ZAPIA-F3): lê um pedido promovido e cria a rotina filha; não é um modelo de pedido
 _UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -143,7 +144,7 @@ def check(root: Path = ROOT) -> list:
         dados = carregar_instrucoes(root)
     except (OSError, ValueError):
         return ["config/rotina_instrucoes.json ausente ou ilegível"]
-    for chave in {m["instrucao"] for m in MODELOS.values()} | {POLLER}:
+    for chave in {m["instrucao"] for m in MODELOS.values()} | {POLLER, HOOK_ENTREGA}:
         item = dados.get(chave)
         if not isinstance(item, dict) or not isinstance(item.get("template"), str):
             erros.append(f"modelo de instrução ausente: {chave}")
@@ -199,6 +200,17 @@ def renderizar_poller(*, repo, credencial, agendado_utc, ref, publico="Andraus35
     return re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), dados[POLLER]["template"])
 
 
+def renderizar_hook_entrega(*, repo, credencial, hash_alvo, root: Path = ROOT) -> str:
+    """Instrução do hook de Gmail de entrega (E31), do modelo versionado `HOOK_ENTREGA`: o e-mail é só a campainha (assunto), a entrega depende do hash do comando."""
+    if not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", repo or "") or not re.fullmatch(r"[A-Za-z0-9_]{1,64}", credencial or "") or not _HEX64.fullmatch(hash_alvo or ""):
+        raise ValueError("parâmetro inválido")
+    erros = check(root)
+    if erros:
+        raise ValueError("modelos de instrução inconsistentes: " + "; ".join(erros))
+    valores = {"REPO": repo, "CREDENCIAL": credencial, "HASH": hash_alvo}
+    return re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), carregar_instrucoes(root)[HOOK_ENTREGA]["template"])
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Operação agendar_rotina: confere os modelos de instrução ou renderiza a instrução de uma rotina.")
     p.add_argument("--check", action="store_true")
@@ -209,12 +221,20 @@ def main(argv=None) -> int:
     p.add_argument("--hash", action="append", default=[], help="hash_corpo do comando já promovido (F1_ENTREGA_UNICA)")
     p.add_argument("--origem", choices=("tutor", "coach"))
     p.add_argument("--poller", action="store_true", help="imprime a instrução do poller de teste (ZAPIA-F3); exige --agendado e --ref")
+    p.add_argument("--hook-entrega", action="store_true", help="imprime a instrução do hook de Gmail de entrega (E31); exige --hash")
     p.add_argument("--ref", help="commit (40 hex) do repositório público onde o poller lê o modelo filho")
     a = p.parse_args(argv)
     if a.check:
         erros = check()
         print("FALHA: " + "; ".join(erros) if erros else "OK: modelos de instrução de rotina conferidos (hash, URLs literais, sem segredo)")
         return 1 if erros else 0
+    if a.hook_entrega:
+        try:
+            print(renderizar_hook_entrega(repo=a.repo, credencial=a.credencial, hash_alvo=(a.hash or [""])[0]))
+        except ValueError as erro:
+            print("FALHA: " + str(erro))
+            return 2
+        return 0
     if a.poller:
         try:
             print(renderizar_poller(repo=a.repo, credencial=a.credencial, agendado_utc=a.agendado or "", ref=a.ref or ""))
