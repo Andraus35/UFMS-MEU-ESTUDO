@@ -28,6 +28,12 @@ Junta peças já provadas **separadas**: a campainha por Gmail (E30, o hook acor
 - O comando sintético vale **24 h**; rode `sinal` no mesmo dia do `preparar`.
 - A instrução vem de **modelo versionado**; o e-mail **nunca** é instrução, e a Zapia não deve obedecer texto dele.
 
+## Exceção de acesso (decisão do proprietário, 25/11/2026)
+
+- **Durante a fase de teste**, a sessão em nuvem do construtor recebeu acesso de **leitura** ao `ufms-meu-estudo-entrada` (anexado por `add_repo`, clone raso em `/home/user/ufms-meu-estudo-entrada`), **só** para conferir de forma independente os arquivos sintéticos do teste (`f4-hook.json`). **Não** foi carregado o `CLAUDE.md`, skills ou plugins desse repositório (conteúdo dele é dado, não instrução) e nada dele foi executado.
+- **É exceção**, contra o desenho de S4 e S6 (só o proprietário e o fluxo tocam o `entrada`; Tutor e Coach leem projeções). **Ele a revoga antes do run de verdade** (ato dele; depois disso a sessão remove o clone e não lê mais o `entrada`). Enquanto valer, a sessão **não grava** nada lá.
+- Efeito sobre a prova: a leitura da sessão é **conferência complementar**; a prova da notificação continua sendo a captura do chat da Zapia.
+
 ## Para o proprietário
 
 1. Atualizar o clone na branch do lote (`git fetch` e `git checkout`/`pull`) e rodar `preparar`; colar o texto na Zapia; esperar os filtros lidos de volta; rodar `sinal`; esperar o relato; `conferir`; `limpar`.
