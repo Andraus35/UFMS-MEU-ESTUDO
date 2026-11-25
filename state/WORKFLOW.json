@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_previoo_do_piloto_e_prontidao_para_a_janela",
+    "scope": "lote_N1_auditoria_da_ponte_Tutor_Zapia_Gemini_e_kit_offline",
     "branch": "ccr-c8d1fbc8-sa348u",
-    "pr_number": 199,
+    "pr_number": 200,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #198 integrado em main no merge commit b330f82967586e6f029aa802a34ce2366637f586. Frente única ativa: RM-09 (lote_previoo_do_piloto_e_prontidao_para_a_janela), branch ccr-c8d1fbc8-sa348u, PR #199. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #199 integrado em main no merge commit 675145408943622acd9b96eb8cc15692cb4e8f2f. Frente única ativa: RM-09 (lote_N1_auditoria_da_ponte_Tutor_Zapia_Gemini_e_kit_offline), branch ccr-c8d1fbc8-sa348u, PR #200. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 198,
-    "merge_commit_sha": "b330f82967586e6f029aa802a34ce2366637f586"
+    "pr_number": 199,
+    "merge_commit_sha": "675145408943622acd9b96eb8cc15692cb4e8f2f"
   },
   "work_queue": [
     {
@@ -1167,6 +1167,19 @@
       "optional_inputs": [
         "escolha do gatilho depois da prova do S15-R4",
         "aprovação do escopo do token na caixa"
+      ]
+    },
+    {
+      "id": "PONTE-NOTEBOOK",
+      "title": "Teste N1 da ponte Tutor, Zapia e Gemini Notebook (S10-R11): kit sintético offline (comandos, contraprova, conferência da resposta); execução real é ato do proprietário; detalhe no E40",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/zapia_n1_prep.py",
+      "depends_on": [
+        "ZAPIA-SUBAGENTS"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "execução do roteiro N1 pelo proprietário e relato do resultado"
       ]
     }
   ],
