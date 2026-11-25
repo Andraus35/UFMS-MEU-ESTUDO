@@ -22,14 +22,18 @@ MODELO = "config/modelos_fluxo/promover.yml"
 VALIDADOR_REPO = "Andraus35/UFMS-MEU-ESTUDO"
 PLACEHOLDER_SHA = "__VALIDADOR_SHA__"
 PLACEHOLDER_GATE = "__VALIDADOR_GATE_SHA256__"
+PLACEHOLDER_EMISSOR = "__VALIDADOR_EMISSOR_SHA256__"
+TITULO_CAMPAINHA = "SINAL comando-promovido"
 TRIGGERS_PERMITIDOS = frozenset({"push", "workflow_dispatch"})
 # Contextos que o modelo pode interpolar (só em `env:`, nunca em `run:`); nenhum vem de texto controlável por terceiros.
 EXPRESSOES_PERMITIDAS = frozenset({"github.token", "github.sha", "github.run_id", "github.repository",
-                                   "secrets.DADOS_TOKEN", "vars.FLUXO_SHA256"})
+                                   "secrets.DADOS_TOKEN", "vars.FLUXO_SHA256",
+                                   "steps.contar.outputs.promovidos"})
 ETAPAS_EM_ORDEM = ("Obter a fila no SHA do evento", "Conferir o hash do próprio fluxo",
                    "Obter o validador do público fixado por SHA",
                    "Promover com o portão (única etapa com o segredo do histórico)",
-                   "Promover comandos da caixa (sem o segredo do histórico)")
+                   "Promover comandos da caixa (sem o segredo do histórico)",
+                   "Contar os comandos promovidos (sem texto de comando)")
 _EXPR = re.compile(r"\$\{\{\s*(.*?)\s*\}\}")
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -105,11 +109,18 @@ def verificar(texto, instanciado=False):
         v.append("PERMISSOES_PADRAO_NAO_VAZIAS")
     if re.search(r"(?m)^permissions:\s*(?!\{\})\S", texto) or _bloco_toplevel(texto, "permissions")[1]:
         v.append("PERMISSOES_DE_TOPO_COM_CONTEUDO")
-    for m in re.finditer(r"(?m)^\s+permissions:\s*\n((?:\s{8,}\S.*\n?)+)", texto):
-        for linha in m.group(1).splitlines():
-            if not re.fullmatch(r"\s+contents:\s*(?:read|write)\s*", linha):
-                v.append("PERMISSAO_NAO_PERMITIDA:" + linha.strip())
-    if re.search(r"write-all|read-all|id-token|\bworkflows:|\bactions:\s*(?:read|write)|\bpackages:|\bissues:|"
+    jobs = _jobs(texto)
+    if set(jobs) != {"promover", "campainha"}:
+        v.append("JOBS_INESPERADOS")
+    for nome_job, corpo_job in jobs.items():
+        perms = _permissoes_do_job(corpo_job)
+        esperado = {"promover": {"contents"}, "campainha": {"issues"}}.get(nome_job, set())
+        for chave, valor in perms.items():
+            if chave not in esperado or (chave == "issues" and valor != "write") or (chave == "contents" and valor not in ("read", "write")):
+                v.append("PERMISSAO_NAO_PERMITIDA:%s:%s=%s" % (nome_job, chave, valor))
+        if nome_job in jobs and set(perms) != esperado:
+            v.append("PERMISSAO_DO_JOB_INCOMPLETA:" + nome_job)
+    if re.search(r"write-all|read-all|id-token|\bworkflows:|\bactions:\s*(?:read|write)|\bpackages:|"
                  r"pull-requests:|\badministration:|\bsecrets:\s*(?:read|write)", texto):
         v.append("PERMISSAO_AMPLA_OU_SENSIVEL")
     # expressões: só a lista fechada e nunca dentro de `run:`
@@ -171,10 +182,44 @@ def verificar(texto, instanciado=False):
         v.append("CAIXA_SEM_SHA_FIXADO")
     if "DADOS_TOKEN" in caixa or "secrets." in caixa:
         v.append("CAIXA_COM_SEGREDO_DO_HISTORICO")
+    # campainha (ZAPIA-EMISSOR): job próprio, só `issues: write`, só depois da promoção, título fixo e corpo vazio
+    emi = re.findall(r"(?m)^  VALIDADOR_EMISSOR_SHA256:\s*(\S+)\s*$", texto)
+    if len(emi) != 1 or not (_HEX64.fullmatch(emi[0]) or (not instanciado and emi[0] == PLACEHOLDER_EMISSOR)):
+        v.append("EMISSOR_HASH_INVALIDO")
+    camp = jobs.get("campainha", "")
+    if camp:
+        if not re.search(r"(?m)^    needs:\s*promover\s*$", camp):
+            v.append("CAMPAINHA_SEM_NEEDS")
+        if len(re.findall(r"(?m)^    if:", camp)) != 1 or not re.search(r"(?m)^    if:\s*needs\.promover\.outputs\.promovidos != '0'\s*$", camp):
+            v.append("CAMPAINHA_SEM_CONDICAO_DE_PROMOCAO")
+        if "secrets." in camp or "DADOS_TOKEN" in camp or "contents:" in camp or "fila_repo" in camp:
+            v.append("CAMPAINHA_COM_SEGREDO_OU_FILA")
+        etapas_c = _etapas(camp)
+        obter = etapas_c.get("Campainha, obter o validador do público fixado por SHA", "")
+        if not ('"$VALIDADOR_SHA"' in obter and "rev-parse HEAD" in obter and "sha256sum scripts/sinal_emissor.py" in obter
+                and '"$VALIDADOR_EMISSOR_SHA256"' in obter):
+            v.append("CAMPAINHA_SEM_CONFERENCIA_DO_EMISSOR")
+        abrir = etapas_c.get("Campainha, abrir a issue-sinal (título fixo, corpo vazio)", "")
+        if "sinal_emissor.py" not in abrir or "--emitir" not in abrir or "--entrada-repo" not in abrir:
+            v.append("CAMPAINHA_SEM_EMISSOR")
+        if re.search(r"--(?:titulo|title|corpo|body|texto|nome)\b|\bgh\s+issue\b|\bcurl\b", abrir):
+            v.append("CAMPAINHA_COM_TEXTO_LIVRE")
+        if len(etapas_c) != 2:
+            v.append("CAMPAINHA_COM_ETAPAS_EXTRAS")
+    else:
+        v.append("CAMPAINHA_AUSENTE")
+    saida = re.search(r"(?m)^    outputs:\s*\n\s+promovidos:\s*\$\{\{ steps\.contar\.outputs\.promovidos \}\}\s*$", jobs.get("promover", ""))
+    if not saida:
+        v.append("PROMOVER_SEM_SAIDA_DE_CONTAGEM")
+    contar = por_nome.get(ETAPAS_EM_ORDEM[5], "")
+    if "sinal_emissor.py" not in contar or "--contar" not in contar or "GITHUB_OUTPUT" not in contar or "resumo_caixa.json" not in contar:
+        v.append("CONTAGEM_FORA_DO_CONTRATO")
+    if "resumo_caixa.json" not in caixa:
+        v.append("CAIXA_SEM_RESUMO_PARA_CONTAGEM")
     # execução serial e idempotente
     if not re.search(r"(?m)^concurrency:\s*\n\s+group:\s*\S+\s*\n\s+cancel-in-progress:\s*false\s*$", texto):
         v.append("CONCORRENCIA_NAO_SERIAL")
-    if not re.search(r"(?m)^\s+timeout-minutes:\s*\d+\s*$", texto):
+    if not jobs or any(not re.search(r"(?m)^    timeout-minutes:\s*\d+\s*$", c) for c in jobs.values()):
         v.append("SEM_TIMEOUT")
     # vedados em qualquer lugar
     for padrao, codigo in _PROIBIDOS_TEXTO:
@@ -185,6 +230,38 @@ def verificar(texto, instanciado=False):
             v.append("SEGREDO_IMPRESSO_OU_GRAVADO")
             break
     return sorted(set(v), key=v.index)
+
+
+def _jobs(texto):
+    """Mapa job -> texto do job (filhos de `jobs:` em coluna 2)."""
+    achou, filhos = _bloco_toplevel(texto, "jobs")
+    out, nome, buf = {}, None, []
+    for l in filhos:
+        m = re.match(r"^  ([A-Za-z_][\w-]*):\s*$", l)
+        if m:
+            if nome is not None:
+                out[nome] = "\n".join(buf)
+            nome, buf = m.group(1), []
+        elif nome is not None:
+            buf.append(l)
+    if nome is not None:
+        out[nome] = "\n".join(buf)
+    return out
+
+
+def _permissoes_do_job(corpo):
+    """Chaves e valores do bloco `permissions:` de coluna 4 do job (vazio se ausente)."""
+    saida, dentro = {}, False
+    for l in corpo.splitlines():
+        if re.match(r"^    permissions:\s*$", l):
+            dentro = True
+            continue
+        if dentro:
+            m = re.match(r"^      ([\w-]+):\s*(\S+)\s*$", l)
+            if not m:
+                break
+            saida[m.group(1)] = m.group(2)
+    return saida
 
 
 def _etapas(texto):
