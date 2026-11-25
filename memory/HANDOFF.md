@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #199; SHA 675145408943622acd9b96eb8cc15692cb4e8f2f
-- Frente ativa: **RM-09 / PR #200**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
+- Último merge comprovado: PR #200; SHA 2be76c09cd38e2112174c015028925cf45b39cf4
+- Frente ativa: **RM-09 / PR #201**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -14,6 +14,8 @@
 <!-- GOVERNANCE-CHECKPOINT:END -->
 
 **PONTO DE RETOMADA (25/11/2026, fim da sessão):** #192 a #199 mesclados (lotes ZAPIA-EMISSOR, ZAPIA-SUBAGENTS, S22 spec, registros E34, E35, E37, E38, E39). **Aprovado por ele:** texto da E3 (aplicar em agents/ só depois da janela, merge expresso), frase "finalizar estudos", gabarito e resposta do aluno em campos separados (E38). **Fluxo reinstalado no entrada** (SHA a4f8084, hash 0b08e17b) e `FLUXO_SHA256` definida por ele (captura); **fixado em SHA defasado: o pré-voo de abertura dá VERMELHO até reinstalar no HEAD da main, por último e sem merge no meio** (`scripts/termux/coleta_preflight.sh`, E39). **Janela do piloto: ele decidiu NÃO abrir agora; caderno real: depois.** **Anexo do entrada ainda por revogar (ato dele).** **Ponte Tutor-Zapia-Gemini:** auditoria e roteiro N1 em `docs/governanca/E40_AUDITORIA_PONTE_TUTOR_ZAPIA_GEMINI_E_ROTEIRO_N1_20261125.md` (kit offline `scripts/zapia_n1_prep.py` e `scripts/notebook_response_check.py`; nada provado no Notebook real; `agents/TUTOR.md` item 8 contradiz a D-26, contrato a emendar com aprovação). S22 (tarefas agendadas do Claude como gatilho) só especificada, nada criado. WORKFLOW perto do limite de 64 KiB do START: arquivar antes de crescer.
+
+**DECISÕES DE 25/11/2026 (fim):** item 8 de agents/TUTOR.md aplicado em PR próprio (texto aprovado por ele; merge só por pedido dele); prova da S22 ADIADA (sem token, sem tarefa); emenda do prompt do Notebook: ele escolheu que enunciado reformulado, alternativas e gabarito ENTRAM (S10-R3 e validador, próxima sessão, contraprovas e mutações, E37 não cobre); N1 real e script do Termux ainda por fazer; anexo do entrada por revogar (ato dele).
 
 **DECISÃO C1 (25/11/2026):** enunciado e gabarito **deixam de ser proibidos** na entrega da Zapia (conteúdo público das bancas); **comentário de professor e recursos do TEC continuam proibidos**. Registro em `docs/governanca/E37_DECISAO_CONTEUDO_DE_QUESTAO_20261125.md`; E3 e S9-R5 revistas só em texto; **código, esquema e `agents/` ainda não refletem** (aplicação depois da janela do piloto, com aprovação expressa).
 
