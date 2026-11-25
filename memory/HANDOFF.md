@@ -4,14 +4,16 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #194; SHA a4f8084670e7d5e0d6048423ffe9e4a8e40ac455
-- Frente ativa: **RM-09 / PR #195**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
+- Último merge comprovado: PR #195; SHA 45d70314ea1e64193b87643e031d141259409fa5
+- Frente ativa: **RM-09 / PR #196**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
+
+**BACKLOG S22 (25/11/2026):** tarefas agendadas do Claude Code como gatilho dos agentes (S15-R3 a), a abrir e especificar; é o próximo item da fila (`state/WORKFLOW.json`, `S22`); entrega a especificar: arquivo S22_TAREFAS_AGENDADAS_CLAUDE_GATILHO em docs/especificacoes (ainda não existe). A tarefa agendada só acorda a sessão para decidir e emitir comando; a entrega no minuto a TEC, Gemini e estudante segue pela Zapia. Escopo: encaixe no harness (relógio, sessão, START pelo broker, proposta, caixa, fluxo, campainha, Zapia), escopo mínimo do token de escrita na caixa (S6-R7), prova do gatilho sem efeito em 3 dias (S15-R4), limites do recurso (mínimo de 1 h, atraso, sessão sem memória, conexão do GitHub expirada), push direto ao aparelho (D-25) e matriz gatilho x canal. Nada foi criado, agendado ou testado. S21 fica reservada ao ciclo de revisão do E25.
 
 **DECISÃO C1 (25/11/2026):** enunciado e gabarito **deixam de ser proibidos** na entrega da Zapia (conteúdo público das bancas); **comentário de professor e recursos do TEC continuam proibidos**. Registro em `docs/governanca/E37_DECISAO_CONTEUDO_DE_QUESTAO_20261125.md`; E3 e S9-R5 revistas só em texto; **código, esquema e `agents/` ainda não refletem** (aplicação depois da janela do piloto, com aprovação expressa).
 
