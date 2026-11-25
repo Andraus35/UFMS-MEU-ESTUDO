@@ -95,7 +95,7 @@ class PreparoTest(unittest.TestCase):
                 self.assertEqual(prep.main(["--saida", d]), 0)
             nomes = {p.name for p in Path(d).iterdir()}
             self.assertEqual(nomes, {"n1-fonte.json", "n1-fonte.recibo.json", "n1-contraprova.json", "n1-contraprova.recibo.json",
-                                     "n1-questao.json", "n1-questao.recibo.json", "fonte-n1.txt", "meta.json", "instrucao-zapia.txt"})
+                                     "n1-questao.json", "n1-questao.recibo.json", "fonte-n1.txt", "meta.json", "instrucao-zapia.txt", "instrucao-hook-notebook.txt"})
 
 
 class ConferenciaDaRespostaTest(unittest.TestCase):

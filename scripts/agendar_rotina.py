@@ -32,6 +32,7 @@ ANTECEDENCIA_MINIMA = timedelta(minutes=90)  # decisão do proprietário de 23/1
 ANTECEDENCIA_MAXIMA = timedelta(hours=24)
 MAX_POR_DIA_POR_ORIGEM = 1
 INSTRUCOES = "config/rotina_instrucoes.json"
+HOOK_NOTEBOOK = "HOOK_NOTEBOOK"  # instrução do hook de Gmail que executa no Gemini Notebook o prompt de um comando enviar_prompt_notebook já promovido e grava a resposta (E41)
 HOOK_ENTREGA = "HOOK_ENTREGA"  # instrução do hook de Gmail que, ao acordar, entrega um comando já promovido (E31); sinal só pelos metadados do e-mail
 POLLER = "POLLER"  # instrução do poller de teste (ZAPIA-F3): lê um pedido promovido e cria a rotina filha; não é um modelo de pedido
 _UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
@@ -144,7 +145,7 @@ def check(root: Path = ROOT) -> list:
         dados = carregar_instrucoes(root)
     except (OSError, ValueError):
         return ["config/rotina_instrucoes.json ausente ou ilegível"]
-    for chave in {m["instrucao"] for m in MODELOS.values()} | {POLLER, HOOK_ENTREGA}:
+    for chave in {m["instrucao"] for m in MODELOS.values()} | {POLLER, HOOK_ENTREGA, HOOK_NOTEBOOK}:
         item = dados.get(chave)
         if not isinstance(item, dict) or not isinstance(item.get("template"), str):
             erros.append(f"modelo de instrução ausente: {chave}")
@@ -152,11 +153,13 @@ def check(root: Path = ROOT) -> list:
         t = item["template"]
         if item.get("sha256") != hash_texto(t):
             erros.append(f"{chave}: hash não confere com o texto")
-        finais = "criadas" if chave == POLLER else "entregas"
+        finais = {POLLER: "criadas", HOOK_NOTEBOOK: "respostas"}.get(chave, "entregas")
         for url in ("https://api.github.com/repos/{REPO}/contents/comandos/recibos", "https://api.github.com/repos/{REPO}/contents/comandos/validados",
                     "https://api.github.com/repos/{REPO}/contents/comandos/" + finais):
             if url not in t:
                 erros.append(f"{chave}: URL literal ausente: {url}")
+        if chave == HOOK_NOTEBOOK and "https://api.github.com/repos/{REPO}/contents/comandos/fontes/{FONTE_ARQUIVO}" not in t:
+            erros.append(f"{chave}: URL literal ausente: comandos/fontes")
         if "commands/" in t:
             erros.append(f"{chave}: caminho traduzido (commands)")
         if re.search(r"ghp_|github_pat_|Bearer\s+[A-Za-z0-9]", t):
@@ -211,6 +214,21 @@ def renderizar_hook_entrega(*, repo, credencial, hash_alvo, root: Path = ROOT) -
     return re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), carregar_instrucoes(root)[HOOK_ENTREGA]["template"])
 
 
+def renderizar_hook_notebook(*, repo, credencial, hashes, fonte_arquivo, fonte_sha256, fonte_nome, root: Path = ROOT) -> str:
+    """Instrução do hook de Gmail que executa no Gemini Notebook o prompt de comandos `enviar_prompt_notebook` já promovidos (E41), do modelo `HOOK_NOTEBOOK`.
+    O e-mail é só a campainha; a execução depende do hash de cada comando e do hash da fonte. Falha fechada em qualquer parâmetro fora do padrão."""
+    if (not re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", repo or "") or not re.fullmatch(r"[A-Za-z0-9_]{1,64}", credencial or "")
+            or not isinstance(hashes, (list, tuple)) or not 1 <= len(hashes) <= 5 or not all(isinstance(h, str) and _HEX64.fullmatch(h) for h in hashes)
+            or not re.fullmatch(r"[A-Za-z0-9._-]{1,60}", fonte_arquivo or "") or not _HEX64.fullmatch(fonte_sha256 or "")
+            or not re.fullmatch(r"[A-Za-zÀ-ÿ0-9 ,.()-]{1,120}", fonte_nome or "")):
+        raise ValueError("parâmetro inválido")
+    erros = check(root)
+    if erros:
+        raise ValueError("modelos de instrução inconsistentes: " + "; ".join(erros))
+    valores = {"REPO": repo, "CREDENCIAL": credencial, "HASHES": ", ".join(hashes), "FONTE_ARQUIVO": fonte_arquivo, "FONTE_SHA256": fonte_sha256, "FONTE_NOME": fonte_nome}
+    return re.sub(r"\{([A-Z_0-9]+)\}", lambda m: valores.get(m.group(1), m.group(0)), carregar_instrucoes(root)[HOOK_NOTEBOOK]["template"])
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Operação agendar_rotina: confere os modelos de instrução ou renderiza a instrução de uma rotina.")
     p.add_argument("--check", action="store_true")
@@ -222,12 +240,24 @@ def main(argv=None) -> int:
     p.add_argument("--origem", choices=("tutor", "coach"))
     p.add_argument("--poller", action="store_true", help="imprime a instrução do poller de teste (ZAPIA-F3); exige --agendado e --ref")
     p.add_argument("--hook-entrega", action="store_true", help="imprime a instrução do hook de Gmail de entrega (E31); exige --hash")
+    p.add_argument("--hook-notebook", action="store_true", help="imprime a instrução do hook de Gmail que executa no Notebook (E41); exige --hash (até 5), --fonte-arquivo, --fonte-sha256 e --fonte-nome")
+    p.add_argument("--fonte-arquivo")
+    p.add_argument("--fonte-sha256")
+    p.add_argument("--fonte-nome")
     p.add_argument("--ref", help="commit (40 hex) do repositório público onde o poller lê o modelo filho")
     a = p.parse_args(argv)
     if a.check:
         erros = check()
         print("FALHA: " + "; ".join(erros) if erros else "OK: modelos de instrução de rotina conferidos (hash, URLs literais, sem segredo)")
         return 1 if erros else 0
+    if a.hook_notebook:
+        try:
+            print(renderizar_hook_notebook(repo=a.repo, credencial=a.credencial, hashes=a.hash, fonte_arquivo=a.fonte_arquivo or "", fonte_sha256=a.fonte_sha256 or "",
+                                           fonte_nome=a.fonte_nome or ""))
+        except ValueError as erro:
+            print("FALHA: " + str(erro))
+            return 2
+        return 0
     if a.hook_entrega:
         try:
             print(renderizar_hook_entrega(repo=a.repo, credencial=a.credencial, hash_alvo=(a.hash or [""])[0]))

@@ -110,14 +110,21 @@ class ColocarTest(N1Base):
         self.assertEqual(r.returncode, 1)
         self.assertNotIn("PUT", self.calls())
 
-    def test_com_frase_grava_seis_arquivos_e_confere_leitura_de_volta(self):
+    def test_com_frase_grava_sete_arquivos_e_confere_leitura_de_volta(self):
         r = self.roda("colocar", "COLOCAR N1\n")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         for n in ("n1-fonte.json", "n1-contraprova.json", "n1-questao.json"):
             self.assertEqual((self.fake / "repo/comandos/validados" / n).read_bytes(), (self.n1 / n).read_bytes())
             self.assertEqual((self.fake / "repo/comandos/recibos" / n).read_bytes(), (self.n1 / n.replace(".json", ".recibo.json")).read_bytes())
-        self.assertEqual(self.calls().count("-X PUT"), 6)
+        self.assertEqual(self.calls().count("-X PUT"), 7)
+        self.assertEqual((self.fake / "repo/comandos/fontes/n1.txt").read_bytes(), (self.n1 / "fonte-n1.txt").read_bytes())
         self.assertNotIn("fila/", self.calls())  # nada na fila de entradas; só comandos/
+
+    def test_nao_sobrescreve_a_fonte_existente(self):
+        (self.fake / "repo/comandos/fontes").mkdir(parents=True)
+        (self.fake / "repo/comandos/fontes/n1.txt").write_text("antigo")
+        self.assertEqual(self.roda("colocar", "COLOCAR N1\n").returncode, 1)
+        self.assertNotIn("PUT", self.calls())
 
     def test_nao_sobrescreve_arquivo_existente(self):
         (self.fake / "repo/comandos/validados").mkdir(parents=True)

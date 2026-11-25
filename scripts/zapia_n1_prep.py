@@ -9,6 +9,7 @@ A fonte é o texto público do caput do art. 37 da Constituição, que o proprie
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import secrets
 import sys
@@ -16,14 +17,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    import agendar_rotina
     import agent_commands
     import command_box
     import notebook_prompt_validator as npv
     import zapia_entrega
 except ModuleNotFoundError:  # uso como pacote
-    from scripts import agent_commands, command_box, zapia_entrega
+    from scripts import agendar_rotina, agent_commands, command_box, zapia_entrega
     from scripts import notebook_prompt_validator as npv
 
+FONTE_ARQUIVO = "n1.txt"  # nome em comandos/fontes/ de `entrada`; o hook confere o SHA-256 dos bytes
 FONTE_NOME = "Constituição Federal, art. 37, caput (texto oficial)"
 FONTE_TEXTO = ("A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios "
                "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:")
@@ -104,6 +107,11 @@ def main(argv=None) -> int:
     (d / "fonte-n1.txt").write_bytes(m["fonte_bytes"])
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     (d / "instrucao-zapia.txt").write_text(instrucao_para_a_zapia(m["itens"]), encoding="utf-8")
+    # E41: texto do hook de Gmail que executa os comandos no Notebook (modelo versionado HOOK_NOTEBOOK); o SHA-256 da fonte vai no texto
+    hashes = [i["hash_corpo"] for i in m["itens"]]
+    (d / "instrucao-hook-notebook.txt").write_text(agendar_rotina.renderizar_hook_notebook(
+        repo="Andraus35/ufms-meu-estudo-entrada", credencial="github_ufms_repo_token", hashes=hashes, fonte_arquivo=FONTE_ARQUIVO,
+        fonte_sha256=hashlib.sha256(m["fonte_bytes"]).hexdigest(), fonte_nome=m["fonte_nome"]), encoding="utf-8")
     print(json.dumps({"saida": str(d), "arquivos": sorted(x.name for x in d.iterdir())}, ensure_ascii=False))
     return 0
 

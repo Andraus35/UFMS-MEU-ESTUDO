@@ -2,7 +2,7 @@
 # prova_n1.sh (teste N1 da ponte Tutor -> Zapia -> Gemini Notebook, S10-R11, roteiro do E40): ATO DO PROPRIETÁRIO, no Termux, com a SUA sessão do gh.
 # Três passos, um por vez:  preparar | colocar | conferir
 #   preparar : gera os comandos e recibos SINTÉTICOS (scripts/zapia_n1_prep.py) em $N1_DIR (padrão ~/n1). Offline, não grava nada no GitHub.
-#   colocar  : (frase COLOCAR N1) grava 2 comandos em comandos/validados/ e 2 recibos em comandos/recibos/ de `entrada`, e confere cada um por
+#   colocar  : (frase COLOCAR N1) grava os comandos em comandos/validados/, os recibos em comandos/recibos/ e a fonte pública em comandos/fontes/n1.txt de `entrada`, e confere cada um por
 #              leitura de volta (bytes iguais). Recusa sobrescrever arquivo que já exista. Os recibos são SINTETICO_MANUAL: NÃO provam promoção pelo fluxo.
 #   conferir : lê comandos/respostas/<nome> de `entrada` e roda scripts/notebook_response_check.py. Só leitura. Não imprime o texto da resposta.
 # Sem token em argumento ou tela (usa o gh logado). A flag de escrita de resultados NÃO é tocada. Limite: prova o transporte e a conferência; o
@@ -40,22 +40,24 @@ NOMES="$(python -c 'import json,sys;print(" ".join(sorted(json.load(open(sys.arg
 [ -n "$NOMES" ] || falha "meta.json sem itens."
 
 if [ "$PASSO" = "colocar" ]; then
+  gh api "repos/$ENTRADA/contents/comandos/fontes/n1.txt" >/dev/null 2>&1 && falha "comandos/fontes/n1.txt já existe em entrada; não sobrescrevo."
   for n in $NOMES; do
     gh api "repos/$ENTRADA/contents/comandos/validados/$n" >/dev/null 2>&1 && falha "comandos/validados/$n já existe em entrada; não sobrescrevo."
     gh api "repos/$ENTRADA/contents/comandos/recibos/$n" >/dev/null 2>&1 && falha "comandos/recibos/$n já existe em entrada; não sobrescrevo."
   done
-  pergunta "COLOCAR N1" "Gravar 2 comandos e 2 recibos SINTÉTICOS em comandos/ de $ENTRADA com a sua sessão do gh?" || { echo "Nada foi feito."; exit 1; }
+  pergunta "COLOCAR N1" "Gravar os comandos, recibos e a fonte SINTÉTICOS (sem dado pessoal) em comandos/ de $ENTRADA com a sua sessão do gh?" || { echo "Nada foi feito."; exit 1; }
   grava() {  # $1 caminho no repositório; $2 arquivo local
     local conteudo; conteudo="$(base64 < "$2" | tr -d '\n')"
     gh api -X PUT "repos/$ENTRADA/contents/$1" -f message="N1: arquivo sintetico do teste da ponte (sem dado pessoal)" -f content="$conteudo" -f branch=main >/dev/null 2>&1 || { div "não consegui gravar $1"; return; }
     gh api "repos/$ENTRADA/contents/$1" --jq .content 2>/dev/null | base64 -d > "$TMP/volta" 2>/dev/null || true
     if cmp -s "$TMP/volta" "$2"; then ok "$1 gravado e conferido por leitura de volta."; else div "$1: a leitura de volta difere do que foi gravado"; fi
   }
+  grava "comandos/fontes/n1.txt" "$N1_DIR/fonte-n1.txt"
   for n in $NOMES; do
     grava "comandos/validados/$n" "$N1_DIR/$n"
     grava "comandos/recibos/$n" "$N1_DIR/${n%.json}.recibo.json"
   done
-  echo "Próximo: cole $N1_DIR/instrucao-zapia.txt na conversa da Zapia; depois: bash scripts/termux/prova_n1.sh conferir"
+  echo "Próximo: crie na Zapia o hook de Gmail de uso único com o texto de $N1_DIR/instrucao-hook-notebook.txt (ou, sem hook, cole $N1_DIR/instrucao-zapia.txt); depois: bash scripts/termux/prova_n1.sh conferir"
   [ "$DIV" -eq 0 ] || { echo "RESULTADO: $DIV divergência(s)." >&2; exit 2; }
   exit 0
 fi
