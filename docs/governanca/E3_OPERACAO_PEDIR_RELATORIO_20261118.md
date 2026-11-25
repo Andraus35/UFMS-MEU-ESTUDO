@@ -27,7 +27,7 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 | Perfil | **Compartilhada** por Tutor e Coach (entra em `SHARED`, ao lado de `ler_arquivo_repositorio` e `enviar_mensagem`) |
 | Destino | `zapia_relatorio` (novo, fechado) |
 | Parâmetros (fechados) | `plataforma` (`tec` ou `gemini_notebook`), `modalidade` (só para `tec`: `1` caderno exclusivo FAPEC; `2` guias do TEC), `cargo` (`324` ou `523`), `recorte` (período e filtros, texto curto) |
-| Proibido | enunciado, gabarito, texto de questão, HTML, captura, credencial e dado pessoal (`forbidden_param_keys`) |
+| Proibido | **comentário de professor e recursos exclusivos do TEC** (material, análise, explicações), HTML, captura, credencial e dado pessoal (`forbidden_param_keys`). **Revisto em 25/11/2026 (decisão C1):** enunciado e gabarito **deixam de ser proibidos** (ver abaixo); estavam nesta lista na proposta de 18/11/2026 |
 | Limite | **até 2 pedidos por dia, no máximo 1 por plataforma e só com atividade concluída**: um para o **estudo no TEC** e outro para a **revisão no Gemini Notebook** (decisão do proprietário de 21/11/2026, que substitui o "1 por dia" de 18/11/2026) |
 | Compartilhamento | **O Tutor compartilha com o Coach o resultado do aluno em cada sessão** (decisão de 21/11/2026), cada um na sua função (S2, S3); o **mecanismo** desse compartilhamento (por exemplo, a leitura das projeções do S6-R9 ou uma mensagem) **ainda não está definido** e fica como pendência E3-C |
 | Efeito | **só orientação**: a Zapia devolve o relatório pelo contrato de entrega (S9, L2, S16-R12); **nunca grava** no repositório público; resultado pessoal só pela fila e pelo portão (flag `false`) |
@@ -41,7 +41,7 @@ O esquema de comandos modela **agente → Zapia** (origens `tutor` e `coach`). O
 | Disparo | O proprietário avisa a Zapia com a frase **"Iniciar estudos"** (decisão B1, 21/11/2026) | A frase **"finalizar estudos"** (decisão B1b, 21/11/2026, que **substitui** a "Estudo de hoje finalizado." do requisito anterior) |
 | Quem escreve | A Zapia, **só** na fila `entrada` (S6-R2) | A Zapia, **só** na fila `entrada` |
 | Conteúdo mínimo | data e hora (relógio injetado, S15), cargo, matéria e caminho do nó do dia **quando informados** | data e hora, e as **evidências da rodada** (acertos, erros e referências a cadernos ou questões **quando disponíveis**) pelo contrato de entrega; campo ausente = "desconhecido" |
-| Proibido | dado pessoal, credencial, texto de questão | idem |
+| Proibido | dado pessoal, credencial, comentário de professor e recursos exclusivos do TEC (a proibição de texto de questão foi **revista em 25/11/2026**, decisão C1) | idem |
 | Quem lê | Tutor e Coach, pelas projeções (S6-R9), **cada um na sua função** | idem |
 | Honestidade | O evento **não prova** leitura, envio ou registro por si; só o **recibo do fluxo** prova (S6-R4) | idem |
 
@@ -106,3 +106,9 @@ Esta proposta está **aceita pelo contrato** quando `python scripts/doc_cohesion
 ## Ordem de aplicação (decisão F3)
 
 O proprietário priorizou a **persistência privada** (consentimento v4, repositório privado de dados e prova do fluxo de escrita). Portanto a **aplicação** da E3 em `agents/`, no esquema e no gate vem **depois** desse destrave; **até lá** esta proposta permanece como texto aprovado em princípio, sem efeito. No estado registrado em `state/WORKFLOW.json`, a infraestrutura já existe (repositórios privados, consentimento v4 e fluxo que promoveu uma prova sintética); o que falta é a **janela do piloto (PJ)**, que depende da **aprovação expressa do proprietário**, e a **renovação dos tokens (P9)**, que são atos dele.
+
+## Decisão C1 (25/11/2026): enunciado e gabarito permitidos na entrega da Zapia
+
+**Decisão do proprietário, nas palavras dele:** o conteúdo das questões é **público**, obtido em sites de bancas de concursos; é razoável **retirar a proibição de enunciados e gabaritos**, porque o Tutor precisa saber **o que o aluno acertou ou errou** ao confrontar com o relatório de desempenho. **Não pode** a Zapia trazer o **comentário do professor** nem os **recursos do TEC**, que são a expertise da empresa. Registro em `docs/governanca/E37_DECISAO_CONTEUDO_DE_QUESTAO_20261125.md`.
+
+Isto **continua sendo proposta de texto**: nada foi aplicado em `agents/`, no esquema de comandos nem nos filtros (a lista `forbidden_param_keys` ainda traz `enunciado`). A aplicação segue a regra de duas aprovações expressas e depois da janela do piloto.

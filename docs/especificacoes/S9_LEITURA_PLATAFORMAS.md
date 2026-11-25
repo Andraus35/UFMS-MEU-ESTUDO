@@ -71,6 +71,15 @@ Esta especificação está **aceita pelo contrato** quando `python scripts/doc_c
 - **A exportação do TEC** existe, segundo o proprietário e o autorrelato da Zapia; o **formato** não foi visto, e **não** há conversor até haver amostra.
 - **A origem do dado não é provada** (S6-R7): quem controla a conta do proprietário controla o canal.
 
+## Emenda E37 (25/11/2026): enunciado e gabarito na entrega da Zapia
+
+**Natureza:** emenda **aditiva** da S9-R5, por decisão do proprietário. O texto acima **permanece** como histórico; onde divergir, **vale esta seção** (a seção E2 segue como a última do arquivo por exigência de teste; esta emenda é posterior). Não altera o `PRODUCT.md` nem os arquivos de contrato; a aplicação em código e em `agents/` é lote posterior.
+
+- **S9-R5 (emenda):** a saída mínima **pode incluir enunciado e gabarito oficial da banca**, em **campos estruturados e separados** (por exemplo `enunciado`, `gabarito`, `caderno_id`, `questao_id`), para o Tutor cruzar com o desempenho do aluno. **Continuam fora**: comentário de professor, recursos e conteúdo exclusivos do TEC (material, análise, explicações), identificador de conta, HTML bruto e captura.
+- **Onde mora:** enunciado, gabarito e resposta marcada pelo aluno só no repositório **privado**, pela fila e pelo portão (flag `false`); **nunca** no repositório público.
+- **Dado não confiável:** o texto da questão e qualquer instrução embutida seguem como **dado** (S5-R4), sem execução.
+- **Honestidade:** código e filtros **ainda não refletem** esta emenda (`forbidden_param_keys` em `config/agent_command_schema.json` ainda lista `enunciado`); até a aplicação aprovada, a regra vigente em código é a antiga.
+
 ## Emenda E2 (18/11/2026): o desempenho do TEC pela Zapia
 
 **Natureza:** emenda **aditiva** da S9-R1, por decisão do proprietário. O texto acima **permanece** como histórico; onde divergir, **vale esta seção**. Não altera o `PRODUCT.md`.

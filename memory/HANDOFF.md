@@ -4,14 +4,16 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #192; SHA 6891c88bd4215cc8607c4bcfde9d70298af4674a
-- Frente ativa: **RM-09 / PR #193**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
+- Último merge comprovado: PR #193; SHA d7fae455049de8ea8488358d0f2d8fd8db919421
+- Frente ativa: **RM-09 / PR #194**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
+
+**DECISÃO C1 (25/11/2026):** enunciado e gabarito **deixam de ser proibidos** na entrega da Zapia (conteúdo público das bancas); **comentário de professor e recursos do TEC continuam proibidos**. Registro em `docs/governanca/E37_DECISAO_CONTEUDO_DE_QUESTAO_20261125.md`; E3 e S9-R5 revistas só em texto; **código, esquema e `agents/` ainda não refletem** (aplicação depois da janela do piloto, com aprovação expressa).
 
 ## LEITURA OBRIGATÓRIA: capacidades da Zapia (decisão do proprietário de 22/11/2026)
 
