@@ -1168,6 +1168,19 @@
         "escolha do gatilho depois da prova do S15-R4",
         "aprovação do escopo do token na caixa"
       ]
+    },
+    {
+      "id": "N1",
+      "title": "Teste N1 da ponte Tutor, Zapia e Gemini Notebook (S10-R11): kit sintético offline (comandos, contraprova, conferência da resposta); execução real é ato do proprietário; detalhe no E40",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/zapia_n1_prep.py",
+      "depends_on": [
+        "ZAPIA-SUBAGENTS"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "execução do roteiro N1 pelo proprietário e relato do resultado"
+      ]
     }
   ],
   "owner_priorities": [
