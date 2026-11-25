@@ -39,8 +39,11 @@ def _limpo(texto: str) -> bool:
                 or npv.instrucao_embutida(texto) or content_filters.mistura_de_scripts(texto))
 
 
-def conferir(resposta_bytes, esperado: dict, fonte_texto: str, contraprova: bool = False):
-    """`esperado`: {nome, hash_corpo, fonte_nome}. Devolve None se a resposta pode seguir ao Tutor, senão um código."""
+def conferir(resposta_bytes, esperado: dict, fonte_texto: str, contraprova: bool = False, ancora_gabarito: str | None = None):
+    """`esperado`: {nome, hash_corpo, fonte_nome}. Devolve None se a resposta pode seguir ao Tutor, senão um código.
+
+    `ancora_gabarito` (C1): trecho da FONTE que sustenta o gabarito da questão (registrado pelo Tutor); a citação devolvida precisa contê-lo, senão
+    `CITACAO_NAO_SUSTENTA_GABARITO`. Confere que o Notebook citou a passagem certa; NÃO prova que a resposta do Notebook acertou."""
     try:
         r = json.loads(bytes(resposta_bytes).decode("utf-8"))
     except (UnicodeDecodeError, ValueError, TypeError):
@@ -72,4 +75,6 @@ def conferir(resposta_bytes, esperado: dict, fonte_texto: str, contraprova: bool
         return "CITACAO_LONGA_DEMAIS"
     if _norm(citacao) not in _norm(fonte_texto):
         return "CITACAO_NAO_ESTA_NA_FONTE"
+    if ancora_gabarito is not None and (not isinstance(ancora_gabarito, str) or not ancora_gabarito.strip() or _norm(ancora_gabarito) not in _norm(citacao)):
+        return "CITACAO_NAO_SUSTENTA_GABARITO"
     return None

@@ -100,6 +100,37 @@ class PreparoTest(unittest.TestCase):
                                      "n1-questao.json", "n1-questao.recibo.json", "fonte-n1.txt", "meta.json", "instrucao-zapia.txt", "instrucao-hook-notebook.txt"})
 
 
+class GabaritoContraAFonteTest(unittest.TestCase):
+    """C1: a citação da questão precisa conter o trecho da fonte que sustenta o gabarito (âncora registrada pelo Tutor)."""
+    ESP = {"nome": QUESTAO["nome"], "hash_corpo": QUESTAO["hash_corpo"], "fonte_nome": prep.FONTE_NOME}
+    ANC = QUESTAO["ancora_gabarito"]
+
+    def test_so_a_questao_tem_ancora_e_ela_esta_na_fonte(self):
+        self.assertIsNotNone(self.ANC)
+        self.assertIn("legalidade", self.ANC)
+        self.assertIsNone(M["itens"][0]["ancora_gabarito"])
+        self.assertIsNone(M["itens"][1]["ancora_gabarito"])
+
+    def test_citacao_que_contem_a_ancora_confere(self):
+        cit = "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
+        self.assertIsNone(nrc.conferir(resposta(self.ESP, citacao_trecho=cit), self.ESP, FONTE, ancora_gabarito=self.ANC))
+
+    def test_citacao_valida_da_fonte_mas_sem_a_ancora_e_recusada(self):
+        for cit in ("A administração pública direta e indireta de qualquer dos Poderes da União", "e, também, ao seguinte:"):
+            self.assertEqual(nrc.conferir(resposta(self.ESP, citacao_trecho=cit), self.ESP, FONTE, ancora_gabarito=self.ANC), "CITACAO_NAO_SUSTENTA_GABARITO")
+
+    def test_sem_ancora_o_comportamento_antigo_e_mantido_e_ancora_invalida_recusa(self):
+        cit = "e, também, ao seguinte:"
+        self.assertIsNone(nrc.conferir(resposta(self.ESP, citacao_trecho=cit), self.ESP, FONTE))
+        for ruim in ("", "   ", 5):
+            self.assertEqual(nrc.conferir(resposta(self.ESP, citacao_trecho=cit), self.ESP, FONTE, ancora_gabarito=ruim), "CITACAO_NAO_SUSTENTA_GABARITO")
+
+    def test_ancora_nao_se_aplica_a_contraprova_nem_a_parada(self):
+        self.assertIsNone(nrc.conferir(resposta(ESP_C, texto_literal="Isso não consta nas fontes.", citacao_trecho=""), ESP_C, FONTE, contraprova=True, ancora_gabarito=self.ANC))
+        parada = resposta(self.ESP, estado="PARADO", texto_literal="", citacao_trecho="", codigo_parada="LOGIN")
+        self.assertIsNone(nrc.conferir(parada, self.ESP, FONTE, ancora_gabarito=self.ANC))
+
+
 class ConferenciaDaRespostaTest(unittest.TestCase):
     def test_resposta_correta_segue_ao_tutor(self):
         self.assertIsNone(nrc.conferir(resposta(), ESP, FONTE))
@@ -196,6 +227,11 @@ class ProcedenciaDoTutorTest(unittest.TestCase):
         def invalido(d):
             d["itens"][0]["prompt"]["lacuna"] = "meu CPF é 123.456.789-09"
         for mud in (autoria, hash_, editado, faltando, repetido, invalido):
+            with self.assertRaises(ValueError, msg=mud.__name__):
+                prep.carregar_propostas(self._arquivo(mud))
+        def ancora_fora(d): d["itens"][2]["ancora_gabarito"] = "razoabilidade e proporcionalidade"
+        def ancora_sem_gabarito(d): d["itens"][0]["ancora_gabarito"] = "legalidade"
+        for mud in (ancora_fora, ancora_sem_gabarito):
             with self.assertRaises(ValueError, msg=mud.__name__):
                 prep.carregar_propostas(self._arquivo(mud))
         with self.assertRaises(ValueError):

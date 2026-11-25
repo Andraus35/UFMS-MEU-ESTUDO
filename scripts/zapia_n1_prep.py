@@ -21,10 +21,12 @@ try:
     import agent_commands
     import command_box
     import notebook_prompt_validator as npv
+    import notebook_response_check as nrc
     import zapia_entrega
 except ModuleNotFoundError:  # uso como pacote
     from scripts import agendar_rotina, agent_commands, command_box, zapia_entrega
     from scripts import notebook_prompt_validator as npv
+    from scripts import notebook_response_check as nrc
 
 FONTE_ARQUIVO = "n1.txt"  # nome em comandos/fontes/ de `entrada`; o hook confere o SHA-256 dos bytes
 FONTE_NOME = "Constituição Federal, art. 37, caput (texto oficial)"
@@ -39,15 +41,15 @@ CASOS = (
 )
 
 
-def carregar_propostas(caminho=PROPOSTAS) -> dict:
-    """Prompts do Tutor por nome de comando. Falha fechada (ValueError): arquivo ilegível, nome faltando ou repetido, autoria diferente de
+def carregar_propostas(caminho=PROPOSTAS) -> tuple:
+    """`(prompts, âncoras do gabarito)` do Tutor por nome de comando. Falha fechada (ValueError): arquivo ilegível, nome faltando ou repetido, autoria diferente de
     `subagent_tutor`, prompt que o validador recusa ou hash do texto canônico que não bate."""
     try:
         dados = json.loads(Path(caminho).read_text(encoding="utf-8"))
         itens = dados["itens"]
     except (OSError, ValueError, KeyError, TypeError):
         raise ValueError("propostas do Tutor ausentes ou ilegíveis")
-    saida = {}
+    saida, ancoras = {}, {}
     for item in itens if isinstance(itens, list) else []:
         if not isinstance(item, dict) or item.get("autoria") != "subagent_tutor":
             raise ValueError("proposta sem autoria do Tutor")
@@ -60,15 +62,24 @@ def carregar_propostas(caminho=PROPOSTAS) -> dict:
         if item.get("sha256_texto") != npv.hash_agrupado(r.texto):
             raise ValueError("o hash da proposta não confere com o texto (alterada depois do Tutor)")
         saida[nome] = item["prompt"]
+        ancora = item.get("ancora_gabarito")
+        if ancora is not None:  # C1: o trecho que sustenta o gabarito precisa existir na fonte e o prompt precisa ter gabarito
+            if not isinstance(ancora, str) or not ancora.strip() or "gabarito" not in item["prompt"]:
+                raise ValueError("âncora do gabarito sem gabarito no prompt")
+            if nrc._norm(ancora) not in nrc._norm(FONTE_TEXTO):
+                raise ValueError("a âncora do gabarito não está na fonte")
+            ancoras[nome] = ancora
     faltam = [c["nome"] for c in CASOS if c["nome"] not in saida]
     if faltam:
         raise ValueError("faltam propostas do Tutor para: " + ", ".join(faltam))
-    return saida
+    return saida, ancoras  # âncoras do gabarito por comando (só os de campos C1)
 
 
-def montar(agora_utc, propostas=None) -> dict:
+def montar(agora_utc, propostas=None, ancoras=None) -> dict:
     """Comandos e recibos sintéticos. Levanta ValueError se faltar proposta do Tutor ou se o validador do prompt ou a caixa recusarem qualquer comando."""
-    propostas = carregar_propostas() if propostas is None else propostas
+    if propostas is None:
+        propostas, ancoras = carregar_propostas()
+    ancoras = ancoras or {}
     if not isinstance(propostas, dict) or any(c["nome"] not in propostas for c in CASOS):
         raise ValueError("faltam propostas do Tutor")
     schema = agent_commands.load_schema()
@@ -88,7 +99,7 @@ def montar(agora_utc, propostas=None) -> dict:
         h = command_box.command_hash(comando)
         recibo = {"entrada_id": caso["nome"], "status": "PROMOVER", "codigo": "SINTETICO_MANUAL", "hash_corpo": h, "execucao": "manual-n1",
                   "validador_sha": "0" * 40}
-        saida["itens"].append({"nome": caso["nome"], "contraprova": caso["contraprova"], "hash_corpo": h, "prompt": params["prompt"],
+        saida["itens"].append({"nome": caso["nome"], "contraprova": caso["contraprova"], "ancora_gabarito": ancoras.get(caso["nome"]), "hash_corpo": h, "prompt": params["prompt"],
                                "comando_bytes": bruto, "recibo_bytes": zapia_entrega._canonico(recibo)})
     return saida
 
@@ -118,7 +129,7 @@ def main(argv=None) -> int:
     for i in m["itens"]:
         (d / i["nome"]).write_bytes(i["comando_bytes"])
         (d / (i["nome"].replace(".json", "") + ".recibo.json")).write_bytes(i["recibo_bytes"])
-        meta["itens"][i["nome"]] = {"hash_corpo": i["hash_corpo"], "contraprova": i["contraprova"]}
+        meta["itens"][i["nome"]] = {"hash_corpo": i["hash_corpo"], "contraprova": i["contraprova"], "ancora_gabarito": i["ancora_gabarito"]}
     (d / "fonte-n1.txt").write_bytes(m["fonte_bytes"])
     (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
     (d / "instrucao-zapia.txt").write_text(instrucao_para_a_zapia(m["itens"]), encoding="utf-8")

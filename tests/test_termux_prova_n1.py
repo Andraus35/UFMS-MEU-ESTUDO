@@ -173,6 +173,13 @@ class ConferirTest(N1Base):
         self.assertNotIn("PUT", self.calls())
         self.assertNotIn("Legalidade", r.stdout)  # não imprime o texto da resposta
 
+    def test_questao_com_citacao_que_nao_sustenta_o_gabarito_falha(self):
+        self.boas()
+        self.responde("n1-questao.json", texto_literal="1. Qual item não está expresso? Dica: releia.", citacao_trecho="e, também, ao seguinte:")
+        r = self.roda("conferir")
+        self.assertEqual(r.returncode, 2)
+        self.assertIn("CITACAO_NAO_SUSTENTA_GABARITO", r.stdout)
+
     def test_resposta_pendente_nao_e_sucesso(self):
         r = self.roda("conferir")
         self.assertEqual(r.returncode, 2)

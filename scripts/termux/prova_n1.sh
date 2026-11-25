@@ -75,7 +75,7 @@ meta = json.load(open(d + "/meta.json", encoding="utf-8"))
 item = meta["itens"][nome]
 esperado = {"nome": nome, "hash_corpo": item["hash_corpo"], "fonte_nome": meta["fonte_nome"]}
 fonte = open(d + "/fonte-n1.txt", encoding="utf-8").read()
-codigo = chk.conferir(open(resp, "rb").read(), esperado, fonte, contraprova=bool(item["contraprova"]))
+codigo = chk.conferir(open(resp, "rb").read(), esperado, fonte, contraprova=bool(item["contraprova"]), ancora_gabarito=item.get("ancora_gabarito"))
 if codigo is None and json.loads(open(resp, encoding="utf-8").read()).get("estado") == "PARADO":
     codigo = "PARADA_REGISTRADA"  # forma válida, mas o teste NÃO foi provado: a Zapia ou o Notebook pararam
 print(codigo or "OK")
