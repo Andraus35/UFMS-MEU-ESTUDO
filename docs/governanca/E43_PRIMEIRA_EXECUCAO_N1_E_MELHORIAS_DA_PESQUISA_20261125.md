@@ -24,3 +24,7 @@
 ## Fica para depois (decidido pelo proprietário)
 
 Aprovação assinada com pacote de evidência **não** foi pedida (mantém só o hash do comando). **Isolar onde a Zapia escreve:** ver `E44_PROPOSTA_REPOSITORIO_DE_RESPOSTAS_20261125.md` (proposta, não aplicada). Prompts do Tutor a revisar para um 2º N1: sem acrônimos, contraprova só "não consta nas fontes", exatamente uma pergunta, sem oferta de pesquisa na web.
+
+## 2ª rodada do N1 (PR #207, 25/11/2026)
+
+Depois da falha da contraprova, o **Tutor (subagent)** revisou os três prompts: sem acrônimos nem mnemônicos, **exatamente uma pergunta**, sem oferta de pesquisa na web nem conhecimento externo, dica só apoiada em palavra citada do trecho e, na contraprova, a resposta inteira é **exatamente** `não consta nas fontes`. A questão passou a perguntar qual ente **não** é citado no caput (gabarito `E`, Territórios; âncora: "de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios"). Os prompts novos estão em `config/propostas_tutor_n1.json` (`rodada: 2`, autoria e hash conferidos pelo kit); os da rodada 1 ficam no histórico do Git e nos canaries. O kit ganhou `--prefixo n1b`, para os comandos novos (`n1b-*.json`) **não** sobrescreverem os da 1ª rodada no `entrada`. **Mesmos limites:** autoria declarada, autorrelato da Zapia, n=3, uma fonte de uma frase.

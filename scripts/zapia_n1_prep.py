@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import secrets
 import sys
 from datetime import datetime, timezone
@@ -74,7 +75,7 @@ def carregar_propostas(caminho=PROPOSTAS) -> tuple:
     return saida, ancoras  # âncoras do gabarito por comando (só os de campos C1)
 
 
-def montar(agora_utc, propostas=None, ancoras=None) -> dict:
+def montar(agora_utc, propostas=None, ancoras=None, prefixo="n1") -> dict:
     """Comandos e recibos sintéticos. Levanta ValueError se faltar proposta do Tutor ou se o validador do prompt ou a caixa recusarem qualquer comando."""
     if propostas is None:
         propostas, ancoras = carregar_propostas()
@@ -83,8 +84,12 @@ def montar(agora_utc, propostas=None, ancoras=None) -> dict:
         raise ValueError("faltam propostas do Tutor")
     schema = agent_commands.load_schema()
     saida = {"fonte_nome": FONTE_NOME, "fonte_bytes": FONTE_TEXTO.encode("utf-8"), "itens": []}
+    if not isinstance(prefixo, str) or not re.fullmatch(r"n1[a-z0-9]{0,3}", prefixo):
+        raise ValueError("prefixo inválido (use n1, n1b, n1c...)")
     for n, caso in enumerate(CASOS, 1):
-        veredito, params = npv.preparar(dict(propostas[caso["nome"]]))
+        base = caso["nome"]  # nome da proposta do Tutor; o nome do comando leva o prefixo da rodada
+        caso = {**caso, "nome": prefixo + base[2:]}
+        veredito, params = npv.preparar(dict(propostas[base]))
         if not veredito.ok:
             raise ValueError("o validador do prompt recusou o caso de teste: " + str(veredito.codigo))
         comando = {"schema_version": schema["schema_version"], "origin": "tutor", "operation": "enviar_prompt_notebook",
@@ -98,7 +103,7 @@ def montar(agora_utc, propostas=None, ancoras=None) -> dict:
         h = command_box.command_hash(comando)
         recibo = {"entrada_id": caso["nome"], "status": "PROMOVER", "codigo": "SINTETICO_MANUAL", "hash_corpo": h, "execucao": "manual-n1",
                   "validador_sha": "0" * 40}
-        saida["itens"].append({"nome": caso["nome"], "contraprova": caso["contraprova"], "ancora_gabarito": ancoras.get(caso["nome"]), "hash_corpo": h, "prompt": params["prompt"],
+        saida["itens"].append({"nome": caso["nome"], "contraprova": caso["contraprova"], "ancora_gabarito": ancoras.get(base), "hash_corpo": h, "prompt": params["prompt"],
                                "comando_bytes": bruto, "recibo_bytes": zapia_entrega._canonico(recibo)})
     return saida
 
@@ -120,8 +125,9 @@ def instrucao_para_a_zapia(itens) -> str:
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Teste N1: preparar os comandos sintéticos do Notebook (offline).")
     p.add_argument("--saida", required=True)
+    p.add_argument("--prefixo", default="n1", help="n1 (1ª rodada), n1b (2ª)...: prefixo dos nomes dos comandos")
     a = p.parse_args(argv)
-    m = montar(datetime.now(timezone.utc))
+    m = montar(datetime.now(timezone.utc), prefixo=a.prefixo)
     d = Path(a.saida)
     d.mkdir(parents=True, exist_ok=True)
     meta = {"fonte_nome": m["fonte_nome"], "itens": {}}

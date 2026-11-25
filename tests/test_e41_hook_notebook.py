@@ -136,7 +136,7 @@ class KitTest(unittest.TestCase):
             self.assertLessEqual(len(texto), ar.LIMITE_TAREFA_HOOK)
             self.assertIn("comandos/fontes/n1.txt", texto)
             self.assertIsNone(meta["itens"]["n1-fonte.json"]["ancora_gabarito"])
-            self.assertIn("eficiência", meta["itens"]["n1-questao.json"]["ancora_gabarito"])
+            self.assertIn("Municípios", meta["itens"]["n1-questao.json"]["ancora_gabarito"])
 
 
 if __name__ == "__main__":

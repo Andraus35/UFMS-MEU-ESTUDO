@@ -17,7 +17,7 @@ M = prep.montar(datetime(2026, 11, 25, 15, 0, 0, tzinfo=timezone.utc))
 FONTE = M["fonte_bytes"].decode("utf-8")
 META = {"fonte_nome": M["fonte_nome"], "itens": {i["nome"]: {"hash_corpo": i["hash_corpo"], "contraprova": i["contraprova"], "ancora_gabarito": i["ancora_gabarito"]}
                                                   for i in M["itens"]}}
-CIT = "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
+CIT = "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
 SEGREDO_DO_NOTEBOOK = "TRECHO-LITERAL-DO-NOTEBOOK-UNICO-0001"
 
 

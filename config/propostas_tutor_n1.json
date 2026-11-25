@@ -1,60 +1,63 @@
 {
-  "_nota": "Prompts do teste N1 PROPOSTOS pelo subagent Tutor (somente leitura, offline) em 25/11/2026 e aceitos pelo validador. O kit só gera o N1 a partir deste arquivo e recusa entrada sem autoria `subagent_tutor` ou com hash que não bata. A autoria é declarada, não provada (S6-R7); a qualidade pedagógica é revisão humana. Alterar um prompt exige nova proposta do Tutor e novo hash.",
+  "_nota": "Prompts do teste N1 PROPOSTOS pelo subagent Tutor (somente leitura, offline) em 25/11/2026 e aceitos pelo validador. O kit só gera o N1 a partir deste arquivo e recusa entrada sem autoria `subagent_tutor` ou com hash que não bata. A autoria é declarada, não provada (S6-R7); a qualidade pedagógica é revisão humana. Alterar um prompt exige nova proposta do Tutor e novo hash. RODADA 2 (25/11/2026): os três prompts foram REVISADOS pelo subagent Tutor depois da 1ª execução do N1 (E43): sem acrônimos nem mnemônicos, exatamente uma pergunta, sem pesquisa na web, contraprova só com 'não consta nas fontes'. Os prompts da rodada 1 estão no histórico do Git e nos canaries.",
   "itens": [
     {
       "nome": "n1-fonte.json",
       "papel": "fonte_responde",
       "autoria": "subagent_tutor",
       "proposto_em": "2026-11-25",
-      "justificativa": "Os cinco princípios estão enumerados no próprio caput (fonte única).",
+      "justificativa": "Fecha os dois furos do N1: veta acrônimo e conhecimento externo, ancora a dica em palavra citada do trecho e proíbe revelar a resposta ou a inicial.",
       "prompt": {
-        "topico": "Art. 37, caput, da CF/1988: princípios da administração pública",
-        "lacuna": "Quais são os cinco princípios que o caput do art. 37 da CF enumera para a administração pública? Quero lembrar de todos, em ordem, sem consultar a lista.",
-        "metodo": "Faça uma pergunta de recuperação por vez e espere minha tentativa. Dê dicas graduais, da mais vaga à mais específica, sem entregar a resposta antes de eu tentar.",
-        "exigencia_fonte": "Ao final, cite o trecho literal da fonte que traz a resposta. Se o ponto não consta nas fontes, diga: não consta nas fontes.",
-        "formato_saida": "Texto simples, curto: uma pergunta, dicas graduais e, por fim, o trecho citado entre aspas."
+        "topico": "Caput do art. 37 da Constituição Federal: princípios da administração pública",
+        "lacuna": "Fixar os princípios expressos no caput do art. 37 da CF, usando só a redação literal da fonte, sem apoio de memória externa.",
+        "metodo": "Faça exatamente UMA pergunta de recuperação ativa sobre o trecho e aguarde minha tentativa. Só se eu pedir dica, dê uma dica curta apoiada apenas em uma palavra do trecho, citando essa palavra entre aspas. A dica nunca entrega a resposta nem a inicial dela. Proibido acrônimo, sigla mnemônica ou macete.",
+        "exigencia_fonte": "Use somente a fonte enviada, sem conhecimento externo e sem oferecer pesquisa na web. Cite o trecho literal que sustenta cada dica. Se algo não puder ser sustentado, diga: não consta nas fontes.",
+        "formato_saida": "Uma única pergunta, em um parágrafo curto, sem lista, sem tabela e sem acrônimo. Depois, somente a dica pedida, com a palavra do trecho entre aspas."
       },
-      "sha256_texto": "cd6a1d15-1049e7ff-610de3da-a998c1f8-5bb550ea-976590e3-ef4a9cfb-72cf5361"
+      "sha256_texto": "96d4cb00-9b8e5dca-8849f8fa-6b628f28-17008168-7b0560db-1d0e9cc7-b232308c",
+      "rodada": 2
     },
     {
       "nome": "n1-contraprova.json",
       "papel": "contraprova",
       "autoria": "subagent_tutor",
       "proposto_em": "2026-11-25",
-      "justificativa": "O caput só lista os princípios e termina em 'ao seguinte:'; não traz prazo de concurso nem prorrogação (estão nos incisos).",
+      "justificativa": "O caput só traz princípios e abrangência; não traz prazo de validade do concurso, prorrogação nem incisos.",
       "prompt": {
-        "topico": "Art. 37 da CF: administração pública, princípios e prazos",
-        "lacuna": "Qual é o prazo, em anos, de validade do concurso público previsto neste artigo, e quem pode prorrogá-lo?",
-        "metodo": "Faça uma pergunta de recuperação por vez e dê dicas graduais, da mais vaga à mais específica, sem entregar a resposta; peça que eu tente lembrar antes de cada dica.",
-        "exigencia_fonte": "Cite o trecho literal da fonte que sustenta cada afirmação; se a fonte não trouxer o ponto, responda 'não consta nas fontes' e não invente citação.",
-        "formato_saida": "Até três perguntas curtas numeradas, cada uma com dica graduada, e ao final uma linha com o trecho citado ou 'não consta nas fontes'."
+        "topico": "Art. 37, caput, da CF: regime da administração pública",
+        "lacuna": "Ponto do mesmo tema que o caput não traz: prazo de validade do concurso público e sua prorrogação.",
+        "metodo": "Faça uma única pergunta de recuperação sobre a lacuna, sem dica nem resumo. Antes, confira a fonte: se ela não trouxer o ponto, não faça pergunta e responda exatamente: não consta nas fontes.",
+        "exigencia_fonte": "Use só a fonte única: cite o trecho literal do caput. Se o trecho não trouxer o ponto, a resposta inteira é exatamente a frase não consta nas fontes, sem pergunta, dica, citação, conteúdo de fora nem oferta de pesquisa na web.",
+        "formato_saida": "Uma linha, sem acrônimos nem mnemônicos. Se a fonte não trouxer o ponto, somente: não consta nas fontes."
       },
-      "sha256_texto": "2fbdae01-cc988fe8-f434480a-69c99a83-95404be0-aedb9397-ca60458d-c9f43382"
+      "sha256_texto": "b1aa6dcb-2f7a4e9a-9e5264ad-2e555708-11ac25c4-29460020-c2a2d2bb-768c7dd6",
+      "rodada": 2
     },
     {
       "nome": "n1-questao.json",
       "papel": "questao_c1",
       "autoria": "subagent_tutor",
       "proposto_em": "2026-11-25",
-      "justificativa": "Questão reformulada com gabarito derivado do caput; lacuna é inferência do Tutor (E0).",
+      "justificativa": "Territórios não aparece na lista de entes do caput; as outras quatro alternativas constam no trecho. Gabarito derivável só do texto.",
       "prompt": {
-        "topico": "Princípios da administração pública no caput do art. 37 da CF/1988",
-        "lacuna": "Inferência do Tutor, sem evidência do aluno (E0): distinguir os princípios expressos no caput do art. 37 de princípios apenas implícitos ou doutrinários.",
-        "metodo": "Faça perguntas de recuperação, uma por vez, esperando minha resposta; dê dicas graduais e curtas; não entregue a resposta antes de eu tentar duas vezes.",
-        "exigencia_fonte": "Responda só com a fonte colada: cite o trecho que sustenta cada afirmação; se algo não consta nas fontes, diga que não consta nas fontes.",
-        "formato_saida": "Uma pergunta por mensagem; depois da minha resposta, feedback de duas linhas com o trecho citado; ao final, lista dos princípios que preciso rever.",
-        "enunciado_reformulado": "Considere o caput do art. 37 da Constituição Federal e indique qual item abaixo não é um princípio nele expressamente enumerado.",
+        "topico": "Caput do art. 37 da CF: entes alcançados pela administração pública",
+        "lacuna": "Preciso fixar quais entes e Poderes o caput cita, sem confundir com entes que o texto não menciona.",
+        "metodo": "Faça exatamente uma pergunta de recuperação ativa, sem resumo, e só use a fonte única enviada, sem conhecimento externo, sem pesquisa na web, sem acrônimos nem mnemônicos.",
+        "exigencia_fonte": "Use somente o caput do art. 37 da CF e cite o trecho literal que sustenta o ponto; se não consta nessa fonte, diga que não consta nas fontes.",
+        "formato_saida": "Uma única pergunta, sem acrônimos nem mnemônicos, sem oferta de pesquisa na web; dica opcional apoiada só em palavra do trecho citado; sem revelar a resposta antes de eu tentar.",
+        "enunciado_reformulado": "Considere apenas o início do art. 37 da Constituição, que obriga a administração direta e indireta a seguir certos princípios. Qual destes entes NÃO é citado nesse trecho?",
         "alternativas": [
-          "Legalidade",
-          "Impessoalidade",
-          "Razoabilidade",
-          "Publicidade",
-          "Eficiência"
+          "União",
+          "Estados",
+          "Distrito Federal",
+          "Municípios",
+          "Territórios"
         ],
-        "gabarito": "C"
+        "gabarito": "E"
       },
-      "sha256_texto": "cd07240f-b355f935-86167447-62753030-a305598b-7269510d-96f33927-2e60d5c8",
-      "ancora_gabarito": "legalidade, impessoalidade, moralidade, publicidade e eficiência"
+      "sha256_texto": "a4a1a97b-0a453789-7a93a8c6-fd352c64-47916ce3-1f5b2edf-701141e0-2c4c0753",
+      "ancora_gabarito": "de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios",
+      "rodada": 2
     }
   ]
 }
