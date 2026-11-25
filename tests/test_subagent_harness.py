@@ -75,6 +75,21 @@ class ProponenteNaoConfiavelTest(unittest.TestCase):
         self.assertEqual(h.avaliar("a.json", h.comando(), c2)["codigo"], "REGISTRO_INDISPONIVEL")
 
 
+class PropostasDeSubagentsReaisTest(unittest.TestCase):
+    """Propostas de dois subagents reais (Tutor e Coach, somente leitura, 25/11/2026), guardadas como DADO sintético."""
+
+    def test_propostas_reais_passam_ou_sao_recusadas_como_esperado(self):
+        itens = json.loads((ROOT / "tests/fixtures/propostas_subagents_20261125.json").read_text(encoding="utf-8"))
+        esperado = {"tutor-a": cb.PROMOVER, "tutor-b": cb.PROMOVER, "coach-mensagem-incentivo": cb.PROMOVER,
+                    "coach-lembrete-ufms-002": cb.PROMOVER, "negativo-coach": cb.DENIED}
+        self.assertEqual({i["id"] for i in itens}, set(esperado))
+        for i in itens:
+            r = h.avaliar(i["id"] + ".json", i["comando"])
+            self.assertEqual(r["status"], esperado[i["id"]], (i["id"], r))
+        neg = h.avaliar("n.json", next(i for i in itens if i["id"] == "negativo-coach")["comando"])
+        self.assertEqual(neg["codigo"], "OPERACAO_FORA_DA_TABELA_DA_ORIGEM")
+
+
 class CliTest(unittest.TestCase):
     def test_cli_matriz_sai_zero_e_cli_de_propostas_avalia_sem_eco(self):
         import contextlib
