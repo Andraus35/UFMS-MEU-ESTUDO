@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "lote_ZAPIA-EMISSOR_campainha_pelo_fluxo_e_proposta_D-32",
+    "scope": "lote_D-32_emenda_do_PRODUCT_campainha_por_Gmail",
     "branch": "ccr-c8d1fbc8-sa348u",
-    "pr_number": 192,
+    "pr_number": 193,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #191 integrado em main no merge commit 6f9686a14ad1adef33d2c83b1b0b3da0ffb279fc. Frente única ativa: RM-09 (lote_ZAPIA-EMISSOR_campainha_pelo_fluxo_e_proposta_D-32), branch ccr-c8d1fbc8-sa348u, PR #192. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #192 integrado em main no merge commit 6891c88bd4215cc8607c4bcfde9d70298af4674a. Frente única ativa: RM-09 (lote_D-32_emenda_do_PRODUCT_campainha_por_Gmail), branch ccr-c8d1fbc8-sa348u, PR #193. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 191,
-    "merge_commit_sha": "6f9686a14ad1adef33d2c83b1b0b3da0ffb279fc"
+    "pr_number": 192,
+    "merge_commit_sha": "6891c88bd4215cc8607c4bcfde9d70298af4674a"
   },
   "work_queue": [
     {

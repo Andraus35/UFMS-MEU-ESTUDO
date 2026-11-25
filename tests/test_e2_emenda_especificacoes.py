@@ -68,7 +68,7 @@ class EmendaTests(unittest.TestCase):
 
     def test_nao_toca_product_agents_settings_nem_a_flag(self):
         product = (ROOT / "PRODUCT.md").read_text(encoding="utf-8")
-        self.assertLessEqual(len(product.encode("utf-8")), 38 * 1024)
+        self.assertLessEqual(len(product.encode("utf-8")), 40 * 1024)  # teto 40 KiB com a D-32
         for nome in ("TUTOR.md", "COACH.md", "ZAPIA.md"):
             txt = (ROOT / "agents" / nome).read_text(encoding="utf-8")
             self.assertNotIn("pedir_relatorio", txt)  # a operação nova é a E3, com aprovação

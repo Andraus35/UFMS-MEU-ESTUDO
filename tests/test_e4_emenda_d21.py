@@ -27,7 +27,7 @@ class EmendaD21Tests(unittest.TestCase):
             self.assertIn(t, d21, t)
 
     def test_orcamento_e_registro(self):
-        self.assertLessEqual(len(PRODUCT.encode("utf-8")), 38 * 1024)
+        self.assertLessEqual(len(PRODUCT.encode("utf-8")), 40 * 1024)  # teto 40 KiB com a D-32
         self.assertIn("não autoriza", REGISTRO.lower().replace("**", ""))
         self.assertIn("pedido explícito", REGISTRO)
 

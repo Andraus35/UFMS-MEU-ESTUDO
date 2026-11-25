@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PRODUCT = (ROOT / "PRODUCT.md").read_text(encoding="utf-8")
 ARQUIVO = (ROOT / "docs" / "governanca" / "ARQUIVO_PRODUCT_EVIDENCIAS_E01_E12_20261118.md").read_text(encoding="utf-8")
 REGISTRO = (ROOT / "docs" / "governanca" / "E1_EMENDA_PRODUCT_20261118.md").read_text(encoding="utf-8")
-ORCAMENTO_BYTES = 38 * 1024
+ORCAMENTO_BYTES = 40 * 1024  # 38 KiB até a D-31; 40 KiB com a D-32 (25/11/2026, autorizado pelo proprietário)
 
 
 def bullet(texto, ident):
