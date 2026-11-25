@@ -1157,7 +1157,7 @@
     },
     {
       "id": "S22",
-      "title": "Tarefas agendadas do Claude Code como gatilho dos agentes (S15-R3 a), a ABRIR e ESPECIFICAR (pedido do proprietário de 25/11/2026): como acordam Coach e Tutor no horário combinado para decidir e emitir comando; a entrega no minuto a TEC, Gemini e estudante segue pela Zapia (D-26, D-27). Escopo: encaixe no harness (relógio -> sessão -> START pelo broker -> proposta -> caixa -> fluxo -> campainha -> Zapia), escopo mínimo do token de escrita na caixa (S6-R7), prova do gatilho sem efeito em 3 dias (S15-R4), limites do recurso (mínimo de 1 h, atraso, sessão nova sem memória, conexão do GitHub expirada), decisão sobre push direto ao aparelho (D-25) e matriz gatilho x canal; S21 fica reservada ao ciclo de revisão do E25",
+      "title": "Tarefas agendadas do Claude Code como gatilho dos agentes (S15-R3 a), a abrir e especificar (pedido de 25/11/2026); a entrega no minuto a TEC, Gemini e estudante segue pela Zapia; escopo na nota do HANDOFF; S21 reservada ao ciclo de revisão do E25",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S22_TAREFAS_AGENDADAS_CLAUDE_GATILHO.md",
       "depends_on": [
@@ -1165,8 +1165,8 @@
       ],
       "blocking_inputs": [],
       "optional_inputs": [
-        "escolha do gatilho pelo proprietário depois da prova do S15-R4",
-        "aprovação do escopo do token de escrita na caixa"
+        "escolha do gatilho depois da prova do S15-R4",
+        "aprovação do escopo do token na caixa"
       ]
     }
   ],
