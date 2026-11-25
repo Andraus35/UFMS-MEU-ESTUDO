@@ -1116,6 +1116,44 @@
       "optional_inputs": [
         "captura da lista de rotinas e da notificação do app, no ato do proprietário"
       ]
+    },
+    {
+      "id": "ZAPIA-EMISSOR",
+      "title": "Lote 1 da ligação (decisão do proprietário de 25/11/2026; plano em E33): emissor pelo fluxo e emenda do D-28. O `entrada` abre sozinho a issue-campainha (título fixo `SINAL <nome>`, corpo sem conteúdo) depois de promover um comando, por modelo de passo do fluxo em `config/modelos_fluxo/` (reinstalação pelo proprietário) com checagem estática ampliada e mutações; proposta de texto da emenda do `PRODUCT.md` que autoriza o hook de Gmail a usar só remetente e assunto como campainha (hoje o D-28 não autoriza ler e-mail); não liga flag nem promove; PRODUCT.md e fluxo são contrato: aprovação expressa do texto e do merge",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E34_EMISSOR_PELO_FLUXO_E_EMENDA_D28.md",
+      "depends_on": [
+        "ZAPIA-F3"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "aprovação expressa do proprietário ao texto da emenda do PRODUCT.md",
+        "reinstalação do fluxo no entrada com o SHA do merge (ato dele)"
+      ]
+    },
+    {
+      "id": "ZAPIA-SUBAGENTS",
+      "title": "Lote 2 da ligação (E33): Tutor e Coach como subagents somente leitura, offline e sintético, com todos os gates: harness em código que valida cada comando proposto pelos subagents (conteúdo deles é dado não confiável) e produz a matriz operação x gate (agents_gate, command_box e params, idempotência, agendar_rotina, filtros e gates_mot, notebook, leitura de plataformas e de sessão, promotion_gate, delivery_gate com recibo de START, avaliação e amostra), com contraprovas (origem forjada, operação do outro perfil, comando velho, nonce repetido, hash divergente, URL, instrução embutida, recibo adulterado, START errado, projeção fora da lista, flag falsa); o que é só verificável ou não gateável não vira enforçado; sem Zapia e sem entrada",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E35_TESTE_SUBAGENTS_TUTOR_COACH_GATES.md",
+      "depends_on": [
+        "ZAPIA-EMISSOR"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "ZAPIA-LIGAR",
+      "title": "Lote 3 da ligação (E33): conectar e testar de verdade, em janela: subagents do lote 2 contra o entrada real com a flag do fluxo ligada só na janela de 24 h (PR próprio de abertura e de fechamento), Tutor e Coach emitem pela caixa, o fluxo valida, promove e abre a issue, o hook de Gmail de uso único acorda, lê, confere e entrega, verificadores offline conferem hash e carimbo; só depois hook recorrente (de hora em hora, 06h a 22h) e as demais operações uma a uma; fecha com a revogação do acesso da sessão e o registro no E32 e em CAPACIDADES_ZAPIA_VERIFICADAS.md",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E36_LIGAR_E_TESTAR_AUTOMACAO_PONTA_A_PONTA.md",
+      "depends_on": [
+        "ZAPIA-SUBAGENTS"
+      ],
+      "blocking_inputs": [
+        "P9 feita (tokens renovados), consentimento v4 e aprovação expressa da janela do piloto citando PR e head (o atalho 'Mesclar' não vale), com o fluxo reinstalado no SHA do lote 1"
+      ],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
