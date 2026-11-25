@@ -63,3 +63,18 @@ Esta especificação está **aceita pelo contrato** quando `python scripts/doc_c
 - **A fidelidade não é medida** para o conteúdo deste projeto; a verificação do Tutor (R7) é a defesa, e ela é **heurística e humana**.
 - **A origem do comando não é provada** (S6-R7): quem controla a conta do proprietário controla o canal.
 - **Contradiz o D-12** até a E1; o proprietário decide quando emendar.
+
+## Emenda C1 (25/11/2026): enunciado reformulado, alternativas e gabarito no prompt (PR #202)
+
+**Emenda aditiva:** o texto acima permanece; onde divergir, vale esta seção. Origem: decisão C1 do proprietário (E37) e a escolha dele de 25/11/2026 de que o prompt ao Notebook **pode** levar enunciado reformulado, alternativas e gabarito (E38).
+
+| Item | Regra |
+|---|---|
+| Campos | Três campos **opcionais, só juntos** (tudo ou nada, código `QUESTAO_INCOMPLETA`): `enunciado_reformulado` (até 600 caracteres), `alternativas` (lista de 2 a 5 textos de até 200 caracteres; as letras (A) a (E) são postas pelo validador) e `gabarito` (uma letra dentro das alternativas). Sem eles, o texto canônico e o hash do prompt são **idênticos** aos de antes |
+| Texto canônico | Cinco linhas fixas e, quando houver questão, mais três: `Enunciado reformulado: …`, `Alternativas: (A) … \| (B) … `, `Gabarito: X`. O `\|` é reservado como separador |
+| Continua proibido | Chave `enunciado` e `questao` no prompt; **comentário de professor e recursos do TEC** (heurística: "comentário", "professor", "resolução comentada", "videoaula", "recursos do TEC" nos campos novos, com falso positivo aceito); URL, HTML, segredo, dado pessoal, instrução embutida, desempenho individual, caractere invisível ou misto, multilinha |
+| Dispensado só nos campos novos | O filtro de **texto de questão** (comando de prova, alternativas listadas). Nos cinco campos antigos ele segue valendo |
+| Filtro de comandos | `agent_commands._scan_params(..., operacao="enviar_prompt_notebook")` dispensa **apenas** o filtro de texto de questão sobre o parâmetro `prompt`; os demais filtros e as chaves proibidas do esquema (contrato, **inalterado**) seguem. Usado na emissão, na caixa e no portão de entrega |
+| Limite total | 2000 caracteres no texto montado (`PROMPT_LONGO_DEMAIS`) |
+
+**Limites:** "reformulado" **não é verificável por código**: o validador não distingue enunciado reformulado de cópia literal; isso é revisão humana e amostragem (AM). A heurística de comentário de professor é lista de palavras e **não prova ausência**. Nada foi testado no Notebook real. `agents/`, `config/agent_command_schema.json`, `AGENTS.md` e `PRODUCT.md` **não mudaram**; o perfil do Tutor ainda não instrui o uso dos campos (aplicação em `agents/` exige aprovação expressa). Testes: `tests/test_notebook_prompt_validator.py` (classe `QuestaoReformuladaC1Test`), 10 mutações do código novo, todas mortas.

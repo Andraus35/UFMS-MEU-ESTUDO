@@ -262,7 +262,7 @@ def _comando(est, papel, contexto, motivos):
         return None
     if papel in PAPEIS and papel != "zapia" and papel not in ORIGEM_DA_OPERACAO[op]:
         motivos.append("papel_nao_pode_emitir_a_operacao")
-    if agent_commands._scan_params(est["params"], schema):
+    if agent_commands._scan_params(est["params"], schema, operacao=op):
         motivos.append("comando_com_parametro_proibido")
     if command_params_schema.validar_params(op, est["params"]):
         motivos.append("comando_com_params_fora_do_esquema")  # GA-1: o mesmo esquema fechado do validador
