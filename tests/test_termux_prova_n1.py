@@ -110,14 +110,21 @@ class ColocarTest(N1Base):
         self.assertEqual(r.returncode, 1)
         self.assertNotIn("PUT", self.calls())
 
-    def test_com_frase_grava_quatro_arquivos_e_confere_leitura_de_volta(self):
+    def test_com_frase_grava_sete_arquivos_e_confere_leitura_de_volta(self):
         r = self.roda("colocar", "COLOCAR N1\n")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-        for n in ("n1-fonte.json", "n1-contraprova.json"):
+        for n in ("n1-fonte.json", "n1-contraprova.json", "n1-questao.json"):
             self.assertEqual((self.fake / "repo/comandos/validados" / n).read_bytes(), (self.n1 / n).read_bytes())
             self.assertEqual((self.fake / "repo/comandos/recibos" / n).read_bytes(), (self.n1 / n.replace(".json", ".recibo.json")).read_bytes())
-        self.assertEqual(self.calls().count("-X PUT"), 4)
+        self.assertEqual(self.calls().count("-X PUT"), 7)
+        self.assertEqual((self.fake / "repo/comandos/fontes/n1.txt").read_bytes(), (self.n1 / "fonte-n1.txt").read_bytes())
         self.assertNotIn("fila/", self.calls())  # nada na fila de entradas; só comandos/
+
+    def test_nao_sobrescreve_a_fonte_existente(self):
+        (self.fake / "repo/comandos/fontes").mkdir(parents=True)
+        (self.fake / "repo/comandos/fontes/n1.txt").write_text("antigo")
+        self.assertEqual(self.roda("colocar", "COLOCAR N1\n").returncode, 1)
+        self.assertNotIn("PUT", self.calls())
 
     def test_nao_sobrescreve_arquivo_existente(self):
         (self.fake / "repo/comandos/validados").mkdir(parents=True)
@@ -156,6 +163,8 @@ class ConferirTest(N1Base):
         self.responde("n1-fonte.json", texto_literal="Legalidade, impessoalidade, moralidade, publicidade e eficiência.",
                       citacao_trecho="obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência")
         self.responde("n1-contraprova.json", texto_literal="Isso não consta nas fontes.")
+        self.responde("n1-questao.json", texto_literal="1. Qual item não está expresso no caput? Dica: releia a lista.",
+                      citacao_trecho="obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência")
 
     def test_respostas_boas_conferem_e_so_ha_leitura(self):
         self.boas()

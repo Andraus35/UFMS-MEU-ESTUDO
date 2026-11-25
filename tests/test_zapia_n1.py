@@ -29,9 +29,37 @@ def resposta(esp=ESP, **mud):
     return json.dumps({k: v for k, v in r.items() if v is not None}, ensure_ascii=False).encode("utf-8")
 
 
+QUESTAO = M["itens"][2]
+
+
+class QuestaoC1Test(unittest.TestCase):
+    def test_terceiro_comando_leva_os_campos_c1_e_passa_validador_e_caixa(self):
+        c = json.loads(QUESTAO["comando_bytes"])
+        self.assertTrue(npv.conferir_parametros(c["params"]).ok)
+        linhas = c["params"]["prompt"].split("\n")
+        self.assertEqual(len(linhas), 8)
+        self.assertEqual(linhas[7], "Gabarito: C")
+        self.assertIn("(C) Razoabilidade", linhas[6])
+        self.assertFalse(QUESTAO["contraprova"])
+
+    def test_gabarito_nao_esta_no_caput_e_as_demais_alternativas_estao(self):
+        self.assertNotIn("razoabilidade", FONTE.lower())
+        for princ in ("legalidade", "impessoalidade", "publicidade", "eficiência"):
+            self.assertIn(princ, FONTE.lower())
+
+    def test_prompt_do_tutor_e_o_unico_com_os_tres_campos(self):
+        for i in M["itens"][:2]:
+            self.assertEqual(len(json.loads(i["comando_bytes"])["params"]["prompt"].split("\n")), 5)
+
+    def test_resposta_com_citacao_da_fonte_confere_e_citacao_inventada_nao(self):
+        esp = {"nome": QUESTAO["nome"], "hash_corpo": QUESTAO["hash_corpo"], "fonte_nome": prep.FONTE_NOME}
+        self.assertIsNone(nrc.conferir(resposta(esp), esp, FONTE))
+        self.assertEqual(nrc.conferir(resposta(esp, citacao_trecho="a razoabilidade é princípio expresso"), esp, FONTE), "CITACAO_NAO_ESTA_NA_FONTE")
+
+
 class PreparoTest(unittest.TestCase):
-    def test_dois_comandos_do_tutor_passam_pelo_validador_e_pela_caixa(self):
-        self.assertEqual([i["nome"] for i in M["itens"]], ["n1-fonte.json", "n1-contraprova.json"])
+    def test_tres_comandos_do_tutor_passam_pelo_validador_e_pela_caixa(self):
+        self.assertEqual([i["nome"] for i in M["itens"]], ["n1-fonte.json", "n1-contraprova.json", "n1-questao.json"])
         for i in M["itens"]:
             c = json.loads(i["comando_bytes"])
             self.assertEqual((c["origin"], c["operation"], c["destination"]), ("tutor", "enviar_prompt_notebook", "notebook_estudo"))
@@ -50,8 +78,10 @@ class PreparoTest(unittest.TestCase):
             self.assertNotRegex(i["prompt"] + FONTE, r"https?://|@|\bCPF\b")
 
     def test_contraprova_pergunta_o_que_a_fonte_nao_traz(self):
-        self.assertIn("prazo de prescrição", CONTRA["prompt"])
-        self.assertNotIn("prescrição", FONTE.lower())
+        self.assertIn("prazo", CONTRA["prompt"].lower())
+        self.assertIn("validade do concurso", CONTRA["prompt"])
+        for palavra in ("prazo", "prorrog", "validade"):
+            self.assertNotIn(palavra, FONTE.lower())  # a fonte (caput) não traz o ponto perguntado
 
     def test_instrucao_para_a_zapia_so_transporta_e_para_no_aviso(self):
         t = prep.instrucao_para_a_zapia(M["itens"])
@@ -67,7 +97,7 @@ class PreparoTest(unittest.TestCase):
                 self.assertEqual(prep.main(["--saida", d]), 0)
             nomes = {p.name for p in Path(d).iterdir()}
             self.assertEqual(nomes, {"n1-fonte.json", "n1-fonte.recibo.json", "n1-contraprova.json", "n1-contraprova.recibo.json",
-                                     "fonte-n1.txt", "meta.json", "instrucao-zapia.txt"})
+                                     "n1-questao.json", "n1-questao.recibo.json", "fonte-n1.txt", "meta.json", "instrucao-zapia.txt", "instrucao-hook-notebook.txt"})
 
 
 class ConferenciaDaRespostaTest(unittest.TestCase):
@@ -131,3 +161,52 @@ class ConferenciaDaRespostaTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ProcedenciaDoTutorTest(unittest.TestCase):
+    """Os prompts do N1 vêm SÓ de config/propostas_tutor_n1.json (subagent Tutor, autoria declarada e hash); o kit recusa o resto."""
+
+    def _arquivo(self, mudar):
+        import tempfile
+        d = json.loads(prep.PROPOSTAS.read_text(encoding="utf-8"))
+        mudar(d)
+        f = Path(tempfile.mkdtemp()) / "p.json"
+        f.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+        return f
+
+    def test_prompts_do_kit_sao_exatamente_os_do_arquivo_de_propostas(self):
+        d = json.loads(prep.PROPOSTAS.read_text(encoding="utf-8"))
+        por_nome = {i["nome"]: i for i in d["itens"]}
+        self.assertEqual(set(por_nome), {c["nome"] for c in prep.CASOS})
+        for item in M["itens"]:
+            self.assertEqual(item["prompt"], npv.montar(por_nome[item["nome"]]["prompt"]))
+            self.assertEqual(por_nome[item["nome"]]["autoria"], "subagent_tutor")
+
+    def test_codigo_do_kit_nao_carrega_texto_de_prompt(self):
+        codigo = (ROOT / "scripts/zapia_n1_prep.py").read_text(encoding="utf-8")
+        for campo in ('"topico"', '"lacuna"', '"metodo"', '"exigencia_fonte"', '"formato_saida"', '"enunciado_reformulado"', '"alternativas"'):
+            self.assertNotIn(campo, codigo, campo)
+
+    def test_arquivo_recusado_se_autoria_hash_nome_ou_prompt_forem_alterados(self):
+        def autoria(d): d["itens"][0]["autoria"] = "engenharia"
+        def hash_(d): d["itens"][1]["sha256_texto"] = "0" * 8 + d["itens"][1]["sha256_texto"][8:]
+        def editado(d): d["itens"][0]["prompt"]["lacuna"] = d["itens"][0]["prompt"]["lacuna"] + " Detalhe."
+        def faltando(d): d["itens"].pop()
+        def repetido(d): d["itens"].append(dict(d["itens"][0]))
+        def invalido(d):
+            d["itens"][0]["prompt"]["lacuna"] = "meu CPF é 123.456.789-09"
+        for mud in (autoria, hash_, editado, faltando, repetido, invalido):
+            with self.assertRaises(ValueError, msg=mud.__name__):
+                prep.carregar_propostas(self._arquivo(mud))
+        with self.assertRaises(ValueError):
+            prep.carregar_propostas(ROOT / "nao-existe.json")
+
+    def test_montar_com_propostas_alteradas_falha(self):
+        with self.assertRaises(ValueError):
+            prep.montar(AGORA, propostas={})
+
+    def test_fonte_responde_e_contraprova_nao(self):
+        d = {i["nome"]: i["prompt"] for i in json.loads(prep.PROPOSTAS.read_text(encoding="utf-8"))["itens"]}
+        self.assertIn("princípios", d["n1-fonte.json"]["lacuna"].lower())
+        self.assertIn("princípios", FONTE.lower())
+        self.assertIn("prazo", d["n1-contraprova.json"]["lacuna"].lower())
