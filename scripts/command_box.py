@@ -175,7 +175,7 @@ def _validar(nome, raw, ctx, schema, entrada_id):
     params = comando["params"]
     if not isinstance(params, dict):
         raise _Parar("PARAMS_NAO_OBJETO", "parametros")
-    motivo = agent_commands._scan_params(params, schema)
+    motivo = agent_commands._scan_params(params, schema, operacao=operacao)
     if motivo:
         raise _Parar(motivo, "parametros")
     motivo = None if operacao == PROMPT_NOTEBOOK else command_params_schema.validar_params(operacao, params)  # GA-1: o prompt tem validador próprio (N2)

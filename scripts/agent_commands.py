@@ -152,8 +152,9 @@ def texto_de_questao(texto) -> bool:
                 or len(_ALTERNATIVAS_PARENTESES.findall(texto)) >= 2)
 
 
-def _scan_params(value, schema, depth=0):
-    """Devolve o motivo de recusa ou None."""
+def _scan_params(value, schema, depth=0, operacao=None):
+    """Devolve o motivo de recusa ou None. `operacao="enviar_prompt_notebook"` dispensa só o filtro de TEXTO DE QUESTÃO (C1, E37: o prompt
+    pode levar enunciado reformulado, alternativas e gabarito; o validador do prompt confere o resto). Todo outro filtro segue valendo."""
     limits = schema["limits"]
     if depth > limits["max_param_depth"]:
         return "PARAMS_PROFUNDOS"
@@ -163,17 +164,19 @@ def _scan_params(value, schema, depth=0):
                 return "PARAMS_CHAVE_INVALIDA"
             if key.strip().lower() in schema["forbidden_param_keys"]:
                 return "PARAMS_CAMPO_PROIBIDO"
-            reason = _scan_params(item, schema, depth + 1)
+            reason = _scan_params(item, schema, depth + 1, operacao)
             if reason:
                 return reason
     elif isinstance(value, list):
         for item in value:
-            reason = _scan_params(item, schema, depth + 1)
+            reason = _scan_params(item, schema, depth + 1, operacao)
             if reason:
                 return reason
     elif isinstance(value, str):
         if len(value) > limits["max_param_string_chars"]:
             return "PARAMS_TEXTO_LONGO"
+        if operacao == "enviar_prompt_notebook":
+            return scan_text(value, html=True)
         return scan_text(value, html=True) or ("PARAMS_TEXTO_DE_QUESTAO" if texto_de_questao(value) else None)
     elif value is not None and not isinstance(value, (bool, int, float)):
         return "PARAMS_TIPO_INVALIDO"
@@ -256,7 +259,7 @@ def validate_command(command, *, keys: dict, now: datetime, ledger, schema: dict
     params = command["params"]
     if not isinstance(params, dict):
         return _deny("PARAMS_NAO_OBJETO")
-    reason = _scan_params(params, schema)
+    reason = _scan_params(params, schema, operacao=operation)
     if reason:
         return _deny(reason)
     if command_params_schema.registro_pessoal_bloqueado(operation, flags):  # GA-1: resultado pessoal só com a flag verdadeira (fail-closed)
