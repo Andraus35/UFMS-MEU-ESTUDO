@@ -30,6 +30,15 @@ class RegistroTeste(unittest.TestCase):
             self.assertIn(trecho, r, trecho)
         self.assertNotIn("a **rotina agendada** da Zapia;", r)  # a versão antiga do NÃO PROVADO, superada pelo E23
 
+    def test_o_resumo_guarda_o_limite_de_4000_caracteres_da_tarefa_do_hook(self):
+        import agendar_rotina
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("LIMITE OBSERVADO (25/11/2026", "no máximo 4000 caracteres", "String should have at most 4000 characters", "LIMITE_TAREFA_HOOK = 4000",
+                       "não foi medido"):
+            self.assertIn(trecho, r, trecho)
+        self.assertEqual(agendar_rotina.LIMITE_TAREFA_HOOK, 4000)  # o registro e o código dizem o mesmo número
+        self.assertEqual(agendar_rotina.LIMITE_TAREFA_HOOK, int(__import__("re").search(r"LIMITE_TAREFA_HOOK = (\d+)", r).group(1)))
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)
