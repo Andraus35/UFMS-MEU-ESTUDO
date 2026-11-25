@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote PROMPT-NOTEBOOK-C1 (RM-09): emenda da S10-R3 e do validador do prompt ao Notebook (enunciado reformulado, alternativas e gabarito entram, decisão C1/E37 de 25/11/2026), com contraprovas e mutações; offline, sem Zapia, sem agents/",
+    "scope": "Contrato (RM-09): agents/TUTOR.md, item 9 das Regras e exceção em Limites para os campos C1 do prompt ao Notebook (texto aprovado pelo proprietário em 25/11/2026); arquivo de contrato, merge só por pedido expresso citando PR e head",
     "branch": "ccr-8e778ab7-04h3zk",
-    "pr_number": 202,
+    "pr_number": 203,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #201 integrado em main no merge commit 1d0374e746e3405b00bbeeae61fce20f37774d12. Frente única ativa: RM-09 (Lote PROMPT-NOTEBOOK-C1 (RM-09): emenda da S10-R3 e do validador do prompt ao Notebook (enunciado reformulado, alternativas e gabarito entram, decisão C1/E37 de 25/11/2026), com contraprovas e mutações; offline, sem Zapia, sem agents/), branch ccr-8e778ab7-04h3zk, PR #202. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #202 integrado em main no merge commit 658dc43b7f3e52243edc01b1f079f85952d89e38. Frente única ativa: RM-09 (Contrato (RM-09): agents/TUTOR.md, item 9 das Regras e exceção em Limites para os campos C1 do prompt ao Notebook (texto aprovado pelo proprietário em 25/11/2026); arquivo de contrato, merge só por pedido expresso citando PR e head), branch ccr-8e778ab7-04h3zk, PR #203. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 201,
-    "merge_commit_sha": "1d0374e746e3405b00bbeeae61fce20f37774d12"
+    "pr_number": 202,
+    "merge_commit_sha": "658dc43b7f3e52243edc01b1f079f85952d89e38"
   },
   "work_queue": [
     {
