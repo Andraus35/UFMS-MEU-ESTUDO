@@ -49,6 +49,18 @@ gh issue close -R Andraus35/ufms-meu-estudo-entrada <numero>
 - **Regra de ordem:** antes de criar issue com `SINAL` no título, o e-mail de teste (`TESTE-NOTIF`, sem `SINAL`) precisa chegar na Caixa de entrada, para não gastar o único disparo do hook.
 - **Ainda não provado:** que o hook acorde, que o e-mail do GitHub case com o filtro, o atraso e a desativação ao fim.
 
+## Resultado do teste 2 (24/11/2026, 20:42 em Campo Grande): **o hook DISPAROU**
+
+- **Observado (captura do proprietário, relógio do aparelho 20:42 visível):** o hook de Gmail `5b91c690` (conta conectada, `senders` = `notifications@github.com`, `subject_contains` = `[Andraus35/ufms-meu-estudo-entrada] SINAL`) acordou a conversa e a Zapia relatou **25/11/2026 às 00:41:56 UTC** e o assunto **`[Andraus35/ufms-meu-estudo-entrada] SINAL teste F4 (Issue #5)`**, que começa pelo prefixo; **sem corpo, sem GitHub, sem gravação**; o hook **encerrou depois do primeiro relatório** (autorrelato dela).
+- **Antes do disparo:** o e-mail de teste do GitHub (`TESTE-NOTIF`, Issue #4) chegou na Caixa de entrada do mesmo Gmail, com remetente `notifications@github.com` (cabeçalho lido pelo proprietário); depois de ligar o envio das próprias atualizações, o GitHub passou a avisar por e-mail as ações dele.
+- **Conclusão (confiança B, uma execução):** **a campainha por Gmail funciona**: uma issue no `entrada` privado vira e-mail do GitHub, que acorda um hook da Zapia no minuto seguinte, com o filtro que o app oferece. **Atraso: 27 s** (issue #5 criada às 2026-11-25T00:41:29Z, captura do terminal do proprietário; relato do hook às 00:41:56Z, autorrelato da Zapia); a issue foi fechada só depois do relato.
+- **Não provado:** que o hook, ao acordar, **leia o repositório e entregue** a mensagem (o teste foi só relato); que o emissor seja o fluxo (aqui a issue foi aberta por ele); repetição em vários dias; hook **recorrente** (este foi de uso único); e a pontualidade em relação a `agendado_utc`.
+- **Cuidado aprendido:** o aviso de **fechamento** da issue é outro e-mail (`Re: ...`) que **contém** o trecho do filtro; o script só fecha a issue depois do relato.
+
+## Próximo passo proposto (outro lote, depois do merge do #189, com aprovação)
+
+Teste 3, **ponta a ponta**: o hook, ao acordar, executa o caminho do F1 (ler comando e recibo, conferir hash, notificar, gravar `comandos/entregas/`), com par sintético colocado à mão. Só depois, a emenda do D-28 e o emissor pelo fluxo.
+
 ## Riscos declarados
 
 - **Leitura de e-mail:** mesmo com filtro, o hook roda sobre a caixa dele. Só vale com o filtro **lido de volta** e a emenda do D-28 aprovada. Antes dela, o teste 2 é **autorizado por ele só como teste único e sem efeito**, com desativação ao fim.
