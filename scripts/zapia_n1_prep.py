@@ -31,10 +31,23 @@ BASE = {"topico": "Art. 37 da Constituição Federal: princípios da administra�
         "metodo": "Gere 3 perguntas de recuperação curtas, com dicas graduais, sem entregar a resposta.",
         "exigencia_fonte": "Cite o trecho literal da fonte; se faltar, diga: não consta nas fontes.",
         "formato_saida": "Lista numerada; cada item com a citação literal da fonte."}
+# Proposta do subagent Tutor (25/11/2026), aceita pelo validador: tópico do edital ("Constituição Federal: Administração Pública, arts. 37 a 41"),
+# com os campos C1 (enunciado reformulado, alternativas e gabarito derivado da fonte colada). A lacuna é INFERÊNCIA do Tutor (estado E0).
+PROMPT_TUTOR_C1 = {
+    "topico": "Princípios da administração pública no caput do art. 37 da CF/1988",
+    "lacuna": "Inferência do Tutor, sem evidência do aluno (E0): distinguir os princípios expressos no caput do art. 37 de princípios apenas implícitos ou doutrinários.",
+    "metodo": "Faça perguntas de recuperação, uma por vez, esperando minha resposta; dê dicas graduais e curtas; não entregue a resposta antes de eu tentar duas vezes.",
+    "exigencia_fonte": "Responda só com a fonte colada: cite o trecho que sustenta cada afirmação; se algo não consta nas fontes, diga que não consta nas fontes.",
+    "formato_saida": "Uma pergunta por mensagem; depois da minha resposta, feedback de duas linhas com o trecho citado; ao final, lista dos princípios que preciso rever.",
+    "enunciado_reformulado": "Considere o caput do art. 37 da Constituição Federal e indique qual item abaixo não é um princípio nele expressamente enumerado.",
+    "alternativas": ["Legalidade", "Impessoalidade", "Razoabilidade", "Publicidade", "Eficiência"],
+    "gabarito": "C",
+}
 CASOS = (
     {"nome": "n1-fonte.json", "contraprova": False, "lacuna": "Quais princípios o caput do art. 37 enumera para a administração pública."},
     {"nome": "n1-contraprova.json", "contraprova": True,
      "lacuna": "Qual é o prazo de prescrição das ações de ressarcimento ao erário previsto na Constituição."},
+    {"nome": "n1-questao.json", "contraprova": False, "prompt_completo": PROMPT_TUTOR_C1},  # campos C1: prova o transporte do enunciado reformulado
 )
 
 
@@ -43,7 +56,7 @@ def montar(agora_utc) -> dict:
     schema = agent_commands.load_schema()
     saida = {"fonte_nome": FONTE_NOME, "fonte_bytes": FONTE_TEXTO.encode("utf-8"), "itens": []}
     for n, caso in enumerate(CASOS, 1):
-        veredito, params = npv.preparar({**BASE, "lacuna": caso["lacuna"]})
+        veredito, params = npv.preparar(dict(caso["prompt_completo"]) if "prompt_completo" in caso else {**BASE, "lacuna": caso["lacuna"]})
         if not veredito.ok:
             raise ValueError("o validador do prompt recusou o caso de teste: " + str(veredito.codigo))
         comando = {"schema_version": schema["schema_version"], "origin": "tutor", "operation": "enviar_prompt_notebook",

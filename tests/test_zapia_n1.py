@@ -29,9 +29,37 @@ def resposta(esp=ESP, **mud):
     return json.dumps({k: v for k, v in r.items() if v is not None}, ensure_ascii=False).encode("utf-8")
 
 
+QUESTAO = M["itens"][2]
+
+
+class QuestaoC1Test(unittest.TestCase):
+    def test_terceiro_comando_leva_os_campos_c1_e_passa_validador_e_caixa(self):
+        c = json.loads(QUESTAO["comando_bytes"])
+        self.assertTrue(npv.conferir_parametros(c["params"]).ok)
+        linhas = c["params"]["prompt"].split("\n")
+        self.assertEqual(len(linhas), 8)
+        self.assertEqual(linhas[7], "Gabarito: C")
+        self.assertIn("(C) Razoabilidade", linhas[6])
+        self.assertFalse(QUESTAO["contraprova"])
+
+    def test_gabarito_nao_esta_no_caput_e_as_demais_alternativas_estao(self):
+        self.assertNotIn("razoabilidade", FONTE.lower())
+        for princ in ("legalidade", "impessoalidade", "publicidade", "eficiência"):
+            self.assertIn(princ, FONTE.lower())
+
+    def test_prompt_do_tutor_e_o_unico_com_os_tres_campos(self):
+        for i in M["itens"][:2]:
+            self.assertEqual(len(json.loads(i["comando_bytes"])["params"]["prompt"].split("\n")), 5)
+
+    def test_resposta_com_citacao_da_fonte_confere_e_citacao_inventada_nao(self):
+        esp = {"nome": QUESTAO["nome"], "hash_corpo": QUESTAO["hash_corpo"], "fonte_nome": prep.FONTE_NOME}
+        self.assertIsNone(nrc.conferir(resposta(esp), esp, FONTE))
+        self.assertEqual(nrc.conferir(resposta(esp, citacao_trecho="a razoabilidade é princípio expresso"), esp, FONTE), "CITACAO_NAO_ESTA_NA_FONTE")
+
+
 class PreparoTest(unittest.TestCase):
-    def test_dois_comandos_do_tutor_passam_pelo_validador_e_pela_caixa(self):
-        self.assertEqual([i["nome"] for i in M["itens"]], ["n1-fonte.json", "n1-contraprova.json"])
+    def test_tres_comandos_do_tutor_passam_pelo_validador_e_pela_caixa(self):
+        self.assertEqual([i["nome"] for i in M["itens"]], ["n1-fonte.json", "n1-contraprova.json", "n1-questao.json"])
         for i in M["itens"]:
             c = json.loads(i["comando_bytes"])
             self.assertEqual((c["origin"], c["operation"], c["destination"]), ("tutor", "enviar_prompt_notebook", "notebook_estudo"))
@@ -67,7 +95,7 @@ class PreparoTest(unittest.TestCase):
                 self.assertEqual(prep.main(["--saida", d]), 0)
             nomes = {p.name for p in Path(d).iterdir()}
             self.assertEqual(nomes, {"n1-fonte.json", "n1-fonte.recibo.json", "n1-contraprova.json", "n1-contraprova.recibo.json",
-                                     "fonte-n1.txt", "meta.json", "instrucao-zapia.txt"})
+                                     "n1-questao.json", "n1-questao.recibo.json", "fonte-n1.txt", "meta.json", "instrucao-zapia.txt"})
 
 
 class ConferenciaDaRespostaTest(unittest.TestCase):

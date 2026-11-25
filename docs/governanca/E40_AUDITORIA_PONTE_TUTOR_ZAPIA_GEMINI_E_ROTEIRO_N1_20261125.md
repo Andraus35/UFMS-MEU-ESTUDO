@@ -36,6 +36,8 @@ D-26 (ponte só pela Zapia) e D-23 (Tutor escreve e verifica, Notebook gera rasc
 
 **Script do Termux (PR #202, 25/11/2026):** `bash scripts/termux/prova_n1.sh preparar` (passo 1, offline), `colocar` (passo 2: frase `COLOCAR N1`, recusa sobrescrever, leitura de volta byte a byte, só `comandos/`, nunca a fila) e `conferir` (passo 4, só leitura, não imprime o texto da resposta; resposta pendente ou `PARADO` não é sucesso). Usa a **sua** sessão do `gh`; nenhum token em argumento. `tests/test_termux_prova_n1.py` (14 testes, `gh` falso) e 8 de 8 mutações mortas. **A sessão não o executou**; o N1 real segue ato do proprietário.
 
+**Kit com os campos C1 (PR #204, 25/11/2026):** o kit passa a gerar **três** comandos: além de `n1-fonte.json` e `n1-contraprova.json`, `n1-questao.json`, com o prompt proposto pelo subagent Tutor (art. 37 da CF, campos `enunciado_reformulado`, `alternativas` e `gabarito` C), aceito pelo validador e pela caixa. A conferência da resposta exige citação aberta da fonte; **não confere o gabarito** (a fidelidade do Notebook segue sem medida). `prova_n1.sh` coloca 6 arquivos e confere 3 respostas. Lacuna do Tutor: tópico e lacuna são **inferência** (estado E0).
+
 ## Limites
 
 Sintético, um disparo, autorrelato da Zapia; não prova fidelidade para direito administrativo, nem a promoção pelo fluxo, nem várias execuções. A conferência da citação prova só que o trecho existe na fonte dada. Nenhum arquivo de contrato (`agents/`, esquema, gates) foi alterado.
