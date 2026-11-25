@@ -32,7 +32,7 @@ class EmendaTeste(unittest.TestCase):
         self.assertIn("**D-31 (23/11/2026):**", t)
         self.assertIn("E26_EMENDA_FIM_DO_AUTORIZO_NAS_AUTOMACOES.md", t)
         self.assertIn("**Mantém** `AUTORIZO` para ler e-mail (E-07)", t)
-        self.assertLessEqual(len(t.encode("utf-8")), 38 * 1024)
+        self.assertLessEqual(len(t.encode("utf-8")), 40 * 1024)  # teto 40 KiB com a D-32
 
     def test_agents_md_nao_cita_a_frase_e_a_operacao_foi_aplicada_pelo_lote_apl(self):
         self.assertNotIn("AUTORIZO", (ROOT / "AGENTS.md").read_text(encoding="utf-8"))  # a E26 não precisou mudar o AGENTS.md
