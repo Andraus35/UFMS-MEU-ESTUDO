@@ -39,6 +39,12 @@ class RegistroTeste(unittest.TestCase):
         self.assertEqual(agendar_rotina.LIMITE_TAREFA_HOOK, 4000)  # o registro e o código dizem o mesmo número
         self.assertEqual(agendar_rotina.LIMITE_TAREFA_HOOK, int(__import__("re").search(r"LIMITE_TAREFA_HOOK = (\d+)", r).group(1)))
 
+    def test_o_resumo_guarda_a_recusa_de_hook_identico(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("RESTRIÇÃO OBSERVADA (25/11/2026", "An identical subscription already exists: 2bef6d04-e272-4b25-b9b9-4d44958cfd73",
+                       "the user decides", "atualize", "não foi testada", "a escolha é do proprietário"):
+            self.assertIn(trecho, r, trecho)
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)
