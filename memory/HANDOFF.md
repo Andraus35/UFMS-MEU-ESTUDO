@@ -4,14 +4,16 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #196; SHA 827d248bab0f28e7b222cd094029aa6f9f3cc5ff
-- Frente ativa: **RM-09 / PR #197**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
+- Último merge comprovado: PR #197; SHA ef7047858c240bff52c665a5fca01624665925ab
+- Frente ativa: **RM-09 / PR #198**; branch `ccr-c8d1fbc8-sa348u`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
 - Persistência pessoal desabilitada; sem dados pessoais, credenciais, replay real ou integrações externas.
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
+
+**APROVAÇÕES DE 25/11/2026 (E38):** texto da E3 aprovado como está (falta o merge que aplica, depois da janela do piloto), frase "finalizar estudos" confirmada, gabarito e resposta do aluno em campos separados; variável FLUXO_SHA256 do entrada definida por ele (relato com captura); **anexo do entrada ainda por revogar (ato dele)**. Registro em `docs/governanca/E38_REGISTRO_DE_APROVACOES_E3_E_FRASE_20261125.md`. **S22 mesclada (#197): especificação das tarefas agendadas do Claude como gatilho; nada criado, agendado ou testado.**
 
 **BACKLOG S22 (25/11/2026):** tarefas agendadas do Claude Code como gatilho dos agentes (S15-R3 a), a abrir e especificar; é o próximo item da fila (`state/WORKFLOW.json`, `S22`); entrega a especificar: arquivo S22_TAREFAS_AGENDADAS_CLAUDE_GATILHO em docs/especificacoes (ainda não existe). A tarefa agendada só acorda a sessão para decidir e emitir comando; a entrega no minuto a TEC, Gemini e estudante segue pela Zapia. Escopo: encaixe no harness (relógio, sessão, START pelo broker, proposta, caixa, fluxo, campainha, Zapia), escopo mínimo do token de escrita na caixa (S6-R7), prova do gatilho sem efeito em 3 dias (S15-R4), limites do recurso (mínimo de 1 h, atraso, sessão sem memória, conexão do GitHub expirada), push direto ao aparelho (D-25) e matriz gatilho x canal. Nada foi criado, agendado ou testado. S21 fica reservada ao ciclo de revisão do E25.
 

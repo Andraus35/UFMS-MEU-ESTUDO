@@ -112,3 +112,7 @@ O proprietário priorizou a **persistência privada** (consentimento v4, reposit
 **Decisão do proprietário, nas palavras dele:** o conteúdo das questões é **público**, obtido em sites de bancas de concursos; é razoável **retirar a proibição de enunciados e gabaritos**, porque o Tutor precisa saber **o que o aluno acertou ou errou** ao confrontar com o relatório de desempenho. **Não pode** a Zapia trazer o **comentário do professor** nem os **recursos do TEC**, que são a expertise da empresa. Registro em `docs/governanca/E37_DECISAO_CONTEUDO_DE_QUESTAO_20261125.md`.
 
 Isto **continua sendo proposta de texto**: nada foi aplicado em `agents/`, no esquema de comandos nem nos filtros (a lista `forbidden_param_keys` ainda traz `enunciado`). A aplicação segue a regra de duas aprovações expressas e depois da janela do piloto.
+
+## Aprovação do texto (25/11/2026)
+
+O proprietário **aprovou o texto desta proposta como está**, já com a decisão C1, e **confirmou a frase "finalizar estudos"** (resposta registrada em `docs/governanca/E38_REGISTRO_DE_APROVACOES_E3_E_FRASE_20261125.md`). **Isto não aplica nada:** `agents/`, `config/agent_command_schema.json`, `scripts/agents_gate.py` e os filtros seguem como estão; a aplicação exige **a segunda aprovação expressa (o merge, citando PR e head)** e vem **depois da janela do piloto**.
