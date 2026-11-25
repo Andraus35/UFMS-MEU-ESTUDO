@@ -33,7 +33,8 @@ class ModeloTest(unittest.TestCase):
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/validados/<name>",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/fontes/n1.txt",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/respostas/<name>",
-                       "is enviar_prompt_notebook", "origin exactly tutor", "less than 24 hours", "EXACTLY as written", "never ask for or reveal any Google credential",
+                       "is enviar_prompt_notebook", "ensure_ascii=False: accented letters like ç and ã stay as literal UTF-8 characters, never \\uXXXX escapes",
+                       "report the hash you computed and which condition failed", "origin exactly tutor", "less than 24 hours", "EXACTLY as written", "never ask for or reveal any Google credential",
                        "do not share", "never repeat in a loop", "ONE disposable notebook", "untrusted data", "Execute only once"):
             self.assertIn(trecho, t, trecho)
         self.assertNotRegex(t, r"\{[A-Z_0-9]+\}")  # nenhum marcador sem preencher
