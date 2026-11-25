@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote KIT-N1-C1 (RM-09): kit do teste N1 (zapia_n1_prep.py e prova_n1.sh) com o prompt do Tutor (art. 37 da CF, campos C1) e conferência; offline, sem Zapia, sem agents/",
+    "scope": "Lote VOLTA-N1 (RM-09): orquestrador offline Tutor-Coach da resposta do Notebook, conferência do gabarito contra a fonte colada, assinatura do comando por chave fora do modelo (roteiro, ato do proprietário) e registro de captura; offline, sem agents/",
     "branch": "ccr-8e778ab7-04h3zk",
-    "pr_number": 204,
+    "pr_number": 205,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #203 integrado em main no merge commit ef94dfd547cbd3f31e5b7040364e5b05dbda1b14. Frente única ativa: RM-09 (Lote KIT-N1-C1 (RM-09): kit do teste N1 (zapia_n1_prep.py e prova_n1.sh) com o prompt do Tutor (art. 37 da CF, campos C1) e conferência; offline, sem Zapia, sem agents/), branch ccr-8e778ab7-04h3zk, PR #204. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #204 integrado em main no merge commit d98cacb164b57f3a9863b28b14ba5e61c3f5bf1c. Frente única ativa: RM-09 (Lote VOLTA-N1 (RM-09): orquestrador offline Tutor-Coach da resposta do Notebook, conferência do gabarito contra a fonte colada, assinatura do comando por chave fora do modelo (roteiro, ato do proprietário) e registro de captura; offline, sem agents/), branch ccr-8e778ab7-04h3zk, PR #205. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 203,
-    "merge_commit_sha": "ef94dfd547cbd3f31e5b7040364e5b05dbda1b14"
+    "pr_number": 204,
+    "merge_commit_sha": "d98cacb164b57f3a9863b28b14ba5e61c3f5bf1c"
   },
   "work_queue": [
     {
