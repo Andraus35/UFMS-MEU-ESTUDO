@@ -34,6 +34,8 @@ D-26 (ponte só pela Zapia) e D-23 (Tutor escreve e verifica, Notebook gera rasc
 4. Baixar as respostas e conferir: `python -c` com `notebook_response_check.conferir(...)` (o comando de conferência fica no PR de roteiro; a regra: `None` = pode seguir ao Tutor).
 5. Tutor verifica a afirmação contra a fonte (S10-R7b) e relata. Apagar os arquivos de teste do `entrada` e o notebook descartável.
 
+**Script do Termux (PR #202, 25/11/2026):** `bash scripts/termux/prova_n1.sh preparar` (passo 1, offline), `colocar` (passo 2: frase `COLOCAR N1`, recusa sobrescrever, leitura de volta byte a byte, só `comandos/`, nunca a fila) e `conferir` (passo 4, só leitura, não imprime o texto da resposta; resposta pendente ou `PARADO` não é sucesso). Usa a **sua** sessão do `gh`; nenhum token em argumento. `tests/test_termux_prova_n1.py` (14 testes, `gh` falso) e 8 de 8 mutações mortas. **A sessão não o executou**; o N1 real segue ato do proprietário.
+
 ## Limites
 
 Sintético, um disparo, autorrelato da Zapia; não prova fidelidade para direito administrativo, nem a promoção pelo fluxo, nem várias execuções. A conferência da citação prova só que o trecho existe na fonte dada. Nenhum arquivo de contrato (`agents/`, esquema, gates) foi alterado.
