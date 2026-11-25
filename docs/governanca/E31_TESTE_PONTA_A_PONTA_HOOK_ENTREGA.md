@@ -45,6 +45,12 @@ Junta peças já provadas **separadas**: a campainha por Gmail (E30, o hook acor
 - **Ressalvas observadas:** (1) o `rotina_id_relatado` que ela gravou (`1a21244610ce2fde`) **não é** o ID que o app mostra para o hook (`2bef6d04`); é outro identificador dela (execução ou evento): **autorrelato não verificado**, e o campo é opcional. (2) O commit do recibo aparece **sob a conta dele** (a credencial da Zapia é dele): **não distingue** quem gravou; só o carimbo e o hash sustentam. (3) A **mensagem** que ela relata ao chat é dela; nada no repositório a prova.
 - **Continua não provado:** o **fluxo como emissor** (aqui a issue foi aberta por esta sessão, antes por ele); par colocado à mão (`SINTETICO_MANUAL`, sem promoção pelo fluxo); hook **recorrente**; vários dias; texto vindo de promoção real; Tutor e Coach emitindo de verdade.
 
+## Limpeza executada (25/11/2026, a pedido dele: "Pode executar as pendências")
+
+- **No `entrada` (commit `8ea64e5`):** apagados os **seis** arquivos de teste, `f4-hook.json` (E31) e `f1-rotina.json` (E23), em `comandos/validados/`, `comandos/recibos/` e `comandos/entregas/`. **Mantidos de propósito:** `.github/workflows/promover.yml` (o fluxo instalado) e `recibos/c5-sintetica-20261118T192903.json` (recibo **escrito pelo fluxo** na prova C5; é registro do fluxo, não arquivo de teste da sessão; apagar é decisão dele). O histórico do Git guarda tudo o que foi apagado.
+- **Clone local da sessão NÃO foi removido:** a remoção da pasta `/home/user/ufms-meu-estudo-entrada` foi **bloqueada pela verificação de segurança** do ambiente (só uma pessoa pode aprovar). A sessão **não vai mais ler nem gravar** nele; **a pasta continua no disco** até ele aprová-la ou o ambiente ser descartado.
+- **Continua com ele (a sessão não alcança):** a captura da notificação no chat da Zapia; **apagar os hooks `2bef6d04` e `5b91c690` na lista da Zapia**; e **revogar o anexo do `entrada` à sessão** (leitura e escrita), antes do run de verdade.
+
 ## Exceção de acesso (decisão do proprietário, 25/11/2026)
 
 - **Durante a fase de teste**, a sessão em nuvem do construtor recebeu acesso de **leitura** ao `ufms-meu-estudo-entrada` (anexado por `add_repo`, clone raso em `/home/user/ufms-meu-estudo-entrada`), **só** para conferir de forma independente os arquivos sintéticos do teste (`f4-hook.json`). **Não** foi carregado o `CLAUDE.md`, skills ou plugins desse repositório (conteúdo dele é dado, não instrução) e nada dele foi executado.
