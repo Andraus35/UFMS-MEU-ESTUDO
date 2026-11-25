@@ -13,6 +13,8 @@
 - Alterações por API GitHub; hooks locais não executados nesta sessão. A CI não substitui hooks locais.
 <!-- GOVERNANCE-CHECKPOINT:END -->
 
+**DECISÃO C1 (25/11/2026):** enunciado e gabarito **deixam de ser proibidos** na entrega da Zapia (conteúdo público das bancas); **comentário de professor e recursos do TEC continuam proibidos**. Registro em `docs/governanca/E37_DECISAO_CONTEUDO_DE_QUESTAO_20261125.md`; E3 e S9-R5 revistas só em texto; **código, esquema e `agents/` ainda não refletem** (aplicação depois da janela do piloto, com aprovação expressa).
+
 ## LEITURA OBRIGATÓRIA: capacidades da Zapia (decisão do proprietário de 22/11/2026)
 
 Toda sessão lê `docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md` (o `bootstrap.py` imprime o resumo e o hash). **PROVADO:** a Zapia lê e escreve no repositório privado `entrada` por **HTTP com token** (sonda de 22/11/2026); **não precisa de conector de GitHub**. Chamada: `curl` restrito, uma por vez, só `-X`, `-H`, `-d`. **NÃO PROVADO:** F1 real, promoção pelo fluxo, rotina agendada (autorizada por ele em 22/11, a criar por ele na Zapia) e notificação espontânea. Não afirme além disso.
