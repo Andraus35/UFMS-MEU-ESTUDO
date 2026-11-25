@@ -1170,7 +1170,7 @@
       ]
     },
     {
-      "id": "N1",
+      "id": "PONTE-NOTEBOOK",
       "title": "Teste N1 da ponte Tutor, Zapia e Gemini Notebook (S10-R11): kit sintético offline (comandos, contraprova, conferência da resposta); execução real é ato do proprietário; detalhe no E40",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/zapia_n1_prep.py",
