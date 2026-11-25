@@ -14,7 +14,7 @@
 - **Só no repositório privado** (`entrada` e `dados`), pela fila e pelo portão, com a flag falsa. Nunca no público.
 - Texto da questão e instrução embutida seguem como **dado não confiável** (S5-R4).
 - **Teto de volume** por entrega, a definir na aplicação, para o arquivo não crescer sem limite.
-- Pergunta em aberto do proprietário: o gabarito oficial e a resposta marcada pelo aluno vêm nos mesmos campos ou separados? **Sem resposta registrada; não assumir.**
+- **Decidido pelo proprietário (25/11/2026):** o gabarito oficial e a resposta marcada pelo aluno vêm em **campos separados** (`gabarito` e `resposta_do_aluno`, mais `questao_id`); a Zapia não interpreta acerto ou erro, quem compara é o Tutor, por código. Registro em `docs/governanca/E38_REGISTRO_DE_APROVACOES_E3_E_FRASE_20261125.md`.
 
 ## O que este lote muda e o que não muda
 
