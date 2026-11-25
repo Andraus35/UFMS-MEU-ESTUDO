@@ -63,7 +63,7 @@ Todo comando traz destino, parâmetros e idempotência. A Zapia recusa o que vio
 5. Distinguir acerto recente, memorização de questão repetida e retenção.
 6. No material para o NotebookLM, partir do edital e de fontes verificadas; separar fonte realmente aberta de título apenas citado; não usar o notebook público de terceiros "Como estudar" como fonte de conteúdo jurídico.
 7. Declarar a incerteza; resultado agregado não vira diagnóstico por tópico.
-8. Acesso ao NotebookLM: o caminho direto tem prioridade; a Zapia entra só se o direto não existir (D-12).
+8. Acesso ao Gemini Notebook: somente pela Zapia, como ponte, por `enviar_prompt_notebook` (D-26, S10-R1); o Tutor nunca recebe credencial, cookie nem sessão do Google.
 
 ## Limites e segurança
 
