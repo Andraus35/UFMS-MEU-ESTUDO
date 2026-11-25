@@ -8,6 +8,10 @@
 - `agendar_rotina.py --hook-notebook` (renderizador com falha fechada) e `zapia_n1_prep.py`, que passa a gerar `instrucao-hook-notebook.txt` com os três hashes e o SHA-256 da fonte; `prova_n1.sh colocar` grava também a fonte.
 - **Tutor e Coach como subagents (offline, nesta sessão):** o Tutor propôs o prompt (art. 37, campos C1) e o Coach recebeu o resumo, sem dado do aluno (E0).
 
+## Procedência dos prompts do N1 (a pedido dele: "precisa vir do Tutor")
+
+Os **três** prompts do N1 vêm do **subagent Tutor** (somente leitura, offline, 25/11/2026), registrados em `config/propostas_tutor_n1.json` com autoria `subagent_tutor`, data e SHA-256 do texto canônico: `n1-fonte` (a fonte responde), `n1-contraprova` (o caput não traz prazo nem prorrogação do concurso) e `n1-questao` (campos C1). **O código do kit não contém texto de prompt**: `zapia_n1_prep.py` só lê esse arquivo e **recusa** gerar o N1 se faltar proposta, se a autoria não for `subagent_tutor`, se o validador recusar o prompt ou se o hash não bater (prompt alterado depois do Tutor). Testes: `ProcedenciaDoTutorTest` (5) e 5 mutações mortas. **Limite:** a autoria é **declarada, não provada** (S6-R7: a nuvem não tem assinatura que o modelo não possa forjar); o que o código garante é que nenhum prompt foi escrito no código do kit e que o texto não mudou desde a proposta. Mudar um prompt exige nova proposta do Tutor e novo hash.
+
 ## Cadeia e o que cada elo prova
 
 | Elo | Estado |

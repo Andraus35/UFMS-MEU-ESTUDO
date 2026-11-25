@@ -30,36 +30,51 @@ FONTE_ARQUIVO = "n1.txt"  # nome em comandos/fontes/ de `entrada`; o hook confer
 FONTE_NOME = "Constituição Federal, art. 37, caput (texto oficial)"
 FONTE_TEXTO = ("A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios "
                "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:")
-BASE = {"topico": "Art. 37 da Constituição Federal: princípios da administração pública",
-        "metodo": "Gere 3 perguntas de recuperação curtas, com dicas graduais, sem entregar a resposta.",
-        "exigencia_fonte": "Cite o trecho literal da fonte; se faltar, diga: não consta nas fontes.",
-        "formato_saida": "Lista numerada; cada item com a citação literal da fonte."}
-# Proposta do subagent Tutor (25/11/2026), aceita pelo validador: tópico do edital ("Constituição Federal: Administração Pública, arts. 37 a 41"),
-# com os campos C1 (enunciado reformulado, alternativas e gabarito derivado da fonte colada). A lacuna é INFERÊNCIA do Tutor (estado E0).
-PROMPT_TUTOR_C1 = {
-    "topico": "Princípios da administração pública no caput do art. 37 da CF/1988",
-    "lacuna": "Inferência do Tutor, sem evidência do aluno (E0): distinguir os princípios expressos no caput do art. 37 de princípios apenas implícitos ou doutrinários.",
-    "metodo": "Faça perguntas de recuperação, uma por vez, esperando minha resposta; dê dicas graduais e curtas; não entregue a resposta antes de eu tentar duas vezes.",
-    "exigencia_fonte": "Responda só com a fonte colada: cite o trecho que sustenta cada afirmação; se algo não consta nas fontes, diga que não consta nas fontes.",
-    "formato_saida": "Uma pergunta por mensagem; depois da minha resposta, feedback de duas linhas com o trecho citado; ao final, lista dos princípios que preciso rever.",
-    "enunciado_reformulado": "Considere o caput do art. 37 da Constituição Federal e indique qual item abaixo não é um princípio nele expressamente enumerado.",
-    "alternativas": ["Legalidade", "Impessoalidade", "Razoabilidade", "Publicidade", "Eficiência"],
-    "gabarito": "C",
-}
+PROPOSTAS = Path(__file__).resolve().parents[1] / "config" / "propostas_tutor_n1.json"
+# Os prompts NÃO moram neste código: vêm só de config/propostas_tutor_n1.json (propostas do subagent Tutor, com autoria declarada e hash).
 CASOS = (
-    {"nome": "n1-fonte.json", "contraprova": False, "lacuna": "Quais princípios o caput do art. 37 enumera para a administração pública."},
-    {"nome": "n1-contraprova.json", "contraprova": True,
-     "lacuna": "Qual é o prazo de prescrição das ações de ressarcimento ao erário previsto na Constituição."},
-    {"nome": "n1-questao.json", "contraprova": False, "prompt_completo": PROMPT_TUTOR_C1},  # campos C1: prova o transporte do enunciado reformulado
+    {"nome": "n1-fonte.json", "contraprova": False},        # a fonte responde
+    {"nome": "n1-contraprova.json", "contraprova": True},   # a fonte NÃO traz a resposta
+    {"nome": "n1-questao.json", "contraprova": False},      # campos C1 (enunciado reformulado, alternativas e gabarito)
 )
 
 
-def montar(agora_utc) -> dict:
-    """Comandos e recibos sintéticos. Levanta ValueError se o validador do prompt ou a caixa recusarem qualquer comando."""
+def carregar_propostas(caminho=PROPOSTAS) -> dict:
+    """Prompts do Tutor por nome de comando. Falha fechada (ValueError): arquivo ilegível, nome faltando ou repetido, autoria diferente de
+    `subagent_tutor`, prompt que o validador recusa ou hash do texto canônico que não bate."""
+    try:
+        dados = json.loads(Path(caminho).read_text(encoding="utf-8"))
+        itens = dados["itens"]
+    except (OSError, ValueError, KeyError, TypeError):
+        raise ValueError("propostas do Tutor ausentes ou ilegíveis")
+    saida = {}
+    for item in itens if isinstance(itens, list) else []:
+        if not isinstance(item, dict) or item.get("autoria") != "subagent_tutor":
+            raise ValueError("proposta sem autoria do Tutor")
+        nome = item.get("nome")
+        if nome in saida or not isinstance(item.get("prompt"), dict):
+            raise ValueError("proposta repetida ou malformada")
+        r = npv.validar(item["prompt"])
+        if not r.ok:
+            raise ValueError("o validador recusou a proposta do Tutor: " + str(r.codigo))
+        if item.get("sha256_texto") != npv.hash_agrupado(r.texto):
+            raise ValueError("o hash da proposta não confere com o texto (alterada depois do Tutor)")
+        saida[nome] = item["prompt"]
+    faltam = [c["nome"] for c in CASOS if c["nome"] not in saida]
+    if faltam:
+        raise ValueError("faltam propostas do Tutor para: " + ", ".join(faltam))
+    return saida
+
+
+def montar(agora_utc, propostas=None) -> dict:
+    """Comandos e recibos sintéticos. Levanta ValueError se faltar proposta do Tutor ou se o validador do prompt ou a caixa recusarem qualquer comando."""
+    propostas = carregar_propostas() if propostas is None else propostas
+    if not isinstance(propostas, dict) or any(c["nome"] not in propostas for c in CASOS):
+        raise ValueError("faltam propostas do Tutor")
     schema = agent_commands.load_schema()
     saida = {"fonte_nome": FONTE_NOME, "fonte_bytes": FONTE_TEXTO.encode("utf-8"), "itens": []}
     for n, caso in enumerate(CASOS, 1):
-        veredito, params = npv.preparar(dict(caso["prompt_completo"]) if "prompt_completo" in caso else {**BASE, "lacuna": caso["lacuna"]})
+        veredito, params = npv.preparar(dict(propostas[caso["nome"]]))
         if not veredito.ok:
             raise ValueError("o validador do prompt recusou o caso de teste: " + str(veredito.codigo))
         comando = {"schema_version": schema["schema_version"], "origin": "tutor", "operation": "enviar_prompt_notebook",

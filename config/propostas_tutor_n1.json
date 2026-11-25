@@ -1,0 +1,59 @@
+{
+  "_nota": "Prompts do teste N1 PROPOSTOS pelo subagent Tutor (somente leitura, offline) em 25/11/2026 e aceitos pelo validador. O kit só gera o N1 a partir deste arquivo e recusa entrada sem autoria `subagent_tutor` ou com hash que não bata. A autoria é declarada, não provada (S6-R7); a qualidade pedagógica é revisão humana. Alterar um prompt exige nova proposta do Tutor e novo hash.",
+  "itens": [
+    {
+      "nome": "n1-fonte.json",
+      "papel": "fonte_responde",
+      "autoria": "subagent_tutor",
+      "proposto_em": "2026-11-25",
+      "justificativa": "Os cinco princípios estão enumerados no próprio caput (fonte única).",
+      "prompt": {
+        "topico": "Art. 37, caput, da CF/1988: princípios da administração pública",
+        "lacuna": "Quais são os cinco princípios que o caput do art. 37 da CF enumera para a administração pública? Quero lembrar de todos, em ordem, sem consultar a lista.",
+        "metodo": "Faça uma pergunta de recuperação por vez e espere minha tentativa. Dê dicas graduais, da mais vaga à mais específica, sem entregar a resposta antes de eu tentar.",
+        "exigencia_fonte": "Ao final, cite o trecho literal da fonte que traz a resposta. Se o ponto não consta nas fontes, diga: não consta nas fontes.",
+        "formato_saida": "Texto simples, curto: uma pergunta, dicas graduais e, por fim, o trecho citado entre aspas."
+      },
+      "sha256_texto": "cd6a1d15-1049e7ff-610de3da-a998c1f8-5bb550ea-976590e3-ef4a9cfb-72cf5361"
+    },
+    {
+      "nome": "n1-contraprova.json",
+      "papel": "contraprova",
+      "autoria": "subagent_tutor",
+      "proposto_em": "2026-11-25",
+      "justificativa": "O caput só lista os princípios e termina em 'ao seguinte:'; não traz prazo de concurso nem prorrogação (estão nos incisos).",
+      "prompt": {
+        "topico": "Art. 37 da CF: administração pública, princípios e prazos",
+        "lacuna": "Qual é o prazo, em anos, de validade do concurso público previsto neste artigo, e quem pode prorrogá-lo?",
+        "metodo": "Faça uma pergunta de recuperação por vez e dê dicas graduais, da mais vaga à mais específica, sem entregar a resposta; peça que eu tente lembrar antes de cada dica.",
+        "exigencia_fonte": "Cite o trecho literal da fonte que sustenta cada afirmação; se a fonte não trouxer o ponto, responda 'não consta nas fontes' e não invente citação.",
+        "formato_saida": "Até três perguntas curtas numeradas, cada uma com dica graduada, e ao final uma linha com o trecho citado ou 'não consta nas fontes'."
+      },
+      "sha256_texto": "2fbdae01-cc988fe8-f434480a-69c99a83-95404be0-aedb9397-ca60458d-c9f43382"
+    },
+    {
+      "nome": "n1-questao.json",
+      "papel": "questao_c1",
+      "autoria": "subagent_tutor",
+      "proposto_em": "2026-11-25",
+      "justificativa": "Questão reformulada com gabarito derivado do caput; lacuna é inferência do Tutor (E0).",
+      "prompt": {
+        "topico": "Princípios da administração pública no caput do art. 37 da CF/1988",
+        "lacuna": "Inferência do Tutor, sem evidência do aluno (E0): distinguir os princípios expressos no caput do art. 37 de princípios apenas implícitos ou doutrinários.",
+        "metodo": "Faça perguntas de recuperação, uma por vez, esperando minha resposta; dê dicas graduais e curtas; não entregue a resposta antes de eu tentar duas vezes.",
+        "exigencia_fonte": "Responda só com a fonte colada: cite o trecho que sustenta cada afirmação; se algo não consta nas fontes, diga que não consta nas fontes.",
+        "formato_saida": "Uma pergunta por mensagem; depois da minha resposta, feedback de duas linhas com o trecho citado; ao final, lista dos princípios que preciso rever.",
+        "enunciado_reformulado": "Considere o caput do art. 37 da Constituição Federal e indique qual item abaixo não é um princípio nele expressamente enumerado.",
+        "alternativas": [
+          "Legalidade",
+          "Impessoalidade",
+          "Razoabilidade",
+          "Publicidade",
+          "Eficiência"
+        ],
+        "gabarito": "C"
+      },
+      "sha256_texto": "cd07240f-b355f935-86167447-62753030-a305598b-7269510d-96f33927-2e60d5c8"
+    }
+  ]
+}
