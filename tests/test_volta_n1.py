@@ -95,6 +95,56 @@ class RelatorioTest(unittest.TestCase):
         self.assertEqual(m, META)
 
 
+COMANDOS = {i["nome"]: i["comando_bytes"] for i in M["itens"]}
+
+
+class IntegridadeEAvaliacaoTest(unittest.TestCase):
+    """E43: o hook não calcula hash; a volta confere o hash do comando em validados/ e classifica a resposta em três partes."""
+
+    def test_comandos_integros_passam_e_entram_no_relatorio(self):
+        r = vn.processar(META, FONTE, boas(), None, None, None, COMANDOS)
+        self.assertEqual(r["veredito"], vn.PRONTO)
+        self.assertTrue(all(i["comando_integro"] for i in r["relatorio_tutor"]))
+        self.assertTrue(all("abstencao" in i and "codigos_finos" in i for i in r["relatorio_tutor"]))
+
+    def test_comando_adulterado_ou_ausente_derruba_o_veredito(self):
+        adulterado = dict(COMANDOS)
+        cmd = json.loads(adulterado["n1-fonte.json"])
+        cmd["params"]["prompt"] = cmd["params"]["prompt"] + " extra"
+        adulterado["n1-fonte.json"] = json.dumps(cmd, ensure_ascii=False).encode("utf-8")
+        for variante in (adulterado, {**COMANDOS, "n1-fonte.json": None}, {**COMANDOS, "n1-fonte.json": b"lixo"}):
+            r = vn.processar(META, FONTE, boas(), None, None, None, variante)
+            self.assertEqual(r["veredito"], vn.NAO_PROVADO)
+            self.assertFalse(next(i for i in r["relatorio_tutor"] if i["comando"] == "n1-fonte.json")["comando_integro"])
+            self.assertIn("hash do comando em validados/ NÃO confere com o esperado", r["ressalvas"])
+
+    def test_sem_comandos_a_conferencia_de_integridade_nao_existe(self):
+        r = vn.processar(META, FONTE, boas())
+        self.assertNotIn("comando_integro", r["relatorio_tutor"][0])
+
+    def test_contraprova_que_se_abstem_mas_completa_aparece_com_codigos_finos(self):
+        b = boas()
+        b["n1-contraprova.json"] = resp("n1-contraprova.json", texto_literal="Não consta nas fontes. O prazo é de dois anos, conforme o inciso III.")
+        r = vn.processar(META, FONTE, b, None, None, None, COMANDOS)
+        item = next(i for i in r["relatorio_tutor"] if i["comando"] == "n1-contraprova.json")
+        self.assertEqual(item["estado"], "RECUSADA")
+        self.assertIn("ABSTENCAO_COM_CONTEUDO_EXTERNO", item["codigos_finos"])
+        self.assertTrue(item["abstencao"]["disse_nao_consta"])
+
+    def test_resposta_respondivel_com_mnemonico_vira_ressalva_sem_derrubar(self):
+        b = boas()
+        b["n1-fonte.json"] = resp("n1-fonte.json", texto_literal="Use o mnemônico L.I.M.P.E. para lembrar.")
+        r = vn.processar(META, FONTE, b, None, None, None, COMANDOS)
+        self.assertEqual(r["veredito"], vn.PRONTO)
+        self.assertIn("conteúdo de fora da fonte em resposta respondível (ver codigos_finos)", r["ressalvas"])
+
+    def test_o_relatorio_nao_leva_texto_do_notebook_nem_nas_avaliacoes(self):
+        b = boas()
+        b["n1-fonte.json"] = resp("n1-fonte.json", texto_literal="L.I.M.P.E. " + SEGREDO_DO_NOTEBOOK)
+        j = json.dumps(vn.processar(META, FONTE, b, None, None, None, COMANDOS), ensure_ascii=False)
+        self.assertNotIn(SEGREDO_DO_NOTEBOOK, j)
+
+
 class PropostaDoCoachTest(unittest.TestCase):
     def prop(self, texto, **mud):
         return sh.comando(origin="coach", nonce="nonce-fake-0000000003", idempotency_key="k-00000010", params={"texto": texto}, **mud)
@@ -143,9 +193,17 @@ class CLITest(unittest.TestCase):
             self.assertEqual(json.loads(out.getvalue())["relatorio"]["pendentes"], 3)
             for nome, bruto in boas().items():
                 (d / "ent/comandos/respostas" / nome).write_bytes(bruto)
+            (d / "ent/comandos/validados").mkdir(parents=True)
+            for nome, bruto in COMANDOS.items():
+                (d / "ent/comandos/validados" / nome).write_bytes(bruto)
             with contextlib.redirect_stdout(io.StringIO()) as out:
                 self.assertEqual(vn.main(args), 0)
-            self.assertEqual(json.loads(out.getvalue())["relatorio"]["veredito"], vn.PRONTO)
+            rel = json.loads(out.getvalue())["relatorio"]
+            self.assertEqual(rel["veredito"], vn.PRONTO)
+            self.assertTrue(all(i["comando_integro"] for i in rel["relatorio_tutor"]))
+            (d / "ent/comandos/validados/n1-fonte.json").write_bytes(b"{}")  # comando trocado no entrada
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(vn.main(args), 2)
 
 
 if __name__ == "__main__":

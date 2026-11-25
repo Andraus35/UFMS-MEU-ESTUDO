@@ -30,6 +30,27 @@ class RegistroTeste(unittest.TestCase):
             self.assertIn(trecho, r, trecho)
         self.assertNotIn("a **rotina agendada** da Zapia;", r)  # a versão antiga do NÃO PROVADO, superada pelo E23
 
+    def test_o_resumo_guarda_o_limite_de_4000_caracteres_da_tarefa_do_hook(self):
+        import agendar_rotina
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("LIMITE OBSERVADO (25/11/2026", "no máximo 4000 caracteres", "String should have at most 4000 characters", "LIMITE_TAREFA_HOOK = 4000",
+                       "não foi medido"):
+            self.assertIn(trecho, r, trecho)
+        self.assertEqual(agendar_rotina.LIMITE_TAREFA_HOOK, 4000)  # o registro e o código dizem o mesmo número
+        self.assertEqual(agendar_rotina.LIMITE_TAREFA_HOOK, int(__import__("re").search(r"LIMITE_TAREFA_HOOK = (\d+)", r).group(1)))
+
+    def test_o_resumo_guarda_a_recusa_de_hook_identico(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("RESTRIÇÃO OBSERVADA (25/11/2026", "An identical subscription already exists: 2bef6d04-e272-4b25-b9b9-4d44958cfd73",
+                       "the user decides", "atualize", "não foi testada", "a escolha é do proprietário"):
+            self.assertIn(trecho, r, trecho)
+
+    def test_o_resumo_guarda_a_parada_do_hook_na_conferencia_do_hash(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("issue #8", "PAROU na conferência do SHA-256", "O arquivo do `entrada` está íntegro", "a32afe90", "ensure_ascii=False",
+                       "não manda mais a Zapia calcular hash", "pula", "consome o disparo"):
+            self.assertIn(trecho, r, trecho)
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)

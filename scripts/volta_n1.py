@@ -56,10 +56,10 @@ def validar_captura(captura):
     return None
 
 
-def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprovacoes=None, chave_publica=None) -> dict:
+def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprovacoes=None, chave_publica=None, comandos=None) -> dict:
     """`meta`: o meta.json do kit; `respostas`: nome -> bytes (ou None se a Zapia ainda não gravou). Devolve o relatório (sem o texto do Notebook)."""
     erro_captura = validar_captura(captura)
-    itens, algum_parado, algum_pendente, aprov_ruim = [], False, False, False
+    itens, algum_parado, algum_pendente, aprov_ruim, cmd_ruim, externo = [], False, False, False, False, False
     for nome in sorted(meta["itens"]):
         info = meta["itens"][nome]
         bruto = respostas.get(nome)
@@ -85,16 +85,34 @@ def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprov
             motivo = aprovacao_comando.verificar(aprovacoes.get(nome), info["hash_corpo"], chave_publica)
             linha["autoria"] = "aprovada_pelo_proprietario" if motivo is None else "APROVACAO_RECUSADA:" + motivo
             aprov_ruim = aprov_ruim or motivo is not None
+        # integridade do comando que a Zapia executou: o hook NÃO calcula hash (E43); o hash do arquivo em `validados/` é conferido aqui, em código
+        prompt = ""
+        if comandos is not None:
+            bruto_cmd = comandos.get(nome)
+            try:
+                cmd = json.loads(bytes(bruto_cmd).decode("utf-8")) if bruto_cmd else None
+                integro = cmd is not None and command_box.command_hash(cmd) == info["hash_corpo"]
+                prompt = ((cmd or {}).get("params") or {}).get("prompt", "") if integro else ""
+            except (ValueError, UnicodeDecodeError, AttributeError, TypeError):
+                integro = False
+            linha["comando_integro"] = bool(integro)
+            cmd_ruim = cmd_ruim or not integro
+        if bruto and linha["estado"] in ("CONFERIDA", "RECUSADA"):
+            av = nrc.avaliar(bruto, fonte_texto, prompt)
+            linha["abstencao"] = {k: v for k, v in av.items() if k != "avaliavel"} if av.get("avaliavel") else None
+            linha["codigos_finos"] = nrc.codigos_da_avaliacao(av, bool(info["contraprova"]))
+            externo = externo or "CONTEUDO_EXTERNO_NA_RESPOSTA" in linha["codigos_finos"]
         itens.append(linha)
     todos_ok = all(i["estado"] == "CONFERIDA" for i in itens)
     return {
-        "veredito": PRONTO if todos_ok and erro_captura is None and not aprov_ruim else NAO_PROVADO,
+        "veredito": PRONTO if todos_ok and erro_captura is None and not aprov_ruim and not cmd_ruim else NAO_PROVADO,
         "confianca": "B+captura" if captura is not None and erro_captura is None else "B",
         "captura": "ausente" if captura is None else (erro_captura or "registrada"),
         "pendentes": sum(1 for i in itens if i["estado"] == "PENDENTE"), "parados": sum(1 for i in itens if i["estado"] == "PARADO"),
         "relatorio_tutor": itens,
         "ressalvas": ["autorrelato da Zapia", "gabarito conferido só pela citação da âncora, não pela resposta do Notebook", "verificação contra a fonte é do Tutor (S10-R7b)"]
-                     + (["há resposta pendente"] if algum_pendente else []) + (["há resposta PARADA: o teste não foi provado"] if algum_parado else []),
+                     + (["há resposta pendente"] if algum_pendente else []) + (["conteúdo de fora da fonte em resposta respondível (ver codigos_finos)"] if externo else [])
+                     + (["hash do comando em validados/ NÃO confere com o esperado"] if cmd_ruim else []) + (["há resposta PARADA: o teste não foi provado"] if algum_parado else []),
     }
 
 
@@ -140,6 +158,14 @@ def _ler_aprovacoes(pasta: Path, meta: dict) -> dict:
     return saida
 
 
+def _ler_comandos(entrada: Path, meta: dict) -> dict:
+    saida = {}
+    for nome in meta["itens"]:
+        p = Path(entrada) / "comandos" / "validados" / nome
+        saida[nome] = p.read_bytes() if p.is_file() else None
+    return saida
+
+
 def _ler_respostas(entrada: Path, meta: dict) -> dict:
     saida = {}
     for nome in meta["itens"]:
@@ -162,7 +188,7 @@ def main(argv=None) -> int:
     respostas = _ler_respostas(Path(a.entrada), meta)
     captura = json.loads(Path(a.captura).read_text(encoding="utf-8")) if a.captura else None
     aprov = _ler_aprovacoes(Path(a.aprovacoes), meta) if a.aprovacoes else None
-    rel = processar(meta, Path(a.fonte).read_text(encoding="utf-8"), respostas, captura, aprov, a.publica)
+    rel = processar(meta, Path(a.fonte).read_text(encoding="utf-8"), respostas, captura, aprov, a.publica, _ler_comandos(Path(a.entrada), meta))
     saida = {"relatorio": rel, "entrada_coach": entrada_coach(rel)}
     if a.proposta_coach:
         saida["proposta_coach"] = avaliar_proposta_coach(json.loads(Path(a.proposta_coach).read_text(encoding="utf-8")), respostas, datetime.now(timezone.utc))

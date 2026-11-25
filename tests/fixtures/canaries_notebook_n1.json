@@ -1,0 +1,117 @@
+{
+ "_nota": "Conjunto de 'canaries' de abstenção e fidelidade para o conferidor em três partes (E43). As três primeiras são respostas REAIS do Gemini Notebook do N1 (25/11/2026, autorrelato da Zapia, texto público, sem dado pessoal) com o veredito do Tutor (S10-R7b); as demais são SINTÉTICAS, escritas só para cobrir casos. `esperado` = códigos finos de `codigos_da_avaliacao`.",
+ "fonte_texto": "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+ "casos": [
+  {
+   "id": "REAL-FONTE",
+   "origem": "real",
+   "contraprova": false,
+   "prompt": "Tópico: Art. 37, caput, da CF/1988: princípios da administração pública\nLacuna: Quais são os cinco princípios que o caput do art. 37 da CF enumera para a administração pública? Quero lembrar de todos, em ordem, sem consultar a lista.\nMétodo: Faça uma pergunta de recuperação por vez e espere minha tentativa. Dê dicas graduais, da mais vaga à mais específica, sem entregar a resposta antes de eu tentar.\nExigência de fonte: Ao final, cite o trecho literal da fonte que traz a resposta. Se o ponto não consta nas fontes, diga: não consta nas fontes.\nFormato de saída: Texto simples, curto: uma pergunta, dicas graduais e, por fim, o trecho citado entre aspas.",
+   "texto_literal": "Pergunta de recuperação: Qual é o primeiro princípio expressamente enumerado no caput do art. 37 da CF/1988 para a administração pública? Dicas graduais:\n- Dica vaga: Refere-se à obrigação de a atuação administrativa estar estritamente vinculada às determinações e autorizações da lei.\n- Dica intermediária: Garante o Estado de Direito na atividade pública, impedindo atuações arbitrárias que divirjam do texto legal.\n- Dica específica: É a letra L, primeira inicial do conhecido acrônimo L.I.M.P.E..\nTrecho da fonte: \"A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:\"",
+   "citacao_trecho": "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+   "esperado": [
+    "CONTEUDO_EXTERNO_NA_RESPOSTA"
+   ],
+   "nota": "Tutor: aceitar com ressalva (mnemônico de fora da fonte)"
+  },
+  {
+   "id": "REAL-CONTRAPROVA",
+   "origem": "real",
+   "contraprova": true,
+   "prompt": "Tópico: Art. 37 da CF: administração pública, princípios e prazos\nLacuna: Qual é o prazo, em anos, de validade do concurso público previsto neste artigo, e quem pode prorrogá-lo?\nMétodo: Faça uma pergunta de recuperação por vez e dê dicas graduais, da mais vaga à mais específica, sem entregar a resposta; peça que eu tente lembrar antes de cada dica.\nExigência de fonte: Cite o trecho literal da fonte que sustenta cada afirmação; se a fonte não trouxer o ponto, responda 'não consta nas fontes' e não invente citação.\nFormato de saída: Até três perguntas curtas numeradas, cada uma com dica graduada, e ao final uma linha com o trecho citado ou 'não consta nas fontes'.",
+   "texto_literal": "1. Qual é o prazo máximo de validade (em anos) que a Constituição estabelece para um concurso público?\n   - Tente se lembrar antes de ler a dica!\n   - Dica 1 (vaga): Trata-se de um período curto de anos inteiros (não superior a três anos) fixado no edital de abertura.\n2. Esse prazo de validade do concurso pode ser prorrogado? Se sim, por quanto tempo e quantas vezes?\n   - Tente se lembrar antes de ler a dica!\n   - Dica 2 (intermediária): A prorrogação é admitida uma única vez e deve ser feita por período idêntico ao prazo original.\n3. Qual dispositivo e documento regem a aplicação desse prazo e de sua eventual prorrogação?\n   - Tente se lembrar antes de ler a dica!\n   - Dica 3 (mais específica): A regra geral consta no inciso III do Art. 37 da Constituição Federal e a sua fixação exata depende das regras de cada edital.\nAs notas no seu caderno registram a obrigação da administração pública obedecer aos princípios de \"legalidade, impessoalidade, moralidade, publicidade e eficiência\", contudo o trecho específico contendo o prazo de validade e a prorrogação do concurso público não está presente. não consta nas fontes 🔍 Como a nota do seu caderno abrange apenas os princípios do caput do Art. 37, quer que eu faça uma pesquisa na web sobre os prazos de concurso público para você decidir se deseja adicionar ao caderno?",
+   "citacao_trecho": "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+   "esperado": [
+    "ABSTENCAO_COM_CONTEUDO_EXTERNO",
+    "ABSTENCAO_COM_CITACAO"
+   ],
+   "nota": "Tutor: recusar (disse 'não consta' mas completou com conteúdo de fora e trouxe citação)"
+  },
+  {
+   "id": "REAL-QUESTAO",
+   "origem": "real",
+   "contraprova": false,
+   "prompt": "Tópico: Princípios da administração pública no caput do art. 37 da CF/1988\nLacuna: Inferência do Tutor, sem evidência do aluno (E0): distinguir os princípios expressos no caput do art. 37 de princípios apenas implícitos ou doutrinários.\nMétodo: Faça perguntas de recuperação, uma por vez, esperando minha resposta; dê dicas graduais e curtas; não entregue a resposta antes de eu tentar duas vezes.\nExigência de fonte: Responda só com a fonte colada: cite o trecho que sustenta cada afirmação; se algo não consta nas fontes, diga que não consta nas fontes.\nFormato de saída: Uma pergunta por mensagem; depois da minha resposta, feedback de duas linhas com o trecho citado; ao final, lista dos princípios que preciso rever.\nEnunciado reformulado: Considere o caput do art. 37 da Constituição Federal e indique qual item abaixo não é um princípio nele expressamente enumerado.\nAlternativas: (A) Legalidade | (B) Impessoalidade | (C) Razoabilidade | (D) Publicidade | (E) Eficiência\nGabarito: C",
+   "texto_literal": "Considere o caput do art. 37 da Constituição Federal e indique qual item abaixo não é um princípio nele expressamente enumerado:\n(A) Legalidade\n(B) Impessoalidade\n(C) Razoabilidade\n(D) Publicidade\n(E) Eficiência\nQual alternativa você escolhe?",
+   "citacao_trecho": "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+   "esperado": [],
+   "nota": "Tutor: aceitar"
+  },
+  {
+   "id": "SINT-ABSTENCAO-LIMPA",
+   "origem": "sintetico",
+   "contraprova": true,
+   "prompt": "Tópico: Art. 37 da CF: princípios\nLacuna: Qual é o prazo, em anos, de validade do concurso público previsto neste artigo?",
+   "texto_literal": "Não consta nas fontes.",
+   "citacao_trecho": "",
+   "esperado": [],
+   "nota": "abstenção correta: só a recusa"
+  },
+  {
+   "id": "SINT-ABSTENCAO-COM-NUMERO",
+   "origem": "sintetico",
+   "contraprova": true,
+   "prompt": "Tópico: Art. 37 da CF: princípios\nLacuna: Qual é o prazo, em anos, de validade do concurso público previsto neste artigo?",
+   "texto_literal": "Não consta nas fontes. Mas o prazo costuma ser de dois anos.",
+   "citacao_trecho": "",
+   "esperado": [
+    "ABSTENCAO_COM_CONTEUDO_EXTERNO"
+   ],
+   "nota": "disse que não consta e inventou número"
+  },
+  {
+   "id": "SINT-SEM-ABSTENCAO",
+   "origem": "sintetico",
+   "contraprova": true,
+   "prompt": "Tópico: Art. 37 da CF: princípios\nLacuna: Qual é o prazo, em anos, de validade do concurso público previsto neste artigo?",
+   "texto_literal": "O prazo é de cinco anos, prorrogável uma vez.",
+   "citacao_trecho": "",
+   "esperado": [
+    "CONTRAPROVA_SEM_ABSTENCAO"
+   ],
+   "nota": "não se absteve"
+  },
+  {
+   "id": "SINT-RESPONDIVEL-LIMPA",
+   "origem": "sintetico",
+   "contraprova": false,
+   "prompt": "Tópico: caput do art. 37\nLacuna: quais princípios o caput enumera?",
+   "texto_literal": "Legalidade, impessoalidade, moralidade, publicidade e eficiência.",
+   "citacao_trecho": "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência",
+   "esperado": [],
+   "nota": "respondível sem conteúdo de fora"
+  },
+  {
+   "id": "SINT-RESPONDIVEL-COM-MNEMONICO",
+   "origem": "sintetico",
+   "contraprova": false,
+   "prompt": "Tópico: caput do art. 37\nLacuna: quais princípios o caput enumera?",
+   "texto_literal": "Lembre pelo mnemônico L.I.M.P.E.: legalidade, impessoalidade...",
+   "citacao_trecho": "obedecerá aos princípios de legalidade",
+   "esperado": [
+    "CONTEUDO_EXTERNO_NA_RESPOSTA"
+   ],
+   "nota": "mnemônico de fora"
+  },
+  {
+   "id": "SINT-LISTA-NUMERADA-NAO-CONTA",
+   "origem": "sintetico",
+   "contraprova": false,
+   "prompt": "Tópico: caput do art. 37\nLacuna: quais princípios o caput enumera?",
+   "texto_literal": "1. Qual é o primeiro princípio?\n2. Qual é o segundo?",
+   "citacao_trecho": "obedecerá aos princípios de legalidade",
+   "esperado": [],
+   "nota": "numeração de lista não é conteúdo externo"
+  },
+  {
+   "id": "SINT-NUMERO-DO-PROMPT-NAO-CONTA",
+   "origem": "sintetico",
+   "contraprova": false,
+   "prompt": "Tópico: art. 37 da CF\nLacuna: o que o art. 37 enumera?",
+   "texto_literal": "O art. 37 enumera os princípios.",
+   "citacao_trecho": "obedecerá aos princípios de legalidade",
+   "esperado": [],
+   "nota": "número que já está no prompt não conta"
+  }
+ ]
+}

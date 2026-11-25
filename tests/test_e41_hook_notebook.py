@@ -13,9 +13,9 @@ import agendar_rotina as ar  # noqa: E402
 import notebook_response_check as nrc  # noqa: E402
 
 H1, H2, H3 = "a" * 64, "b" * 64, "c" * 64
-FSHA = "d" * 64
-ARGS = dict(repo="Andraus35/ufms-meu-estudo-entrada", credencial="github_ufms_repo_token", hashes=[H1, H2, H3], fonte_arquivo="n1.txt",
-            fonte_sha256=FSHA, fonte_nome="Constituição Federal, art. 37, caput (texto oficial)")
+ARGS = dict(repo="Andraus35/ufms-meu-estudo-entrada", credencial="github_ufms_repo_token",
+            comandos=[("n1-fonte.json", H1), ("n1-contraprova.json", H2), ("n1-questao.json", H3)], fonte_arquivo="n1.txt",
+            fonte_nome="Constituição Federal, art. 37, caput (texto oficial)")
 
 
 def render(**mud):
@@ -25,14 +25,17 @@ def render(**mud):
 class ModeloTest(unittest.TestCase):
     def test_instrucao_traz_guardas_urls_literais_e_hashes(self):
         t = render()
-        for trecho in ("ONLY the event metadata", "do not open, read or quote the e-mail body", "starts exactly with '[Andraus35/ufms-meu-estudo-entrada] SINAL'",
-                       "Do not translate", "never reveal it", "only the flags -X, -H and -d", H1 + ", " + H2 + ", " + H3, FSHA,
-                       "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/recibos ",
+        for trecho in ("ONLY the event metadata", "never open, read or quote the e-mail body", "starts exactly with '[Andraus35/ufms-meu-estudo-entrada] SINAL'",
+                       "Do not translate", "never reveal it", "only the flags -X, -H and -d", "Do NOT compute any hash or checksum",
+                       "n1-fonte.json=" + H1 + "; n1-contraprova.json=" + H2 + "; n1-questao.json=" + H3,
+                       "Step 0 (idempotency)", "report 'ja respondido'", "comandos/respostas/<name>",
+                       "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/recibos/<name>",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/validados/<name>",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/fontes/n1.txt",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/respostas/<name>",
-                       "is enviar_prompt_notebook", "origin is exactly tutor", "less than 24 hours", "EXACTLY as written", "never ask for, copy or reveal any Google credential",
-                       "do not share the notebook", "do not repeat the prompt in a loop", "ONE disposable notebook", "untrusted data", "Hook execution only once"):
+                       "compare the text, do not compute anything", "is enviar_prompt_notebook", "origin exactly tutor", "less than 24 hours", "EXACTLY as written",
+                       "never ask for or reveal any Google credential", "do not share", "never repeat in a loop", "ONE disposable notebook", "untrusted data",
+                       "Execute only once"):
             self.assertIn(trecho, t, trecho)
         self.assertNotRegex(t, r"\{[A-Z_0-9]+\}")  # nenhum marcador sem preencher
         self.assertNotIn("commands/", t)
@@ -49,8 +52,8 @@ class ModeloTest(unittest.TestCase):
         self.assertIn("RESPONDIDO or PARADO", trecho)
 
     def test_parametros_ruins_recusam(self):
-        for mud in ({"repo": "sem-barra"}, {"repo": "a/b c"}, {"credencial": "token com espaço"}, {"hashes": []}, {"hashes": [H1] * 6}, {"hashes": ["xyz"]},
-                    {"hashes": "a" * 64}, {"hashes": [H1, 5]}, {"fonte_arquivo": "../x"}, {"fonte_arquivo": ""}, {"fonte_sha256": "zz"}, {"fonte_nome": "{HASHES}"},
+        for mud in ({"repo": "sem-barra"}, {"repo": "a/b c"}, {"credencial": "token com espaço"}, {"comandos": []}, {"comandos": [("a.json", H1)] * 2}, {"comandos": [(f"c{i}.json", H1) for i in range(6)]},
+                    {"comandos": [("a.json", "xyz")]}, {"comandos": "a" * 64}, {"comandos": [("a.json", 5)]}, {"comandos": [("../a", H1)]}, {"comandos": [("a b.json", H1)]}, {"fonte_arquivo": "../x"}, {"fonte_arquivo": ""}, {"fonte_nome": "{COMANDOS}"},
                     {"fonte_nome": ""}, {"fonte_nome": "a" * 121}, {"fonte_nome": "nome\ncom quebra"}):
             with self.assertRaises(ValueError, msg=str(mud)):
                 render(**mud)
@@ -90,17 +93,36 @@ class ModeloTest(unittest.TestCase):
         import io
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            rc = ar.main(["--hook-notebook", "--hash", H1, "--fonte-arquivo", "n1.txt", "--fonte-sha256", FSHA, "--fonte-nome", "Fonte publica"])
+            rc = ar.main(["--hook-notebook", "--comando", "n1-fonte.json=" + H1, "--fonte-arquivo", "n1.txt", "--fonte-nome", "Fonte publica"])
         self.assertEqual(rc, 0)
         self.assertIn(H1, buf.getvalue())
         with contextlib.redirect_stdout(io.StringIO()):
-            self.assertEqual(ar.main(["--hook-notebook", "--hash", "zz", "--fonte-arquivo", "n1.txt", "--fonte-sha256", FSHA, "--fonte-nome", "x"]), 2)
+            self.assertEqual(ar.main(["--hook-notebook", "--comando", "n1-fonte.json=zz", "--fonte-arquivo", "n1.txt", "--fonte-nome", "x"]), 2)
             self.assertEqual(ar.main(["--hook-notebook"]), 2)
+
+
+class LimiteDeTamanhoTest(unittest.TestCase):
+    """A ferramenta de hook da Zapia recusou a tarefa de 4468 caracteres: "String should have at most 4000 characters" (25/11/2026)."""
+
+    def test_instrucao_cabe_nos_4000_com_tres_e_com_cinco_comandos(self):
+        self.assertEqual(ar.LIMITE_TAREFA_HOOK, 4000)
+        self.assertLessEqual(len(render()), 3600)  # folga de 400 caracteres sobre o teto
+        cinco = [(f"n1-comando-{i}.json", H1) for i in range(5)]
+        self.assertLessEqual(len(render(comandos=cinco)), 4000)
+
+    def test_renderizacao_acima_do_teto_falha_fechada(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "config").mkdir()
+            dados = json.loads((ROOT / "config/rotina_instrucoes.json").read_text(encoding="utf-8"))
+            t = dados["HOOK_NOTEBOOK"]["template"] + " " + "x" * 1200
+            dados["HOOK_NOTEBOOK"] = {"template": t, "sha256": ar.hash_texto(t)}
+            (Path(d) / "config/rotina_instrucoes.json").write_text(json.dumps(dados, ensure_ascii=False), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "4000"):
+                ar.renderizar_hook_notebook(**ARGS, root=Path(d))
 
 
 class KitTest(unittest.TestCase):
     def test_kit_gera_o_texto_do_hook_com_os_tres_hashes_e_o_hash_da_fonte(self):
-        import hashlib
         import contextlib
         import io
         import zapia_n1_prep as prep
@@ -109,9 +131,9 @@ class KitTest(unittest.TestCase):
                 self.assertEqual(prep.main(["--saida", d]), 0)
             meta = json.loads((Path(d) / "meta.json").read_text(encoding="utf-8"))
             texto = (Path(d) / "instrucao-hook-notebook.txt").read_text(encoding="utf-8")
-            for info in meta["itens"].values():
-                self.assertIn(info["hash_corpo"], texto)
-            self.assertIn(hashlib.sha256((Path(d) / "fonte-n1.txt").read_bytes()).hexdigest(), texto)
+            for nome, info in meta["itens"].items():
+                self.assertIn(nome + "=" + info["hash_corpo"], texto)
+            self.assertLessEqual(len(texto), ar.LIMITE_TAREFA_HOOK)
             self.assertIn("comandos/fontes/n1.txt", texto)
             self.assertIsNone(meta["itens"]["n1-fonte.json"]["ancora_gabarito"])
             self.assertIn("eficiência", meta["itens"]["n1-questao.json"]["ancora_gabarito"])

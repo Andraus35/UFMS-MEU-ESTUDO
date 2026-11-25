@@ -27,6 +27,10 @@ Os **três** prompts do N1 vêm do **subagent Tutor** (somente leitura, offline,
 
 1. Mesclar o PR do lote; atualizar o clone. 2. `bash scripts/termux/prova_n1.sh preparar` e `colocar` (ou a sessão grava, pela exceção de acesso ao `entrada`). 3. Na Zapia, criar **um** hook de Gmail com **só** `senders` = `notifications@github.com` e `subject_contains` = `[Andraus35/ufms-meu-estudo-entrada] SINAL`, com o texto de `~/n1/instrucao-hook-notebook.txt`; conferir conta, filtros e texto salvo lidos de volta. 4. Abrir **uma** issue `SINAL teste N1` e só fechá-la depois do relato. 5. `prova_n1.sh conferir`; trazer o texto literal da Zapia e as capturas. 6. Revogar o anexo do `entrada` e apagar o hook.
 
+## Correção de tamanho (25/11/2026)
+
+A ferramenta de hook da Zapia **recusou** o primeiro texto (4468 caracteres): `Invalid value: task: String should have at most 4000 characters`. O modelo `HOOK_NOTEBOOK` foi enxugado (nomes e hashes dos comandos no próprio texto, `name=hash_corpo`; sem listar os recibos) e o renderizador **recusa** texto acima de `LIMITE_TAREFA_HOOK` (4000); com os 3 comandos do N1 o texto tem 3375 caracteres. Por isso o texto do hook passou a ser regerado: o anterior **não deve ser usado**.
+
 ## Limites
 
 - Autorrelato da Zapia (B); uma execução; o Notebook pode recusar, pedir login ou mudar de tela: nesse caso o resultado é `PARADO`, que é dado, não falha silenciosa.
