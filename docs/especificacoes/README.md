@@ -28,6 +28,7 @@ Uma página por especificação, em `docs/especificacoes/`, com nome `S<n>_<assu
 | S18 | **Inteligência Motivacional e Comportamental (IMC) do Coach** | diagnóstico de comportamento, biblioteca de intervenções, ciclos, N-of-1, encaminhamento e privacidade; texto do perfil só proposto; manual só índice e citação curta no público |
 | S19 | **A Zapia como interface do Tutor e do Coach** | rotina agendada e hook mapeados às necessidades do estudo; Zapia executa, não decide; nada cadastrado; PDF da Zapia não lido |
 | S20 | **Automação ponta a ponta: Tutor e Coach acionam a Zapia (e o Gemini por ela)** | mapa do que falta, decisões D1 a D3 do proprietário sem adoção, fases F0 a F5; só especifica, não implanta; fila de gaps GAP-A a GAP-E |
+| S22 | **Tarefas agendadas do Claude como gatilho dos agentes** | relógio que abre a sessão de Coach e Tutor; encaixe no harness, matriz gatilho x canal, escopo do token e prova S15-R4; só especifica, nada criado |
 
 A S11 e a S14 definem **como provar** e **como operar** o harness; **não o implantam nem o homologam** (RM-01 a RM-07 seguem `implementado_nao_homologado`). O estado de cada item da fila fica só em `state/WORKFLOW.json`.
 
