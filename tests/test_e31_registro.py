@@ -10,7 +10,7 @@ class RegistroTeste(unittest.TestCase):
         t = DOC.read_text(encoding="utf-8")
         for trecho in ("prova_f4_hook_entrega.sh", "HOOK_ENTREGA", "senders", "subject_contains", "nunca o corpo", "SINTETICO_MANUAL", "não anterior à criação da issue", "900 s",
                        "Refuta", "S20-R9", "O emissor é ele", "não o fluxo", "emenda do D-28", "não rodou com o `gh` real", "24 h", "autorrelato", "Nada aqui está provado",
-                       "Não altera contrato", "Exceção de acesso", "revoga antes do run de verdade", "não grava", "Escrita temporária", "Nada além disso", "não foi confirmado pela ferramenta", "PARCIAL", "29 s", "defeito do nosso modelo", "relato errado do URL", "opcional"):
+                       "Não altera contrato", "Exceção de acesso", "revoga antes do run de verdade", "não grava", "Escrita temporária", "Nada além disso", "não foi confirmado pela ferramenta", "PARCIAL", "29 s", "defeito do nosso modelo", "relato errado do URL", "opcional", "2ª execução", "ok: true", "48 s", "não é", "233 bytes", "não conseguiu desativá-lo nem apagá-lo"):
             self.assertIn(trecho, t, trecho)
 
 
