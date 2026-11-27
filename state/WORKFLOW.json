@@ -1181,6 +1181,57 @@
       "optional_inputs": [
         "execução do roteiro N1 pelo proprietário e relato do resultado"
       ]
+    },
+    {
+      "id": "N1-DIAG-FONTE",
+      "title": "Diagnóstico do passo 'adicionar fonte' do Notebook integrado ao Gemini: a Zapia executa o teste manual e relata a tela literal (E46, apêndice A)",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E43_PRIMEIRA_EXECUCAO_N1_E_MELHORIAS_DA_PESQUISA_20261125.md",
+      "depends_on": [
+        "PONTE-NOTEBOOK"
+      ],
+      "blocking_inputs": [
+        "relato literal do teste manual feito pela Zapia"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "N1-RODADA-4",
+      "title": "Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7)",
+      "roadmap_task": "RM-09",
+      "deliverable": "scripts/zapia_n1_prep.py",
+      "depends_on": [
+        "N1-DIAG-FONTE"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": []
+    },
+    {
+      "id": "E45-CORRETOR",
+      "title": "Proposta do corretor fora do modelo com a API oficial do NotebookLM Enterprise, modelo de ameaça e corretor simulado; sem credencial; emenda da D-26 só por decisão dele",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E45_CORRETOR_API_OFICIAL_NOTEBOOK.md",
+      "depends_on": [
+        "PONTE-NOTEBOOK"
+      ],
+      "blocking_inputs": [],
+      "optional_inputs": [
+        "decisão dele sobre emendar a D-26",
+        "confirmação de que a API aceita a conta dele"
+      ]
+    },
+    {
+      "id": "S22-PROVA-MIN",
+      "title": "Prova mínima da S22: tarefa agendada de uso único só de leitura do entrada; só com o pedido expresso 'Criar a tarefa S22' e um horário",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/especificacoes/S22_TAREFAS_AGENDADAS_CLAUDE_GATILHO.md",
+      "depends_on": [
+        "S22"
+      ],
+      "blocking_inputs": [
+        "pedido expresso 'Criar a tarefa S22' e um horário"
+      ],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
