@@ -6,6 +6,7 @@ import shutil
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -28,6 +29,7 @@ FILHA = "2026-11-23T17:00:00Z"
 POLLER = datetime(2026, 11, 23, 15, 20, 0, tzinfo=timezone.utc)
 REPO = "Andraus35/ufms-meu-estudo-entrada"
 REF = "a" * 40
+NONCE_FIXO = "a1b2c3d4e5f60718"
 
 
 def canon(o):
@@ -38,7 +40,10 @@ class Cenario(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp, True)
-        self.alvo = f1.montar(AGORA, nome=zp.NOME_ALVO)
+        # nonce FIXO: com secrets.token_hex o hash do alvo variava e, em ~0,7% das execuções, trazia 11 dígitos seguidos com dígitos verificadores de CPF
+        # que o filtro de dado pessoal recusa (CI da main vermelha em 27/11/2026); o teste precisa ser determinístico
+        with mock.patch.object(f1.secrets, "token_hex", return_value=NONCE_FIXO):
+            self.alvo = f1.montar(AGORA, nome=zp.NOME_ALVO)
         self.ped = zp.montar_pedido(AGORA, FILHA, self.alvo["hash_corpo"])
         self.comando = json.loads(self.ped["comando_bytes"])
         self.recibos = {zp.NOME_PEDIDO: self.ped["hash_corpo"], zp.NOME_ALVO: self.alvo["hash_corpo"]}
@@ -260,3 +265,20 @@ class SondaRealSoLeituraTest(tcbr.Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HashAleatorioNaoDerrubaOTesteTest(unittest.TestCase):
+    def test_o_alvo_e_o_pedido_sao_reprodutiveis_com_nonce_fixo(self):
+        hashes = set()
+        for _ in range(3):
+            with mock.patch.object(f1.secrets, "token_hex", return_value=NONCE_FIXO):
+                alvo = f1.montar(AGORA, nome=zp.NOME_ALVO)
+            zp.montar_pedido(AGORA, FILHA, alvo["hash_corpo"])  # não levanta
+            hashes.add(alvo["hash_corpo"])
+        self.assertEqual(len(hashes), 1)
+
+    def test_contraprova_o_filtro_continua_recusando_cpf_valido(self):
+        import agent_commands as ac
+        self.assertEqual(ac.scan_text("cpf 52998224725"), "PARAMS_DADO_PESSOAL")
+        self.assertEqual(ac.scan_text("cpf 529.982.247-25"), "PARAMS_DADO_PESSOAL")
+        self.assertIsNone(ac.scan_text("a1b2c3d4e5f60718"))
