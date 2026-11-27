@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote HOOK-NOTEBOOK-CURTO (RM-09): modelo HOOK_NOTEBOOK enxuto para caber no limite de 4000 caracteres da tarefa do hook da Zapia (nomes e hashes dos comandos no texto, sem listar recibos); offline, sem agents/",
+    "scope": "Lote N1B-PROMPTS-REVISADOS (RM-09): segundo N1 com prompts revisados pelo Tutor (sem acrônimos, contraprova só 'não consta nas fontes', uma pergunta, sem pesquisa na web), kit com prefixo n1b e hook v2; offline, sem agents/",
     "branch": "ccr-8e778ab7-04h3zk",
-    "pr_number": 206,
+    "pr_number": 207,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #205 integrado em main no merge commit a5883e2c693a7de3dd5926e85b71447bad044d29. Frente única ativa: RM-09 (Lote HOOK-NOTEBOOK-CURTO (RM-09): modelo HOOK_NOTEBOOK enxuto para caber no limite de 4000 caracteres da tarefa do hook da Zapia (nomes e hashes dos comandos no texto, sem listar recibos); offline, sem agents/), branch ccr-8e778ab7-04h3zk, PR #206. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #206 integrado em main no merge commit af752fb3567a0b161aef62e799d36410b259b7dd. Frente única ativa: RM-09 (Lote N1B-PROMPTS-REVISADOS (RM-09): segundo N1 com prompts revisados pelo Tutor (sem acrônimos, contraprova só 'não consta nas fontes', uma pergunta, sem pesquisa na web), kit com prefixo n1b e hook v2; offline, sem agents/), branch ccr-8e778ab7-04h3zk, PR #207. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 205,
-    "merge_commit_sha": "a5883e2c693a7de3dd5926e85b71447bad044d29"
+    "pr_number": 206,
+    "merge_commit_sha": "af752fb3567a0b161aef62e799d36410b259b7dd"
   },
   "work_queue": [
     {

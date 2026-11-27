@@ -163,8 +163,8 @@ class ConferirTest(N1Base):
         self.responde("n1-fonte.json", texto_literal="Legalidade, impessoalidade, moralidade, publicidade e eficiência.",
                       citacao_trecho="obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência")
         self.responde("n1-contraprova.json", texto_literal="Isso não consta nas fontes.")
-        self.responde("n1-questao.json", texto_literal="1. Qual item não está expresso no caput? Dica: releia a lista.",
-                      citacao_trecho="obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência")
+        self.responde("n1-questao.json", texto_literal="1. Qual ente não é citado no caput? Dica: releia a lista.",
+                      citacao_trecho="A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência")
 
     def test_respostas_boas_conferem_e_so_ha_leitura(self):
         self.boas()

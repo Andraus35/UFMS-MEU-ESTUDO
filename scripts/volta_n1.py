@@ -56,10 +56,10 @@ def validar_captura(captura):
     return None
 
 
-def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprovacoes=None, chave_publica=None, comandos=None) -> dict:
+def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprovacoes=None, chave_publica=None, comandos=None, respondido_em=None) -> dict:
     """`meta`: o meta.json do kit; `respostas`: nome -> bytes (ou None se a Zapia ainda não gravou). Devolve o relatório (sem o texto do Notebook)."""
     erro_captura = validar_captura(captura)
-    itens, algum_parado, algum_pendente, aprov_ruim, cmd_ruim, externo = [], False, False, False, False, False
+    itens, algum_parado, algum_pendente, aprov_ruim, cmd_ruim, externo, vencido = [], False, False, False, False, False, False
     for nome in sorted(meta["itens"]):
         info = meta["itens"][nome]
         bruto = respostas.get(nome)
@@ -97,6 +97,16 @@ def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprov
                 integro = False
             linha["comando_integro"] = bool(integro)
             cmd_ruim = cmd_ruim or not integro
+            # idade do comando conferida AQUI, em código (o hook não parseia datas): a resposta precisa ser posterior à emissão e vir em até 24 h
+            quando = (respondido_em or {}).get(nome)
+            if quando is not None and bruto and cmd is not None:
+                try:
+                    emitido = datetime.strptime(cmd["issued_at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+                    delta = (quando - emitido).total_seconds()
+                    linha["resposta_dentro_do_prazo"] = 0 <= delta <= 24 * 3600
+                except (KeyError, ValueError, TypeError):
+                    linha["resposta_dentro_do_prazo"] = False
+                vencido = vencido or not linha["resposta_dentro_do_prazo"]
         if bruto and linha["estado"] in ("CONFERIDA", "RECUSADA"):
             av = nrc.avaliar(bruto, fonte_texto, prompt)
             linha["abstencao"] = {k: v for k, v in av.items() if k != "avaliavel"} if av.get("avaliavel") else None
@@ -105,14 +115,15 @@ def processar(meta: dict, fonte_texto: str, respostas: dict, captura=None, aprov
         itens.append(linha)
     todos_ok = all(i["estado"] == "CONFERIDA" for i in itens)
     return {
-        "veredito": PRONTO if todos_ok and erro_captura is None and not aprov_ruim and not cmd_ruim else NAO_PROVADO,
+        "veredito": PRONTO if todos_ok and erro_captura is None and not aprov_ruim and not cmd_ruim and not vencido else NAO_PROVADO,
         "confianca": "B+captura" if captura is not None and erro_captura is None else "B",
         "captura": "ausente" if captura is None else (erro_captura or "registrada"),
         "pendentes": sum(1 for i in itens if i["estado"] == "PENDENTE"), "parados": sum(1 for i in itens if i["estado"] == "PARADO"),
         "relatorio_tutor": itens,
         "ressalvas": ["autorrelato da Zapia", "gabarito conferido só pela citação da âncora, não pela resposta do Notebook", "verificação contra a fonte é do Tutor (S10-R7b)"]
                      + (["há resposta pendente"] if algum_pendente else []) + (["conteúdo de fora da fonte em resposta respondível (ver codigos_finos)"] if externo else [])
-                     + (["hash do comando em validados/ NÃO confere com o esperado"] if cmd_ruim else []) + (["há resposta PARADA: o teste não foi provado"] if algum_parado else []),
+                     + (["hash do comando em validados/ NÃO confere com o esperado"] if cmd_ruim else [])
+                     + (["resposta fora da janela de 24 h do comando (ou anterior à emissão)"] if vencido else []) + (["há resposta PARADA: o teste não foi provado"] if algum_parado else []),
     }
 
 
@@ -166,6 +177,21 @@ def _ler_comandos(entrada: Path, meta: dict) -> dict:
     return saida
 
 
+def _horas_das_respostas(entrada: Path, meta: dict) -> dict:
+    """Hora (UTC) do commit que gravou cada resposta, pelo `git log` do checkout de `entrada`; nome sem histórico fica de fora (conferência pulada)."""
+    import subprocess
+    saida = {}
+    for nome in meta["itens"]:
+        try:
+            r = subprocess.run(["git", "-C", str(entrada), "log", "-1", "--format=%cI", "--", f"comandos/respostas/{nome}"], capture_output=True, text=True, timeout=20)
+            texto = r.stdout.strip()
+            if r.returncode == 0 and texto:
+                saida[nome] = datetime.fromisoformat(texto).astimezone(timezone.utc)
+        except (OSError, ValueError, subprocess.SubprocessError):
+            continue
+    return saida
+
+
 def _ler_respostas(entrada: Path, meta: dict) -> dict:
     saida = {}
     for nome in meta["itens"]:
@@ -188,7 +214,8 @@ def main(argv=None) -> int:
     respostas = _ler_respostas(Path(a.entrada), meta)
     captura = json.loads(Path(a.captura).read_text(encoding="utf-8")) if a.captura else None
     aprov = _ler_aprovacoes(Path(a.aprovacoes), meta) if a.aprovacoes else None
-    rel = processar(meta, Path(a.fonte).read_text(encoding="utf-8"), respostas, captura, aprov, a.publica, _ler_comandos(Path(a.entrada), meta))
+    rel = processar(meta, Path(a.fonte).read_text(encoding="utf-8"), respostas, captura, aprov, a.publica, _ler_comandos(Path(a.entrada), meta),
+                    _horas_das_respostas(Path(a.entrada), meta))
     saida = {"relatorio": rel, "entrada_coach": entrada_coach(rel)}
     if a.proposta_coach:
         saida["proposta_coach"] = avaliar_proposta_coach(json.loads(Path(a.proposta_coach).read_text(encoding="utf-8")), respostas, datetime.now(timezone.utc))

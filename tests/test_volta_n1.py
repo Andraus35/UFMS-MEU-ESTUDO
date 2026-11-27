@@ -17,7 +17,7 @@ M = prep.montar(datetime(2026, 11, 25, 15, 0, 0, tzinfo=timezone.utc))
 FONTE = M["fonte_bytes"].decode("utf-8")
 META = {"fonte_nome": M["fonte_nome"], "itens": {i["nome"]: {"hash_corpo": i["hash_corpo"], "contraprova": i["contraprova"], "ancora_gabarito": i["ancora_gabarito"]}
                                                   for i in M["itens"]}}
-CIT = "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
+CIT = "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
 SEGREDO_DO_NOTEBOOK = "TRECHO-LITERAL-DO-NOTEBOOK-UNICO-0001"
 
 
@@ -143,6 +143,73 @@ class IntegridadeEAvaliacaoTest(unittest.TestCase):
         b["n1-fonte.json"] = resp("n1-fonte.json", texto_literal="L.I.M.P.E. " + SEGREDO_DO_NOTEBOOK)
         j = json.dumps(vn.processar(META, FONTE, b, None, None, None, COMANDOS), ensure_ascii=False)
         self.assertNotIn(SEGREDO_DO_NOTEBOOK, j)
+
+
+class IdadeDoComandoTest(unittest.TestCase):
+    """O hook v3 não parseia datas: a volta confere em código que a resposta veio depois da emissão e em até 24 h."""
+
+    def emitido(self, nome="n1-fonte.json"):
+        return datetime.strptime(json.loads(COMANDOS[nome])["issued_at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+
+    def todos(self, delta_s, so=None):
+        from datetime import timedelta
+        return {n: self.emitido(n) + timedelta(seconds=delta_s) for n in META["itens"] if so in (None, n)}
+
+    def test_resposta_dentro_de_24h_passa(self):
+        for delta in (0, 120, 24 * 3600):
+            r = vn.processar(META, FONTE, boas(), None, None, None, COMANDOS, self.todos(delta))
+            self.assertEqual(r["veredito"], vn.PRONTO, delta)
+            self.assertTrue(all(i["resposta_dentro_do_prazo"] for i in r["relatorio_tutor"]))
+
+    def test_resposta_depois_de_24h_ou_antes_da_emissao_derruba(self):
+        for delta in (24 * 3600 + 1, -1, 90 * 24 * 3600):
+            r = vn.processar(META, FONTE, boas(), None, None, None, COMANDOS, self.todos(delta, so="n1-fonte.json"))
+            self.assertEqual(r["veredito"], vn.NAO_PROVADO, delta)
+            self.assertIn("resposta fora da janela de 24 h do comando (ou anterior à emissão)", r["ressalvas"])
+
+    def test_sem_hora_da_resposta_a_conferencia_e_pulada(self):
+        r = vn.processar(META, FONTE, boas(), None, None, None, COMANDOS, None)
+        self.assertNotIn("resposta_dentro_do_prazo", r["relatorio_tutor"][0])
+
+    def test_issued_at_ilegivel_conta_como_fora_do_prazo(self):
+        from datetime import timedelta
+        cmds = dict(COMANDOS)
+        c = json.loads(cmds["n1-fonte.json"])
+        c["issued_at"] = "ontem"
+        cmds["n1-fonte.json"] = json.dumps(c, ensure_ascii=False).encode("utf-8")
+        meta = copy.deepcopy(META)
+        import command_box
+        meta["itens"]["n1-fonte.json"]["hash_corpo"] = command_box.command_hash(c)  # a integridade passa; só a data é ilegível
+        b = boas()
+        b["n1-fonte.json"] = resp("n1-fonte.json", hash_corpo=meta["itens"]["n1-fonte.json"]["hash_corpo"])
+        r = vn.processar(meta, FONTE, b, None, None, None, cmds, {"n1-fonte.json": datetime.now(timezone.utc) + timedelta(seconds=1)})
+        self.assertFalse(next(i for i in r["relatorio_tutor"] if i["comando"] == "n1-fonte.json")["resposta_dentro_do_prazo"])
+        self.assertEqual(r["veredito"], vn.NAO_PROVADO)
+
+    def test_cli_usa_a_hora_do_commit_da_resposta(self):
+        import contextlib
+        import io
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            ent = d / "ent"
+            (ent / "comandos/respostas").mkdir(parents=True)
+            (ent / "comandos/validados").mkdir(parents=True)
+            for nome, bruto in boas().items():
+                (ent / "comandos/respostas" / nome).write_bytes(bruto)
+            for nome, bruto in COMANDOS.items():
+                (ent / "comandos/validados" / nome).write_bytes(bruto)
+            (d / "meta.json").write_text(json.dumps(META, ensure_ascii=False), encoding="utf-8")
+            (d / "fonte.txt").write_text(FONTE, encoding="utf-8")
+            env = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+                   "GIT_COMMITTER_DATE": "2030-01-01T00:00:00Z", "GIT_AUTHOR_DATE": "2030-01-01T00:00:00Z", "PATH": __import__("os").environ["PATH"], "HOME": str(d)}
+            for cmd in (["git", "init", "-q"], ["git", "add", "-A"], ["git", "commit", "-q", "-m", "x"]):
+                subprocess.run(cmd, cwd=ent, env=env, check=True, capture_output=True)
+            args = ["--entrada", str(ent), "--meta", str(d / "meta.json"), "--fonte", str(d / "fonte.txt")]
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(vn.main(args), 2)  # commit de 2030: muito depois das 24 h da emissão em 2026
+            rel = json.loads(out.getvalue())["relatorio"]
+            self.assertTrue(any("janela de 24 h" in r for r in rel["ressalvas"]))
 
 
 class PropostaDoCoachTest(unittest.TestCase):

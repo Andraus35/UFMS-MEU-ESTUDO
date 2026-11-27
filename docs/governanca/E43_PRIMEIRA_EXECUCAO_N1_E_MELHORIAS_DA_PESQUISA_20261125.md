@@ -24,3 +24,11 @@
 ## Fica para depois (decidido pelo proprietário)
 
 Aprovação assinada com pacote de evidência **não** foi pedida (mantém só o hash do comando). **Isolar onde a Zapia escreve:** ver `E44_PROPOSTA_REPOSITORIO_DE_RESPOSTAS_20261125.md` (proposta, não aplicada). Prompts do Tutor a revisar para um 2º N1: sem acrônimos, contraprova só "não consta nas fontes", exatamente uma pergunta, sem oferta de pesquisa na web.
+
+## 2ª rodada do N1 (PR #207, 25/11/2026)
+
+Depois da falha da contraprova, o **Tutor (subagent)** revisou os três prompts: sem acrônimos nem mnemônicos, **exatamente uma pergunta**, sem oferta de pesquisa na web nem conhecimento externo, dica só apoiada em palavra citada do trecho e, na contraprova, a resposta inteira é **exatamente** `não consta nas fontes`. A questão passou a perguntar qual ente **não** é citado no caput (gabarito `E`, Territórios; âncora: "de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios"). Os prompts novos estão em `config/propostas_tutor_n1.json` (`rodada: 2`, autoria e hash conferidos pelo kit); os da rodada 1 ficam no histórico do Git e nos canaries. O kit ganhou `--prefixo n1b`, para os comandos novos (`n1b-*.json`) **não** sobrescreverem os da 1ª rodada no `entrada`. **Mesmos limites:** autoria declarada, autorrelato da Zapia, n=3, uma fonte de uma frase.
+
+## 3ª rodada (`n1c`) e hook v3 (26/11/2026)
+
+Na 2ª rodada (issue #10) a Zapia gravou só `n1b-fonte.json` como `PARADO` com `codigo_parada: DATA_PARSE_ERROR` (commit `776dad2`) e **parou a tarefa inteira**; `n1b-contraprova` e `n1b-questao` ficaram sem resposta. Causa **não provada** (a mensagem literal dela não chegou), mas o único passo do hook que usa data era "issued_at menos de 24 h". **Hook v3:** a Zapia **não parseia nem compara data ou hora**; a idade do comando é conferida **offline** em `volta_n1.py` (a resposta precisa ser posterior à emissão e vir em até 24 h, pela hora do commit que a gravou, via `git log` do checkout); um erro isolado grava `PARADO` com código e **segue para o próximo comando**, e só login, captcha ou bloqueio param a tarefa. Os comandos `n1c-*` (mesmos prompts da rodada 2, hashes novos) foram gravados no `entrada` em 26/11/2026 às 21:55Z (commit `3285a4d`; valem até 27/11 às 21:55Z). O hook v3 tem 3768 caracteres com os 3 comandos (limite 4000).

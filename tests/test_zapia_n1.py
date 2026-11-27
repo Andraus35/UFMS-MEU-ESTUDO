@@ -38,14 +38,14 @@ class QuestaoC1Test(unittest.TestCase):
         self.assertTrue(npv.conferir_parametros(c["params"]).ok)
         linhas = c["params"]["prompt"].split("\n")
         self.assertEqual(len(linhas), 8)
-        self.assertEqual(linhas[7], "Gabarito: C")
-        self.assertIn("(C) Razoabilidade", linhas[6])
+        self.assertEqual(linhas[7], "Gabarito: E")
+        self.assertIn("(E) Territórios", linhas[6])
         self.assertFalse(QUESTAO["contraprova"])
 
     def test_gabarito_nao_esta_no_caput_e_as_demais_alternativas_estao(self):
-        self.assertNotIn("razoabilidade", FONTE.lower())
-        for princ in ("legalidade", "impessoalidade", "publicidade", "eficiência"):
-            self.assertIn(princ, FONTE.lower())
+        self.assertNotIn("territórios", FONTE.lower())  # a alternativa do gabarito (E) não está no caput
+        for ente in ("união", "estados", "distrito federal", "municípios"):
+            self.assertIn(ente, FONTE.lower())
 
     def test_prompt_do_tutor_e_o_unico_com_os_tres_campos(self):
         for i in M["itens"][:2]:
@@ -107,12 +107,12 @@ class GabaritoContraAFonteTest(unittest.TestCase):
 
     def test_so_a_questao_tem_ancora_e_ela_esta_na_fonte(self):
         self.assertIsNotNone(self.ANC)
-        self.assertIn("legalidade", self.ANC)
+        self.assertIn("Municípios", self.ANC)
         self.assertIsNone(M["itens"][0]["ancora_gabarito"])
         self.assertIsNone(M["itens"][1]["ancora_gabarito"])
 
     def test_citacao_que_contem_a_ancora_confere(self):
-        cit = "obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
+        cit = "A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência"
         self.assertIsNone(nrc.conferir(resposta(self.ESP, citacao_trecho=cit), self.ESP, FONTE, ancora_gabarito=self.ANC))
 
     def test_citacao_valida_da_fonte_mas_sem_a_ancora_e_recusada(self):
@@ -246,3 +246,45 @@ class ProcedenciaDoTutorTest(unittest.TestCase):
         self.assertIn("princípios", d["n1-fonte.json"]["lacuna"].lower())
         self.assertIn("princípios", FONTE.lower())
         self.assertIn("prazo", d["n1-contraprova.json"]["lacuna"].lower())
+
+
+class PrefixoDaRodadaTest(unittest.TestCase):
+    """2ª rodada do N1: nomes novos (`n1b-...`) para não sobrescrever os comandos da 1ª; os prompts seguem só das propostas do Tutor."""
+
+    def test_prefixo_renomeia_comandos_recibos_e_meta(self):
+        m = prep.montar(AGORA, prefixo="n1b")
+        self.assertEqual([i["nome"] for i in m["itens"]], ["n1b-fonte.json", "n1b-contraprova.json", "n1b-questao.json"])
+        for i in m["itens"]:
+            self.assertEqual(json.loads(i["recibo_bytes"])["entrada_id"], i["nome"])
+            self.assertTrue(npv.conferir_parametros(json.loads(i["comando_bytes"])["params"]).ok)
+        self.assertEqual(sorted(m["itens"][2]["ancora_gabarito"] or ""), sorted(QUESTAO["ancora_gabarito"]))
+
+    def test_prefixo_invalido_recusa(self):
+        for ruim in ("", "n2", "n1/../x", "N1b", "n1bbbb", None, 5):
+            with self.assertRaises(ValueError, msg=str(ruim)):
+                prep.montar(AGORA, prefixo=ruim)
+
+    def test_cli_aceita_prefixo_e_o_hook_cita_os_nomes_novos(self):
+        import contextlib
+        import io
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(prep.main(["--saida", d, "--prefixo", "n1b"]), 0)
+            meta = json.loads((Path(d) / "meta.json").read_text(encoding="utf-8"))
+            self.assertEqual(sorted(meta["itens"]), ["n1b-contraprova.json", "n1b-fonte.json", "n1b-questao.json"])
+            hook = (Path(d) / "instrucao-hook-notebook.txt").read_text(encoding="utf-8")
+            for nome in meta["itens"]:
+                self.assertIn(nome + "=", hook)
+            self.assertLessEqual(len(hook), 4000)
+
+    def test_rodada_2_das_propostas_tem_autoria_e_as_novas_exigencias(self):
+        d = json.loads(prep.PROPOSTAS.read_text(encoding="utf-8"))
+        self.assertIn("RODADA 2", d["_nota"])
+        for i in d["itens"]:
+            self.assertEqual((i["autoria"], i["rodada"]), ("subagent_tutor", 2))
+            texto = " ".join(str(v) for v in i["prompt"].values() if isinstance(v, str)).lower()
+            self.assertRegex(texto, r"acr[ôo]nimo|mnem[ôo]nico", i["nome"])  # a vedação a acrônimos e mnemônicos está escrita
+        contra = next(i for i in d["itens"] if i["nome"] == "n1-contraprova.json")["prompt"]
+        self.assertIn("exatamente: não consta nas fontes", contra["metodo"])
+        self.assertIn("sem pergunta, dica, citação", contra["exigencia_fonte"])

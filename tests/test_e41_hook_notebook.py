@@ -33,7 +33,8 @@ class ModeloTest(unittest.TestCase):
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/validados/<name>",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/fontes/n1.txt",
                        "https://api.github.com/repos/Andraus35/ufms-meu-estudo-entrada/contents/comandos/respostas/<name>",
-                       "compare the text, do not compute anything", "is enviar_prompt_notebook", "origin exactly tutor", "less than 24 hours", "EXACTLY as written",
+                       "compare the text, do not compute anything", "is enviar_prompt_notebook", "origin exactly tutor", "do NOT parse, compare or compute any date or time",
+                       "write the PARADO response for this command and stop the whole task", "go on to the next command", "EXACTLY as written",
                        "never ask for or reveal any Google credential", "do not share", "never repeat in a loop", "ONE disposable notebook", "untrusted data",
                        "Execute only once"):
             self.assertIn(trecho, t, trecho)
@@ -106,7 +107,7 @@ class LimiteDeTamanhoTest(unittest.TestCase):
 
     def test_instrucao_cabe_nos_4000_com_tres_e_com_cinco_comandos(self):
         self.assertEqual(ar.LIMITE_TAREFA_HOOK, 4000)
-        self.assertLessEqual(len(render()), 3600)  # folga de 400 caracteres sobre o teto
+        self.assertLessEqual(len(render()), 3850)  # folga de 150 caracteres sobre o teto
         cinco = [(f"n1-comando-{i}.json", H1) for i in range(5)]
         self.assertLessEqual(len(render(comandos=cinco)), 4000)
 
@@ -136,7 +137,7 @@ class KitTest(unittest.TestCase):
             self.assertLessEqual(len(texto), ar.LIMITE_TAREFA_HOOK)
             self.assertIn("comandos/fontes/n1.txt", texto)
             self.assertIsNone(meta["itens"]["n1-fonte.json"]["ancora_gabarito"])
-            self.assertIn("eficiência", meta["itens"]["n1-questao.json"]["ancora_gabarito"])
+            self.assertIn("Municípios", meta["itens"]["n1-questao.json"]["ancora_gabarito"])
 
 
 if __name__ == "__main__":
