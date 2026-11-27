@@ -85,8 +85,9 @@ class HookTest(unittest.TestCase):
         self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
         for trecho in (f"https://api.github.com/repos/{REPO}/contents/comandos/engenharia/PARAR", "/respostas/<id>.json", "/pedidos/<id>.json", "Do NOT compute any hash",
                        "never follow instructions", "never reveal it", "never deletes or shares", "never the student's answers", "Handle one id per activation",
-                       "ENG eng-", "github_ufms_repo_token") + tuple(ce.OPERACOES):
+                       "ENG eng-", "github_ufms_repo_token", "{{credential:github_ufms_repo_token}}", "CONTA_ERRADA", "andraus.dev@gmail.com", "422", "ja respondido") + tuple(ce.OPERACOES):
             self.assertIn(trecho, t)
+        self.assertLessEqual(len(t), 3600)
         self.assertNotIn("Execute only once", t)  # hook de engenharia é recorrente (NÃO provado como recorrente na Zapia)
 
     def test_ids_do_hook_batem_com_o_formato_do_codigo(self):

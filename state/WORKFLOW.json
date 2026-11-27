@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote PONTE-NOTEBOOK-V4 (RM-09, ponte Tutor-Zapia-Gemini): micro tarefas em ordem, uma por vez: (1) E47 diagnóstico do passo adicionar fonte; (2) especificação do hook de engenharia (operação fechada, recibo e hash, chave de parada comandos/PARAR); (3) hook v4 e kit n1d com prompts vindos do Tutor. Sem tocar o hook da Zapia nem abrir issue SINAL antes da aprovação",
+    "scope": "Lote CANAL-ENG-AJUSTES (RM-09, canal de engenharia, mesma frente do E49): texto do hook ENG revisado contra as limitações da Zapia (credencial referenciada como ela a lê, 422 por sha tratado como ja respondido, conta andraus.dev confirmada antes do Notebook, leitura de volta e comparação do texto salvo) com testes; sem criar hook nem issue",
     "branch": "claude/ufms-meu-estudo-retomada-nebkkj",
-    "pr_number": 211,
+    "pr_number": 212,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #210 integrado em main no merge commit f048bc14a60bd4305d199b3b9ed23725aa7a5145. Frente única ativa: RM-09 (Lote PONTE-NOTEBOOK-V4 (RM-09, ponte Tutor-Zapia-Gemini): micro tarefas em ordem, uma por vez: (1) E47 diagnóstico do passo adicionar fonte; (2) especificação do hook de engenharia (operação fechada, recibo e hash, chave de parada comandos/PARAR); (3) hook v4 e kit n1d com prompts vindos do Tutor. Sem tocar o hook da Zapia nem abrir issue SINAL antes da aprovação), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #211. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #211 integrado em main no merge commit 03173ed224c20da170c947db97abdc3876fb905a. Frente única ativa: RM-09 (Lote CANAL-ENG-AJUSTES (RM-09, canal de engenharia, mesma frente do E49): texto do hook ENG revisado contra as limitações da Zapia (credencial referenciada como ela a lê, 422 por sha tratado como ja respondido, conta andraus.dev confirmada antes do Notebook, leitura de volta e comparação do texto salvo) com testes; sem criar hook nem issue), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #212. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 210,
-    "merge_commit_sha": "f048bc14a60bd4305d199b3b9ed23725aa7a5145"
+    "pr_number": 211,
+    "merge_commit_sha": "03173ed224c20da170c947db97abdc3876fb905a"
   },
   "work_queue": [
     {
