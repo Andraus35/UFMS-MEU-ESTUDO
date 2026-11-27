@@ -1,5 +1,6 @@
 """E49: canal de engenharia entre o orquestrador e a Zapia: operações fechadas, resposta conferida em código, hook dentro do limite e estado persistido."""
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -93,6 +94,20 @@ class HookTest(unittest.TestCase):
     def test_ids_do_hook_batem_com_o_formato_do_codigo(self):
         self.assertRegex("eng-0007", ce.ID)
         self.assertIn("'[" + REPO + "] ENG eng-'", ce.hook_engenharia(REPO))
+
+
+class ContasZapiaTest(unittest.TestCase):
+    def test_o_hook_nao_nomeia_conta_zapia_e_nomeia_a_conta_google_do_notebook(self):
+        t = ce.hook_engenharia(REPO)
+        self.assertEqual(ce.CONTAS_ZAPIA_ENGENHARIA, ("antiga", "nova"))
+        for conta in ce.CONTAS_ZAPIA_ENGENHARIA:
+            self.assertIsNone(re.search(rf"\b{conta}\b", t.lower()), conta)
+        self.assertIn(ce.CONTA_GOOGLE_NOTEBOOK, t)
+
+    def test_o_doc_registra_as_duas_contas_e_um_hook_por_vez(self):
+        doc = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
+        for trecho in ("autorizadas e intercambiáveis", "Um hook ENG ativo por vez", "recebe os eventos do Gmail", "não nomeia conta Zapia", "**Não** vale para estudo"):
+            self.assertIn(trecho, doc)
 
 
 class EstadoTest(unittest.TestCase):

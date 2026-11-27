@@ -51,6 +51,13 @@ class RegistroTeste(unittest.TestCase):
                        "não manda mais a Zapia calcular hash", "pula", "consome o disparo"):
             self.assertIn(trecho, r, trecho)
 
+    def test_o_resumo_guarda_as_duas_contas_da_zapia_na_engenharia_e_o_gmail_em_outra_conta(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("DECISÃO DO PROPRIETÁRIO (27/11/2026", "autorizadas e são intercambiáveis na fase de engenharia", "andraus.dev@gmail.com",
+                       "um hook ENG ativo por vez", "estende nenhuma prova",
+                       "OBSERVADO (27/11/2026, E49", "recebidos por outra conta Zapia", "não dispararia", "Não testado"):
+            self.assertIn(trecho, r, trecho)
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)
