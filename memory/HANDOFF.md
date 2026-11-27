@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #206; SHA af752fb3567a0b161aef62e799d36410b259b7dd
-- Frente ativa: **RM-09 / PR #207**; branch `ccr-8e778ab7-04h3zk`; base main; fase review.
+- Último merge comprovado: PR #207; SHA b1187c86f6b997463288576d8becf0b5fe879e2e
+- Frente ativa: **RM-09 / PR #208**; branch `ccr-8e778ab7-04h3zk`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -17,7 +17,7 @@
 
 **LOTE KIT-N1-C1 (PR #204, draft):** kit do N1 com o prompt do Tutor (campos C1), modelo `HOOK_NOTEBOOK` e `agendar_rotina.py --hook-notebook` (E41, hook de Gmail que executa o prompt no Notebook e grava `comandos/respostas`), `prova_n1.sh` grava a fonte. **Não provado:** a Zapia executar no Notebook; orquestrador Tutor→Coach. Exceção de acesso ao `entrada` ativa (anexado de novo nesta sessão; revogação é ato dele depois do run). Merge só por pedido dele citando PR e head.
 
-**N1 EXECUTADO (25/11/2026) e lote HOOK-NOTEBOOK-CURTO (PR #206, draft):** a ponte Tutor→Zapia→Gemini Notebook→resposta rodou (3 comandos respondidos; veredito `N1_NAO_PROVADO`: a contraprova falhou, o Notebook completou com conteúdo de fora). Registro em `docs/governanca/E43_PRIMEIRA_EXECUCAO_N1_E_MELHORIAS_DA_PESQUISA_20261125.md`; proposta do repositório de respostas em E44 (não aplicada). Hook v2 sem hash no LLM e retomável; `volta_n1.py` confere o hash do comando offline; canaries de abstenção. **Pendente dele:** desabilitar o hook `2bef6d04` na Zapia (ela não consegue), depois a sessão fecha as issues #8 e #9; revogar o anexo do `entrada`. Prompts do Tutor a revisar antes do 2º N1. Merge só por pedido dele citando PR e head.
+**LEITURA OBRIGATÓRIA DA PRÓXIMA SESSÃO: `docs/governanca/E46_RETOMADA_PROXIMA_SESSAO_20261125_26.md` (estado do N1 em 3 rodadas, decisões dele, prompts prontos, atos pendentes e próximas tarefas na ordem).** Resumo: ponte Tutor→Zapia→Notebook provada só na 1ª rodada (`N1_NAO_PROVADO`: a contraprova falhou); rodadas 2 e 3 pararam no passo de adicionar fonte (`FONTE_NAO_ADICIONADA`, causa desconhecida); hook `2bef6d04` **desabilitado**, issues #8 a #11 fechadas; comandos `n1c` valem até 27/11 21:55Z; anexo do `entrada` ativo (revoga ele). Próximas na fila: `N1-DIAG-FONTE`, `N1-RODADA-4`, `E45-CORRETOR`, `S22-PROVA-MIN` (esta só com o pedido 'Criar a tarefa S22').
 
 **PONTO DE RETOMADA (25/11/2026, fim da sessão):** #192 a #199 mesclados (lotes ZAPIA-EMISSOR, ZAPIA-SUBAGENTS, S22 spec, registros E34, E35, E37, E38, E39). **Aprovado por ele:** texto da E3 (aplicar em agents/ só depois da janela, merge expresso), frase "finalizar estudos", gabarito e resposta do aluno em campos separados (E38). **Fluxo reinstalado no entrada** (SHA a4f8084, hash 0b08e17b) e `FLUXO_SHA256` definida por ele (captura); **fixado em SHA defasado: o pré-voo de abertura dá VERMELHO até reinstalar no HEAD da main, por último e sem merge no meio** (`scripts/termux/coleta_preflight.sh`, E39). **Janela do piloto: ele decidiu NÃO abrir agora; caderno real: depois.** **Anexo do entrada ainda por revogar (ato dele).** **Ponte Tutor-Zapia-Gemini:** auditoria e roteiro N1 em `docs/governanca/E40_AUDITORIA_PONTE_TUTOR_ZAPIA_GEMINI_E_ROTEIRO_N1_20261125.md` (kit offline `scripts/zapia_n1_prep.py` e `scripts/notebook_response_check.py`; nada provado no Notebook real; `agents/TUTOR.md` item 8 contradiz a D-26, contrato a emendar com aprovação). S22 (tarefas agendadas do Claude como gatilho) só especificada, nada criado. WORKFLOW perto do limite de 64 KiB do START: arquivar antes de crescer.
 

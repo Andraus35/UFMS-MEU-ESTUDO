@@ -20,12 +20,12 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
         self.assertEqual(ids[:6], ["S1", "S2", "S3", "S4", "S5", "S8"])
         # S12, S13, S7 e S6 já têm a entrega; C4, o runner e o hook (tarefas de código) vêm antes de S9
-        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "HOOK3", "RS", "AE", "AM", "RG", "HOOK4", "S15", "S16", "S17", "TOP1", "TOP2", "TOP3", "S18", "S19", "HOOKG", "HOOKP", "S20", "HOOKR", "GAP-A", "GAP-A2", "GAP-B", "GAP-C", "GAP-D", "GAP-E", "COR-A", "COR-B", "COR-C", "COR-D", "ZAPIA-F1", "COR-E", "ZAPIA-F2a", "ZAPIA-APL", "ZAPIA-CTX", "ZAPIA-F3", "ZAPIA-EMISSOR", "ZAPIA-SUBAGENTS", "ZAPIA-LIGAR", "S22", "PONTE-NOTEBOOK"])
+        self.assertEqual(ids[6:], ["S12", "S13", "S7", "S6", "C4", "RUNNER", "HOOK", "COMANDOS", "CODEOWNERS", "C3", "S9", "S10", "L1", "S11", "E1", "N2", "Z1", "E2", "HOOK2", "L2", "E3", "E4", "C5R", "V4", "V4F", "C6A", "C6B", "C6C", "C6D", "C5P", "C6", "C5F", "C5G", "E7", "PROJ", "PF", "PREL", "PJ", "RT", "CM", "S14", "GE", "HOOK3", "RS", "AE", "AM", "RG", "HOOK4", "S15", "S16", "S17", "TOP1", "TOP2", "TOP3", "S18", "S19", "HOOKG", "HOOKP", "S20", "HOOKR", "GAP-A", "GAP-A2", "GAP-B", "GAP-C", "GAP-D", "GAP-E", "COR-A", "COR-B", "COR-C", "COR-D", "ZAPIA-F1", "COR-E", "ZAPIA-F2a", "ZAPIA-APL", "ZAPIA-CTX", "ZAPIA-F3", "ZAPIA-EMISSOR", "ZAPIA-SUBAGENTS", "ZAPIA-LIGAR", "S22", "PONTE-NOTEBOOK", "N1-DIAG-FONTE", "N1-RODADA-4", "E45-CORRETOR", "S22-PROVA-MIN"])
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertIsNone(fila["proximo"])  # S22 tem a entrega (especificação, 25/11/2026); ZAPIA-LIGAR espera PJ, consentimento v4 e P9 (ato do proprietário); PJ, RT e CM esperam o proprietário
-        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "ZAPIA-LIGAR"])  # HOOKG tem a entrega (E12, 21/11/2026)
+        self.assertEqual(fila["proximo"]["id"], "E45-CORRETOR")  # proposta do corretor (decisão dele de 26/11/2026), sem insumo bloqueante; S22 tem a entrega (especificação, 25/11/2026); ZAPIA-LIGAR espera PJ, consentimento v4 e P9 (ato do proprietário); PJ, RT e CM esperam o proprietário
+        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "ZAPIA-LIGAR", "E45-CORRETOR"])  # HOOKG tem a entrega (E12, 21/11/2026)
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["PJ", "ZAPIA-LIGAR"])
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
