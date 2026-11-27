@@ -151,3 +151,12 @@ class DocE45Test(unittest.TestCase):
         doc = (ROOT / "docs/governanca/E45_CORRETOR_API_OFICIAL_NOTEBOOK.md").read_text(encoding="utf-8")
         for trecho in ("Preview", "descreve método para fazer pergunta", "Lacunas", "SemCredencial", "D-26", "emendar a D-26 agora", "nada é feito pela sessão"):
             self.assertIn(trecho, doc)
+
+
+class FilaN1Test(unittest.TestCase):
+    def test_itens_abertos_do_n1_nao_contam_como_feitos_por_entrega_ja_existente(self):
+        wf = json.loads((ROOT / "state/WORKFLOW.json").read_text(encoding="utf-8"))
+        itens = {i["id"]: i for i in wf["work_queue"]}
+        for id_ in ("N1-DIAG-FONTE", "N1-RODADA-4", "S22-PROVA-MIN"):
+            self.assertFalse((ROOT / itens[id_]["deliverable"]).exists(), id_)  # só passam a existir quando o trabalho for feito
+        self.assertEqual(itens["N1-RODADA-4"]["depends_on"], ["N1-DIAG-FONTE"])
