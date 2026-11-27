@@ -24,8 +24,8 @@ class RetomadaProximaSessaoTests(unittest.TestCase):
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         # a S11, o PF e o PREL têm a entrega (19/11/2026); o próximo liberado é o recibo de START (RS), depois do GE e do HOOK3; a E3 e a janela (PJ) esperam o proprietário
-        self.assertEqual(fila["proximo"]["id"], "E45-CORRETOR")  # proposta do corretor (decisão dele de 26/11/2026), sem insumo bloqueante; S22 tem a entrega (especificação, 25/11/2026); ZAPIA-LIGAR espera PJ, consentimento v4 e P9 (ato do proprietário); PJ, RT e CM esperam o proprietário
-        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "ZAPIA-LIGAR", "E45-CORRETOR"])  # HOOKG tem a entrega (E12, 21/11/2026)
+        self.assertIsNone(fila["proximo"])  # E45-CORRETOR tem a entrega (27/11/2026, PR #209); sobram só itens bloqueados pelo proprietário. Antes: proposta do corretor (decisão dele de 26/11/2026), sem insumo bloqueante; S22 tem a entrega (especificação, 25/11/2026); ZAPIA-LIGAR espera PJ, consentimento v4 e P9 (ato do proprietário); PJ, RT e CM esperam o proprietário
+        self.assertEqual(fila["pendentes"], ["PJ", "RT", "CM", "ZAPIA-LIGAR"])  # HOOKG tem a entrega (E12, 21/11/2026)
         self.assertEqual([b["id"] for b in fila["bloqueados"]], ["PJ", "ZAPIA-LIGAR"])
         s10 = next(i for i in WORKFLOW["work_queue"] if i["id"] == "S10")
         self.assertEqual(s10["blocking_inputs"], [])
