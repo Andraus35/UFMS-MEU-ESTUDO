@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote E45-CORRETOR (RM-09): proposta do corretor fora do modelo com a API oficial do NotebookLM Enterprise, modelo de ameaça e corretor simulado; sem credencial e sem tocar o entrada; emenda da D-26 só por decisão do proprietário",
+    "scope": "Lote CI-ESTAVEL (RM-09): teste test_e29_f3_poller deixa de depender de hash aleatório que o filtro de CPF recusa em ~0,7% das execuções (CI da main vermelha no 0b979b3); só teste e registro, sem alterar o filtro",
     "branch": "claude/ufms-meu-estudo-retomada-nebkkj",
-    "pr_number": 209,
+    "pr_number": 210,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #208 integrado em main no merge commit 7e06917d457eca3b06598c7246029208d979d51e. Frente única ativa: RM-09 (Lote E45-CORRETOR (RM-09): proposta do corretor fora do modelo com a API oficial do NotebookLM Enterprise, modelo de ameaça e corretor simulado; sem credencial e sem tocar o entrada; emenda da D-26 só por decisão do proprietário), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #209. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #209 integrado em main no merge commit 0b979b393b00a4e698081bc2e8a06a12e57fb358. Frente única ativa: RM-09 (Lote CI-ESTAVEL (RM-09): teste test_e29_f3_poller deixa de depender de hash aleatório que o filtro de CPF recusa em ~0,7% das execuções (CI da main vermelha no 0b979b3); só teste e registro, sem alterar o filtro), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #210. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 208,
-    "merge_commit_sha": "7e06917d457eca3b06598c7246029208d979d51e"
+    "pr_number": 209,
+    "merge_commit_sha": "0b979b393b00a4e698081bc2e8a06a12e57fb358"
   },
   "work_queue": [
     {
