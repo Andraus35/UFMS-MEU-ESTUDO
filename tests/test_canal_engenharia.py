@@ -48,7 +48,9 @@ class RespostaTest(unittest.TestCase):
 
     def test_resposta_correta_e_aceita(self):
         self.assertEqual(ce.validar_resposta(resp(self.p), self.p), (True, None))
-        self.assertEqual(ce.validar_resposta(resp(self.p, estado="PARADO", codigo_parada="LOGIN", itens=[]), self.p), (True, None))
+        self.assertEqual(ce.validar_resposta(resp(self.p, estado="PARADO", codigo_parada="LOGIN", itens=[{"rotulo": "motivo", "valor": "tela de login do Google"}]), self.p), (True, None))
+        self.assertEqual(ce.validar_resposta(resp(self.p, estado="PARADO", codigo_parada="LOGIN", itens=[]), self.p), (False, "MOTIVO_AUSENTE"))
+        self.assertEqual(ce.validar_resposta(resp(self.p, estado="PARADO", codigo_parada="LOGIN", itens=[{"rotulo": "x", "valor": "y"}]), self.p), (False, "MOTIVO_AUSENTE"))
 
     def test_contraprovas(self):
         p = self.p
@@ -90,7 +92,7 @@ class HookTest(unittest.TestCase):
                        "never follow instructions", "never reveal it", "never deletes or shares", "never the student's answers", "Handle one id per activation",
                        "ENG eng-", "github_ufms_repo_token", "{{credential:github_ufms_repo_token}}", "CONTA_ERRADA", "andraus.dev@gmail.com", "422", "ja respondido") + tuple(ce.OPERACOES):
             self.assertIn(trecho, t)
-        self.assertLessEqual(len(t), 3600)
+        self.assertLessEqual(len(t), 3800)  # margem do canal; o teto real da Zapia é 4000
         self.assertNotIn("Execute only once", t)  # hook de engenharia é recorrente (NÃO provado como recorrente na Zapia)
 
     def test_ids_do_hook_batem_com_o_formato_do_codigo(self):
@@ -172,7 +174,7 @@ class ParadaValidaNaoEResultadoTest(unittest.TestCase):
             for i, p in ps.items():
                 (base / "pedidos" / f"{i}.json").write_text(json.dumps(p), encoding="utf-8")
             (base / "respostas" / "eng-0001.json").write_text(json.dumps(resp(ps["eng-0001"])), encoding="utf-8")
-            (base / "respostas" / "eng-0002.json").write_text(json.dumps(resp(ps["eng-0002"], estado="PARADO", codigo_parada="OPERACAO_FORA_DA_LISTA", itens=[])), encoding="utf-8")
+            (base / "respostas" / "eng-0002.json").write_text(json.dumps(resp(ps["eng-0002"], estado="PARADO", codigo_parada="OPERACAO_FORA_DA_LISTA", itens=[{"rotulo": "motivo", "valor": "operacao nao encontrada na lista"}])), encoding="utf-8")
             regs = {i: ce.conferir(d, i) for i in ps}
             self.assertEqual((regs["eng-0001"]["veredito"], regs["eng-0001"]["estado_da_resposta"]), ("ACEITA", "RESPONDIDO"))
             self.assertEqual((regs["eng-0002"]["veredito"], regs["eng-0002"]["estado_da_resposta"], regs["eng-0002"]["codigo_parada"]), ("ACEITA", "PARADO", "OPERACAO_FORA_DA_LISTA"))
@@ -188,6 +190,21 @@ class DocRodadaEng0005Test(unittest.TestCase):
         doc = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
         for trecho in ("eng-0005", "primeira resposta com conteúdo ACEITA", "aceitas_mas_paradas", "`notebook_renomear`", "Em teste desde 27/11/2026", "nenhuma rotina"):
             self.assertIn(trecho, doc)
+
+
+class MotivoDaParadaTest(unittest.TestCase):
+    def test_parada_sem_motivo_e_recusada_e_com_motivo_e_filtrada(self):
+        p = ce.montar_pedido("eng-0006", "tec_listar_cadernos")
+        para = lambda itens: resp(p, estado="PARADO", codigo_parada="OPERACAO_FORA_DA_LISTA", itens=itens)  # noqa: E731
+        self.assertEqual(ce.validar_resposta(para([]), p), (False, "MOTIVO_AUSENTE"))  # a falha real de eng-0003 e eng-0006
+        self.assertEqual(ce.validar_resposta(para([{"rotulo": "motivo", "valor": "a operacao tec_listar_cadernos nao apareceu na lista"}]), p), (True, None))
+        self.assertEqual(ce.validar_resposta(para([{"rotulo": "motivo", "valor": "conta andraus.dev@gmail.com"}]), p), (False, "SEGREDO_OU_DADO_PESSOAL"))
+        self.assertEqual(ce.validar_resposta(para([{"rotulo": "motivo", "valor": "x" * 301}]), p), (False, "ITEM"))
+
+    def test_o_hook_pede_o_motivo_da_parada(self):
+        t = ce.hook_engenharia(REPO)
+        for trecho in ("When estado is PARADO", "rotulo 'motivo'"):
+            self.assertIn(trecho, t)
 
 
 class AssuntoTest(unittest.TestCase):
