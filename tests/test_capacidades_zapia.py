@@ -63,6 +63,11 @@ class RegistroTeste(unittest.TestCase):
         for trecho in ("9f622bbf", "assunto fora do padrao", "(Issue #N)", "começa com", "idêntico", "Não provado:** recorrência"):
             self.assertIn(trecho, r, trecho)
 
+    def test_o_resumo_guarda_a_primeira_rodada_completa_do_canal_e_o_erro_de_copia_do_hash(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("OBSERVADO (28/11/2026, E49", "sem o proprietário colar prompt", "errou **1 caractere**", "HASH_NAO_CONFERE", "16 caracteres", "notebook_renomear"):
+            self.assertIn(trecho, r, trecho)
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)

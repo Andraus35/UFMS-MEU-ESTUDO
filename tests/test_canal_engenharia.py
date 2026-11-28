@@ -15,7 +15,7 @@ REPO = "Andraus35/ufms-meu-estudo-entrada"
 
 
 def resp(p, **kw):
-    r = {"id": p["id"], "pedido_sha256": p["pedido_sha256"], "estado": "RESPONDIDO", "itens": [{"rotulo": "fontes", "valor": "0 fonte"}]}
+    r = {"id": p["id"], "pedido_sha16": p["pedido_sha256"][:16], "estado": "RESPONDIDO", "itens": [{"rotulo": "fontes", "valor": "0 fonte"}]}
     r.update(kw)
     return r
 
@@ -55,7 +55,9 @@ class RespostaTest(unittest.TestCase):
         ruins = {
             "FORMATO": [resp(p, extra="x"), "texto", {"id": p["id"]}],
             "ID_DIFERENTE": [resp(p, id="eng-0009")],
-            "HASH_NAO_CONFERE": [resp(p, pedido_sha256="0" * 64)],
+            "HASH_NAO_CONFERE": [resp(p, pedido_sha16="0" * 16), resp(p, pedido_sha16=p["pedido_sha256"]),  # 64 caracteres não é mais aceito
+                                 resp(p, pedido_sha16=p["pedido_sha256"][:15]), resp(p, pedido_sha16=p["pedido_sha256"][:2] + ("0" if p["pedido_sha256"][2] != "0" else "1") + p["pedido_sha256"][3:16]),
+                                 resp(p, pedido_sha16="F67C9C63A0F04D4F")],
             "ESTADO": [resp(p, estado="OK")],
             "CODIGO_PARADA": [resp(p, estado="PARADO"), resp(p, estado="PARADO", codigo_parada="login"), resp(p, codigo_parada="LOGIN")],
             "ITENS": [resp(p, itens="x"), resp(p, itens=[{"rotulo": "a", "valor": "b"}] * 51)],
@@ -110,6 +112,25 @@ class ContasZapiaTest(unittest.TestCase):
             self.assertIn(trecho, doc)
 
 
+class EcoTest(unittest.TestCase):
+    def test_a_falha_real_da_rodada_eng_0001_continua_sendo_recusada(self):
+        # a Zapia copiou f66c9c63... em vez de f67c9c63... (1 caractere); o eco de 16 caracteres também recusa esse erro e a taxa de erro de cópia cai
+        p = {"id": "eng-0001", "operacao": "notebook_listar", "params": {}, "motivo": "Teste do canal: listar os cadernos da conta andraus.dev (somente leitura).", "origem": "orquestrador"}
+        p["pedido_sha256"] = ce.sha_pedido(p)
+        self.assertEqual(p["pedido_sha256"], "f67c9c63a0f04d4f33fcf3f8d69cea7cb7f48779c18e7fe0e8d0bb0279d4b1ca")
+        r = {"id": "eng-0001", "pedido_sha16": "f66c9c63a0f04d4f", "estado": "RESPONDIDO", "itens": []}
+        self.assertEqual(ce.validar_resposta(r, p), (False, "HASH_NAO_CONFERE"))
+        r["pedido_sha16"] = "f67c9c63a0f04d4f"
+        self.assertEqual(ce.validar_resposta(r, p), (True, None))
+
+    def test_o_hook_pede_so_16_caracteres_e_nao_64(self):
+        t = ce.hook_engenharia(REPO)
+        self.assertIn("pedido_sha16", t)
+        self.assertIn("first 16 characters", t)
+        self.assertNotIn("pedido_sha256 copied letter for letter", t)
+        self.assertEqual(ce.ECO, 16)
+
+
 class AssuntoTest(unittest.TestCase):
     def test_extrair_id_aceita_o_assunto_real_do_github_e_recusa_o_resto(self):
         ok = {f"[{REPO}] ENG eng-0001 (Issue #12)": "eng-0001", f"[{REPO}] ENG eng-0007": "eng-0007"}
@@ -141,7 +162,7 @@ class EstadoTest(unittest.TestCase):
             for i, p in ps.items():
                 (base / "pedidos" / f"{i}.json").write_text(json.dumps(p), encoding="utf-8")
             (base / "respostas" / "eng-0002.json").write_text(json.dumps(resp(ps["eng-0002"])), encoding="utf-8")
-            (base / "respostas" / "eng-0003.json").write_text(json.dumps(resp(ps["eng-0003"], pedido_sha256="0" * 64)), encoding="utf-8")
+            (base / "respostas" / "eng-0003.json").write_text(json.dumps(resp(ps["eng-0003"], pedido_sha16="0" * 16)), encoding="utf-8")
             (base / "respostas" / "eng-0004.json").write_text("{", encoding="utf-8")
             self.assertEqual(ce.estado(d), {"parada_ativa": False, "aguardando_resposta": ["eng-0001"], "a_conferir": ["eng-0002", "eng-0003", "eng-0004"], "aceitas": [], "recusadas": {}})
             regs = {i: ce.conferir(d, i) for i in ("eng-0002", "eng-0003", "eng-0004")}
