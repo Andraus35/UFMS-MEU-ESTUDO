@@ -35,6 +35,15 @@
         "Emenda da S6-R6: aprovar o texto (E54, PR #218)",
         "Merge do #217: mesclar (feito, 34177be)"
       ]
+    },
+    {
+      "registrado_em": "2026-11-28T16:08:22Z",
+      "estado": "Estado lido agora: ciclo da tarefa RM-09 (PR #219) em 'em_andamento'; próximo item da fila: N1-RODADA-4 — Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7).",
+      "respostas": [
+        "Merge do #218: conferir CI e mesclar (feito, 8fa05d0)",
+        "Proxima frente: RODADA-NO-START (PR #219)",
+        "Branches antigos do entrada: limpeza pedida, mas a exclusao foi recusada pelo ambiente (fazer pelo navegador)"
+      ]
     }
   ]
 }
