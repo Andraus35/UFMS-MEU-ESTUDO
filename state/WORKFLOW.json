@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote CANAL-ENG-TEC-PASSO5 (RM-09): registra no E49 e nas capacidades da Zapia o TEC pelo canal (estrutura de caderno), o passo 5 provado e a ativacao perdida do hook; sem tocar agents/, AGENTS.md, PRODUCT.md nem .claude/; sem dado real",
+    "scope": "Lote WORKFLOW-ARQUIVO (RM-09): arquiva titulos longos de itens feitos da work_queue de state/WORKFLOW.json (texto integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md) para voltar ao limite de 64 KiB do START; sem tocar contrato; sem dado real",
     "branch": "claude/new-session-qu2ofh",
-    "pr_number": 215,
+    "pr_number": 216,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #214 integrado em main no merge commit 2ea0939e9f2254242871b572bcbfc90eb5023638. Frente única ativa: RM-09 (Lote CANAL-ENG-TEC-PASSO5 (RM-09): registra no E49 e nas capacidades da Zapia o TEC pelo canal (estrutura de caderno), o passo 5 provado e a ativacao perdida do hook; sem tocar agents/, AGENTS.md, PRODUCT.md nem .claude/; sem dado real), branch claude/new-session-qu2ofh, PR #215. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #215 integrado em main no merge commit aa43fb07b7db36b85fee25f488323d3a50962dd4. Frente única ativa: RM-09 (Lote WORKFLOW-ARQUIVO (RM-09): arquiva titulos longos de itens feitos da work_queue de state/WORKFLOW.json (texto integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md) para voltar ao limite de 64 KiB do START; sem tocar contrato; sem dado real), branch claude/new-session-qu2ofh, PR #216. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 214,
-    "merge_commit_sha": "2ea0939e9f2254242871b572bcbfc90eb5023638"
+    "pr_number": 215,
+    "merge_commit_sha": "aa43fb07b7db36b85fee25f488323d3a50962dd4"
   },
   "work_queue": [
     {
@@ -321,7 +321,7 @@
     },
     {
       "id": "C3",
-      "title": "Roteiro do Termux da C3 (ato do proprietário): cria `entrada` privado, confere forks e colaboradores, limita as ações, guarda o segredo do fluxo e instala o fluxo com o SHA fixado; o roteiro é código offline com teste, a execução é do proprietário",
+      "title": "Roteiro do Termux da C3 (ato do proprietário): cria `entrada` privado, confere forks e colaboradores, limita as ações, guarda o segredo do fluxo e (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/termux/prepara_entrada.sh",
       "depends_on": [
@@ -364,7 +364,7 @@
     },
     {
       "id": "L1",
-      "title": "Módulo offline de leitura somente leitura (S9-R2 a R5): lista de domínios, recusa de escrita, limite de taxa com relógio injetado, saída sem cookie, token nem HTML e filtro de instrução embutida; sem rede e sem navegador, com páginas sintéticas",
+      "title": "Módulo offline de leitura somente leitura (S9-R2 a R5): lista de domínios, recusa de escrita, limite de taxa com relógio injetado, saída sem cookie (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/platform_read_guard.py",
       "depends_on": [
@@ -486,7 +486,7 @@
     },
     {
       "id": "C5R",
-      "title": "Roteiro do Termux da primeira metade da C5 (ato do proprietário), com a flag desligada: o token \"zapia token\" grava um arquivo sintético na fila de entrada, o fluxo roda, o runner responde FLAG_DESLIGADA e dados não muda; o roteiro é código offline com teste, a execução é do proprietário; a promoção até dados exige a C6",
+      "title": "Roteiro do Termux da primeira metade da C5 (ato do proprietário), com a flag desligada: o token \"zapia token\" grava um arquivo sintético na fila de (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/termux/prova_c5.sh",
       "depends_on": [
@@ -510,7 +510,7 @@
     },
     {
       "id": "V4F",
-      "title": "Subcomando consentir-v4 do ufms.sh (ato do proprietário): registra consent-v4.json no repositório privado só com a frase CONSINTO v4 e leitura de volta, a partir do texto aprovado; não habilita a flag nem a leitura por sessões (C6)",
+      "title": "Subcomando consentir-v4 do ufms.sh (ato do proprietário): registra consent-v4.json no repositório privado só com a frase CONSINTO v4 e leitura de (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/termux/ufms.sh",
       "depends_on": [
@@ -521,7 +521,7 @@
     },
     {
       "id": "C6A",
-      "title": "Guarda offline da leitura de projeções por sessões do app Claude (S6-R9): exige consentimento v4 íntegro, projeção em lista fechada proposta sem texto de questão nem identificador de conta, recusa histórico bruto; não liga a flag nem dá acesso a sessão alguma (a C6 é PR próprio com aprovação expressa)",
+      "title": "Guarda offline da leitura de projeções por sessões do app Claude (S6-R9): exige consentimento v4 íntegro, projeção em lista fechada proposta sem (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/session_read_guard.py",
       "depends_on": [
@@ -534,7 +534,7 @@
     },
     {
       "id": "C6B",
-      "title": "Promoção exige o consentimento v4 (decisão do proprietário de 18/11/2026): o runner lê consent-v4.json e só aceita o v4 íntegro (o v2 e o v3 não bastam), com contraprovas; a flag segue falsa e o fluxo instalado precisa ser reinstalado com o novo SHA pelo proprietário",
+      "title": "Promoção exige o consentimento v4 (decisão do proprietário de 18/11/2026): o runner lê consent-v4.json e só aceita o v4 íntegro (o v2 e o v3 não (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/promotion_runner.py",
       "depends_on": [
@@ -545,7 +545,7 @@
     },
     {
       "id": "C6C",
-      "title": "Flag própria do fluxo privado (storage.private_flow_promotion_enabled, falsa) lida pelo runner e pelo executor da caixa, no lugar da personal_results_writes_enabled do público, que fica falsa para sempre (decisão do proprietário de 18/11/2026); a C6 liga só a nova, em PR próprio com aprovação expressa",
+      "title": "Flag própria do fluxo privado (storage.private_flow_promotion_enabled, falsa) lida pelo runner e pelo executor da caixa, no lugar da (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/command_box_runner.py",
       "depends_on": [
@@ -556,7 +556,7 @@
     },
     {
       "id": "C6D",
-      "title": "Marca de evento sintético (decisão do proprietário de 18/11/2026): a entrada aceita o campo opcional sintetico (só o booleano true), o histórico guarda a marca no envelope e as projeções descartam o evento de teste (fail-closed: marca ambígua ou registro malformado também sai); prepara a segunda metade da C5 sem poluir o histórico real; a flag segue falsa",
+      "title": "Marca de evento sintético (decisão do proprietário de 18/11/2026): a entrada aceita o campo opcional sintetico (só o booleano true), o histórico (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/promotion_gate.py",
       "depends_on": [
@@ -567,7 +567,7 @@
     },
     {
       "id": "C5P",
-      "title": "Roteiro do Termux da segunda metade da C5 (ato do proprietário), com a flag do fluxo ligada pela C6: a Zapia grava uma entrada sintética na fila, o fluxo a promove a dados com a marca de teste no envelope, e o roteiro confere sucesso do fluxo, +1 evento, cabeça de dados, envelope, fila consumida e recibo; bloqueia se a flag não estiver ligada no SHA fixado pelo fluxo; o evento sintético fica no histórico (só de acréscimo)",
+      "title": "Roteiro do Termux da segunda metade da C5 (ato do proprietário), com a flag do fluxo ligada pela C6: a Zapia grava uma entrada sintética na fila, o (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/termux/prova_c5_promocao.sh",
       "depends_on": [
@@ -580,7 +580,7 @@
     },
     {
       "id": "C6",
-      "title": "C6, janela curta: liga só private_flow_promotion_enabled (a do público nunca liga), por PR próprio com aprovação expressa do proprietário; o fluxo só passa a valer depois de reinstalado com o SHA do merge (ATUALIZAR); o fechamento é outro PR que volta a flag a false mais nova reinstalação",
+      "title": "C6, janela curta: liga só private_flow_promotion_enabled (a do público nunca liga), por PR próprio com aprovação expressa do proprietário; o fluxo só (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E6_C6_LIGA_FLAG_DO_FLUXO_20261118.md",
       "depends_on": [
@@ -593,7 +593,7 @@
     },
     {
       "id": "C5F",
-      "title": "Correções da prova real de 18/11/2026: o runner diz qual token está malformado (conjunto fechado, nunca o valor); o roteiro da C3 recusa token com CR, invisível ou espaço; os dois roteiros da C5 não caem quando a conclusão do fluxo vem vazia; a prova da promoção exige a fila vazia; a janela da C6 segue aberta até a prova passar",
+      "title": "Correções da prova real de 18/11/2026: o runner diz qual token está malformado (conjunto fechado, nunca o valor); o roteiro da C3 recusa token com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/promotion_runner.py",
       "depends_on": [
@@ -604,7 +604,7 @@
     },
     {
       "id": "C5G",
-      "title": "Causa real da falha do fluxo na prova de 18/11/2026: o GITHUB_TOKEN do Actions (rótulo entrada) passava de 255 caracteres e o runner o recusava (TOKEN_INVALIDO:entrada); o teto vai a 1024 (ASCII imprimível, sem espaço), o diagnóstico passa a trazer comprimento e se é imprimível (metadados, nunca o valor) e os roteiros do Termux alinham o limite; a janela da C6 segue aberta até a prova passar",
+      "title": "Causa real da falha do fluxo na prova de 18/11/2026: o GITHUB_TOKEN do Actions (rótulo entrada) passava de 255 caracteres e o runner o recusava (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/promotion_runner.py",
       "depends_on": [
@@ -628,7 +628,7 @@
     },
     {
       "id": "PROJ",
-      "title": "Gerador offline de projeções para as sessões do app Claude (decisão do proprietário de 18/11/2026): função pura que recebe registros do histórico já (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Gerador offline de projeções para as sessões do app Claude (decisão do proprietário de 18/11/2026): função pura que recebe registros do histórico já (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/projection_generator.py",
       "depends_on": [
@@ -639,7 +639,7 @@
     },
     {
       "id": "PF",
-      "title": "Pré-voo do piloto (S11-R2): script somente leitura, tudo ou nada, com leituras injetadas: duas flags false em repouso, hash do fluxo igual ao modelo do SHA da main, repositórios privados sem forks e convites, consentimento v4 íntegro, validade dos tokens com margem, CI verde no HEAD; contraprova por item vermelho; saída sem segredo",
+      "title": "Pré-voo do piloto (S11-R2): script somente leitura, tudo ou nada, com leituras injetadas: duas flags false em repouso, hash do fluxo igual ao modelo (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-08",
       "deliverable": "scripts/piloto_preflight.py",
       "depends_on": [
@@ -650,7 +650,7 @@
     },
     {
       "id": "PREL",
-      "title": "Relatório do ciclo e semáforo do piloto (S11-R10, R11, R13): script que monta o relatório sem dado pessoal (contagens, SHAs, hashes, níveis, as oito etapas com prova ou NÃO PROVADA, lacunas, linha Não provado) e decide vermelho, âmbar ou verde pelos gatilhos fixados antes; recusa campo fora da lista",
+      "title": "Relatório do ciclo e semáforo do piloto (S11-R10, R11, R13): script que monta o relatório sem dado pessoal (contagens, SHAs, hashes, níveis, as oito (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-08",
       "deliverable": "scripts/piloto_relatorio.py",
       "depends_on": [
@@ -699,7 +699,7 @@
     },
     {
       "id": "S14",
-      "title": "Especificação do runtime operacional do harness (regra do proprietário de 19/11/2026: LLM livre na cognição, condicionado nas leituras e entregas por (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Especificação do runtime operacional do harness (regra do proprietário de 19/11/2026: LLM livre na cognição, condicionado nas leituras e entregas por (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-07",
       "deliverable": "docs/especificacoes/S14_RUNTIME_OPERACIONAL.md",
       "depends_on": [
@@ -713,7 +713,7 @@
     },
     {
       "id": "GE",
-      "title": "Verificador de entrega (S14-R5 a R8, R11, R13, R17): envelope fechado, alegações declaradas e verificadas contra edital e projeção, modo sombra e modo bloqueio, registro sem dado pessoal; COMANDO sempre em bloqueio; sem rede, credencial nem modelo",
+      "title": "Verificador de entrega (S14-R5 a R8, R11, R13, R17): envelope fechado, alegações declaradas e verificadas contra edital e projeção, modo sombra e (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/delivery_gate.py",
       "depends_on": [
@@ -725,7 +725,7 @@
     },
     {
       "id": "HOOK3",
-      "title": "Prorrogação do hook Stop de entrega final até o fim do piloto (decisão do proprietário de 20/11/2026, por escolha em pergunta de fim de rodada): .claude/hooks/entrega_final.py hoje vale só até 20/11/2026; a mudança é pequena (a data limite passa a ser o fechamento da janela do piloto), altera .claude/ (arquivo de contrato, CODEOWNERS) e o merge continua sendo o Mesclar dele; o hook falha aberto e segue sendo lembrete, não controle (S14-R17)",
+      "title": "Prorrogação do hook Stop de entrega final até o fim do piloto (decisão do proprietário de 20/11/2026, por escolha em pergunta de fim de rodada) (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E10_PRORROGACAO_HOOK_ENTREGA_FINAL.md",
       "depends_on": [
@@ -736,7 +736,7 @@
     },
     {
       "id": "RS",
-      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Recibo de START verificável (S14-R2, R3): o broker emite o recibo (SHA, papel, hashes) e o verificador recalcula no repositório no SHA fixado; recusa (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/start_receipt.py",
       "depends_on": [
@@ -747,7 +747,7 @@
     },
     {
       "id": "AE",
-      "title": "Avaliação offline do verificador de entrega (S14-R12a): suíte de envelopes sintéticos válidos e adversariais com resultado esperado determinístico; fecha parte de RM-06 e RM-07 só para o que é gateável; nenhum portão chama modelo",
+      "title": "Avaliação offline do verificador de entrega (S14-R12a): suíte de envelopes sintéticos válidos e adversariais com resultado esperado determinístico (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/delivery_eval.py",
       "depends_on": [
@@ -769,7 +769,7 @@
     },
     {
       "id": "RG",
-      "title": "Ligação do recibo de START ao verificador de entrega (S14-R3): o delivery_gate recalcula o recibo esperado no checkout do contrato, no SHA fixado, com o start_receipt; papel sem START definido, SHA ruim ou falha ao calcular deixam o recibo não conferido (fail-closed); sem rede e sem modelo. Mesma frente do RS, do GE e do AE (lote S14); item registrado na decisão do proprietário de 21/11/2026",
+      "title": "Ligação do recibo de START ao verificador de entrega (S14-R3): o delivery_gate recalcula o recibo esperado no checkout do contrato, no SHA fixado (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-07",
       "deliverable": "scripts/delivery_receipt_binding.py",
       "depends_on": [
@@ -781,7 +781,7 @@
     },
     {
       "id": "HOOK4",
-      "title": "Alinhamento do hook Stop de perguntas de fim de rodada à regra de merge por lote do AGENTS.md (E11): troca 'Uma tarefa por vez' por 'Um lote por vez'; arquivo de contrato em .claude/, merge só com aprovação expressa do proprietário; item registrado na decisão de 21/11/2026",
+      "title": "Alinhamento do hook Stop de perguntas de fim de rodada à regra de merge por lote do AGENTS.md (E11): troca 'Uma tarefa por vez' por 'Um lote por (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E11_ALINHAMENTO_HOOK_PERGUNTAS_AO_LOTE.md",
       "depends_on": [
@@ -792,7 +792,7 @@
     },
     {
       "id": "S15",
-      "title": "Orquestração do ciclo: fluxo, rotina e fonte de tempo (decisão do proprietário de 21/11/2026): unifica as decisões de fluxo e rotina de Tutor, Coach, Zapia e estudante (S1 a S14, PRODUCT.md) e define como proposta a fonte de verdade do tempo (relógio injetado em UTC, fuso e dia de estudo, idade da projeção, quem acorda os agentes, prova do gatilho sem efeito); pesquisa obrigatória; não implanta nem homologa; liga ao RM-09",
+      "title": "Orquestração do ciclo: fluxo, rotina e fonte de tempo (decisão do proprietário de 21/11/2026): unifica as decisões de fluxo e rotina de Tutor, Coach (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S15_ORQUESTRACAO_FLUXO_ROTINA_TEMPO.md",
       "depends_on": [
@@ -804,7 +804,7 @@
     },
     {
       "id": "S16",
-      "title": "Rotina de estudo UFMS 2027 (requisitos do proprietário de 21/11/2026): top 10 por matéria pelos percentuais do guia TEC, hierarquia e origem de cada nó, filtros, entrega diária, comandos de início e encerramento, Notebook e lacunas do guia; separa intenção, especificado, implementado, testado e bloqueado; registra pendências P1 a P5 e conflitos C1 a C3 sem inventar regra; não lista o top 10 nem implanta; liga ao RM-09",
+      "title": "Rotina de estudo UFMS 2027 (requisitos do proprietário de 21/11/2026): top 10 por matéria pelos percentuais do guia TEC, hierarquia e origem de cada (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S16_ROTINA_ESTUDO_TOP10_UFMS_2027.md",
       "depends_on": [
@@ -815,7 +815,7 @@
     },
     {
       "id": "S17",
-      "title": "Pesquisa e autonomia cognitiva do Tutor e do Coach (requisito do proprietário de 21/11/2026): pesquisa web só leitura para estado da arte e melhores (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Pesquisa e autonomia cognitiva do Tutor e do Coach (requisito do proprietário de 21/11/2026): pesquisa web só leitura para estado da arte e melhores (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S17_PESQUISA_AUTONOMIA_TUTOR_COACH.md",
       "depends_on": [
@@ -826,7 +826,7 @@
     },
     {
       "id": "TOP1",
-      "title": "S16 T1: nó do TEC com caminho inteiro, origem, modalidade e percentuais da matéria e do caderno com denominador (S16-R1, R2, R3, R5); offline, sintético, sem gravar resultado; recusa pai marcado folha, soma de folhas acima de 100% e identidade repetida; desconhecido nunca é preenchido",
+      "title": "S16 T1: nó do TEC com caminho inteiro, origem, modalidade e percentuais da matéria e do caderno com denominador (S16-R1, R2, R3, R5); offline (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/tec_no.py",
       "depends_on": [
@@ -837,7 +837,7 @@
     },
     {
       "id": "TOP2",
-      "title": "S16 T2: seleção do top 10 por matéria a partir de percentuais fornecidos (S16-R4, R5, R6; P1 a P5, P7, P8): só modalidade 1 e nós terminais, empate no 10º incluído até o teto de 15 (acima, decisão do proprietário sem lista), lista parcial com menos de 10 folhas, PENDENCIA_ABERTA para amostra ausente, não definitiva ou instável, recusa sem nenhum percentual; correspondência com o guia só por mapa explícito; função pura, sem lista embutida",
+      "title": "S16 T2: seleção do top 10 por matéria a partir de percentuais fornecidos (S16-R4, R5, R6; P1 a P5, P7, P8): só modalidade 1 e nós terminais, empate (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/top10_materia.py",
       "depends_on": [
@@ -848,7 +848,7 @@
     },
     {
       "id": "TOP3",
-      "title": "S16 T3: entrega diária (S16-R7, R8, R9) e recorte do plano ao top 10 (C2, R4, R14): cargo, matéria, caminho, posição e percentual só quando (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "S16 T3: entrega diária (S16-R7, R8, R9) e recorte do plano ao top 10 (C2, R4, R14): cargo, matéria, caminho, posição e percentual só quando (título (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/entrega_diaria.py",
       "depends_on": [
@@ -859,7 +859,7 @@
     },
     {
       "id": "S18",
-      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026): especificação com pesquisa obrigatória; canônico (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Inteligência Motivacional e Comportamental (IMC) do Coach (pedido do proprietário de 21/11/2026): especificação com pesquisa obrigatória; canônico (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S18_INTELIGENCIA_MOTIVACIONAL_COACH.md",
       "depends_on": [
@@ -873,7 +873,7 @@
     },
     {
       "id": "S19",
-      "title": "Tutor e Coach usam os recursos da Zapia como interface com o estudante (pedido do proprietário de 21/11/2026, com o PDF \"Agendamentos e gatilhos na (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Tutor e Coach usam os recursos da Zapia como interface com o estudante (pedido do proprietário de 21/11/2026, com o PDF \"Agendamentos e gatilhos na (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S19_ZAPIA_INTERFACE_AGENDAMENTOS_GATILHOS.md",
       "depends_on": [
@@ -886,7 +886,7 @@
     },
     {
       "id": "HOOKG",
-      "title": "Hook geral claude-context-guard (pedido do proprietário de 21/11/2026): mede a janela de contexto e, aos 50%, injeta a ordem de preparar memória e o (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Hook geral claude-context-guard (pedido do proprietário de 21/11/2026): mede a janela de contexto e, aos 50%, injeta a ordem de preparar memória e o (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-00",
       "deliverable": "docs/governanca/E12_HOOK_GERAL_PASSAGEM_ENTRE_SESSOES.md",
       "depends_on": [
@@ -900,7 +900,7 @@
     },
     {
       "id": "HOOKP",
-      "title": "Hook de perguntas de fim de rodada pergunta só o que mudou (pedido do proprietário de 21/11/2026): o hook continua só lendo e usa o transcript (último Estado lido agora igual ao atual e AskUserQuestion depois dele: não bloqueia de novo; estado mudado: mostra antes e agora); altera .claude/hooks/perguntas_boas_praticas.py (contrato, aprovação expressa do texto e do merge); na dúvida pergunta como antes; não observado em Claude Code real",
+      "title": "Hook de perguntas de fim de rodada pergunta só o que mudou (pedido do proprietário de 21/11/2026): o hook continua só lendo e usa o transcript (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-00",
       "deliverable": "docs/governanca/E13_HOOK_PERGUNTAS_SO_O_QUE_MUDOU.md",
       "depends_on": [
@@ -911,7 +911,7 @@
     },
     {
       "id": "S20",
-      "title": "Automação ponta a ponta: Tutor e Coach acionam a Zapia, e o Gemini Notebook por ela, sem o proprietário colar prompts (pedido de 21/11/2026): especificação com pesquisa (D-16), mapa do que falta (P1 a P8), decisões D1 a D3 do proprietário sem adoção e fases F0 a F5; só especifica, não implanta; fecha com S5, S6, S10, S14, S15 e S19",
+      "title": "Automação ponta a ponta: Tutor e Coach acionam a Zapia, e o Gemini Notebook por ela, sem o proprietário colar prompts (pedido de 21/11/2026) (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/especificacoes/S20_AUTOMACAO_PONTA_A_PONTA_ZAPIA.md",
       "depends_on": [
@@ -922,7 +922,7 @@
     },
     {
       "id": "HOOKR",
-      "title": "Hook de passagem desarma a sessão quando a medição cai abaixo do limite (pedido do proprietário de 21/11/2026, depois do falso alarme de 52% com (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Hook de passagem desarma a sessão quando a medição cai abaixo do limite (pedido do proprietário de 21/11/2026, depois do falso alarme de 52% com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-00",
       "deliverable": "scripts/context_guard_state.py",
       "depends_on": [
@@ -933,7 +933,7 @@
     },
     {
       "id": "GAP-A",
-      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GA-1 a GA-5: esquema de params por operação, filtros no texto de params do COMANDO, hash do prompt, LEMBRETE com várias atividades e formato único da chave de idempotência",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/command_params_schema.py",
       "depends_on": [
@@ -944,7 +944,7 @@
     },
     {
       "id": "GAP-A2",
-      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md), continuação do GAP-A: GA-3 a GA-5 (hash do prompt (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md), continuação do GAP-A: GA-3 a GA-5 (hash do prompt (título (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/command_idempotency.py",
       "depends_on": [
@@ -955,7 +955,7 @@
     },
     {
       "id": "GAP-B",
-      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GB-1 e GB-2: classificação do dia (S15-R16) como função pura e gerado_em como instante UTC",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/day_classifier.py",
       "depends_on": [
@@ -966,7 +966,7 @@
     },
     {
       "id": "GAP-C",
-      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GC-1 a GC-3: resumo de estudo de uma página, SHA externo do START e reconciliação das divergências documentais",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/study_summary.py",
       "depends_on": [
@@ -977,7 +977,7 @@
     },
     {
       "id": "GAP-D",
-      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GD-1 a GD-5: formato Tutor→Coach, meta pretendida, filtro de dado pessoal, âncora da Lei 8.112 e decision_queue",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/tutor_coach_handoff.py",
       "depends_on": [
@@ -988,7 +988,7 @@
     },
     {
       "id": "GAP-E",
-      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; GE-1 e GE-2: derivado paginado do Manual (texto integral só no privado) e gates G-MOT verificáveis; aplicar em agents/ exige aprovação expressa",
+      "title": "Lote da fila de gaps de 21/11/2026 (docs/governanca/FILA_GAPS_E_DIVERGENCIAS_20261121.md); reproduzir o achado com teste que falha antes de corrigir (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "scripts/manual_pages.py",
       "depends_on": [
@@ -1001,7 +1001,7 @@
     },
     {
       "id": "COR-A",
-      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AT-1, AT-2, AC-1 e AC-2: entrega integrada (o delivery_gate confere o prompt do Notebook, a idade da projeção e recalcula o hash do lembrete com os ids; formato único do prompt)",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E15_COR_A_ENTREGA_INTEGRADA.md",
       "depends_on": [
@@ -1012,7 +1012,7 @@
     },
     {
       "id": "COR-B",
-      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AC-3, AC-4, AC-8 e o decisor do teto diário (S8-R1, S15-R17): id fixo da chave briefing, descanso e pendência no lembrete2, chave em maiúsculas, teto da janela, data de consultar_agenda_minima",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E16_COR_B_CHAVE_E_LIMITES_DIARIOS.md",
       "depends_on": [
@@ -1023,7 +1023,7 @@
     },
     {
       "id": "COR-C",
-      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AT-3 a AT-7: filtros de conteúdo (URL sem esquema, instrução embutida e homóglifo, texto de questão no prompt, URL e instrução nas mensagens e no handoff, tokens de efeito em inglês na leitura de plataformas)",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E17_COR_C_FILTROS_DE_CONTEUDO.md",
       "depends_on": [
@@ -1034,7 +1034,7 @@
     },
     {
       "id": "COR-D",
-      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AC-5, AC-6 e AC-7: gates G-MOT ligados à entrega, fail-closed em tipo não booleano, paráfrases e falsos positivos, léxico de desempenho e disponibilidade (continua heurístico); aplicar em agents/ exige aprovação expressa",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E18_COR_D_GATES_MOT_NA_ENTREGA.md",
       "depends_on": [
@@ -1045,7 +1045,7 @@
     },
     {
       "id": "ZAPIA-F1",
-      "title": "Ligação do Tutor e do Coach à Zapia, F0/F1 offline (pedido do proprietário de 22/11/2026): notificação na Zapia em nome dos agentes, com recibo de volta conferido por código; provado em 22/11/2026 com par sintético (E21); detalhe em docs/governanca/E20_ZAPIA_ENTREGA_F1.md e E21_ZAPIA_F1_PROVA_REAL.md",
+      "title": "Ligação do Tutor e do Coach à Zapia, F0/F1 offline (pedido do proprietário de 22/11/2026): notificação na Zapia em nome dos agentes, com recibo de (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E21_ZAPIA_F1_PROVA_REAL.md",
       "depends_on": [
@@ -1058,7 +1058,7 @@
     },
     {
       "id": "COR-E",
-      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com teste que falha antes de corrigir; uma branch, um PR draft, contraprovas em ALTA e MEDIA; AT-8 e AC-9: lista de permissão de caminhos de leitura, citação por palavra inteira e hash por página no manifesto do Manual, idade da projeção por data",
+      "title": "Lote de correção da fila de auditoria Tutor e Coach de 21/11/2026 (docs/governanca/FILA_AUDITORIA_TUTOR_COACH_20261121.md); reproduzir o achado com (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E19_COR_E_ENDURECIMENTO_MENOR.md",
       "depends_on": [
@@ -1069,7 +1069,7 @@
     },
     {
       "id": "ZAPIA-F2a",
-      "title": "Rotina de teste da Zapia, execução única (S20-R6, S15-R4, S8-R8; pedido do proprietário de 22/11/2026, depois do F1 provado): roteiro com a frase (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Rotina de teste da Zapia, execução única (S20-R6, S15-R4, S8-R8; pedido do proprietário de 22/11/2026, depois do F1 provado): roteiro com a frase (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E23_ZAPIA_ROTINA_TESTE_PROVA_REAL.md",
       "depends_on": [
@@ -1082,7 +1082,7 @@
     },
     {
       "id": "ZAPIA-APL",
-      "title": "Aplicação da operação agendar_rotina (E24, aprovada pela decisão do proprietário de 23/11/2026 de excluir o AUTORIZO, E26): operação compartilhada (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Aplicação da operação agendar_rotina (E24, aprovada pela decisão do proprietário de 23/11/2026 de excluir o AUTORIZO, E26): operação compartilhada (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E27_APLICACAO_AGENDAR_ROTINA.md",
       "depends_on": [
@@ -1095,7 +1095,7 @@
     },
     {
       "id": "ZAPIA-CTX",
-      "title": "Alimentar o runner real da caixa com o contexto do agendar_rotina (E27): hashes_promovidos (leitura dos recibos de comandos/recibos) e (título integral em docs/governanca/ARQUIVO_TITULOS_WORKFLOW_20261125.md)",
+      "title": "Alimentar o runner real da caixa com o contexto do agendar_rotina (E27): hashes_promovidos (leitura dos recibos de comandos/recibos) e (título (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E28_RUNNER_CONTEXTO_AGENDAR_ROTINA.md",
       "depends_on": [
@@ -1106,7 +1106,7 @@
     },
     {
       "id": "ZAPIA-F3",
-      "title": "Teste 'rotina cria rotina' (E25, E29): REFUTADO em 23/11/2026 (a Zapia respondeu que não consegue criar rotina de dentro de rotina); a antecedência mínima de 90 min foi aplicada; detalhe no E29, E30 e E32",
+      "title": "Teste 'rotina cria rotina' (E25, E29): REFUTADO em 23/11/2026 (a Zapia respondeu que não consegue criar rotina de dentro de rotina); a antecedência (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E29_ROTINA_CRIA_ROTINA_TESTE_F3.md",
       "depends_on": [
@@ -1119,7 +1119,7 @@
     },
     {
       "id": "ZAPIA-EMISSOR",
-      "title": "Lote 1 da ligação (E33): emissor pelo fluxo (o entrada abre a issue-campainha ao promover, título fixo, corpo vazio) e emenda do D-28 (hook de Gmail só com remetente e assunto como campainha); contrato: PRODUCT.md e fluxo, aprovação expressa do texto e do merge; detalhe no E33 e no E34",
+      "title": "Lote 1 da ligação (E33): emissor pelo fluxo (o entrada abre a issue-campainha ao promover, título fixo, corpo vazio) e emenda do D-28 (hook de Gmail (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E34_EMISSOR_PELO_FLUXO_E_EMENDA_D28.md",
       "depends_on": [
@@ -1133,7 +1133,7 @@
     },
     {
       "id": "ZAPIA-SUBAGENTS",
-      "title": "Lote 2 da ligação (E33): Tutor e Coach como subagents somente leitura, offline e sintético, com harness que valida cada comando pelos gates e produz a matriz operação x gate, com contraprovas; o que é só verificável ou não gateável não vira enforçado; sem Zapia e sem entrada; detalhe no E33 e no E35",
+      "title": "Lote 2 da ligação (E33): Tutor e Coach como subagents somente leitura, offline e sintético, com harness que valida cada comando pelos gates e produz (título integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md)",
       "roadmap_task": "RM-09",
       "deliverable": "docs/governanca/E35_TESTE_SUBAGENTS_TUTOR_COACH_GATES.md",
       "depends_on": [
