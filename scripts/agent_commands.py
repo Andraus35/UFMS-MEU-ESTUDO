@@ -46,6 +46,10 @@ DENIED = "DENIED"
 
 _CPF_FMT = re.compile(r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)")
 _DIGITS11 = re.compile(r"(?<!\d)\d{11}(?!\d)")
+# Um hash hexadecimal (md5, sha1, sha224, sha256, sha384, sha512) tem ~1 chance em 100 de trazer 11 dígitos seguidos com dígitos verificadores de CPF
+# (falso positivo de ~0,7% medido em 28/11/2026). Só é exemplo de hash o token hexadecimal INTEIRO de um desses comprimentos, delimitado por não alfanumérico.
+# Limite declarado: quem embalar um CPF dentro de um token hexadecimal com exatamente esse comprimento escapa deste filtro (heurístico, como o resto).
+_HASH_HEX = re.compile(r"(?<![0-9A-Za-z])(?=[0-9a-fA-F]*[a-fA-F])(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{40}|[0-9a-fA-F]{56}|[0-9a-fA-F]{64}|[0-9a-fA-F]{96}|[0-9a-fA-F]{128})(?![0-9A-Za-z])")
 # quantificadores limitados: sem isso a busca é quadrática em textos longos (corpo de issue de 60 000 caracteres)
 _EMAIL = re.compile(r"[\w.+-]{1,64}@[\w-]{1,255}\.[\w.-]{1,255}")
 _SECRET = re.compile(
@@ -123,7 +127,7 @@ def scan_text(text: str, *, html: bool = False):
         return "PARAMS_HTML_BRUTO"
     if _EMAIL.search(text) or _CPF_FMT.search(text):
         return "PARAMS_DADO_PESSOAL"
-    for match in _DIGITS11.findall(text):
+    for match in _DIGITS11.findall(_HASH_HEX.sub(" ", text)):  # hash hexadecimal inteiro não conta como CPF
         if _cpf_valid(match):
             return "PARAMS_DADO_PESSOAL"
     return None

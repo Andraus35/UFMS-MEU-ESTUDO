@@ -19,7 +19,9 @@ case "$PERFIL" in
 esac
 PRIV=0; case "$PERFIL" in privado|privado_issues) PRIV=1;; esac
 PUBLICO="${PUBLICO:-Andraus35/UFMS-MEU-ESTUDO}"
-ISSUE="${ISSUE:-75}"
+ISSUE_PADRAO=75  # issue do repositório PÚBLICO; no perfil privado_issues o repositório é o entrada, onde existe a #12 (a #75 não existe lá: 404 enganoso, achado de 28/11/2026)
+[ "$PERFIL" = "privado_issues" ] && ISSUE_PADRAO=12
+ISSUE="${ISSUE:-$ISSUE_PADRAO}"
 VAZIO='{}'
 DIVERGENCIAS=0
 API="https://api.github.com"
@@ -130,6 +132,7 @@ echo
 echo "== Sondas de escrita (corpo vazio: não criam nada) =="
 C=$(call POST "/repos/$REPO/issues" "$VAZIO");                    confere "$ESP_ISSUE" "$C"; echo "Criar issue ...........: $(veredito "$C") [$CONF]"
 C=$(call POST "/repos/$REPO/issues/$ISSUE/comments" "$VAZIO");     confere "$ESP_COMENT" "$C"; echo "Comentar na issue $ISSUE: $(veredito "$C") [$CONF]"
+[ "$C" = "404" ] && echo "  (404 pode ser issue inexistente em $REPO, não falta de permissão: rode de novo com ISSUE=<número de uma issue que exista>)"
 C=$(call PUT  "/repos/$REPO/contents/sonda-nao-existe.txt" "$VAZIO"); confere "$ESP_ARQ" "$C"; echo "Gravar arquivo ........: $(veredito "$C") [$CONF]"
 C=$(call POST "/repos/$REPO/pulls" "$VAZIO");                      confere "$ESP_PR" "$C"; echo "Abrir pull request ....: $(veredito "$C") [$CONF]"
 if [ "$PRIV" = 1 ]; then

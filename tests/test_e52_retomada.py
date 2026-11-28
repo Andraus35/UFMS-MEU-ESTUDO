@@ -45,14 +45,13 @@ class RetomadaE52Test(unittest.TestCase):
     def test_a_fila_tem_os_tres_itens_novos_com_bloqueio_e_dependencia(self):
         fila = {i["id"]: i for i in WORKFLOW["work_queue"]}
         self.assertEqual([i["id"] for i in WORKFLOW["work_queue"]][-4:], ["ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START", "FILTRO-HASH-CPF"])
-        self.assertTrue(fila["FILTRO-HASH-CPF"]["blocking_inputs"])
         self.assertTrue((ROOT / fila["ENG-V10-HOOK"]["deliverable"]).exists())  # E53 (28/11/2026): provado
         self.assertEqual(fila["ENG-DESPERTAR"]["depends_on"], ["ENG-V10-HOOK"])
         self.assertEqual(fila["RODADA-NO-START"]["depends_on"], ["ENG-DESPERTAR"])
         for id_ in fila:
-            if id_ in ("FILTRO-HASH-CPF",):
+            if id_ in ("ZZ-NENHUM",):
                 self.assertFalse((ROOT / fila[id_]["deliverable"]).exists(), id_)  # a entrega só existe quando o trabalho for feito
-        for feito in ("ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START"):
+        for feito in ("ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START", "FILTRO-HASH-CPF"):
             self.assertTrue((ROOT / fila[feito]["deliverable"]).exists(), feito)  # E53, E54 e E55 (28/11/2026): feitos
 
     def test_o_proximo_item_liberado_e_o_do_n1_e_os_novos_ficam_bloqueados(self):
