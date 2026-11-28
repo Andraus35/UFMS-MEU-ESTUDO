@@ -16,6 +16,11 @@ acima do limite, `armed_at` no estado dele), este hook CEDE e não bloqueia: as 
 a próxima sessão. Lote pendente também cede: nesse caso é o hook geral que obriga a verificar o fim do lote, concluir o ponto de corte e
 persistir (commit e push) SEM pedir permissão. Leitura apenas do estado do guard (`~/.claude/context-guard/state/<sessão>.json`); estado
 ausente ou ilegível: não cede.
+
+PERSISTÊNCIA ENTRE SESSÕES (E53, opção B do proprietário de 28/11/2026): o hook continua SÓ LENDO, mas agora também lê
+`memory/PERGUNTAS.json`, gravado no repositório por `scripts/registrar_perguntas.py` DEPOIS das respostas (o motivo do bloqueio manda
+rodá-lo e comitar). Se o último estado registrado é IGUAL ao atual, não bloqueia, mesmo em sessão nova; se difere, mostra o que mudou.
+Arquivo ausente, ilegível ou sem entradas: cai no transcript (E13) e, na dúvida, pergunta.
 """
 import json
 import os
@@ -115,6 +120,17 @@ def cede_ao_hook_de_passagem(dados):
         return False
 
 
+def estado_persistido():
+    """Último estado registrado no repositório por `registrar_perguntas.py` (só lê); None se ausente, ilegível ou vazio."""
+    try:
+        raiz = Path(os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd())
+        d = json.loads((raiz / "memory" / "PERGUNTAS.json").read_text(encoding="utf-8"))
+        e = (d.get("entradas") or [])[-1]["estado"]
+        return e.strip() if isinstance(e, str) and e.startswith("Estado lido agora: ") else None
+    except Exception:
+        return None
+
+
 def estado_da_fila():
     """Resumo do estado real (ciclo e próximo item); vazio se não puder ler."""
     try:
@@ -139,7 +155,9 @@ def motivo(estado=None, anterior=None):
         "tarefas coesas da mesma frente no mesmo PR; se o próximo trabalho for de outra frente, o merge vem antes (AGENTS.md). Cada "
         "pergunta traz a opção recomendada de melhores práticas para o repositório e para o projeto primeiro, marcada "
         "'(Recomendado)', com justificativa; não repita o que já foi respondido. Ao receber as respostas, registre no HANDOFF "
-        "(se o fluxo permitir) e comece a próxima rodada dentro do que foi autorizado. " + (estado if estado is not None else estado_da_fila())).strip()
+        "(se o fluxo permitir) e comece a próxima rodada dentro do que foi autorizado. Depois das respostas, REGISTRE-AS no "
+        "repositório: `python scripts/registrar_perguntas.py --resposta \"<pergunta: resposta>\"` (uma opção por resposta) e inclua "
+        "memory/PERGUNTAS.json no próximo commit da branch de trabalho; sem isso a próxima sessão repete as perguntas. " + (estado if estado is not None else estado_da_fila())).strip()
 
 
 def main():
@@ -156,6 +174,9 @@ def main():
             return 0
         estado = estado_da_fila()
         anterior, perguntou = estado_anterior(open(dados["transcript_path"], encoding="utf-8").read().splitlines())
+        persistido = estado_persistido()
+        if persistido:  # o repositório vale mais que o transcript: ele atravessa sessões
+            anterior, perguntou = persistido, True
         if estado and anterior == estado and perguntou:
             return 0  # mesmo estado, pergunta já feita: não repete
     except Exception:

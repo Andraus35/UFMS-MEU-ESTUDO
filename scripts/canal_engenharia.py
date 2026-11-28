@@ -187,7 +187,7 @@ def hook_engenharia(repo: str, credencial: str = "github_ufms_repo_token") -> st
         f"{', '.join(OPERACOES)}. Otherwise write PARADO with codigo_parada OPERACAO_FORA_DA_LISTA. "
         f"Step 3: do ONLY that operation in your own signed-in browser session (never ask for or reveal any Google or TEC credential, cookie or session; read-only except notebook_renomear, which only renames the notebook at params.url, never deletes or shares). "
         f"For any notebook_* operation first select the Google account {CONTA_GOOGLE_NOTEBOOK}; if you cannot, write PARADO with codigo_parada CONTA_ERRADA and stop. "
-        f"For tec_* operations report only titles, ids, filters and question counts, never the student's answers, scores or performance. On a login, captcha or block write PARADO with codigo_parada LOGIN and stop. "
+        f"For tec_* operations report only titles, ids, filters and question counts, never the student's answers, scores or performance. On a captcha or block write PARADO with codigo_parada BLOQUEIO and stop. "
         f"Step 4: PUT {b}/respostas/<id>.json with -X PUT and -d of a JSON object with message, branch main and content (base64 of a JSON object with ONLY these keys: id, pedido_sha16 (the first 16 characters of the field pedido_sha256 of the request file, copied letter for letter as text), estado RESPONDIDO or PARADO, "
         f"itens a list of at most 50 objects with ONLY rotulo and valor (valor up to 300 characters, literal text from the screen), and only when PARADO codigo_parada: capital letters, digits and underscores, 3 to 40 characters). "
         f"If that PUT answers 422 saying sha was not supplied, the file already exists: do not retry, report 'ja respondido'. "

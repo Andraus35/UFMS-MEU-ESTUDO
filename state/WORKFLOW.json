@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote RODADA-TUTOR-COACH (RM-09): orquestrador único com Tutor e Coach como subagentes em fases fixas, mensagens de esquema fechado, offline e sintético (E51, rodada_tutor_coach.py); inclui ajustes do canal de engenharia que a rodada usa (E49, E50, hook ENG v10); persistência E52; sem dado real, sem rotina, sem tocar agents/ nem contrato",
-    "branch": "claude/ufms-meu-estudo-retomada-nebkkj",
-    "pr_number": 213,
+    "scope": "Lote HOOK-PERGUNTAS-PERSISTENCIA (RM-09): hook de perguntas persiste estado e respostas no repositorio entre sessoes (E53); registrar_perguntas.py e memory/PERGUNTAS.json; sem dado real",
+    "branch": "claude/new-session-qu2ofh",
+    "pr_number": 214,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #212 mesclado em main no commit 206306492cb6dbc7002bf7e2c26a81ffa86eee11. Frente única ativa: RM-09, PR #213 (ver active.scope e docs/governanca/E52_RETOMADA_PROXIMA_SESSAO_20261128.md).",
+  "notes": "PR #213 integrado em main no merge commit ffe324f3f6b448763674ca680c78bb8d447a668f. Frente única ativa: RM-09 (Lote HOOK-PERGUNTAS-PERSISTENCIA (RM-09): hook de perguntas persiste estado e respostas no repositorio entre sessoes (E53); registrar_perguntas.py e memory/PERGUNTAS.json; sem dado real), branch claude/new-session-qu2ofh, PR #214. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 212,
-    "merge_commit_sha": "206306492cb6dbc7002bf7e2c26a81ffa86eee11"
+    "pr_number": 213,
+    "merge_commit_sha": "ffe324f3f6b448763674ca680c78bb8d447a668f"
   },
   "work_queue": [
     {
