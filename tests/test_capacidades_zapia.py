@@ -51,6 +51,23 @@ class RegistroTeste(unittest.TestCase):
                        "não manda mais a Zapia calcular hash", "pula", "consome o disparo"):
             self.assertIn(trecho, r, trecho)
 
+    def test_o_resumo_guarda_as_duas_contas_da_zapia_na_engenharia_e_o_gmail_em_outra_conta(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("DECISÃO DO PROPRIETÁRIO (27/11/2026", "autorizadas e são intercambiáveis na fase de engenharia", "andraus.dev@gmail.com",
+                       "um hook ENG ativo por vez", "estende nenhuma prova",
+                       "OBSERVADO (27/11/2026, E49", "recebidos por outra conta Zapia", "não dispararia", "Não testado"):
+            self.assertIn(trecho, r, trecho)
+
+    def test_o_resumo_guarda_a_primeira_ativacao_do_hook_eng_e_a_licao_do_assunto(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("9f622bbf", "assunto fora do padrao", "(Issue #N)", "começa com", "idêntico", "Não provado:** recorrência"):
+            self.assertIn(trecho, r, trecho)
+
+    def test_o_resumo_guarda_a_primeira_rodada_completa_do_canal_e_o_erro_de_copia_do_hash(self):
+        r = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"])
+        for trecho in ("OBSERVADO (28/11/2026, E49", "sem o proprietário colar prompt", "errou **1 caractere**", "HASH_NAO_CONFERE", "16 caracteres", "notebook_renomear", "eng-0002", "conferiu", "eng-0003", "eng-0004", "646 caracteres", "eng-0005", "primeira resposta com conteúdo ACEITA", "4 acertos em 4", "eng-0006", "item `motivo`"):
+            self.assertIn(trecho, r, trecho)
+
     def test_o_registro_nao_promove_o_que_nao_foi_provado(self):
         resumo = "\n".join(bootstrap.capacidades_zapia(ROOT)["resumo"]).lower()
         self.assertNotIn("rotina agendada provada", resumo)
