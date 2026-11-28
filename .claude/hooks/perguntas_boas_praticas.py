@@ -78,7 +78,7 @@ def trecho_do_turno(caminho):
     return linhas[ultimo + 1:]
 
 
-_ESTADO = re.compile(r"(Estado lido agora: [^\n]+)")
+_ESTADO = re.compile(r"(Estado lido agora: ciclo da tarefa [^\n]+)")  # só o aviso real do hook; uma citação solta de "Estado lido agora:" não vale (28/11/2026)
 
 
 def _textos(entrada):

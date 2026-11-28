@@ -15,6 +15,8 @@
 
 
 
+**LEITURA OBRIGATÓRIA (28/11/2026, estado mais novo): `docs/governanca/E56_RETOMADA_PROXIMA_SESSAO_20261128_B.md`** (canal provado, rotina de despertar, hook v14, emenda E54, resumo do canal no START; pendências dele e ordem das tarefas; substitui o estado do E52).
+
 **LEITURA OBRIGATÓRIA DA PRÓXIMA SESSÃO (28/11/2026): `docs/governanca/E52_RETOMADA_PROXIMA_SESSAO_20261128.md`** (canal de engenharia com a Zapia, hook v10 pendente, despertar dos agentes, rodada Tutor–Coach, atos dele e ordem das tarefas; **dê o prompt completo ao proprietário em toda resposta**: `python scripts/canal_engenharia.py --entrada . --prompt-hook`). Blocos de 25 e 26/11 arquivados sem alteração em `docs/governanca/ARQUIVO_HANDOFF_SESSAO_20261125_26.md`.
 
 **LEITURA OBRIGATÓRIA DA PRÓXIMA SESSÃO: `docs/governanca/E46_RETOMADA_PROXIMA_SESSAO_20261125_26.md` (estado do N1 em 3 rodadas, decisões dele, prompts prontos, atos pendentes e próximas tarefas na ordem).** Resumo: ponte Tutor→Zapia→Notebook provada só na 1ª rodada (`N1_NAO_PROVADO`: a contraprova falhou); rodadas 2 e 3 pararam no passo de adicionar fonte (`FONTE_NAO_ADICIONADA`, causa desconhecida); hook `2bef6d04` **desabilitado**, issues #8 a #11 fechadas; comandos `n1c` valem até 27/11 21:55Z; anexo do `entrada` ativo (revoga ele). Próximas na fila: `N1-DIAG-FONTE`, `N1-RODADA-4`, `E45-CORRETOR`, `S22-PROVA-MIN` (esta só com o pedido 'Criar a tarefa S22').

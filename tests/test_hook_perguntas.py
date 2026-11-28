@@ -178,6 +178,12 @@ class ScriptTest(HookRunner, unittest.TestCase):
         self.assertIn("ciclo da tarefa RM-00 (PR #1)", motivo)  # o antes
         self.assertIn("Estado lido agora:", motivo)  # e o agora (estado real do projeto)
 
+    def test_citacao_solta_de_estado_lido_agora_nao_vale_como_aviso_anterior(self):
+        # o texto da conversa que apenas CITA "Estado lido agora:" não é o aviso do hook; sem aviso real, pergunta como antes
+        citacao = "O hook compara o 'Estado lido agora: ' com o do transcript da própria sessão."
+        motivo = self.assertBloqueia(self.rodar([usuario(citacao), uso("AskUserQuestion"), usuario("outro pedido"), bash("git push")]))
+        self.assertNotIn("O que mudou desde a última pergunta:", motivo)
+
     def test_aviso_em_bloco_de_texto_tambem_e_lido(self):
         feedback, _ = self.feedback()
         linha = json.dumps({"type": "user", "message": {"content": [{"type": "text", "text": feedback}]}})
