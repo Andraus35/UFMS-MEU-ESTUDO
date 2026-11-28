@@ -27,6 +27,14 @@
         "Lote do canal ENG: tudo junto (#217)",
         "Proxima frente depois do lote: emenda da S6-R6"
       ]
+    },
+    {
+      "registrado_em": "2026-11-28T15:47:08Z",
+      "estado": "Estado lido agora: ciclo da tarefa RM-09 (PR #218) em 'em_andamento'; próximo item da fila: N1-RODADA-4 — Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7).",
+      "respostas": [
+        "Emenda da S6-R6: aprovar o texto (E54, PR #218)",
+        "Merge do #217: mesclar (feito, 34177be)"
+      ]
     }
   ]
 }
