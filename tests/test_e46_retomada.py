@@ -36,7 +36,7 @@ class RetomadaE46Test(unittest.TestCase):
 
     def test_as_proximas_tarefas_estao_na_fila_na_ordem_e_com_o_que_as_bloqueia(self):
         ids = [i["id"] for i in WORKFLOW["work_queue"]]
-        fim = ids[-4:]
+        fim = ids[-8:-4]  # os 4 últimos itens são do E52 (28/11/2026)
         self.assertEqual(fim, ["N1-DIAG-FONTE", "N1-RODADA-4", "E45-CORRETOR", "S22-PROVA-MIN"])
         fila = {i["id"]: i for i in WORKFLOW["work_queue"]}
         self.assertTrue(fila["N1-DIAG-FONTE"]["blocking_inputs"])

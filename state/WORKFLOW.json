@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote CANAL-ENG-AJUSTES (RM-09, canal de engenharia, mesma frente do E49): texto do hook ENG revisado contra as limitações da Zapia (credencial referenciada como ela a lê, 422 por sha tratado como ja respondido, conta andraus.dev confirmada antes do Notebook, leitura de volta e comparação do texto salvo) com testes; sem criar hook nem issue",
+    "scope": "Lote RODADA-TUTOR-COACH (RM-09): orquestrador único com Tutor e Coach como subagentes em fases fixas, mensagens de esquema fechado, offline e sintético (E51, rodada_tutor_coach.py); inclui ajustes do canal de engenharia que a rodada usa (E49, E50, hook ENG v10); persistência E52; sem dado real, sem rotina, sem tocar agents/ nem contrato",
     "branch": "claude/ufms-meu-estudo-retomada-nebkkj",
-    "pr_number": 212,
+    "pr_number": 213,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #211 integrado em main no merge commit 03173ed224c20da170c947db97abdc3876fb905a. Frente única ativa: RM-09 (Lote CANAL-ENG-AJUSTES (RM-09, canal de engenharia, mesma frente do E49): texto do hook ENG revisado contra as limitações da Zapia (credencial referenciada como ela a lê, 422 por sha tratado como ja respondido, conta andraus.dev confirmada antes do Notebook, leitura de volta e comparação do texto salvo) com testes; sem criar hook nem issue), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #212. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #212 mesclado em main no commit 206306492cb6dbc7002bf7e2c26a81ffa86eee11. Frente única ativa: RM-09, PR #213 (ver active.scope e docs/governanca/E52_RETOMADA_PROXIMA_SESSAO_20261128.md).",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 211,
-    "merge_commit_sha": "03173ed224c20da170c947db97abdc3876fb905a"
+    "pr_number": 212,
+    "merge_commit_sha": "206306492cb6dbc7002bf7e2c26a81ffa86eee11"
   },
   "work_queue": [
     {
@@ -1230,6 +1230,58 @@
       ],
       "blocking_inputs": [
         "pedido expresso 'Criar a tarefa S22' e um horário"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "ENG-V10-HOOK",
+      "title": "Aplicar o hook ENG v10 na Zapia (canal_engenharia.py --prompt-hook) e provar tec_listar_cadernos (eng-0008); E52",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E53_PROVA_TEC_PELO_CANAL.md",
+      "depends_on": [
+        "PONTE-NOTEBOOK"
+      ],
+      "blocking_inputs": [
+        "relato literal da Zapia com o v10 aplicado"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "ENG-DESPERTAR",
+      "title": "Acordar os agentes (E50): issue RESP (D) ou /fire (C), rotina na web com config/rotina_despertar_prompt.txt; provar a cadeia",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E54_PROVA_DESPERTAR_ROTINA.md",
+      "depends_on": [
+        "ENG-V10-HOOK"
+      ],
+      "blocking_inputs": [
+        "decisão D ou C",
+        "permissão de issues ou token /fire",
+        "rotina na web e GitHub App no entrada"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "RODADA-NO-START",
+      "title": "Resumo do canal no START do broker e subagentes reais na rodada Tutor-Coach (PR de contrato); E51",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E55_RODADA_TUTOR_COACH_NO_START.md",
+      "depends_on": [
+        "ENG-DESPERTAR"
+      ],
+      "blocking_inputs": [
+        "aprovação expressa do texto do contrato"
+      ],
+      "optional_inputs": []
+    },
+    {
+      "id": "FILTRO-HASH-CPF",
+      "title": "Falso positivo de CPF em hashes (~0,7%) no scan_text: decidir e corrigir com contraprova; E52 §7",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E56_FILTRO_CPF_EM_HASHES.md",
+      "depends_on": [],
+      "blocking_inputs": [
+        "decisão do proprietário sobre alterar o filtro"
       ],
       "optional_inputs": []
     }

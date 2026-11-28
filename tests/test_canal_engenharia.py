@@ -208,6 +208,23 @@ class MotivoDaParadaTest(unittest.TestCase):
             self.assertIn(trecho, t)
 
 
+class LeituraSemBase64Test(unittest.TestCase):
+    def test_o_hook_le_o_pedido_cru_e_nao_manda_decodificar_base64(self):
+        t = ce.hook_engenharia(REPO)
+        i = t.index("Step 2:")
+        passo2 = t[i:t.index("Step 3:")]
+        # a falha real da rodada eng-0007: a Zapia leu 'operacao' como 'operawao' ao decodificar o base64 de cabeça
+        self.assertIn("application/vnd.github.raw+json", passo2)
+        self.assertIn("never base64", passo2)
+        self.assertNotIn("decode the base64", passo2)
+        self.assertIn("letter by letter", passo2)
+
+    def test_o_doc_registra_o_erro_de_leitura_do_eng_0007(self):
+        doc = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
+        for trecho in ("eng-0007", "operawao", "application/vnd.github.raw+json", "Passo 5", "HTTP 403", "Issues: Read and write"):
+            self.assertIn(trecho, doc)
+
+
 class AssuntoTest(unittest.TestCase):
     def test_extrair_id_aceita_o_assunto_real_do_github_e_recusa_o_resto(self):
         ok = {f"[{REPO}] ENG eng-0001 (Issue #12)": "eng-0001", f"[{REPO}] ENG eng-0007": "eng-0007"}
@@ -219,7 +236,7 @@ class AssuntoTest(unittest.TestCase):
 
     def test_o_texto_do_hook_diz_a_mesma_regra_do_codigo(self):
         t = ce.hook_engenharia(REPO)
-        for trecho in ("must START with", "ignore everything after the 4 digits", "(Issue #12)", "assunto fora do padrao"):
+        for trecho in ("must START with", "ignore everything after them", "(Issue #12)", "assunto fora do padrao"):
             self.assertIn(trecho, t)
         self.assertNotIn("must be exactly '[", t)  # a versão que falhou na 1ª ativação (27/11/2026)
 
@@ -346,3 +363,28 @@ class DocE50DecisoesTest(unittest.TestCase):
         for trecho in ("Caminho escolhido: D", "extrair_id_resp", "caminhos_fora", "--auditar rotina", "--proximo <agente>", "666d66c7a200be9ca2ac75c42d10a5509b398ab1b02c573f0397b3901a90dda7",
                        "não deu o horário", "nada foi criado", "permissão de **issues**", "Não provado"):
             self.assertIn(trecho, doc)
+
+
+class DocE50Passo5Test(unittest.TestCase):
+    def test_o_plano_diz_que_o_caminho_d_depende_da_permissao_de_issues(self):
+        doc = (ROOT / "docs/governanca/E50_DESPERTAR_DOS_AGENTES_PELO_REPOSITORIO.md").read_text(encoding="utf-8")
+        for trecho in ("HTTP 403", "O caminho D não funciona até o proprietário conceder", "Issues: Read and write"):
+            self.assertIn(trecho, doc)
+
+
+class PromptDoHookTest(unittest.TestCase):
+    def test_o_prompt_e_gerado_por_codigo_e_leva_o_texto_exato_do_hook(self):
+        p = ce.prompt_atualizar_hook(REPO)
+        self.assertIn("INICIO " + ce.hook_engenharia(REPO) + " FIM", p)
+        for trecho in ("9f622bbf", "RECORRENTE e HABILITADO", "COMPARE o texto salvo", "NÃO remova nem recrie", f'subject_contains = "[{REPO}] ENG"'):
+            self.assertIn(trecho, p)
+        self.assertEqual(ce.REPO_ENTRADA, REPO)
+
+    def test_a_linha_de_comando_imprime_o_mesmo_prompt(self):
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = ce.main(["--entrada", ".", "--prompt-hook"])
+        self.assertEqual(rc, 0)
+        self.assertEqual(buf.getvalue().rstrip("\n"), ce.prompt_atualizar_hook(REPO))
