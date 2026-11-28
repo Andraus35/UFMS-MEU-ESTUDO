@@ -131,6 +131,21 @@ class EcoTest(unittest.TestCase):
         self.assertEqual(ce.ECO, 16)
 
 
+class EmailNaRespostaTest(unittest.TestCase):
+    def test_a_falha_real_da_rodada_eng_0002_continua_recusada_e_a_versao_sem_email_passa(self):
+        p = ce.montar_pedido("eng-0002", "notebook_relatar_tela", {"url": URL})
+        com_email = resp(p, itens=[{"rotulo": "Conta", "valor": "Andraus Dev (andraus.dev@gmail.com)"}])
+        sem_email = resp(p, itens=[{"rotulo": "Conta", "valor": "conta andraus.dev"}])
+        self.assertEqual(ce.validar_resposta(com_email, p), (False, "SEGREDO_OU_DADO_PESSOAL"))
+        self.assertEqual(ce.validar_resposta(sem_email, p), (True, None))
+
+    def test_o_hook_proibe_email_e_identificador_pessoal_nos_itens(self):
+        t = ce.hook_engenharia(REPO)
+        for trecho in ("Never write an e-mail address", "phone number", "conta andraus.dev"):
+            self.assertIn(trecho, t)
+        self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
+
+
 class AssuntoTest(unittest.TestCase):
     def test_extrair_id_aceita_o_assunto_real_do_github_e_recusa_o_resto(self):
         ok = {f"[{REPO}] ENG eng-0001 (Issue #12)": "eng-0001", f"[{REPO}] ENG eng-0007": "eng-0007"}
