@@ -48,7 +48,7 @@ CODIGOS_PRIVADO = {"GET /user": 200, "GET /rate_limit": 200, f"GET /repos/{PRIVA
                    f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 403}
 ENTRADA = "Andraus35/ufms-meu-estudo-entrada"
 CODIGOS_ISSUES = {"GET /user": 200, "GET /rate_limit": 200, f"GET /repos/{ENTRADA}": 200, "GET /user/repos?per_page=100": 200,
-                  f"POST /repos/{ENTRADA}/issues": 422, f"POST /repos/{ENTRADA}/issues/75/comments": 422,
+                  f"POST /repos/{ENTRADA}/issues": 422, f"POST /repos/{ENTRADA}/issues/12/comments": 422,
                   f"PUT /repos/{ENTRADA}/contents/sonda-nao-existe.txt": 422, f"POST /repos/{ENTRADA}/pulls": 403,
                   f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 403}
 CODIGOS_PUBLICO = {"GET /user": 200, "GET /rate_limit": 200, f"GET /repos/{PUBLICO}": 200, "GET /user/repos?per_page=100": 200,
@@ -231,6 +231,21 @@ class VerificaTokenPrivadoIssuesTests(VerificaTokenPrivadoTests):
         r = self.rodar(dict(CODIGOS_PRIVADO, **{f"POST /repos/{PRIVADO}/issues": 422}), PRIVADO, perfil="privado")
         self.assertEqual(r.returncode, 1)
 
+
+    def test_issues_a_issue_padrao_existe_no_entrada_e_o_404_traz_a_dica(self):
+        r = self.rodar(CODIGOS_ISSUES, ENTRADA, perfil="privado_issues", privados=ENTRADA)
+        self.assertIn("Comentar na issue 12", r.stdout)  # padrão do perfil: issue existente do entrada, não a #75 do público
+        r = self.rodar(dict(CODIGOS_ISSUES, **{f"POST /repos/{ENTRADA}/issues/12/comments": 404}), ENTRADA, perfil="privado_issues", privados=ENTRADA)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("pode ser issue inexistente", r.stdout)
+
+    def test_issues_a_variavel_issue_continua_valendo(self):
+        env_codes = dict(CODIGOS_ISSUES, **{f"POST /repos/{ENTRADA}/issues/33/comments": 422})
+        env = dict(os.environ, FAKE_LOG=str(self.log), FAKE_CODES=json.dumps(env_codes), FAKE_REPOS=ENTRADA, FAKE_PRIVADOS=ENTRADA,
+                   FAKE_EXPIRY="2026-12-15 12:00:00 -0400", PATH=f"{self.bin}:{os.environ['PATH']}", PERFIL="privado_issues", ISSUE="33")
+        r = subprocess.run(["bash", str(SCRIPT)], input=TOKEN + "\n", env=env, capture_output=True, text=True, timeout=60)
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("Comentar na issue 33", r.stdout)
 
 if __name__ == "__main__":
     unittest.main()

@@ -57,16 +57,13 @@ class VinculoAoComandoTest(unittest.TestCase):
             self.assertIsNone(agent_commands._scan_params({"h": h}, SCHEMA), h)
             self.assertRegex(h, r"^(?:[0-9a-f]{8}-){7}[0-9a-f]{8}$")
 
-    def test_hex_puro_aciona_o_filtro_em_alguns_casos_e_por_isso_o_agrupamento_existe(self):
+    def test_hex_puro_ja_nao_aciona_o_filtro_de_cpf_mas_o_agrupamento_segue_valido(self):
+        # E56 (28/11/2026, FILTRO-HASH-CPF): o hash hexadecimal inteiro deixou de ser tratado como CPF; o agrupamento em blocos continua aceito
+        import hashlib
         rnd = random.Random(7)
-        achou = False
-        for n in range(20000):
-            import hashlib
+        for n in range(3000):
             h = hashlib.sha256(f"x{n}{rnd.random()}".encode()).hexdigest()
-            if agent_commands._scan_params({"h": h}, SCHEMA):
-                achou = True
-                break
-        self.assertTrue(achou, "se o hex puro nunca falhar, o agrupamento deixa de se justificar")
+            self.assertIsNone(agent_commands._scan_params({"h": h}, SCHEMA), h)
 
 
 class AdulteracaoTest(unittest.TestCase):

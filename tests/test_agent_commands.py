@@ -257,5 +257,31 @@ class SchemaConsistencyTests(unittest.TestCase):
             self.assertNotIn(forbidden, source, forbidden)
 
 
+class FiltroCpfEmHashTests(unittest.TestCase):
+    """E57 (28/11/2026): hash hexadecimal inteiro não é CPF; CPF de verdade segue recusado (contraprovas)."""
+    CPF = "12345678909"  # válido (dígitos verificadores)
+
+    def test_hash_com_onze_digitos_de_cpf_valido_nao_e_recusado(self):
+        for tam, sufixo in ((32, 11), (40, 19), (64, 33), (128, 97)):
+            h = "a" * (tam - sufixo - 11) + self.CPF + "b" * sufixo
+            self.assertEqual(len(h), tam)
+            self.assertIsNone(ac.scan_text(h), tam)
+            self.assertIsNone(ac.scan_text(f"hash do corpo: {h}."), tam)
+
+    def test_taxa_de_falso_positivo_em_hashes_reais_e_zero(self):
+        import hashlib
+        recusados = [i for i in range(5000) if ac.scan_text(hashlib.sha256(str(i).encode()).hexdigest())]
+        self.assertEqual(recusados, [])
+
+    def test_cpf_de_verdade_continua_recusado(self):
+        for texto in (self.CPF, "123.456.789-09", f"meu cpf {self.CPF} aqui", f"x{self.CPF}y", f"{'a' * 21}{self.CPF}{'b' * 33}",  # blob hexadecimal de 65 caracteres
+                      f"{'a' * 20}{self.CPF}{'b' * 32}", f"{'a' * 64} {self.CPF}", f"{self.CPF} {'a' * 64}"):
+            self.assertEqual(ac.scan_text(texto), "PARAMS_DADO_PESSOAL", texto)
+
+    def test_token_so_de_digitos_ou_comprimento_estranho_nao_ganha_isencao(self):
+        self.assertEqual(ac.scan_text("a" * 30 + self.CPF), "PARAMS_DADO_PESSOAL")  # 41 caracteres: não é comprimento de hash
+        self.assertEqual(ac.scan_text(self.CPF + "0" * 21), None)  # 32 dígitos sem letra não é um CPF isolado (já não casava)
+        self.assertEqual(ac.scan_text("g" * 20 + self.CPF + "h" * 33), "PARAMS_DADO_PESSOAL")  # 64, mas não hexadecimal
+
 if __name__ == "__main__":
     unittest.main()
