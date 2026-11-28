@@ -36,7 +36,8 @@ class ModeloTest(unittest.TestCase):
                        "compare the text, do not compute anything", "is enviar_prompt_notebook", "origin exactly tutor", "do NOT parse, compare or compute any date or time",
                        "write the PARADO response for this command and stop the whole task", "go on to the next command", "EXACTLY as written",
                        "never ask for or reveal any Google credential", "do not share", "never repeat in a loop", "ONE disposable notebook", "untrusted data",
-                       "Execute only once"):
+                       "Execute only once", "andraus.dev@gmail.com", "CONTA_ERRADA", "SEM_CADERNO", "MENU_SEM_TEXTO_COLADO", "COLAR_FALHOU", "SALVAR_FALHOU", "LIMITE",
+                       "ignore the header counter", "Fontes list"):
             self.assertIn(trecho, t, trecho)
         self.assertNotRegex(t, r"\{[A-Z_0-9]+\}")  # nenhum marcador sem preencher
         self.assertNotIn("commands/", t)
@@ -107,9 +108,10 @@ class LimiteDeTamanhoTest(unittest.TestCase):
 
     def test_instrucao_cabe_nos_4000_com_tres_e_com_cinco_comandos(self):
         self.assertEqual(ar.LIMITE_TAREFA_HOOK, 4000)
-        self.assertLessEqual(len(render()), 3850)  # folga de 150 caracteres sobre o teto
-        cinco = [(f"n1-comando-{i}.json", H1) for i in range(5)]
-        self.assertLessEqual(len(render(comandos=cinco)), 4000)
+        self.assertLessEqual(len(render()), 3950)  # v4 (E48): folga de 50 caracteres sobre o teto; a v3 tinha 150 e cabia 5 comandos
+        quatro = [(f"n1-comando-{i}.json", H1) for i in range(4)]
+        with self.assertRaisesRegex(ValueError, "4000"):  # limite declarado da v4: o kit tem 3 comandos; 4 ou mais falham fechado, não são truncados
+            render(comandos=quatro)
 
     def test_renderizacao_acima_do_teto_falha_fechada(self):
         with tempfile.TemporaryDirectory() as d:

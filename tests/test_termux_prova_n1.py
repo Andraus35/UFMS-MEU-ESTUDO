@@ -211,6 +211,39 @@ class ConferirTest(N1Base):
         self.assertEqual(self.roda("conferir").returncode, 2)
 
 
+class PrefixoDaRodadaTest(N1Base):
+    """E48: N1_PREFIXO escolhe o prefixo da rodada (n1d); a fonte pública idêntica já existente é mantida, não bloqueia."""
+
+    def roda_d(self, passo, entrada=""):
+        env = {**os.environ, "PATH": f"{self.bin}:{os.environ['PATH']}", "FAKE_DIR": str(self.fake), "N1_DIR": str(self.n1), "HOME": str(self.tmp), "N1_PREFIXO": "n1d"}
+        return subprocess.run(["bash", str(SCRIPT), passo], input=entrada, capture_output=True, text=True, env=env, timeout=60)
+
+    def test_preparar_com_prefixo_gera_nomes_n1d(self):
+        r = self.roda_d("preparar")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        for f in ("n1d-fonte.json", "n1d-contraprova.json", "n1d-questao.json"):
+            self.assertTrue((self.n1 / f).exists(), f)
+        self.assertFalse((self.n1 / "n1-fonte.json").exists())
+
+    def test_fonte_identica_ja_existente_e_mantida_e_grava_so_seis_arquivos(self):
+        self.assertEqual(self.roda_d("preparar").returncode, 0)
+        (self.fake / "repo/comandos/fontes").mkdir(parents=True)
+        (self.fake / "repo/comandos/fontes/n1.txt").write_bytes((self.n1 / "fonte-n1.txt").read_bytes())
+        r = self.roda_d("colocar", "COLOCAR N1\n")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(self.calls().count("-X PUT"), 6)  # 3 comandos + 3 recibos; a fonte não é regravada
+        self.assertIn("mesmos bytes", r.stdout)
+        for n in ("n1d-fonte.json", "n1d-contraprova.json", "n1d-questao.json"):
+            self.assertTrue((self.fake / "repo/comandos/validados" / n).exists(), n)
+
+    def test_fonte_diferente_segue_bloqueando(self):
+        self.assertEqual(self.roda_d("preparar").returncode, 0)
+        (self.fake / "repo/comandos/fontes").mkdir(parents=True)
+        (self.fake / "repo/comandos/fontes/n1.txt").write_text("outro texto")
+        self.assertEqual(self.roda_d("colocar", "COLOCAR N1\n").returncode, 1)
+        self.assertNotIn("PUT", self.calls())
+
+
 class EstaticosTest(unittest.TestCase):
     def test_script_nao_toca_flag_nem_fila_nem_token(self):
         t = SCRIPT.read_text(encoding="utf-8")
