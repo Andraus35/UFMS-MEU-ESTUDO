@@ -162,6 +162,34 @@ class ItemLongoTest(unittest.TestCase):
         self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
 
 
+class ParadaValidaNaoEResultadoTest(unittest.TestCase):
+    def test_resposta_parada_valida_aparece_separada_das_aceitas(self):
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d) / ce.BASE
+            for sub in ("pedidos", "respostas", "registro"):
+                (base / sub).mkdir(parents=True)
+            ps = {i: ce.montar_pedido(i, "notebook_listar") for i in ("eng-0001", "eng-0002")}
+            for i, p in ps.items():
+                (base / "pedidos" / f"{i}.json").write_text(json.dumps(p), encoding="utf-8")
+            (base / "respostas" / "eng-0001.json").write_text(json.dumps(resp(ps["eng-0001"])), encoding="utf-8")
+            (base / "respostas" / "eng-0002.json").write_text(json.dumps(resp(ps["eng-0002"], estado="PARADO", codigo_parada="OPERACAO_FORA_DA_LISTA", itens=[])), encoding="utf-8")
+            regs = {i: ce.conferir(d, i) for i in ps}
+            self.assertEqual((regs["eng-0001"]["veredito"], regs["eng-0001"]["estado_da_resposta"]), ("ACEITA", "RESPONDIDO"))
+            self.assertEqual((regs["eng-0002"]["veredito"], regs["eng-0002"]["estado_da_resposta"], regs["eng-0002"]["codigo_parada"]), ("ACEITA", "PARADO", "OPERACAO_FORA_DA_LISTA"))
+            for i, r in regs.items():
+                (base / "registro" / f"{i}.json").write_text(json.dumps(r), encoding="utf-8")
+            e = ce.estado(d)
+            self.assertEqual(e["aceitas"], ["eng-0001"])
+            self.assertEqual(e["aceitas_mas_paradas"], {"eng-0002": "OPERACAO_FORA_DA_LISTA"})
+
+
+class DocRodadaEng0005Test(unittest.TestCase):
+    def test_o_doc_registra_a_primeira_resposta_aceita_e_o_que_continua_nao_provado(self):
+        doc = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
+        for trecho in ("eng-0005", "primeira resposta com conteúdo ACEITA", "aceitas_mas_paradas", "`notebook_renomear`", "Em teste desde 27/11/2026", "nenhuma rotina"):
+            self.assertIn(trecho, doc)
+
+
 class AssuntoTest(unittest.TestCase):
     def test_extrair_id_aceita_o_assunto_real_do_github_e_recusa_o_resto(self):
         ok = {f"[{REPO}] ENG eng-0001 (Issue #12)": "eng-0001", f"[{REPO}] ENG eng-0007": "eng-0007"}
@@ -195,7 +223,7 @@ class EstadoTest(unittest.TestCase):
             (base / "respostas" / "eng-0002.json").write_text(json.dumps(resp(ps["eng-0002"])), encoding="utf-8")
             (base / "respostas" / "eng-0003.json").write_text(json.dumps(resp(ps["eng-0003"], pedido_sha16="0" * 16)), encoding="utf-8")
             (base / "respostas" / "eng-0004.json").write_text("{", encoding="utf-8")
-            self.assertEqual(ce.estado(d), {"parada_ativa": False, "aguardando_resposta": ["eng-0001"], "a_conferir": ["eng-0002", "eng-0003", "eng-0004"], "aceitas": [], "recusadas": {}})
+            self.assertEqual(ce.estado(d), {"parada_ativa": False, "aguardando_resposta": ["eng-0001"], "a_conferir": ["eng-0002", "eng-0003", "eng-0004"], "aceitas": [], "aceitas_mas_paradas": {}, "recusadas": {}})
             regs = {i: ce.conferir(d, i) for i in ("eng-0002", "eng-0003", "eng-0004")}
             self.assertEqual([regs[i]["veredito"] for i in regs], ["ACEITA", "RECUSADA", "RECUSADA"])
             self.assertEqual(regs["eng-0003"]["codigo"], "HASH_NAO_CONFERE")
@@ -204,7 +232,7 @@ class EstadoTest(unittest.TestCase):
                 (base / "registro" / f"{i}.json").write_text(json.dumps(r), encoding="utf-8")
             (base / "PARAR").write_text("", encoding="utf-8")
             self.assertEqual(ce.estado(d), {"parada_ativa": True, "aguardando_resposta": ["eng-0001"], "a_conferir": [], "aceitas": ["eng-0002"],
-                                            "recusadas": {"eng-0003": "HASH_NAO_CONFERE", "eng-0004": "ILEGIVEL"}})
+                                            "aceitas_mas_paradas": {}, "recusadas": {"eng-0003": "HASH_NAO_CONFERE", "eng-0004": "ILEGIVEL"}})
 
 
 if __name__ == "__main__":

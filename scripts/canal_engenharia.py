@@ -146,14 +146,17 @@ def estado(entrada: Path) -> dict:
     pedidos = {p.stem: p for p in sorted((base / "pedidos").glob("eng-*.json"))}
     respostas = {p.stem for p in (base / "respostas").glob("eng-*.json")}
     registro = {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in (base / "registro").glob("eng-*.json")}
-    out = {"parada_ativa": (base / "PARAR").exists(), "aguardando_resposta": [], "a_conferir": [], "aceitas": [], "recusadas": {}}
+    out = {"parada_ativa": (base / "PARAR").exists(), "aguardando_resposta": [], "a_conferir": [], "aceitas": [], "aceitas_mas_paradas": {}, "recusadas": {}}
     for id_ in pedidos:
         if id_ not in respostas:
             out["aguardando_resposta"].append(id_)
         elif id_ not in registro:
             out["a_conferir"].append(id_)
         elif registro[id_].get("veredito") == "ACEITA":
-            out["aceitas"].append(id_)
+            if registro[id_].get("estado_da_resposta") == "PARADO":  # formato válido, mas a Zapia NÃO executou: não é resultado
+                out["aceitas_mas_paradas"][id_] = registro[id_].get("codigo_parada")
+            else:
+                out["aceitas"].append(id_)
         else:
             out["recusadas"][id_] = registro[id_].get("codigo")
     return out
@@ -168,7 +171,11 @@ def conferir(entrada: Path, id_: str) -> dict:
     except (OSError, ValueError):
         return {"id": id_, "veredito": "RECUSADA", "codigo": "ILEGIVEL"}
     ok, cod = validar_resposta(resposta, pedido)
-    return {"id": id_, "veredito": "ACEITA" if ok else "RECUSADA", "codigo": cod, "pedido_sha256": sha_pedido(pedido)}
+    r = {"id": id_, "veredito": "ACEITA" if ok else "RECUSADA", "codigo": cod, "pedido_sha256": sha_pedido(pedido)}
+    if ok:  # só depois de validada a resposta é lida a esses dois campos
+        r["estado_da_resposta"] = resposta["estado"]
+        r["codigo_parada"] = resposta.get("codigo_parada")
+    return r
 
 
 def main(argv=None) -> int:
