@@ -54,6 +54,16 @@
         "Rotina e App: manter branches e registrar a mudanca da P8",
         "Atos do proprietario agora: sonda do token, excluir 4 branches, conferir filtro de autor, revisar permissoes do App"
       ]
+    },
+    {
+      "registrado_em": "2026-11-28T16:51:38Z",
+      "estado": "Estado lido agora: ciclo da tarefa RM-09 (PR #221) em 'em_andamento'; próximo item da fila: N1-RODADA-4 — Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7).",
+      "respostas": [
+        "Merge do #220: conferir CI e mesclar (feito, 1f53718)",
+        "Proximo lote: correcao do perfil privado_issues + FILTRO-HASH-CPF (#221)",
+        "Confiabilidade: reenvio da issue ENG apos 5 min e conferir texto da Zapia por tamanho e trechos",
+        "Anexo do entrada e App: manter ate o fim do lote e revogar depois"
+      ]
     }
   ]
 }

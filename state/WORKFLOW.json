@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote RECONCILIACAO-CANAL (RM-09): reconcilia a fila com as provas de 28/11/2026 (E53, E54), registra a P8 superada, E56 de retomada e corrige o fallback do hook de perguntas; sem tocar agents/, AGENTS.md, PRODUCT.md; sem dado real",
+    "scope": "Lote CONFORMIDADE-FILTROS (RM-09): filtro de CPF ignora hash hexadecimal inteiro (FILTRO-HASH-CPF, E56) e perfil privado_issues da sonda usa issue existente; sem tocar agents/, AGENTS.md, PRODUCT.md, .claude/; sem dado real",
     "branch": "claude/new-session-qu2ofh",
-    "pr_number": 220,
+    "pr_number": 221,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #219 integrado em main no merge commit 4368e00d31f8917f6ed9b3c8dd2867d4759b4b6e. Frente única ativa: RM-09 (Lote RECONCILIACAO-CANAL (RM-09): reconcilia a fila com as provas de 28/11/2026 (E53, E54), registra a P8 superada, E56 de retomada e corrige o fallback do hook de perguntas; sem tocar agents/, AGENTS.md, PRODUCT.md; sem dado real), branch claude/new-session-qu2ofh, PR #220. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #220 integrado em main no merge commit 1f53718ba704c4356562137543f5a200a03204dd. Frente única ativa: RM-09 (Lote CONFORMIDADE-FILTROS (RM-09): filtro de CPF ignora hash hexadecimal inteiro (FILTRO-HASH-CPF, E56) e perfil privado_issues da sonda usa issue existente; sem tocar agents/, AGENTS.md, PRODUCT.md, .claude/; sem dado real), branch claude/new-session-qu2ofh, PR #221. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 219,
-    "merge_commit_sha": "4368e00d31f8917f6ed9b3c8dd2867d4759b4b6e"
+    "pr_number": 220,
+    "merge_commit_sha": "1f53718ba704c4356562137543f5a200a03204dd"
   },
   "work_queue": [
     {
