@@ -262,3 +262,11 @@ class DocE49Test(unittest.TestCase):
         self.assertIn(ce.hook_engenharia(REPO), doc)
         for trecho in ("não provado", "Autenticidade do emissor não é provada", "Criar a tarefa S22", "nunca apagar nem compartilhar", "Nunca fechar nem comentar a issue ENG", "não é acionado"):
             self.assertIn(trecho, doc)
+
+
+class DocE50Test(unittest.TestCase):
+    def test_o_plano_de_despertar_diz_o_que_nao_foi_criado_e_o_que_depende_do_proprietario(self):
+        doc = (ROOT / "docs/governanca/E50_DESPERTAR_DOS_AGENTES_PELO_REPOSITORIO.md").read_text(encoding="utf-8")
+        for trecho in ("nada foi criado", "Criar a tarefa S22", "sessão nova", "`/fire`", "pelo menos uma vez", "dado não confiável", "recusada",
+                       "claude-code-action", "Lacunas", "leitura/<agente>.json", "Decisões que precisam de você"):
+            self.assertIn(trecho, doc)
