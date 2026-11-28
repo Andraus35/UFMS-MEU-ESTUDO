@@ -4,8 +4,8 @@
 ## Checkpoint vigente
 
 - Repositório: Andraus35/UFMS-MEU-ESTUDO.
-- Último merge comprovado: PR #218; SHA 8fa05d0ecf92fa68c6d311bb13ce162d0e75c72a
-- Frente ativa: **RM-09 / PR #219**; branch `claude/new-session-qu2ofh`; base main; fase review.
+- Último merge comprovado: PR #219; SHA 4368e00d31f8917f6ed9b3c8dd2867d4759b4b6e
+- Frente ativa: **RM-09 / PR #220**; branch `claude/new-session-qu2ofh`; base main; fase review.
 - Fonte operacional única: `state/WORKFLOW.json`.
 - **Próxima tarefa: RM-08**; a entrega formal RM-08 continua bloqueada até os gates precedentes serem avaliados.
 - CURRENT permanece E0, zero eventos/resultados; PROGRESS intocado.
@@ -14,6 +14,8 @@
 <!-- GOVERNANCE-CHECKPOINT:END -->
 
 
+
+**LEITURA OBRIGATÓRIA (28/11/2026, estado mais novo): `docs/governanca/E56_RETOMADA_PROXIMA_SESSAO_20261128_B.md`** (canal provado, rotina de despertar, hook v14, emenda E54, resumo do canal no START; pendências dele e ordem das tarefas; substitui o estado do E52).
 
 **LEITURA OBRIGATÓRIA DA PRÓXIMA SESSÃO (28/11/2026): `docs/governanca/E52_RETOMADA_PROXIMA_SESSAO_20261128.md`** (canal de engenharia com a Zapia, hook v10 pendente, despertar dos agentes, rodada Tutor–Coach, atos dele e ordem das tarefas; **dê o prompt completo ao proprietário em toda resposta**: `python scripts/canal_engenharia.py --entrada . --prompt-hook`). Blocos de 25 e 26/11 arquivados sem alteração em `docs/governanca/ARQUIVO_HANDOFF_SESSAO_20261125_26.md`.
 

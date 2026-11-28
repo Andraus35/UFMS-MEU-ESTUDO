@@ -44,6 +44,16 @@
         "Proxima frente: RODADA-NO-START (PR #219)",
         "Branches antigos do entrada: limpeza pedida, mas a exclusao foi recusada pelo ambiente (fazer pelo navegador)"
       ]
+    },
+    {
+      "registrado_em": "2026-11-28T16:22:27Z",
+      "estado": "Estado lido agora: ciclo da tarefa RM-09 (PR #220) em 'em_andamento'; próximo item da fila: N1-RODADA-4 — Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7).",
+      "respostas": [
+        "Fase 1: mesclar #219 e abrir lote de reconciliacao (#220)",
+        "FILTRO-HASH-CPF: isentar campos de hash (lote proprio, texto a aprovar)",
+        "Rotina e App: manter branches e registrar a mudanca da P8",
+        "Atos do proprietario agora: sonda do token, excluir 4 branches, conferir filtro de autor, revisar permissoes do App"
+      ]
     }
   ]
 }

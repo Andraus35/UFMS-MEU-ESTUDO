@@ -46,19 +46,20 @@ class RetomadaE52Test(unittest.TestCase):
         fila = {i["id"]: i for i in WORKFLOW["work_queue"]}
         self.assertEqual([i["id"] for i in WORKFLOW["work_queue"]][-4:], ["ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START", "FILTRO-HASH-CPF"])
         self.assertTrue(fila["FILTRO-HASH-CPF"]["blocking_inputs"])
-        self.assertTrue(fila["ENG-V10-HOOK"]["blocking_inputs"])
+        self.assertTrue((ROOT / fila["ENG-V10-HOOK"]["deliverable"]).exists())  # E53 (28/11/2026): provado
         self.assertEqual(fila["ENG-DESPERTAR"]["depends_on"], ["ENG-V10-HOOK"])
         self.assertEqual(fila["RODADA-NO-START"]["depends_on"], ["ENG-DESPERTAR"])
         for id_ in fila:
-            if id_ in ("ENG-V10-HOOK", "ENG-DESPERTAR", "FILTRO-HASH-CPF"):
+            if id_ in ("FILTRO-HASH-CPF",):
                 self.assertFalse((ROOT / fila[id_]["deliverable"]).exists(), id_)  # a entrega só existe quando o trabalho for feito
-        self.assertTrue((ROOT / fila["RODADA-NO-START"]["deliverable"]).exists())  # E55 (28/11/2026): o item foi feito
+        for feito in ("ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START"):
+            self.assertTrue((ROOT / fila[feito]["deliverable"]).exists(), feito)  # E53, E54 e E55 (28/11/2026): feitos
 
     def test_o_proximo_item_liberado_e_o_do_n1_e_os_novos_ficam_bloqueados(self):
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)
         fila = json.loads(saida.stdout)["fila"]
         self.assertEqual(fila["proximo"]["id"], "N1-RODADA-4")
-        self.assertIn("ENG-V10-HOOK", [b["id"] for b in fila["bloqueados"]])
+        self.assertNotIn("ENG-V10-HOOK", [b["id"] for b in fila["bloqueados"]])  # provado (E53)
 
     def test_o_workflow_cabe_no_limite_do_start(self):
         tam = len((ROOT / "state/WORKFLOW.json").read_bytes())
@@ -67,6 +68,22 @@ class RetomadaE52Test(unittest.TestCase):
     def test_o_prompt_de_atualizacao_do_hook_sai_do_codigo(self):
         self.assertIn("INICIO " + ce.hook_engenharia(ce.REPO_ENTRADA) + " FIM", ce.prompt_atualizar_hook(ce.REPO_ENTRADA))
 
+
+
+class RetomadaE56Test(unittest.TestCase):
+    def test_o_handoff_aponta_para_o_e56_antes_do_e52(self):
+        h = (ROOT / "memory/HANDOFF.md").read_text(encoding="utf-8")
+        self.assertLess(h.index("E56_RETOMADA_PROXIMA_SESSAO_20261128_B.md"), h.index("E52_RETOMADA_PROXIMA_SESSAO_20261128.md"))
+
+    def test_o_e56_traz_estado_pendencias_ordem_e_armadilhas(self):
+        d = (ROOT / "docs/governanca/E56_RETOMADA_PROXIMA_SESSAO_20261128_B.md").read_text(encoding="utf-8")
+        for trecho in ("4368e00d31f8917f6ed9b3c8dd2867d4759b4b6e", "FILTRO-HASH-CPF", "privado_issues", "claude/adoring-turing-*", "Autor = Andraus35",
+                       "revogar é ato do proprietário", "git merge -s ours", "≤ 3950", "sem diferenças", "N1-RODADA-4", "S22-PROVA-MIN"):
+            self.assertIn(trecho, d, trecho)
+
+    def test_p8_registra_que_o_entrada_voltou_ao_app(self):
+        p8 = next(i for i in WORKFLOW["owner_priorities"] if i["id"] == "P8")
+        self.assertIn("VOLTOU ao Claude GitHub App", p8["nota"])
 
 if __name__ == "__main__":
     unittest.main()
