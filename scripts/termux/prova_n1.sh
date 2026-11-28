@@ -15,6 +15,7 @@ ENTRADA="Andraus35/ufms-meu-estudo-entrada"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
 N1_DIR="${N1_DIR:-$HOME/n1}"
+N1_PREFIXO="${N1_PREFIXO:-n1}"  # n1 (1ª rodada), n1b, n1c, n1d (E48): prefixo dos nomes dos comandos; o hook não repete respostas já gravadas com o mesmo nome
 PASSO="${1:-}"
 DIV=0
 falha() { echo "BLOQUEADO: $1" >&2; exit 1; }
@@ -26,7 +27,7 @@ for cmd in python; do command -v "$cmd" >/dev/null 2>&1 || falha "falta o comand
 TMP="$(mktemp -d)"; chmod 700 "$TMP"; trap 'rm -rf "$TMP"' EXIT
 
 if [ "$PASSO" = "preparar" ]; then
-  python "$ROOT/scripts/zapia_n1_prep.py" --saida "$N1_DIR" >/dev/null || falha "o preparo recusou (validador do prompt ou caixa)."
+  python "$ROOT/scripts/zapia_n1_prep.py" --saida "$N1_DIR" --prefixo "$N1_PREFIXO" >/dev/null || falha "o preparo recusou (validador do prompt ou caixa)."
   ok "arquivos gerados em $N1_DIR (comandos, recibos, fonte-n1.txt, instrucao-zapia.txt)."
   echo "Próximo: bash scripts/termux/prova_n1.sh colocar"
   exit 0
@@ -40,7 +41,11 @@ NOMES="$(python -c 'import json,sys;print(" ".join(sorted(json.load(open(sys.arg
 [ -n "$NOMES" ] || falha "meta.json sem itens."
 
 if [ "$PASSO" = "colocar" ]; then
-  gh api "repos/$ENTRADA/contents/comandos/fontes/n1.txt" >/dev/null 2>&1 && falha "comandos/fontes/n1.txt já existe em entrada; não sobrescrevo."
+  FONTE_EXISTE=0
+  if gh api "repos/$ENTRADA/contents/comandos/fontes/n1.txt" >/dev/null 2>&1; then  # a fonte é pública e igual em todas as rodadas: se já existe com os MESMOS bytes, não regrava
+    gh api "repos/$ENTRADA/contents/comandos/fontes/n1.txt" --jq .content 2>/dev/null | base64 -d > "$TMP/fonte-atual" 2>/dev/null || true
+    cmp -s "$TMP/fonte-atual" "$N1_DIR/fonte-n1.txt" && FONTE_EXISTE=1 || falha "comandos/fontes/n1.txt já existe em entrada com conteúdo diferente; não sobrescrevo."
+  fi
   for n in $NOMES; do
     gh api "repos/$ENTRADA/contents/comandos/validados/$n" >/dev/null 2>&1 && falha "comandos/validados/$n já existe em entrada; não sobrescrevo."
     gh api "repos/$ENTRADA/contents/comandos/recibos/$n" >/dev/null 2>&1 && falha "comandos/recibos/$n já existe em entrada; não sobrescrevo."
@@ -52,7 +57,7 @@ if [ "$PASSO" = "colocar" ]; then
     gh api "repos/$ENTRADA/contents/$1" --jq .content 2>/dev/null | base64 -d > "$TMP/volta" 2>/dev/null || true
     if cmp -s "$TMP/volta" "$2"; then ok "$1 gravado e conferido por leitura de volta."; else div "$1: a leitura de volta difere do que foi gravado"; fi
   }
-  grava "comandos/fontes/n1.txt" "$N1_DIR/fonte-n1.txt"
+  if [ "$FONTE_EXISTE" = 1 ]; then ok "comandos/fontes/n1.txt já existe com os mesmos bytes; mantido."; else grava "comandos/fontes/n1.txt" "$N1_DIR/fonte-n1.txt"; fi
   for n in $NOMES; do
     grava "comandos/validados/$n" "$N1_DIR/$n"
     grava "comandos/recibos/$n" "$N1_DIR/${n%.json}.recibo.json"
