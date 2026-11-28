@@ -121,7 +121,7 @@ class EcoTest(unittest.TestCase):
         p = {"id": "eng-0001", "operacao": "notebook_listar", "params": {}, "motivo": "Teste do canal: listar os cadernos da conta andraus.dev (somente leitura).", "origem": "orquestrador"}
         p["pedido_sha256"] = ce.sha_pedido(p)
         self.assertEqual(p["pedido_sha256"], "f67c9c63a0f04d4f33fcf3f8d69cea7cb7f48779c18e7fe0e8d0bb0279d4b1ca")
-        r = {"id": "eng-0001", "pedido_sha16": "f66c9c63a0f04d4f", "estado": "RESPONDIDO", "itens": []}
+        r = {"id": "eng-0001", "pedido_sha16": "f66c9c63a0f04d4f", "estado": "RESPONDIDO", "itens": [{"rotulo": "notebook 1", "valor": "x"}]}
         self.assertEqual(ce.validar_resposta(r, p), (False, "HASH_NAO_CONFERE"))
         r["pedido_sha16"] = "f67c9c63a0f04d4f"
         self.assertEqual(ce.validar_resposta(r, p), (True, None))
@@ -129,7 +129,7 @@ class EcoTest(unittest.TestCase):
     def test_o_hook_pede_so_16_caracteres_e_nao_64(self):
         t = ce.hook_engenharia(REPO)
         self.assertIn("pedido_sha16", t)
-        self.assertIn("first 16 characters", t)
+        self.assertIn("first 16 chars", t)
         self.assertNotIn("pedido_sha256 copied letter for letter", t)
         self.assertEqual(ce.ECO, 16)
 
@@ -144,7 +144,7 @@ class EmailNaRespostaTest(unittest.TestCase):
 
     def test_o_hook_proibe_email_e_identificador_pessoal_nos_itens(self):
         t = ce.hook_engenharia(REPO)
-        for trecho in ("No e-mail address, phone number or personal identifier", "conta andraus.dev"):
+        for trecho in ("no e-mail address, phone number, personal identifier or URL outside", "conta andraus.dev"):
             self.assertIn(trecho, t)
         self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
 
@@ -160,7 +160,7 @@ class ItemLongoTest(unittest.TestCase):
 
     def test_o_hook_manda_dividir_em_itens_de_ate_300_caracteres(self):
         t = ce.hook_engenharia(REPO)
-        for trecho in ("MUST be at most 300 characters", "split longer text into several items", "relato 1"):
+        for trecho in ("up to 300 chars", "Split longer text into items", "relato 1"):
             self.assertIn(trecho, t)
         self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
 
@@ -204,8 +204,79 @@ class MotivoDaParadaTest(unittest.TestCase):
 
     def test_o_hook_pede_o_motivo_da_parada(self):
         t = ce.hook_engenharia(REPO)
-        for trecho in ("When estado is PARADO", "rotulo 'motivo'"):
+        for trecho in ("When PARADO also add", "rotulo 'motivo'"):
             self.assertIn(trecho, t)
+
+
+class ConformidadeEndurecidaTest(unittest.TestCase):
+    """E53b: erros e inconsistências do hook achados na auditoria de 28/11/2026 (contraprovas)."""
+
+    def pedido(self, op="tec_listar_cadernos", params=None, **mud):
+        p = ce.montar_pedido("eng-0020", op, params or {}, "teste")
+        p.update(mud)
+        p["pedido_sha256"] = ce.sha_pedido(p)
+        return p
+
+    def resp(self, p, itens, estado="RESPONDIDO", **k):
+        r = {"id": p["id"], "pedido_sha16": p["pedido_sha256"][:16], "estado": estado, "itens": itens}
+        r.update(k)
+        return ce.validar_resposta(r, p)
+
+    def test_respondido_sem_nenhum_item_e_recusado(self):
+        self.assertEqual(self.resp(self.pedido(), []), (False, "ITENS"))
+
+    def test_pedido_de_origem_diferente_e_recusado(self):
+        p = self.pedido(origem="outra")
+        self.assertEqual(self.resp(p, [{"rotulo": "x", "valor": "y"}]), (False, "ORIGEM"))
+
+    def corpo(self, p, **k):
+        r = {"id": p["id"], "pedido_sha16": p["pedido_sha256"][:16], "estado": "RESPONDIDO"}
+        r.update(k)
+        return r
+
+    def test_items_e_o_unico_sinonimo_aceito_e_o_resto_segue_estrito(self):
+        p = self.pedido()
+        ok = [{"rotulo": "x", "valor": "y"}]
+        self.assertEqual(ce.validar_resposta(self.corpo(p, items=ok), p), (True, None))
+        self.assertEqual(ce.validar_resposta(self.corpo(p, itens=ok), p), (True, None))
+        self.assertEqual(ce.validar_resposta(self.corpo(p, itens=ok, items=ok), p), (False, "FORMATO"))  # as duas chaves juntas
+        self.assertEqual(ce.validar_resposta(self.corpo(p, items=ok, extra=1), p), (False, "FORMATO"))  # chave extra
+        for outra in ("item", "label", "values", "Items", "ITENS"):
+            self.assertEqual(ce.validar_resposta(self.corpo(p, **{outra: ok}), p), (False, "FORMATO"), outra)
+
+    def test_o_sinonimo_nao_afrouxa_os_outros_filtros(self):
+        p = self.pedido()
+        self.assertEqual(ce.validar_resposta(self.corpo(p, items=[]), p), (False, "ITENS"))
+        self.assertEqual(ce.validar_resposta(self.corpo(p, items=[{"rotulo": "x", "valor": "a@b.com"}]), p), (False, "SEGREDO_OU_DADO_PESSOAL"))
+        self.assertEqual(ce.validar_resposta(self.corpo(p, items=[{"rotulo": "x", "valor": "y", "extra": "z"}]), p), (False, "ITEM"))
+        self.assertEqual(ce.validar_resposta(self.corpo(p, items=[{"rotulo": "x", "valor": "Acertos"}]), p), (False, "DESEMPENHO_DO_ALUNO"))
+
+    def test_palavra_inteira_nao_confunde_anotacoes_com_nota(self):
+        p = self.pedido()
+        self.assertEqual(self.resp(p, [{"rotulo": "cadernos", "valor": "Anotações de Direito (id 123456)"}]), (True, None))
+        for ruim in ("Notas de aula", "Acertos", "Resultado final", "gabarito oficial", "Percentual de acerto"):
+            self.assertEqual(self.resp(p, [{"rotulo": "cadernos", "valor": ruim}]), (False, "DESEMPENHO_DO_ALUNO"), ruim)
+
+    def test_telefone_com_hifen_e_recusado_e_id_de_caderno_nao(self):
+        p = self.pedido()
+        for ruim in ("contato 67 99999-1234", "fone (67) 3345-6789", "67999991234 e 6799999-1234"):
+            self.assertEqual(self.resp(p, [{"rotulo": "x", "valor": ruim}]), (False, "SEGREDO_OU_DADO_PESSOAL"), ruim)
+        self.assertEqual(self.resp(p, [{"rotulo": "x", "valor": "caderno (id 108839670; 2605 questões); 17.86%"}]), (True, None))
+
+    def test_hook_traz_a_forma_exata_da_resposta_e_os_parametros_das_operacoes(self):
+        t = ce.hook_engenharia(REPO)
+        for trecho in ('"itens":[{"rotulo":', "never items, label or value", "params.novo_titulo", "params.caderno_id",
+                       "URL outside notebook.google.com and tecconcursos.com.br", "1 to 50 itens"):
+            self.assertIn(trecho, t)
+        self.assertTrue(t.isascii())
+        self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
+
+    def test_os_exemplos_do_hook_batem_com_o_validador(self):
+        t = ce.hook_engenharia(REPO)
+        self.assertEqual(sorted(ce.CAMPOS_RESPOSTA), sorted({"id", "pedido_sha16", "estado", "itens", "codigo_parada"}))
+        for campo in ce.CAMPOS_RESPOSTA - {"codigo_parada"}:
+            self.assertIn(f'"{campo}"', t)
+        self.assertIn('"codigo_parada"', t)
 
 
 class LeituraSemBase64Test(unittest.TestCase):

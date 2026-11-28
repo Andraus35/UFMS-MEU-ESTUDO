@@ -18,6 +18,15 @@
         "Proximo lote: arquivar o WORKFLOW (feito no #216)",
         "Despertar: criar rotina na web e instalar o App no entrada (ato do proprietario, a guiar)"
       ]
+    },
+    {
+      "registrado_em": "2026-11-28T15:14:58Z",
+      "estado": "Estado lido agora: ciclo da tarefa RM-09 (PR #217) em 'em_andamento'; próximo item da fila: N1-RODADA-4 — Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7).",
+      "respostas": [
+        "Merge do #216: mesclar (feito, 832944b)",
+        "Lote do canal ENG: tudo junto (#217)",
+        "Proxima frente depois do lote: emenda da S6-R6"
+      ]
     }
   ]
 }
