@@ -3,7 +3,7 @@
 # SEM imprimir o token e SEM criar nada (as sondas de escrita mandam corpo vazio e falham na validação).
 # Uso:  bash verifica_token.sh        (cole o token quando pedir; ele não aparece na tela)
 # Requer: curl (pkg install curl). Opcional: REPO=dono/repo ISSUE=numero bash verifica_token.sh
-# Perfis (variável PERFIL): "publico" (padrão, token do projeto: criar issue PODE, comentar PODE, gravar arquivo NÃO,
+# Perfis (variável PERFIL; "privado_issues" é o token da Zapia no `entrada` depois da emenda E54): "publico" (padrão, token do projeto: criar issue PODE, comentar PODE, gravar arquivo NÃO,
 # abrir PR NÃO) e "privado" (token da Zapia para o repositório de dados: gravar arquivo PODE, issue/comentário/PR NÃO,
 # escrita no repositório público NÃO). Nos dois: token fine-grained, COM expiração e sem alcançar outros repositórios PRIVADOS nem escrever em outros (PR-010; os públicos qualquer token lê).
 # Cada sonda é comparada com o esperado; o fim imprime RESULTADO e sai com código 1 se algo divergir.
@@ -12,8 +12,12 @@ PERFIL="${PERFIL:-publico}"
 case "$PERFIL" in
   publico) REPO="${REPO:-Andraus35/UFMS-MEU-ESTUDO}"; ESP_ISSUE=PODE; ESP_COMENT=PODE; ESP_ARQ=NAO; ESP_PR=NAO;;
   privado) REPO="${REPO:-Andraus35/ufms-meu-estudo-dados}"; ESP_ISSUE=NAO; ESP_COMENT=NAO; ESP_ARQ=PODE; ESP_PR=NAO;;
-  *) echo "PERFIL deve ser publico ou privado."; exit 1;;
+  # E54 (emenda da S6-R6, 28/11/2026): token da Zapia no `entrada`: gravar arquivo PODE e Issues PODE (só para abrir `RESP eng-NNNN`); comentar acompanha Issues
+  # (a API não separa), então a proibição de comentar é do prompt, não da permissão; pull request NÃO; escrita em qualquer outro repositório NÃO.
+  privado_issues) REPO="${REPO:-Andraus35/ufms-meu-estudo-entrada}"; ESP_ISSUE=PODE; ESP_COMENT=PODE; ESP_ARQ=PODE; ESP_PR=NAO;;
+  *) echo "PERFIL deve ser publico, privado ou privado_issues."; exit 1;;
 esac
+PRIV=0; case "$PERFIL" in privado|privado_issues) PRIV=1;; esac
 PUBLICO="${PUBLICO:-Andraus35/UFMS-MEU-ESTUDO}"
 ISSUE="${ISSUE:-75}"
 VAZIO='{}'
@@ -113,10 +117,10 @@ EOF_LISTA
   echo "Repositórios públicos listados: $NPUB (qualquer token lê os públicos; não contam como alcance)"
   # privados permitidos: só o designado, se ele for privado (perfil privado); nenhum no perfil público
   for n in $PRIVADOS; do
-    if [ "$PERFIL" = "privado" ] && [ "$(printf '%s' "$n" | tr 'A-Z' 'a-z')" = "$REPO_MINUSC" ]; then continue; fi
+    if [ "$PRIV" = 1 ] && [ "$(printf '%s' "$n" | tr 'A-Z' 'a-z')" = "$REPO_MINUSC" ]; then continue; fi
     echo "DIVERGE: o token alcança o repositório PRIVADO $n, que não é o designado."; DIVERGENCIAS=$((DIVERGENCIAS+1))
   done
-  if [ "$PERFIL" = "privado" ]; then
+  if [ "$PRIV" = 1 ]; then
     case " $(printf '%s' "$PRIVADOS" | tr 'A-Z' 'a-z') " in *" $REPO_MINUSC "*) ;;
       *) echo "DIVERGE: o token não alcança o repositório designado $REPO."; DIVERGENCIAS=$((DIVERGENCIAS+1));; esac
   fi
@@ -128,7 +132,7 @@ C=$(call POST "/repos/$REPO/issues" "$VAZIO");                    confere "$ESP_
 C=$(call POST "/repos/$REPO/issues/$ISSUE/comments" "$VAZIO");     confere "$ESP_COMENT" "$C"; echo "Comentar na issue $ISSUE: $(veredito "$C") [$CONF]"
 C=$(call PUT  "/repos/$REPO/contents/sonda-nao-existe.txt" "$VAZIO"); confere "$ESP_ARQ" "$C"; echo "Gravar arquivo ........: $(veredito "$C") [$CONF]"
 C=$(call POST "/repos/$REPO/pulls" "$VAZIO");                      confere "$ESP_PR" "$C"; echo "Abrir pull request ....: $(veredito "$C") [$CONF]"
-if [ "$PERFIL" = "privado" ]; then
+if [ "$PRIV" = 1 ]; then
   C=$(call PUT "/repos/$PUBLICO/contents/sonda-nao-existe.txt" "$VAZIO"); confere NAO "$C"
   echo "Gravar no repositório PÚBLICO: $(veredito "$C") [$CONF]"
 fi
@@ -137,7 +141,7 @@ OUTROS=0
 for n in $PUBLICOS $PRIVADOS; do
   nl="$(printf '%s' "$n" | tr 'A-Z' 'a-z')"
   [ "$nl" = "$REPO_MINUSC" ] && continue
-  [ "$PERFIL" = "privado" ] && [ "$nl" = "$(printf '%s' "$PUBLICO" | tr 'A-Z' 'a-z')" ] && continue   # já sondado acima
+  [ "$PRIV" = 1 ] && [ "$nl" = "$(printf '%s' "$PUBLICO" | tr 'A-Z' 'a-z')" ] && continue   # já sondado acima
   OUTROS=$((OUTROS+1)); [ "$OUTROS" -le 20 ] || break
   C=$(call PUT "/repos/$n/contents/sonda-nao-existe.txt" "$VAZIO"); confere NAO "$C"
   echo "Gravar em $n: $(veredito "$C") [$CONF]"

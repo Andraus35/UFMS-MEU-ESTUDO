@@ -46,6 +46,11 @@ CODIGOS_PRIVADO = {"GET /user": 200, "GET /rate_limit": 200, f"GET /repos/{PRIVA
                    f"POST /repos/{PRIVADO}/issues": 403, f"POST /repos/{PRIVADO}/issues/75/comments": 403,
                    f"PUT /repos/{PRIVADO}/contents/sonda-nao-existe.txt": 422, f"POST /repos/{PRIVADO}/pulls": 403,
                    f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 403}
+ENTRADA = "Andraus35/ufms-meu-estudo-entrada"
+CODIGOS_ISSUES = {"GET /user": 200, "GET /rate_limit": 200, f"GET /repos/{ENTRADA}": 200, "GET /user/repos?per_page=100": 200,
+                  f"POST /repos/{ENTRADA}/issues": 422, f"POST /repos/{ENTRADA}/issues/75/comments": 422,
+                  f"PUT /repos/{ENTRADA}/contents/sonda-nao-existe.txt": 422, f"POST /repos/{ENTRADA}/pulls": 403,
+                  f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 403}
 CODIGOS_PUBLICO = {"GET /user": 200, "GET /rate_limit": 200, f"GET /repos/{PUBLICO}": 200, "GET /user/repos?per_page=100": 200,
                    f"POST /repos/{PUBLICO}/issues": 422, f"POST /repos/{PUBLICO}/issues/75/comments": 422,
                    f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 403, f"POST /repos/{PUBLICO}/pulls": 403}
@@ -182,6 +187,49 @@ class VerificaTokenPrivadoTests(unittest.TestCase):
         self.assertIn("indefinido", handoff)
         configuracao = (ROOT / "settings.json").read_text(encoding="utf-8")
         self.assertRegex(configuracao, r'"personal_results_writes_enabled":\s*false')
+
+
+class VerificaTokenPrivadoIssuesTests(VerificaTokenPrivadoTests):
+    """E54: perfil privado_issues (token da Zapia no entrada com Issues em escrita); herda só a montagem, os testes abaixo são próprios."""
+
+    def run(self, result=None):  # não repete os testes herdados
+        if self._testMethodName.startswith("test_issues_"):
+            return super().run(result)
+        return unittest.TestResult() if result is None else result
+
+    def test_issues_conforme_passa(self):
+        r = self.rodar(CODIGOS_ISSUES, ENTRADA, perfil="privado_issues", privados=ENTRADA)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("RESULTADO: CONFERE com o perfil privado_issues", r.stdout)
+        self.assertNotIn("DIVERGE", r.stdout)
+
+    def test_issues_sem_a_permissao_de_issues_diverge(self):
+        r = self.rodar(dict(CODIGOS_ISSUES, **{f"POST /repos/{ENTRADA}/issues": 403}), ENTRADA, perfil="privado_issues", privados=ENTRADA)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("DIVERGE (esperado", r.stdout)
+
+    def test_issues_com_pull_request_ou_sem_gravar_arquivo_diverge(self):
+        for mudanca in ({f"POST /repos/{ENTRADA}/pulls": 422}, {f"PUT /repos/{ENTRADA}/contents/sonda-nao-existe.txt": 403}):
+            with self.subTest(mudanca=mudanca):
+                r = self.rodar(dict(CODIGOS_ISSUES, **mudanca), ENTRADA, perfil="privado_issues", privados=ENTRADA)
+                self.assertEqual(r.returncode, 1)
+
+    def test_issues_alcancando_outro_repositorio_privado_ou_escrevendo_nele_diverge(self):
+        r = self.rodar(CODIGOS_ISSUES, f"{ENTRADA},{PRIVADO}", perfil="privado_issues", privados=f"{ENTRADA},{PRIVADO}")
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("DIVERGE", r.stdout)
+        r = self.rodar(dict(CODIGOS_ISSUES, **{f"PUT /repos/{PUBLICO}/contents/sonda-nao-existe.txt": 422}), ENTRADA, perfil="privado_issues", privados=ENTRADA)
+        self.assertEqual(r.returncode, 1)
+
+    def test_issues_sem_expiracao_ou_classic_diverge(self):
+        r = self.rodar(CODIGOS_ISSUES, ENTRADA, perfil="privado_issues", privados=ENTRADA, expira="")
+        self.assertEqual(r.returncode, 1)
+        r = self.rodar(CODIGOS_ISSUES, ENTRADA, perfil="privado_issues", privados=ENTRADA, token="ghp_SENTINELA0123456789abcdefABCDEF")
+        self.assertEqual(r.returncode, 1)
+
+    def test_issues_o_perfil_privado_antigo_continua_recusando_issues(self):
+        r = self.rodar(dict(CODIGOS_PRIVADO, **{f"POST /repos/{PRIVADO}/issues": 422}), PRIVADO, perfil="privado")
+        self.assertEqual(r.returncode, 1)
 
 
 if __name__ == "__main__":
