@@ -141,7 +141,23 @@ class EmailNaRespostaTest(unittest.TestCase):
 
     def test_o_hook_proibe_email_e_identificador_pessoal_nos_itens(self):
         t = ce.hook_engenharia(REPO)
-        for trecho in ("Never write an e-mail address", "phone number", "conta andraus.dev"):
+        for trecho in ("No e-mail address, phone number or personal identifier", "conta andraus.dev"):
+            self.assertIn(trecho, t)
+        self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
+
+
+class ItemLongoTest(unittest.TestCase):
+    def test_a_falha_real_da_rodada_eng_0004_continua_recusada_e_a_versao_dividida_passa(self):
+        p = ce.montar_pedido("eng-0004", "notebook_relatar_tela", {"url": URL})
+        longo = "texto da tela " * 46  # 644 caracteres, como o item da rodada real
+        self.assertGreater(len(longo), 300)
+        self.assertEqual(ce.validar_resposta(resp(p, itens=[{"rotulo": "relato da tela", "valor": longo}]), p), (False, "ITEM"))
+        partes = [{"rotulo": f"relato {i + 1}", "valor": longo[i * 280:(i + 1) * 280]} for i in range(3)]
+        self.assertEqual(ce.validar_resposta(resp(p, itens=partes), p), (True, None))
+
+    def test_o_hook_manda_dividir_em_itens_de_ate_300_caracteres(self):
+        t = ce.hook_engenharia(REPO)
+        for trecho in ("MUST be at most 300 characters", "split longer text into several items", "relato 1"):
             self.assertIn(trecho, t)
         self.assertLessEqual(len(t), ce.LIMITE_TAREFA)
 
