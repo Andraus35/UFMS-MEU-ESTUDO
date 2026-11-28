@@ -57,6 +57,7 @@ O canal já entrega **pedido → hook de Gmail → Zapia → resposta** em `entr
 - **Consumo por agente:** `--proximo <agente>` e `--consumir <agente> <id>` (`orquestrador`, `tutor`, `coach`), idempotentes, só para resposta aceita e **respondida**.
 - **Prompt fixo da rotina:** `config/rotina_despertar_prompt.txt`, SHA-256 `666d66c7a200be9ca2ac75c42d10a5509b398ab1b02c573f0397b3901a90dda7`, pinado em teste; trocar o texto exige PR.
 - **S22 (execução única nesta sessão):** o proprietário marcou a opção, mas **não deu o horário** nem escreveu o pedido literal: **nada foi criado**.
+- **Teste do passo 5 (28/11/2026):** a Zapia tentou abrir a issue `RESP` e recebeu **HTTP 403** (token sem permissão de issues; autorrelato B, corroborado pela ausência da issue). **O caminho D não funciona até o proprietário conceder `Issues: Read and write` ao token fino da Zapia no `entrada`**, o que amplia o poder desse token (E49, item 17).
 - **Pendências do proprietário:** criar a rotina na web (gatilho GitHub, evento issue **aberta**, repositórios principal e `entrada`, prompt do arquivo acima); instalar o Claude GitHub App no `entrada`; dar à credencial da Zapia a permissão de **issues** e atualizar o hook (v9). **Não provado:** que a issue acorde a rotina; o app em repositório privado; a identidade que a rotina usa para gravar no `entrada`.
 
 ## 8. Limites

@@ -221,7 +221,7 @@ class LeituraSemBase64Test(unittest.TestCase):
 
     def test_o_doc_registra_o_erro_de_leitura_do_eng_0007(self):
         doc = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
-        for trecho in ("eng-0007", "operawao", "application/vnd.github.raw+json", "Passo 5"):
+        for trecho in ("eng-0007", "operawao", "application/vnd.github.raw+json", "Passo 5", "HTTP 403", "Issues: Read and write"):
             self.assertIn(trecho, doc)
 
 
@@ -362,4 +362,11 @@ class DocE50DecisoesTest(unittest.TestCase):
         doc = (ROOT / "docs/governanca/E50_DESPERTAR_DOS_AGENTES_PELO_REPOSITORIO.md").read_text(encoding="utf-8")
         for trecho in ("Caminho escolhido: D", "extrair_id_resp", "caminhos_fora", "--auditar rotina", "--proximo <agente>", "666d66c7a200be9ca2ac75c42d10a5509b398ab1b02c573f0397b3901a90dda7",
                        "não deu o horário", "nada foi criado", "permissão de **issues**", "Não provado"):
+            self.assertIn(trecho, doc)
+
+
+class DocE50Passo5Test(unittest.TestCase):
+    def test_o_plano_diz_que_o_caminho_d_depende_da_permissao_de_issues(self):
+        doc = (ROOT / "docs/governanca/E50_DESPERTAR_DOS_AGENTES_PELO_REPOSITORIO.md").read_text(encoding="utf-8")
+        for trecho in ("HTTP 403", "O caminho D não funciona até o proprietário conceder", "Issues: Read and write"):
             self.assertIn(trecho, doc)

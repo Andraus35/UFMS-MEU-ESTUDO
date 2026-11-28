@@ -3,7 +3,7 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote RODADA-TUTOR-COACH (RM-09, conversa Tutor-Coach): modelo aprovado de orquestrador único com Tutor e Coach como subagentes em fases fixas e mensagens de esquema fechado; E51 (plano com pesquisa) e esquema offline e sintético da rodada (pacote de entrada, saídas validadas, hash, ordem) com testes; sem dado real, sem hook, sem rotina, sem tocar agents/ nem contrato",
+    "scope": "Lote RODADA-TUTOR-COACH (RM-09, conversa Tutor-Coach): modelo aprovado de orquestrador único com Tutor e Coach como subagentes em fases fixas e mensagens de esquema fechado; E51 (plano com pesquisa) e esquema offline e sintético da rodada (pacote de entrada, saídas validadas, hash, ordem) com testes; sem dado real, sem hook, sem rotina, sem tocar agents/ nem contrato; mais os ajustes do canal de engenharia que a rodada usa (a rodada emite pedidos desse canal, por isso as micro tarefas são interdependentes): hook ENG com leitura crua do pedido, motivo da parada e passo da issue RESP, E49, E50 e capacidades da Zapia atualizados",
     "branch": "claude/ufms-meu-estudo-retomada-nebkkj",
     "pr_number": 213,
     "base": "main",
@@ -113,7 +113,7 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #212 integrado em main no merge commit 206306492cb6dbc7002bf7e2c26a81ffa86eee11. Frente única ativa: RM-09 (Lote RODADA-TUTOR-COACH (RM-09, conversa Tutor-Coach): modelo aprovado de orquestrador único com Tutor e Coach como subagentes em fases fixas e mensagens de esquema fechado; E51 (plano com pesquisa) e esquema offline e sintético da rodada (pacote de entrada, saídas validadas, hash, ordem) com testes; sem dado real, sem hook, sem rotina, sem tocar agents/ nem contrato), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #213. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #212 integrado em main no merge commit 206306492cb6dbc7002bf7e2c26a81ffa86eee11. Frente única ativa: RM-09 (Lote RODADA-TUTOR-COACH (RM-09, conversa Tutor-Coach): modelo aprovado de orquestrador único com Tutor e Coach como subagentes em fases fixas e mensagens de esquema fechado; E51 (plano com pesquisa) e esquema offline e sintético da rodada (pacote de entrada, saídas validadas, hash, ordem) com testes; sem dado real, sem hook, sem rotina, sem tocar agents/ nem contrato; mais os ajustes do canal de engenharia que a rodada usa (a rodada emite pedidos desse canal, por isso as micro tarefas são interdependentes): hook ENG com leitura crua do pedido, motivo da parada e passo da issue RESP, E49, E50 e capacidades da Zapia atualizados), branch claude/ufms-meu-estudo-retomada-nebkkj, PR #213. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
