@@ -12,3 +12,4 @@
 - **Problema (achado na sonda real de 28/11/2026):** a sonda de comentário usava a issue **#75**, que existe no repositório público e **não** no `entrada`; o 404 saiu como "sem permissão" e deu `DIVERGE` falso.
 - **Correção:** no perfil `privado_issues` a issue padrão é a **#12** (existe no `entrada`); `ISSUE=<n>` continua valendo; um 404 na sonda de comentário agora imprime a dica de que a issue pode não existir. 2 testes novos; a mutação que volta o padrão a 75 é morta.
 - **Limite:** a sonda só vale com a issue indicada existindo; o token real só é conferido no Termux dele, sem mostrar o valor.
+- **Verificação real (28/11/2026, captura do proprietário):** com `ISSUE=12` a sonda deu `RESULTADO: CONFERE com o perfil privado_issues` (detalhes no `E54_EMENDA_S6R6_ISSUES_20261128.md`).
