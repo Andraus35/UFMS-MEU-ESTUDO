@@ -110,6 +110,27 @@ class ContasZapiaTest(unittest.TestCase):
             self.assertIn(trecho, doc)
 
 
+class AssuntoTest(unittest.TestCase):
+    def test_extrair_id_aceita_o_assunto_real_do_github_e_recusa_o_resto(self):
+        ok = {f"[{REPO}] ENG eng-0001 (Issue #12)": "eng-0001", f"[{REPO}] ENG eng-0007": "eng-0007"}
+        for a, esperado in ok.items():
+            self.assertEqual(ce.extrair_id(a, REPO), esperado)
+        for a in (f"Re: [{REPO}] ENG eng-0001 (Issue #12)", f"[{REPO}] ENG eng-001 (Issue #12)", f"[{REPO}] ENG eng-00012", f"[{REPO}] SINAL teste N1c",
+                  f"[{REPO}] ENG eng-0001 (Issue #12) e mais", "", None, f"[Outro/repo] ENG eng-0001 (Issue #12)"):
+            self.assertIsNone(ce.extrair_id(a, REPO), a)
+
+    def test_o_texto_do_hook_diz_a_mesma_regra_do_codigo(self):
+        t = ce.hook_engenharia(REPO)
+        for trecho in ("must START with", "ignore everything after the 4 digits", "(Issue #12)", "assunto fora do padrao"):
+            self.assertIn(trecho, t)
+        self.assertNotIn("must be exactly '[", t)  # a versão que falhou na 1ª ativação (27/11/2026)
+
+    def test_o_doc_manda_titular_a_issue_so_com_eng_e_nao_fechar_a_12(self):
+        doc = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
+        for trecho in ("**`ENG eng-0007`**", "(Issue #N)", "extrair_id", "assunto fora do padrao", "9f622bbf", "A issue #12"):
+            self.assertIn(trecho, doc)
+
+
 class EstadoTest(unittest.TestCase):
     def test_estado_persistido_em_pastas(self):
         with tempfile.TemporaryDirectory() as d:
