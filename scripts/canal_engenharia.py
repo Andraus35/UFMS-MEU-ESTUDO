@@ -22,6 +22,7 @@ except ModuleNotFoundError:  # uso como pacote
 BASE = "comandos/engenharia"
 # Decisão do proprietário de 27/11/2026 (só engenharia): as duas contas da Zapia são autorizadas e intercambiáveis; o texto do hook NÃO nomeia conta Zapia.
 # Registro lido em todo START: docs/governanca/CAPACIDADES_ZAPIA_VERIFICADAS.md. Um hook ENG ativo por vez, na conta que recebe os eventos do Gmail.
+REPO_ENTRADA = "Andraus35/ufms-meu-estudo-entrada"
 CONTAS_ZAPIA_ENGENHARIA = ("antiga", "nova")
 CONTA_GOOGLE_NOTEBOOK = "andraus.dev@gmail.com"
 LIMITE_TAREFA = 3950  # margem sob o teto de 4000 caracteres da tarefa do hook (CAPACIDADES_ZAPIA_VERIFICADAS); era 3600, depois 3800; texto só ASCII (bytes = caracteres)
@@ -239,6 +240,18 @@ def conferir(entrada: Path, id_: str) -> dict:
     return r
 
 
+def prompt_atualizar_hook(repo, hook_id="9f622bbf", conta="souza.merchan@gmail.com"):
+    """Prompt completo para colar na Zapia que tem o hook: atualiza a tarefa EXATAMENTE pelo texto gerado por `hook_engenharia`. Reprodutível por código."""
+    return (
+        f"Atualize o hook de Gmail EXISTENTE {hook_id} (conta {conta}): troque a tarefa dele EXATAMENTE pelo texto entre INICIO e FIM, sem traduzir, resumir nem reescrever nada "
+        f"(nem URLs, nem nomes de pasta como comandos, engenharia, pedidos, respostas, PARAR). Mantenha a conta, os filtros (senders = notifications@github.com e "
+        f'subject_contains = "[{repo}] ENG"), RECORRENTE e HABILITADO. Não crie outro hook, rotina nem lembrete e não execute a tarefa agora. Se a ferramenta não conseguir '
+        f"atualizar, NÃO remova nem recrie: diga o motivo literal. Se o texto passar de 4000 caracteres na sua ferramenta, diga o tamanho e NÃO salve. Depois de salvar, mostre "
+        f"lidos de volta: o ID, a conta, os filtros, se é recorrente, se está habilitado e o texto salvo, e COMPARE o texto salvo com o de INICIO e FIM listando toda diferença "
+        f'(ou escreva "sem diferenças").\nINICIO {hook_engenharia(repo)} FIM'
+    )
+
+
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -246,8 +259,12 @@ def main(argv=None) -> int:
     ap.add_argument("--conferir", metavar="ID")
     ap.add_argument("--proximo", metavar="AGENTE", help="ids aceitos que o agente ainda não consumiu")
     ap.add_argument("--consumir", nargs=2, metavar=("AGENTE", "ID"), help="devolve o novo leitura/<agente>.json (quem grava é o chamador)")
+    ap.add_argument("--prompt-hook", action="store_true", help="imprime o prompt para a Zapia atualizar o hook ENG (texto gerado por código)")
     ap.add_argument("--auditar", metavar="PAPEL", help="lê caminhos alterados na entrada padrão (um por linha) e lista os que o papel não pode gravar")
     a = ap.parse_args(argv)
+    if a.prompt_hook:
+        print(prompt_atualizar_hook(REPO_ENTRADA))
+        return 0
     if a.auditar:
         fora = caminhos_fora([l.strip() for l in sys.stdin if l.strip()], a.auditar)
         print(json.dumps({"papel": a.auditar, "fora": fora}, ensure_ascii=False))

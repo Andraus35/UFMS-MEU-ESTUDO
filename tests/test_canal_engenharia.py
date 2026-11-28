@@ -370,3 +370,21 @@ class DocE50Passo5Test(unittest.TestCase):
         doc = (ROOT / "docs/governanca/E50_DESPERTAR_DOS_AGENTES_PELO_REPOSITORIO.md").read_text(encoding="utf-8")
         for trecho in ("HTTP 403", "O caminho D não funciona até o proprietário conceder", "Issues: Read and write"):
             self.assertIn(trecho, doc)
+
+
+class PromptDoHookTest(unittest.TestCase):
+    def test_o_prompt_e_gerado_por_codigo_e_leva_o_texto_exato_do_hook(self):
+        p = ce.prompt_atualizar_hook(REPO)
+        self.assertIn("INICIO " + ce.hook_engenharia(REPO) + " FIM", p)
+        for trecho in ("9f622bbf", "RECORRENTE e HABILITADO", "COMPARE o texto salvo", "NÃO remova nem recrie", f'subject_contains = "[{REPO}] ENG"'):
+            self.assertIn(trecho, p)
+        self.assertEqual(ce.REPO_ENTRADA, REPO)
+
+    def test_a_linha_de_comando_imprime_o_mesmo_prompt(self):
+        import io
+        import contextlib
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = ce.main(["--entrada", ".", "--prompt-hook"])
+        self.assertEqual(rc, 0)
+        self.assertEqual(buf.getvalue().rstrip("\n"), ce.prompt_atualizar_hook(REPO))
