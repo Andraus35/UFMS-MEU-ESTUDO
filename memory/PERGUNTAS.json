@@ -1,0 +1,14 @@
+{
+  "versao": 1,
+  "entradas": [
+    {
+      "registrado_em": "2026-11-28T03:31:23Z",
+      "estado": "Estado lido agora: ciclo da tarefa RM-09 (PR #214) em 'em_andamento'; próximo item da fila: N1-RODADA-4 — Hook v4 com código por etapa e rodada n1d (prefixo do kit), depois do diagnóstico; atualizar o hook existente, uma issue SINAL só depois da confirmação dele (E46 §7).",
+      "respostas": [
+        "PR do E53: abrir PR draft e registrar recibo (feito: #214)",
+        "Proxima frente: ENG-V10-HOOK (TEC pelo canal), depende do relato da Zapia com v10",
+        "N1: Zapia recebe Gmail e issue SINAL confirmada pelo proprietario (n1d, uma unica issue)"
+      ]
+    }
+  ]
+}

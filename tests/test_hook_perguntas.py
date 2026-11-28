@@ -2,6 +2,7 @@
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -64,13 +65,22 @@ class SettingsTest(unittest.TestCase):
         self.assertNotIn("disableAllHooks", SETTINGS.read_text(encoding="utf-8"))
 
 
-class ScriptTest(unittest.TestCase):
+class HookRunner:
+    """Executa o hook num projeto isolado (nunca na raiz real, cujo memory/PERGUNTAS.json muda o resultado)."""
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.dir = Path(self.tmp.name)
+        self.raiz_isolada = self.dir / "isolado"
+        (self.raiz_isolada / "scripts").mkdir(parents=True)
+        shutil.copy(ROOT / "scripts" / "next_task.py", self.raiz_isolada / "scripts" / "next_task.py")
+        for sub in ("state", "config", "docs"):
+            if (ROOT / sub).is_dir():
+                shutil.copytree(ROOT / sub, self.raiz_isolada / sub, ignore=shutil.ignore_patterns("events"))
 
-    def rodar(self, linhas, ativo=False, projeto=ROOT, bruto=None, sessao=None):
+    def rodar(self, linhas, ativo=False, projeto=None, bruto=None, sessao=None):
+        projeto = projeto or self.raiz_isolada
         arquivo = self.dir / "t.jsonl"
         arquivo.write_text("\n".join(linhas) + "\n", encoding="utf-8")
         dados = {"transcript_path": str(arquivo), "stop_hook_active": ativo}
@@ -86,6 +96,9 @@ class ScriptTest(unittest.TestCase):
         self.assertIsNotNone(saida)
         self.assertEqual(saida["decision"], "block")
         return saida["reason"]
+
+
+class ScriptTest(HookRunner, unittest.TestCase):
 
     def test_entrega_sem_pergunta_bloqueia_com_a_sequencia_e_o_estado(self):
         motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push origin x")]))
@@ -229,12 +242,12 @@ class ScriptTest(unittest.TestCase):
         arquivo = self.dir / "t.jsonl"
         arquivo.write_text(usuario() + "\n" + bash("git push") + "\n", encoding="utf-8")
         r = subprocess.run([sys.executable, str(SCRIPT)], input=json.dumps({"transcript_path": str(arquivo)}),
-                           capture_output=True, text=True, timeout=30, env={**os.environ, "CLAUDE_PROJECT_DIR": str(ROOT)})
+                           capture_output=True, text=True, timeout=30, env={**os.environ, "CLAUDE_PROJECT_DIR": str(self.raiz_isolada)})
         self.assertEqual(set(json.loads(r.stdout)), {"decision", "reason"})
         self.assertEqual(r.stderr, "")
 
 
-class PersistenciaEntreSessoesTest(ScriptTest):
+class PersistenciaEntreSessoesTest(HookRunner, unittest.TestCase):
     """E53 (opção B): o estado perguntado e as respostas vivem no repositório e atravessam sessões."""
 
     def projeto_com(self, estado, entradas=True):
