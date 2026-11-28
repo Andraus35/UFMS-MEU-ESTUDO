@@ -50,8 +50,9 @@ class RetomadaE52Test(unittest.TestCase):
         self.assertEqual(fila["ENG-DESPERTAR"]["depends_on"], ["ENG-V10-HOOK"])
         self.assertEqual(fila["RODADA-NO-START"]["depends_on"], ["ENG-DESPERTAR"])
         for id_ in fila:
-            if id_ in ("ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START", "FILTRO-HASH-CPF"):
+            if id_ in ("ENG-V10-HOOK", "ENG-DESPERTAR", "FILTRO-HASH-CPF"):
                 self.assertFalse((ROOT / fila[id_]["deliverable"]).exists(), id_)  # a entrega só existe quando o trabalho for feito
+        self.assertTrue((ROOT / fila["RODADA-NO-START"]["deliverable"]).exists())  # E55 (28/11/2026): o item foi feito
 
     def test_o_proximo_item_liberado_e_o_do_n1_e_os_novos_ficam_bloqueados(self):
         saida = subprocess.run([sys.executable, "scripts/next_task.py"], cwd=ROOT, capture_output=True, text=True, timeout=60)

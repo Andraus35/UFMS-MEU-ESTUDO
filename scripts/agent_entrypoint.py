@@ -18,6 +18,11 @@ try:
 except ModuleNotFoundError:
     from scripts.bootstrap import run as bootstrap_run
 
+try:
+    import canal_engenharia as _canal
+except ModuleNotFoundError:
+    from scripts import canal_engenharia as _canal
+
 ROLES = frozenset({"tutor", "coach", "engineer", "auditor"})
 ROLE_MODE = {"tutor": "study", "coach": "study",
              "engineer": "engineering", "auditor": "engineering"}
@@ -87,9 +92,32 @@ def verify_start(root, trusted_head, mode):
     }
 
 
+LIMITE_CANAL = ("resumo lido de um clone local do `entrada`, sem prova do HEAD remoto; só ids e códigos de veredito, nunca o texto das respostas; "
+                "resposta PARADO ou RECUSADA não é resultado (E49, E55)")
+MAX_IDS_CANAL = 100
+
+
+def canal_resumo(entrada):
+    """Resumo SOMENTE LEITURA do canal de engenharia (E49) para o START: ids e códigos, nunca o conteúdo das respostas. Qualquer falha vira `disponivel: False`."""
+    try:
+        base = Path(entrada)
+        if not base.is_dir() or base.is_symlink():
+            return {"disponivel": False, "motivo": "clone do entrada ausente", "limite": LIMITE_CANAL}
+        e = _canal.estado(base)
+        return {"disponivel": True, "parada_ativa": bool(e["parada_ativa"]),
+                "aguardando_resposta": sorted(e["aguardando_resposta"])[:MAX_IDS_CANAL],
+                "a_conferir": sorted(e["a_conferir"])[:MAX_IDS_CANAL],
+                "aceitas": sorted(e["aceitas"])[:MAX_IDS_CANAL],
+                "aceitas_mas_paradas": dict(sorted(e["aceitas_mas_paradas"].items())[:MAX_IDS_CANAL]),
+                "recusadas": dict(sorted(e["recusadas"].items())[:MAX_IDS_CANAL]),
+                "limite": LIMITE_CANAL}
+    except Exception as exc:  # noqa: BLE001 — o START não pode cair por causa do canal
+        return {"disponivel": False, "motivo": "falha ao ler o canal (%s)" % type(exc).__name__, "limite": LIMITE_CANAL}
+
+
 class ReadOnlyAgentBroker:
     """Só oferece START e leitura de contexto. Não expõe ferramentas de escrita."""
-    def __init__(self, root, trusted_head, role, *, sha_origin=None, producao=False):
+    def __init__(self, root, trusted_head, role, *, sha_origin=None, producao=False, entrada=None):
         if role not in ROLES:
             raise StartBlocked("Papel de agente não permitido")
         if sha_origin not in (None, "") and sha_origin not in ORIGENS:
@@ -100,6 +128,7 @@ class ReadOnlyAgentBroker:
         self._root = Path(root).resolve()
         self._trusted_head = trusted_head
         self._role = role
+        self._entrada = entrada
         self._mode = ROLE_MODE[role]
         self._snapshot = verify_start(self._root, trusted_head, self._mode)
 
@@ -113,7 +142,7 @@ class ReadOnlyAgentBroker:
         if action not in READ_ACTIONS:
             raise StartBlocked("Operações externas não habilitadas neste broker")
         current = self._refresh()
-        return {
+        receipt = {
             "status": "start_verified",
             "scope": "local_read_only",
             "role": self._role,
@@ -128,6 +157,9 @@ class ReadOnlyAgentBroker:
             "pr": current["pr"],
             "external_effects_enabled": False,
         }
+        if self._entrada:  # E55: o resumo do canal só aparece se o chamador apontou o clone; sem ele o recibo é o de sempre
+            receipt["canal"] = canal_resumo(self._entrada)
+        return receipt
 
     def model_context(self):
         """Entregar o texto lido à futura chamada ao modelo; sem afirmar compreensão."""
@@ -157,12 +189,13 @@ def main():
     parser.add_argument("--role", choices=sorted(ROLES), required=True)
     parser.add_argument("--check", action="store_true", required=True)
     parser.add_argument("--root", default=".")
+    parser.add_argument("--entrada", default=os.environ.get("UFMS_ENTRADA_CLONE", ""), help="clone local do repositório entrada (opcional): inclui o resumo do canal no recibo")
     parser.add_argument("--producao", action="store_true", help="exige origem externa do SHA (UFMS_TRUSTED_HEAD_SHA_ORIGIN=orquestrador|ci)")
     args = parser.parse_args()
     try:
         broker = ReadOnlyAgentBroker(
             args.root, os.environ.get("UFMS_TRUSTED_HEAD_SHA", ""), args.role,
-            sha_origin=os.environ.get("UFMS_TRUSTED_HEAD_SHA_ORIGIN", ""), producao=args.producao)
+            sha_origin=os.environ.get("UFMS_TRUSTED_HEAD_SHA_ORIGIN", ""), producao=args.producao, entrada=args.entrada or None)
         print(json.dumps(broker.request("start"), ensure_ascii=False, sort_keys=True))
     except (StartBlocked, OSError, UnicodeError) as exc:
         print("BLOQUEADO: " + str(exc), file=sys.stderr)

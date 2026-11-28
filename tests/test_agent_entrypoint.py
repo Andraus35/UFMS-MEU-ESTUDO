@@ -140,5 +140,77 @@ class AgentEntrypointTests(unittest.TestCase):
             verify_start(ROOT, HEAD, "admin")
 
 
+class CanalNoStartTests(AgentEntrypointTests):
+    """E55: resumo do canal de engenharia no recibo do START (opcional, só leitura); herda só a montagem do HEAD simulado."""
+
+    def run(self, result=None):
+        if self._testMethodName.startswith("test_canal_"):
+            return super().run(result)
+        return unittest.TestResult() if result is None else result
+
+    def entrada(self, **extra):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        base = Path(temp.name) / "comandos" / "engenharia"
+        for sub in ("pedidos", "respostas", "registro"):
+            (base / sub).mkdir(parents=True)
+        for i in ("eng-0001", "eng-0002", "eng-0003"):
+            (base / "pedidos" / f"{i}.json").write_text("{}", encoding="utf-8")
+        (base / "respostas" / "eng-0001.json").write_text(json.dumps({"itens": [{"rotulo": "x", "valor": "SEGREDO-NA-RESPOSTA-12345"}]}), encoding="utf-8")
+        (base / "respostas" / "eng-0002.json").write_text("{}", encoding="utf-8")
+        (base / "registro" / "eng-0001.json").write_text(json.dumps({"veredito": "ACEITA", "estado_da_resposta": "RESPONDIDO"}), encoding="utf-8")
+        (base / "registro" / "eng-0002.json").write_text(json.dumps({"veredito": "RECUSADA", "codigo": "FORMATO"}), encoding="utf-8")
+        for k, v in extra.items():
+            (base / k).write_text(v, encoding="utf-8")
+        return Path(temp.name)
+
+    def test_canal_sem_clone_o_recibo_nao_muda(self):
+        antes = ReadOnlyAgentBroker(ROOT, HEAD, "engineer").request("start")
+        self.assertNotIn("canal", antes)
+
+    def test_canal_resumo_traz_so_ids_e_codigos(self):
+        e = self.entrada()
+        r = ReadOnlyAgentBroker(ROOT, HEAD, "engineer", entrada=e).request("start")
+        c = r["canal"]
+        self.assertTrue(c["disponivel"])
+        self.assertEqual((c["aceitas"], c["recusadas"], c["aguardando_resposta"]), (["eng-0001"], {"eng-0002": "FORMATO"}, ["eng-0003"]))
+        self.assertNotIn("SEGREDO-NA-RESPOSTA", json.dumps(r))  # o conteúdo das respostas nunca entra no START
+        self.assertIn("nunca o texto das respostas", c["limite"])
+        self.assertFalse(r["external_effects_enabled"])
+
+    def test_canal_nao_altera_hashes_nem_a_lista_obrigatoria(self):
+        e = self.entrada()
+        base = ReadOnlyAgentBroker(ROOT, HEAD, "tutor").request("start")
+        com = ReadOnlyAgentBroker(ROOT, HEAD, "tutor", entrada=e).request("start")
+        self.assertEqual((base["mandatory"], base["sha256"]), (com["mandatory"], com["sha256"]))
+
+    def test_canal_ausente_ou_corrompido_nao_derruba_o_start(self):
+        r = ReadOnlyAgentBroker(ROOT, HEAD, "engineer", entrada="/nao/existe").request("start")
+        self.assertEqual(r["status"], "start_verified")
+        self.assertFalse(r["canal"]["disponivel"])
+        e = self.entrada()
+        (e / "comandos/engenharia/registro/eng-0001.json").write_text("{nao e json", encoding="utf-8")
+        r = ReadOnlyAgentBroker(ROOT, HEAD, "engineer", entrada=e).request("start")
+        self.assertEqual(r["status"], "start_verified")
+        self.assertFalse(r["canal"]["disponivel"])
+
+    def test_canal_parada_ativa_aparece_e_nenhuma_escrita_e_liberada(self):
+        e = self.entrada(PARAR="x")
+        b = ReadOnlyAgentBroker(ROOT, HEAD, "engineer", entrada=e)
+        self.assertTrue(b.request("start")["canal"]["parada_ativa"])
+        with self.assertRaises(StartBlocked):
+            b.request("write")
+        antes = sorted(p.name for p in (e / "comandos/engenharia/registro").iterdir())
+        b.request("inspect")
+        self.assertEqual(antes, sorted(p.name for p in (e / "comandos/engenharia/registro").iterdir()))  # só leitura
+
+    def test_canal_lista_e_limitada(self):
+        e = self.entrada()
+        for n in range(150):
+            (e / "comandos/engenharia/pedidos" / f"eng-{n + 10:04d}.json").write_text("{}", encoding="utf-8")
+        c = ReadOnlyAgentBroker(ROOT, HEAD, "engineer", entrada=e).request("start")["canal"]
+        self.assertLessEqual(len(c["aguardando_resposta"]), 100)
+
+
 if __name__ == "__main__":
     unittest.main()
