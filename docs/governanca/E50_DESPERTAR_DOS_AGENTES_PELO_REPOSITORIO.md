@@ -50,5 +50,14 @@ O canal já entrega **pedido → hook de Gmail → Zapia → resposta** em `entr
 3. Aceitar que a **Zapia guarde** o token de `/fire` (caminho C) ou preferir o de issue (D).
 4. Se o `PROMPT` fixo da rotina pode escrever o registro de veredito no `entrada` (hoje feito por mim, nesta sessão).
 
+## 7b. Respostas do proprietário (28/11/2026) e o que já está no código
+- **Caminho escolhido: D** (a Zapia abre a issue `RESP eng-NNNN` ao terminar; uma **rotina com gatilho GitHub de issue aberta** acorda uma **sessão nova**). Passo 5 do hook (E49, item 15); a issue **não tem corpo** e o id vem só do título (`extrair_id_resp`, padrão exato).
+- **A campainha `ENG eng-NNNN` também é issue aberta no `entrada`:** a rotina será acordada por ela também; o prompt manda **encerrar** quando o título não for `RESP eng-NNNN` (custa uma execução; a documentação não traz filtro de issue).
+- **Escrita da rotina:** só `comandos/engenharia/registro/` e `comandos/engenharia/leitura/` no `entrada`. `caminhos_fora(caminhos, papel)` e `--auditar rotina` detectam violação (por detecção, **não** por prevenção: o token fino não limita por pasta). Hook da Zapia só grava `respostas/`; orquestrador `pedidos/`, `registro/`, `leitura/` e `PARAR`.
+- **Consumo por agente:** `--proximo <agente>` e `--consumir <agente> <id>` (`orquestrador`, `tutor`, `coach`), idempotentes, só para resposta aceita e **respondida**.
+- **Prompt fixo da rotina:** `config/rotina_despertar_prompt.txt`, SHA-256 `666d66c7a200be9ca2ac75c42d10a5509b398ab1b02c573f0397b3901a90dda7`, pinado em teste; trocar o texto exige PR.
+- **S22 (execução única nesta sessão):** o proprietário marcou a opção, mas **não deu o horário** nem escreveu o pedido literal: **nada foi criado**.
+- **Pendências do proprietário:** criar a rotina na web (gatilho GitHub, evento issue **aberta**, repositórios principal e `entrada`, prompt do arquivo acima); instalar o Claude GitHub App no `entrada`; dar à credencial da Zapia a permissão de **issues** e atualizar o hook (v9). **Não provado:** que a issue acorde a rotina; o app em repositório privado; a identidade que a rotina usa para gravar no `entrada`.
+
 ## 8. Limites
 Nada aqui foi testado fora do repositório. Documentação de rotinas está em **prévia** e pode mudar; limites e escopos listados são os da página lida em 28/11/2026. A autenticidade do emissor no `entrada` **continua não provada** (E49 §3).
