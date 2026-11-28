@@ -33,14 +33,17 @@ Canal e Notebook pela Zapia (D-26, D-27); prompts do N1 vêm do Tutor; Gmail da 
 2. **Decidir o despertar:** `Issues: Read and write` no token da Zapia (D), ou token `/fire` no cofre dela (C), ou nenhum.
 3. **Criar a rotina na web** (gatilho GitHub, evento **issue aberta**, repositórios principal e `entrada`, prompt do arquivo acima) e **instalar o Claude GitHub App no `entrada`** (a documentação não diz se funciona em repositório privado).
 4. **S22:** se quiser, "Criar a tarefa S22" com horário.
-5. Revogar o anexo do `entrada` ao fim; apagar ou manter os cadernos de teste do Notebook (nunca "REVISAO UFMS DIREITO ADM" nem "AUDITORIA"; há dois "diagnostico-n1-descartavel": `cff90194` com 2 fontes e `3ed6adfe` com 0); P9 (tokens, aviso de 04/12), janela PJ, consentimento v4 e reinstalar o fluxo seguem pendentes (ver HANDOFF e `next_task.py`).
+5. **Token da Zapia reaproveitado:** a Zapia nova usa o token **antigo** `github_ufms_repo_token`, que cai na **P9 (aviso de 04/12/2026)**; ao dar `Issues: Read and write` (ou ao renovar), crie **um token fino novo** só para o `entrada` e guarde no cofre da Zapia. Sem isso a leitura e a escrita do canal param em 04/12.
+6. Revogar o anexo do `entrada` ao fim; apagar ou manter os cadernos de teste do Notebook (nunca "REVISAO UFMS DIREITO ADM" nem "AUDITORIA"; há dois "diagnostico-n1-descartavel": `cff90194` com 2 fontes e `3ed6adfe` com 0); P9 (tokens, aviso de 04/12), janela PJ, consentimento v4 e reinstalar o fluxo seguem pendentes (ver HANDOFF e `next_task.py`).
 
 ## 7. Trabalho da próxima sessão (uma tarefa por vez, merge antes de mudar de frente)
 1. Conferir no GitHub: último PR mesclado, SHA da `main`, CI; PR **#213** (draft): CI no head, descrição; pedir o merge só com "Mesclar" citando PR e head. Registrar o recibo no **primeiro commit** da tarefa seguinte (`scripts/record_merge_receipt.py`); reiniciar a branch da sessão de `origin/main` e usar `git merge -s ours origin/<branch>` após cada squash.
 2. **ENG-V10-HOOK:** com o relato do v10, abrir `ENG eng-0008` (`tec_listar_cadernos`, `motivo` neutro, descritivo, nunca imperativo), conferir por código, gravar o registro; se parar, ler o `motivo`. Meta: **provar o TEC pelo canal**.
 3. **ENG-DESPERTAR:** conforme a decisão dele (item 2 acima), provar a cadeia `RESP` → rotina → `--proximo`.
 4. **RODADA-NO-START:** PR de contrato (aprovação expressa do texto): resumo do canal no START do broker; só então chamar subagentes reais.
-5. **N1-RODADA-4** (hook v4 do N1, kit `n1d`, prompts do Tutor) e **E45-CORRETOR** seguem as filas do E46; o E47 (diagnóstico do "Texto copiado") está feito.
+5. **N1-RODADA-4** (hook v4 do N1, kit `n1d`, prompts do Tutor; o prompt vem do Tutor, subagent offline e somente leitura) é o **próximo item liberado** da fila (`next_task.py`). Precisa de uma conta Zapia que **receba o Gmail** e de um hook do N1 (filtro `SINAL`): o `2bef6d04` (E46) estaria **desabilitado na Zapia antiga**, **não verificado** nesta sessão; comandos `n1c` vencidos, usar prefixo `n1d`; **uma** issue `SINAL` só com a confirmação dele.
+6. **E45-CORRETOR está FEITO** (PR #209: proposta, modelo de ameaça e corretor simulado). **Não reabrir.** Sobram **atos dele**: decidir se emenda a D-26 (o E45 recomenda **não** emendar agora, porque a API oficial do NotebookLM Enterprise não documenta pergunta ao caderno e exige conta de trabalho com licença) e **verificar a elegibilidade da conta** para essa API.
+7. **Dívida técnica registrada, sem decisão:** o filtro `agent_commands.scan_text` recusa, em cerca de 0,7% dos casos, um comando legítimo cujo hash traga 11 dígitos seguidos com dígitos verificadores de CPF (`PARAMS_DADO_PESSOAL`); o #210 só estabilizou o teste. Corrigir o filtro (por exemplo, isentar campos de hash) é **decisão própria** (item `FILTRO-HASH-CPF` da fila, bloqueado por ele), com contraprova de que CPF de verdade continua recusado, e muda código de segurança.
 
 ## 8. Armadilhas
 - **Bytecode velho:** mutação que não muda o tamanho do arquivo (`16`→`64`) engana o Python; **apague `__pycache__`** (`find scripts tests -name __pycache__ -prune -exec rm -rf {} +`) antes de rodar mutações.
@@ -49,6 +52,11 @@ Canal e Notebook pela Zapia (D-26, D-27); prompts do N1 vêm do Tutor; Gmail da 
 - O `motivo` de um pedido **não** pode soar como instrução (hipótese não provada: a `eng-0003` pode ter parado por isso).
 - `sleep` em bloco foi bloqueado; use `python3 -c "import time; time.sleep(N)"`. Resposta da Zapia leva ~2 minutos.
 - Um PR por vez: **não misturar frentes**; o #213 declara os ajustes do canal como parte do lote porque a rodada emite pedidos do canal.
+
+## 8b. Auditoria de fim de sessão (28/11/2026)
+- **Remoto:** um único PR aberto (#213, draft), CI `validate` verde no head `72f427b`; `main` em `206306492…` com CI verde; branch local igual ao remoto, sem arquivo fora de commit.
+- **Gates locais executados no fim da sessão** (não antes de cada escrita, como o `AGENTS.md` pede: **desvio declarado**): `bootstrap.py --mode engineering`, `roadmap_gate`, `hooks/before_write.py`, `write_policy.py --check`, `hooks/after_write.py`, `hooks/checkpoint.py`, `governance_sync_gate`, `single_flow_gate`, `doc_cohesion`, `product_gate`: todos OK, **nenhum arquivo foi alterado** por eles. A próxima sessão deve rodá-los **antes** de escrever.
+- **Lacunas achadas e corrigidas nesta auditoria:** E45 listado como pendente (está feito); filtro de CPF sem registro; estado do hook do N1 não dito; token reaproveitado que expira na P9; elegibilidade da conta para a API do NotebookLM sem dono; contagem de rodadas do E49.
 
 ## 9. Como a próxima sessão verifica que tudo está aqui
 `python scripts/bootstrap.py --mode engineering`, `python scripts/single_flow_gate.py --check`, `python scripts/next_task.py`, `python -m unittest discover -s tests` (~2790 testes, ~3 min), `python scripts/canal_engenharia.py --entrada <clone>`, `python scripts/canal_engenharia.py --entrada . --prompt-hook`.

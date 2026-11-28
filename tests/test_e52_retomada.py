@@ -32,14 +32,25 @@ class RetomadaE52Test(unittest.TestCase):
                        "RODADA-NO-START", "intercambiáveis", "Dê o prompt completo ao proprietário em toda resposta"):
             self.assertIn(trecho, DOC, trecho)
 
+    def test_a_auditoria_registra_as_lacunas_corrigidas_e_o_desvio_dos_hooks(self):
+        for trecho in ("E45-CORRETOR está FEITO", "Não reabrir", "emenda a D-26", "elegibilidade", "0,7%", "PARAMS_DADO_PESSOAL", "2bef6d04", "P9 (aviso de 04/12/2026)",
+                       "um token fino novo", "desvio declarado", "hooks/before_write.py", "Auditoria de fim de sessão"):
+            self.assertIn(trecho, DOC, trecho)
+        self.assertNotIn("**E45-CORRETOR** seguem as filas", DOC)
+
+    def test_o_e49_conta_as_rodadas_ate_a_eng_0007(self):
+        e49 = (ROOT / "docs/governanca/E49_CANAL_ENGENHARIA_ZAPIA.md").read_text(encoding="utf-8")
+        self.assertIn("`eng-0001` a `eng-0007`", e49)
+
     def test_a_fila_tem_os_tres_itens_novos_com_bloqueio_e_dependencia(self):
         fila = {i["id"]: i for i in WORKFLOW["work_queue"]}
-        self.assertEqual([i["id"] for i in WORKFLOW["work_queue"]][-3:], ["ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START"])
+        self.assertEqual([i["id"] for i in WORKFLOW["work_queue"]][-4:], ["ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START", "FILTRO-HASH-CPF"])
+        self.assertTrue(fila["FILTRO-HASH-CPF"]["blocking_inputs"])
         self.assertTrue(fila["ENG-V10-HOOK"]["blocking_inputs"])
         self.assertEqual(fila["ENG-DESPERTAR"]["depends_on"], ["ENG-V10-HOOK"])
         self.assertEqual(fila["RODADA-NO-START"]["depends_on"], ["ENG-DESPERTAR"])
         for id_ in fila:
-            if id_ in ("ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START"):
+            if id_ in ("ENG-V10-HOOK", "ENG-DESPERTAR", "RODADA-NO-START", "FILTRO-HASH-CPF"):
                 self.assertFalse((ROOT / fila[id_]["deliverable"]).exists(), id_)  # a entrega só existe quando o trabalho for feito
 
     def test_o_proximo_item_liberado_e_o_do_n1_e_os_novos_ficam_bloqueados(self):

@@ -1273,6 +1273,17 @@
         "aprovação expressa do texto do contrato"
       ],
       "optional_inputs": []
+    },
+    {
+      "id": "FILTRO-HASH-CPF",
+      "title": "Falso positivo de CPF em hashes (~0,7%) no scan_text: decidir e corrigir com contraprova; E52 §7",
+      "roadmap_task": "RM-09",
+      "deliverable": "docs/governanca/E56_FILTRO_CPF_EM_HASHES.md",
+      "depends_on": [],
+      "blocking_inputs": [
+        "decisão do proprietário sobre alterar o filtro"
+      ],
+      "optional_inputs": []
     }
   ],
   "owner_priorities": [
