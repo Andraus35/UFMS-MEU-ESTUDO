@@ -234,6 +234,89 @@ class ScriptTest(unittest.TestCase):
         self.assertEqual(r.stderr, "")
 
 
+class PersistenciaEntreSessoesTest(ScriptTest):
+    """E53 (opção B): o estado perguntado e as respostas vivem no repositório e atravessam sessões."""
+
+    def projeto_com(self, estado, entradas=True):
+        proj = self.dir / "proj"
+        (proj / "scripts").mkdir(parents=True, exist_ok=True)
+        (proj / "scripts" / "next_task.py").write_text(
+            "import json\nprint(json.dumps({'ciclo':{'tarefa':'RM-09','pr':1,'estado':'e'},'fila':{'proximo':{'id':'X','titulo':'t'}}}))\n",
+            encoding="utf-8")
+        if entradas is not None:
+            (proj / "memory").mkdir(exist_ok=True)
+            (proj / "memory" / "PERGUNTAS.json").write_text(
+                json.dumps({"versao": 1, "entradas": [{"estado": estado, "respostas": ["a: b"]}] if entradas else []}), encoding="utf-8")
+        return proj
+
+    ATUAL = "Estado lido agora: ciclo da tarefa RM-09 (PR #1) em 'e'; próximo item da fila: X — t."
+
+    def test_sessao_nova_com_mesmo_estado_registrado_nao_repete(self):
+        self.assertIsNone(self.rodar([usuario(), bash("git push")], projeto=self.projeto_com(self.ATUAL)))
+
+    def test_estado_registrado_diferente_bloqueia_e_mostra_o_que_mudou(self):
+        antigo = "Estado lido agora: ciclo da tarefa RM-00 (PR #9) em 'x'; próximo item da fila: Z — velho."
+        motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.projeto_com(antigo)))
+        self.assertIn("O que mudou desde a última pergunta:", motivo)
+        self.assertIn("RM-00 (PR #9)", motivo)
+
+    def test_arquivo_ausente_vazio_ou_corrompido_pergunta_como_antes(self):
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.projeto_com(self.ATUAL, entradas=None)))
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.projeto_com(self.ATUAL, entradas=False)))
+        proj = self.projeto_com(self.ATUAL)
+        (proj / "memory" / "PERGUNTAS.json").write_text("{nao e json", encoding="utf-8")
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=proj))
+
+    def test_estado_registrado_sem_o_prefixo_nao_vale(self):
+        self.assertBloqueia(self.rodar([usuario(), bash("git push")], projeto=self.projeto_com("qualquer coisa")))
+
+    def test_motivo_manda_registrar_as_respostas_no_repositorio(self):
+        motivo = self.assertBloqueia(self.rodar([usuario(), bash("git push")]))
+        self.assertIn("scripts/registrar_perguntas.py", motivo)
+        self.assertIn("memory/PERGUNTAS.json", motivo)
+
+
+class RegistrarPerguntasTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.raiz = Path(self.tmp.name)
+        sys.path.insert(0, str(ROOT / "scripts"))
+        self.addCleanup(sys.path.remove, str(ROOT / "scripts"))
+        import registrar_perguntas as rp
+        self.rp = rp
+        self.estado = PersistenciaEntreSessoesTest.ATUAL
+
+    def lido(self):
+        return json.loads((self.raiz / "memory" / "PERGUNTAS.json").read_text(encoding="utf-8"))
+
+    def test_grava_estado_e_respostas_e_o_hook_o_le(self):
+        self.rp.registrar(self.raiz, ["Próximo: N1 (Recomendado)"], estado=self.estado, agora="2026-11-28T00:00:00Z")
+        self.assertEqual(self.lido()["entradas"][-1]["estado"], self.estado)
+
+    def test_guarda_so_as_ultimas_dez(self):
+        for i in range(13):
+            self.rp.registrar(self.raiz, ["r%d" % i], estado=self.estado)
+        e = self.lido()["entradas"]
+        self.assertEqual((len(e), e[-1]["respostas"], e[0]["respostas"]), (10, ["r12"], ["r3"]))
+
+    def test_recusa_dado_pessoal_credencial_e_formas_invalidas(self):
+        for ruim in ("a@b.com", "cpf 12345678901", "ghp_abcdef", "x" * 301, "  "):
+            with self.assertRaises(ValueError, msg=ruim):
+                self.rp.registrar(self.raiz, [ruim], estado=self.estado)
+        with self.assertRaises(ValueError):
+            self.rp.registrar(self.raiz, ["ok"], estado="sem prefixo")
+        with self.assertRaises(ValueError):
+            self.rp.registrar(self.raiz, [], estado=self.estado)
+        self.assertFalse((self.raiz / "memory" / "PERGUNTAS.json").exists())
+
+    def test_cli_recusa_com_codigo_1(self):
+        r = subprocess.run([sys.executable, str(ROOT / "scripts" / "registrar_perguntas.py"), "--root", str(self.raiz),
+                            "--estado", self.estado, "--resposta", "a@b.com"], capture_output=True, text=True, timeout=30)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("recusado", r.stderr)
+
+
 class FronteirasTest(unittest.TestCase):
     def test_script_nao_usa_rede_nem_grava_nem_le_segredo(self):
         fonte = SCRIPT.read_text(encoding="utf-8")
