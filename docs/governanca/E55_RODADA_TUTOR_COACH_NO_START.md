@@ -14,3 +14,9 @@
 
 ## Verificação
 `tests/test_agent_entrypoint.py` (6 testes novos, `CanalNoStartTests`): recibo sem o campo quando não há clone; só ids e códigos (um segredo plantado numa resposta não aparece); hashes e lista obrigatória inalterados; clone ausente ou registro corrompido não derruba o START; parada ativa aparece e `write` segue bloqueado; limite de 100.
+
+## Rodada sintética com subagentes reais (28/11/2026, `Explore`, somente leitura, uma execução cada)
+- **Tutor:** pacote `b1a86437…`; saída `plano` com resumo de 111 caracteres e duas `refs`; **aceita** por `validar_saida`. O resumo cita revisões em 7, 15 e 30 dias (padrão do `AGENTS.md`).
+- **Coach:** pacote `9488c047…` com o hash da saída do Tutor (`41370184…`); a saída **crua foi RECUSADA com `REFS`**: o subagente acrescentou a referência `tutor_sha256:<64 hex>` (77 caracteres, acima do limite de 64). **O contrato de forma funcionou como previsto.**
+- **Correção minha, não do modelo:** removi só essa referência extra para montar o registro (`rodada-0001`, hash `63197a2c…`). O registro foi montado **só para esta verificação** e **não foi gravado** no `entrada` nem no repositório. Com isso, `viu_tutor_sha256` do Coach igualou o hash da saída do Tutor e nenhum pedido de API foi emitido.
+- **Leitura honesta:** são duas chamadas, sem repetição; **não** prova estabilidade do formato nem qualidade pedagógica. A saída crua do Coach mostra que um subagente real tende a "ajudar" com campos que o esquema não pede; a recusa em código é o que protege.
