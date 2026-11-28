@@ -3,9 +3,9 @@
   "policy": "single_branch_single_pr_single_merge",
   "active": {
     "task_id": "RM-09",
-    "scope": "Lote CANAL-ENG-TEC-PASSO5 (RM-09): registra no E49 e nas capacidades da Zapia o TEC pelo canal (estrutura de caderno), o passo 5 provado e a ativacao perdida do hook; sem tocar agents/, AGENTS.md, PRODUCT.md nem .claude/; sem dado real",
+    "scope": "Lote WORKFLOW-ARQUIVO (RM-09): arquiva titulos longos de itens feitos da work_queue de state/WORKFLOW.json (texto integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md) para voltar ao limite de 64 KiB do START; sem tocar contrato; sem dado real",
     "branch": "claude/new-session-qu2ofh",
-    "pr_number": 215,
+    "pr_number": 216,
     "base": "main",
     "phase": "review"
   },
@@ -113,12 +113,12 @@
       "archived_without_merge": true
     }
   ],
-  "notes": "PR #214 integrado em main no merge commit 2ea0939e9f2254242871b572bcbfc90eb5023638. Frente única ativa: RM-09 (Lote CANAL-ENG-TEC-PASSO5 (RM-09): registra no E49 e nas capacidades da Zapia o TEC pelo canal (estrutura de caderno), o passo 5 provado e a ativacao perdida do hook; sem tocar agents/, AGENTS.md, PRODUCT.md nem .claude/; sem dado real), branch claude/new-session-qu2ofh, PR #215. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
+  "notes": "PR #215 integrado em main no merge commit aa43fb07b7db36b85fee25f488323d3a50962dd4. Frente única ativa: RM-09 (Lote WORKFLOW-ARQUIVO (RM-09): arquiva titulos longos de itens feitos da work_queue de state/WORKFLOW.json (texto integral em ARQUIVO_TITULOS_WORKFLOW_20261128.md) para voltar ao limite de 64 KiB do START; sem tocar contrato; sem dado real), branch claude/new-session-qu2ofh, PR #216. CURRENT E0, zero eventos/resultados; PROGRESS intocado. Repositório público; persistência pessoal, credenciais e integrações externas não autorizadas.",
   "post_merge_resolution": "confirm_merged_pr_then_await_next_task",
   "last_merged": {
     "task_id": "RM-09",
-    "pr_number": 214,
-    "merge_commit_sha": "2ea0939e9f2254242871b572bcbfc90eb5023638"
+    "pr_number": 215,
+    "merge_commit_sha": "aa43fb07b7db36b85fee25f488323d3a50962dd4"
   },
   "work_queue": [
     {
